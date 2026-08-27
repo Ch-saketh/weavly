@@ -42,6 +42,24 @@ public class UserController {
         return ResponseEntity.ok(profileService.getProfile(user.getId()));
     }
 
+    @PutMapping("/me")
+    public ResponseEntity<?> updateCurrentUser(
+            Principal principal,
+            @Valid @RequestBody UpdateUserRequestDto request
+    ) {
+        if (principal == null) {
+            return ResponseEntity.status(401).build();
+        }
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Authenticated user profile session not found"));
+        try {
+            UserResponseDto updatedUser = userService.updateUser(user.getId(), request);
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/{userId}/profile")
     public ResponseEntity<UserProfileResponseDto> getUserProfile(@PathVariable UUID userId) {
         return ResponseEntity.ok(profileService.getProfile(userId));

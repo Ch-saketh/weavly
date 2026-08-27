@@ -62,31 +62,66 @@ export const updateProfile = async (userId, profileData, fileOrInput) => {
     formData.append("image", fileOrInput.files[0]);
   }
 
-  const endpoint = isUuid(userId)
-    ? `${config.usersApiUrl}/profile/${userId}`
-    : `${config.usersApiUrl}/profile/me`;
+  const endpoint = `${config.usersApiUrl}/profile/me`;
   
-  const response = await fetch(endpoint, {
-    method: "PUT",
-    headers: {
-      "Authorization": `Bearer ${token}`
-    },
-    body: formData
-  });
+  try {
+    const response = await fetch(endpoint, {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
+      body: formData
+    });
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || data.error || "Failed to update profile");
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      if (isUuid(userId) && response.status !== 403) {
+        const fallbackRes = await fetch(`${config.usersApiUrl}/profile/${userId}`, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          },
+          body: formData
+        });
+        const fallbackData = await fallbackRes.json().catch(() => ({}));
+        if (fallbackRes.ok) return fallbackData;
+      }
+      throw new Error(data.message || data.error || "Failed to update profile");
+    }
+    return data;
+  } catch (err) {
+    if (isUuid(userId) && err?.message !== "Failed to update profile") {
+      try {
+        const fallbackRes = await fetch(`${config.usersApiUrl}/profile/${userId}`, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          },
+          body: formData
+        });
+        const fallbackData = await fallbackRes.json().catch(() => ({}));
+        if (fallbackRes.ok) return fallbackData;
+      } catch (innerErr) {
+        // Safe fallback
+      }
+    }
+    throw err;
   }
-  return data;
 };
 
 export const deleteProfileImage = async (userId) => {
-  const endpoint = isUuid(userId) ? `/profile/${userId}/image` : `/profile/me/image`;
   try {
-    const response = await usersClient.delete(endpoint);
+    const response = await usersClient.delete(`/profile/me/image`);
     return response.data;
   } catch (err) {
+    if (isUuid(userId) && err?.status !== 403) {
+      try {
+        const response = await usersClient.delete(`/profile/${userId}/image`);
+        return response.data;
+      } catch (innerErr) {
+        // Safe fallback
+      }
+    }
     console.warn("Delete profile image notice:", err?.message || err);
     return null;
   }
@@ -94,74 +129,136 @@ export const deleteProfileImage = async (userId) => {
 
 export const getMeasurements = async (userId) => {
   try {
-    const endpoint = isUuid(userId) ? `/measurements/${userId}` : `/measurements/me`;
-    const response = await usersClient.get(endpoint);
+    const response = await usersClient.get(`/measurements/me`);
     return response.data;
   } catch (err) {
+    if (isUuid(userId) && err?.status !== 403) {
+      try {
+        const response = await usersClient.get(`/measurements/${userId}`);
+        return response.data;
+      } catch (innerErr) {
+        // Safe fallback
+      }
+    }
     console.warn("Measurements fetch notice:", err?.message || err);
     return null;
   }
 };
 
 export const saveMeasurements = async (userId, measurements) => {
-  const endpoint = isUuid(userId) ? `/measurements/${userId}` : `/measurements/me`;
-  const response = await usersClient.put(endpoint, {
-    topSize: measurements.topSize,
-    bottomSize: measurements.bottomSize,
-    shoeSize: measurements.shoeSize,
-    fitPreference: measurements.fitPreference,
-  });
-  return response.data;
+  try {
+    const response = await usersClient.put(`/measurements/me`, {
+      topSize: measurements.topSize,
+      bottomSize: measurements.bottomSize,
+      shoeSize: measurements.shoeSize,
+      fitPreference: measurements.fitPreference,
+    });
+    return response.data;
+  } catch (err) {
+    if (isUuid(userId) && err?.status !== 403) {
+      const response = await usersClient.put(`/measurements/${userId}`, {
+        topSize: measurements.topSize,
+        bottomSize: measurements.bottomSize,
+        shoeSize: measurements.shoeSize,
+        fitPreference: measurements.fitPreference,
+      });
+      return response.data;
+    }
+    throw err;
+  }
 };
 
 export const getAddresses = async (userId) => {
   if (!userId || String(userId).startsWith("customer_dev_")) return [];
   try {
-    const endpoint = isUuid(userId) ? `/addresses/${userId}` : `/addresses/me`;
-    const response = await usersClient.get(endpoint);
+    const response = await usersClient.get(`/addresses/me`);
     return response.data || [];
   } catch (err) {
-    console.warn("Addresses fetch fallback:", err?.message || err);
+    if (isUuid(userId) && err?.status !== 403) {
+      try {
+        const fallback = await usersClient.get(`/addresses/${userId}`);
+        return fallback.data || [];
+      } catch (innerErr) {
+        // Safe fallback
+      }
+    }
     return [];
   }
 };
 
 export const createAddress = async (userId, address) => {
-  const endpoint = isUuid(userId) ? `/addresses/${userId}` : `/addresses/me`;
-  const response = await usersClient.post(endpoint, address);
-  return response.data;
+  try {
+    const response = await usersClient.post(`/addresses/me`, address);
+    return response.data;
+  } catch (err) {
+    if (isUuid(userId) && err?.status !== 403) {
+      const response = await usersClient.post(`/addresses/${userId}`, address);
+      return response.data;
+    }
+    throw err;
+  }
 };
 
 export const updateAddress = async (userId, address) => {
   const addressId = address.id || address.addressId;
-  const endpoint = isUuid(userId) ? `/addresses/${userId}/${addressId}` : `/addresses/${addressId}`;
-  const response = await usersClient.put(endpoint, address);
-  return response.data;
+  try {
+    const response = await usersClient.put(`/addresses/me/${addressId}`, address);
+    return response.data;
+  } catch (err) {
+    if (isUuid(userId) && err?.status !== 403) {
+      const response = await usersClient.put(`/addresses/${userId}/${addressId}`, address);
+      return response.data;
+    }
+    throw err;
+  }
 };
 
 export const deleteAddress = async (userId, addressId) => {
-  const endpoint = isUuid(userId) ? `/addresses/${userId}/${addressId}` : `/addresses/${addressId}`;
-  const response = await usersClient.delete(endpoint);
-  return response.data;
+  try {
+    const response = await usersClient.delete(`/addresses/me/${addressId}`);
+    return response.data;
+  } catch (err) {
+    if (isUuid(userId) && err?.status !== 403) {
+      const response = await usersClient.delete(`/addresses/${userId}/${addressId}`);
+      return response.data;
+    }
+    throw err;
+  }
 };
 
 export const setDefaultAddress = async (userId, addressId) => {
-  const endpoint = isUuid(userId) ? `/addresses/${userId}/${addressId}/default` : `/addresses/${addressId}/default`;
-  const response = await usersClient.patch(endpoint);
-  return response.data;
+  try {
+    const response = await usersClient.patch(`/addresses/me/${addressId}/default`);
+    return response.data;
+  } catch (err) {
+    if (isUuid(userId) && err?.status !== 403) {
+      const response = await usersClient.patch(`/addresses/${userId}/${addressId}/default`);
+      return response.data;
+    }
+    throw err;
+  }
 };
 
 export const updateUserDetails = async (userId, userDetails) => {
   if (!userId || String(userId).startsWith("customer_dev_")) return userDetails;
-  const endpoint = isUuid(userId) ? `/users/${userId}` : `/users/me`;
   try {
-    const response = await usersClient.put(endpoint, {
+    const response = await usersClient.put(`/users/me`, {
       firstName: userDetails.firstName,
       lastName: userDetails.lastName,
     });
     return response.data;
   } catch (err) {
-    console.warn("User details update notice:", err?.message);
+    if (isUuid(userId) && err?.status !== 403) {
+      try {
+        const response = await usersClient.put(`/users/${userId}`, {
+          firstName: userDetails.firstName,
+          lastName: userDetails.lastName,
+        });
+        return response.data;
+      } catch (innerErr) {
+        // Safe fallback
+      }
+    }
     return userDetails;
   }
 };

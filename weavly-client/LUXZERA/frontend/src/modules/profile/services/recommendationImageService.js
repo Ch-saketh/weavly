@@ -16,8 +16,7 @@ export const getRecommendationImages = async (userId) => {
     return [];
   }
   try {
-    const endpoint = isUuid(userId) ? `/recommendation-images/${userId}` : `/recommendation-images/me`;
-    const response = await usersClient.get(endpoint);
+    const response = await usersClient.get(`/recommendation-images/me`);
     if (Array.isArray(response.data)) {
       return response.data;
     }
@@ -26,7 +25,14 @@ export const getRecommendationImages = async (userId) => {
     }
     return [];
   } catch (err) {
-    console.warn("Recommendation images fetch fallback (no remote images or offline):", err?.message || err);
+    if (isUuid(userId) && err?.status !== 403) {
+      try {
+        const fallbackRes = await usersClient.get(`/recommendation-images/${userId}`);
+        return Array.isArray(fallbackRes.data) ? fallbackRes.data : (fallbackRes.data?.content || []);
+      } catch (innerErr) {
+        // Safe fallback
+      }
+    }
     return [];
   }
 };
@@ -44,10 +50,9 @@ export const uploadRecommendationImage = async (userId, file) => {
   formData.append("image", file);
 
   const token = getToken();
-  const endpointPath = isUuid(userId) ? `/recommendation-images/${userId}` : `/recommendation-images/me`;
   
   try {
-    const response = await fetch(`${config.usersApiUrl}${endpointPath}`, {
+    const response = await fetch(`${config.usersApiUrl}/recommendation-images/me`, {
       method: "POST",
       headers: {
         ...(token ? { "Authorization": `Bearer ${token}` } : {})

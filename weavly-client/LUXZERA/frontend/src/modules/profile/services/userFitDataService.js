@@ -12,11 +12,17 @@ const isUuid = (val) => typeof val === "string" && UUID_REGEX.test(val);
 export const getFitData = async (userId) => {
   if (!userId || String(userId).startsWith("customer_dev_")) return null;
   try {
-    const endpoint = isUuid(userId) ? `/user-fit-data/${userId}` : `/user-fit-data/me`;
-    const response = await usersClient.get(endpoint);
+    const response = await usersClient.get(`/user-fit-data/me`);
     return response.data;
   } catch (err) {
-    console.warn("Fit data fetch notice:", err?.message || err);
+    if (isUuid(userId) && err?.status !== 403) {
+      try {
+        const fallbackRes = await usersClient.get(`/user-fit-data/${userId}`);
+        return fallbackRes.data;
+      } catch (innerErr) {
+        // Safe fallback
+      }
+    }
     return null;
   }
 };
@@ -50,7 +56,14 @@ export const saveFitData = async (userId, fitData) => {
     fashionGoals: Array.isArray(fitData.fashionGoals) ? fitData.fashionGoals : [],
   };
 
-  const endpoint = isUuid(userId) ? `/user-fit-data/${userId}` : `/user-fit-data/me`;
-  const response = await usersClient.put(endpoint, payload);
-  return response.data;
+  try {
+    const response = await usersClient.put(`/user-fit-data/me`, payload);
+    return response.data;
+  } catch (err) {
+    if (isUuid(userId) && err?.status !== 403) {
+      const fallbackRes = await usersClient.put(`/user-fit-data/${userId}`, payload);
+      return fallbackRes.data;
+    }
+    throw err;
+  }
 };
