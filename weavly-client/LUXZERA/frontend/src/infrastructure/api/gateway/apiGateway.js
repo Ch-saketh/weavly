@@ -70,7 +70,6 @@ const createClient = (baseURL) => {
           }
         }
         const data = error.response.data;
-        const status = error.response.status;
         const statusText = error.response.statusText;
 
         let errPayload;
