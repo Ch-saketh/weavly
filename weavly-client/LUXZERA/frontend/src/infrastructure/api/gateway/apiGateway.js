@@ -58,14 +58,15 @@ const createClient = (baseURL) => {
       if (error.response) {
         const url = error.config?.url || "";
         const isAuthEndpoint = url.includes("/auth/");
+        const status = error.response.status;
         
-        // Clean up local auth session only for non-auth protected endpoints when token is expired
-        if (error.response.status === 401 && !isAuthEndpoint) {
+        // Clean up local auth session when token is expired or unauthorized
+        if ((status === 401 || (status === 403 && (url.includes("/users/me") || url.includes("/profile/me")))) && !isAuthEndpoint) {
           removeToken();
           if (typeof window !== "undefined") {
-            if (window.location.pathname !== "/" && window.location.pathname !== "/login" && !window.location.pathname.startsWith("/admin/login")) {
-              window.location.href = "/";
-            }
+            try {
+              localStorage.removeItem("Weavly_user_cache");
+            } catch (e) {}
           }
         }
         const data = error.response.data;

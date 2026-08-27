@@ -56,8 +56,8 @@ export const AuthProvider = ({ children }) => {
           }
         } catch (error) {
           console.warn("Session background sync:", error?.message);
-          // ONLY clear session if server explicitly returns 401 Unauthorized (expired/revoked token)
-          if (error?.response?.status === 401 || error?.status === 401) {
+          // ONLY clear session if server explicitly returns 401 Unauthorized or 403 Forbidden (expired/invalid token)
+          if (error?.response?.status === 401 || error?.status === 401 || error?.response?.status === 403 || error?.status === 403) {
             removeToken();
             setUser(null);
           }
