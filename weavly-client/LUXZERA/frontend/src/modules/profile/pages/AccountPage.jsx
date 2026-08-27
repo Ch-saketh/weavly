@@ -190,7 +190,7 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
 
   if (!isMounted || authLoading) {
     return (
-      <div className="min-h-screen bg-[#FEFDFB] flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <CreativeLoader />
       </div>
     );
@@ -198,18 +198,18 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-[#FEFDFB] flex items-center justify-center px-6 font-['Plus_Jakarta_Sans',sans-serif]">
-        <div className="max-w-md rounded-2xl border border-[#E8E5E0] bg-white p-10 text-center shadow-[0_2px_16px_rgba(0,0,0,0.03)]">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8C8C8C]">Account unavailable</p>
-          <h1 className="mt-4 text-[22px] font-semibold text-[#1A1A1A] tracking-[-0.02em] leading-tight">Sign in to view your profile</h1>
-          <p className="mt-2.5 text-[13px] text-[#8C8C8C] leading-relaxed">Access your style preferences, order history, and account settings.</p>
+      <div className="min-h-screen bg-white flex items-center justify-center px-6 font-sans">
+        <div className="max-w-md rounded-2xl border border-[#ECECEC] bg-white p-10 text-center shadow-[0_2px_16px_rgba(0,0,0,0.03)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-neutral-400">Account unavailable</p>
+          <h1 className="mt-4 text-[22px] font-semibold text-neutral-900 tracking-[-0.02em] leading-tight">Sign in to view your profile</h1>
+          <p className="mt-2.5 text-[13px] text-neutral-500 leading-relaxed">Access your style preferences, order history, and account settings.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FEFDFB] antialiased font-satoshi animate-acct-fade-in">
+    <div className="min-h-screen bg-white antialiased font-sans animate-acct-fade-in">
       <style>{`
         .animate-acct-fade-in {
           animation: acct-fade-in 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -235,7 +235,7 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
       `}</style>
 
       {/* Minimal Luxury Top Bar */}
-      <div className="border-b border-neutral-200/70 bg-[#FAF9F6]/80 backdrop-blur-md sticky top-0 z-20">
+      <div className="border-b border-[#ECECEC] bg-white/90 backdrop-blur-md sticky top-0 z-20">
         <div className="max-w-[1120px] mx-auto px-6 sm:px-8 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
             <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-neutral-400">Settings</span>
