@@ -15,13 +15,6 @@ export default function WardrobePage() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-16">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="h-6 px-3 rounded-full bg-[#1D1D1F] text-white text-[11px] font-semibold tracking-wider flex items-center gap-1.5 shadow-2xs">
-                  <Sparkles size={11} className="text-[#F07020]" />
-                  AI RECOMMENDATION ENGINE
-                </span>
-                <span className="text-xs text-[#71717A] font-medium">Bespoke Curation</span>
-              </div>
               <h1 className="text-[32px] md:text-[48px] font-bold text-[#1D1D1F] tracking-tight uppercase">
                 Zyra Collection
               </h1>

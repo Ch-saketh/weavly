@@ -108,13 +108,6 @@ export default function ZeraCollection({
       {/* ── HEADER & OCCASION SELECTOR ── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[#ECECEC] pb-6">
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="h-6 px-2.5 rounded-full bg-[#1D1D1F] text-white text-[11px] font-semibold tracking-wider flex items-center gap-1.5 shadow-2xs">
-              <Sparkles size={11} className="text-[#F07020]" />
-              ZYRA INTELLIGENCE
-            </span>
-            <span className="text-xs text-[#71717A] font-medium">Top 10 Curated</span>
-          </div>
           <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-[#1D1D1F]">
             Zyra <span className="font-normal">Collection</span>
           </h2>
