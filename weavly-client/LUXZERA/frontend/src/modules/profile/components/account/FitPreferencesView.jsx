@@ -176,13 +176,6 @@ export default function FitPreferencesView({ userId, onSaveSuccess }) {
 
   return (
     <div className="relative font-['Plus_Jakarta_Sans',sans-serif] text-left">
-      <div className="mb-8">
-        <h2 className="text-[20px] font-bold text-[#1A1A1A] tracking-[-0.02em]">Fit & Style Preferences</h2>
-        <p className="text-[13px] text-[#8C8C8C] mt-1">
-          Fine-tune your measurements and personal style criteria.
-        </p>
-      </div>
-
       {errorMsg && (
         <div className="px-5 py-3 mb-6 bg-red-50 border border-red-100 rounded-xl text-[12.5px] text-red-600 font-medium flex items-center gap-2">
           <AlertCircle size={15} className="flex-shrink-0" />

@@ -93,12 +93,7 @@ const AccountView = ({
         </div>
       )}
 
-      {/* Section Title */}
-      <div>
-        <h2 className="text-[24px] font-black text-slate-950 tracking-tight font-satoshi">My Profile</h2>
-        <p className="text-[13.5px] font-medium text-slate-500 mt-1">Manage your account details, photo, and style biography.</p>
-      </div>
-
+      {/* Form Content */}
       <form onSubmit={(e) => { e.preventDefault(); onSave(fileInputRef.current); }} className="space-y-6">
         
         {/* Top Member Overview Card */}

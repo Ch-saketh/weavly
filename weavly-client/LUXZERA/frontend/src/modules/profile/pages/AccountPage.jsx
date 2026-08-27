@@ -234,16 +234,15 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
         }
       `}</style>
 
-      {/* Page Header */}
-      <div className="border-b border-[#E8E5E0]/60 bg-white/60 backdrop-blur-md sticky top-0 z-20">
-        <div className="max-w-[1120px] mx-auto px-6 sm:px-8 py-5 sm:py-6 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8C8C8C] mb-0.5">Account</p>
-            <h1 className="text-[22px] sm:text-[26px] font-bold text-[#1A1A1A] tracking-[-0.03em] leading-none">Settings</h1>
-          </div>
-          <div className="hidden sm:block text-right">
-            <span className="text-[12px] font-bold text-slate-700">{currentTab.title}</span>
-            <p className="text-[10.5px] text-slate-400 font-medium">{currentTab.subtitle}</p>
+      {/* Unified 1-Line Header */}
+      <div className="border-b border-[#E8E5E0]/70 bg-white/80 backdrop-blur-md sticky top-0 z-20">
+        <div className="max-w-[1120px] mx-auto px-6 sm:px-8 py-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#C8702A] bg-[#F5EDE4] px-2.5 py-0.5 rounded-md shrink-0">Account</span>
+            <span className="text-slate-300">/</span>
+            <h1 className="text-[16px] sm:text-[17px] font-bold text-slate-900 tracking-tight shrink-0">{currentTab.title}</h1>
+            <span className="hidden md:inline-block text-slate-300">•</span>
+            <p className="hidden md:inline-block text-[13px] text-slate-500 font-medium truncate">{currentTab.subtitle}</p>
           </div>
         </div>
       </div>
