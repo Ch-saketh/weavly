@@ -76,11 +76,145 @@ If you don't look like you just walked out of a high-fashion runway, that’s a 
 
 ---
 
-## 🚀 3. Quick Start (Spinning Up the Armor)
+## 🧠 3. User Encoder Pipeline (Deep-Dive: Phases U1–U7)
 
-### Option A: The Fast Track (Docker Infrastructure)
+The **User Encoder** is an asynchronous multi-modal pipeline that ingests raw user biometrics, face/body imagery, style preferences, and browsing telemetry, distilling them into a canonical **662-Dimensional Unified Latent Vector** ($\mathbf{u} \in \mathbb{R}^{662}, \|\mathbf{u}\|_2 = 1.0$) and a rich structured JSON profile.
 
-Before starting the code servers, launch the vector database and message queue:
+```
+                      USER ENCODER ARCHITECTURE (PHASES U1 – U7)
+
+   Raw User Input (Spring Boot Event / REST Payload)
+       │
+   [Phase U1: Ingestion & Normalization]
+       ├── UserInputNormalizer (Range bounding, unit conversion, missing-value defaults)
+       └── InputRouter (Dispatches to 3 parallel modal encoders)
+       │
+       ├───► [Phase U2: Data Encoder] ───────────────► 128D Structured Fashion Latent
+       │         • Fit Preferences & Biometrics (Height, weight, chest/waist/hip, inseam)
+       │         • Style Archetype Classifier (Minimalist, Streetwear, Classic, Bohemian)
+       │         • Color Palette Analyzer (Dominant tones, contrast ratios, avoid-list)
+       │
+       ├───► [Phase U3: Image Encoder] ──────────────► 512D Visual Latent
+       │         • Face Geometry & Undertone Extractor (Warm, cool, neutral melanin detection)
+       │         • Body Proportion Analyzer (Shoulder-to-hip ratio, silhouette topology)
+       │         • Multi-Image Vision Backbone (Zero-shot visual identity feature extraction)
+       │
+       └───► [Phase U4: Behaviour Encoder] ──────────► 64D Behavioral Latent
+                 • Price Tier & Budget Sensitivity Scoring
+                 • Occasion Affinity Histogram (Work vs Party vs Casual velocity)
+                 • Category Interaction & Recency Weighting
+       │
+   [Phase U5: Unified Insight Aggregator]
+       ├── Source-Aware Conflict Resolver (Image vs Data evidence adjudication)
+       ├── Cross-Modal Agreement Scorer (Confidence-weighted feature binding)
+       └── UnifiedUserInsights Generation (Canonical JSON profile)
+       │
+   [Phase U6: Multimodal Fusion Engine]
+       ├── Deterministic Orthogonal Projection (512D Visual ⊕ 128D Attribute ⊕ 22D Biometric)
+       ├── L2 Normalization Layer (Unit hypersphere constraint: ||u||₂ = 1.0)
+       └── EmbeddingValidator (NaN/Inf bounding, strict 662D dimension assertion)
+       │
+   [Phase U7: Dual Persistence Layer]
+       ├── PostgreSQL (Supabase `user_zyra_representations` JSONB profile)
+       └── Qdrant Vector Store (Real-time user latent indexing for fast retrieval)
+```
+
+---
+
+## 👗 4. Product Encoder Pipeline (Deep-Dive: Phases P1–P7)
+
+The **Product Encoder** transforms raw catalog entries (garment photography, descriptions, pricing, and fabric specs) into high-fidelity structured fashion profiles and dense **662-Dimensional Product Embeddings** ($\mathbf{v} \in \mathbb{R}^{662}, \|\mathbf{v}\|_2 = 1.0$).
+
+```
+                    PRODUCT ENCODER ARCHITECTURE (PHASES P1 – P7)
+
+   Catalog Ingestion (Spring Boot / Vendor Integration)
+       │
+   [Phase P1: Ingestion & Canonical Normalization]
+       ├── ProductDataValidator (Schema compliance & completeness validation)
+       ├── ProductDataNormalizer (Multi-view image mapping: front, back, detail, flatlay)
+       └── ProductInputRouter (Routing to visual, textual, and attribute encoders)
+       │
+       ├───► [Phase P2: Product Image Encoder] ──────► 512D Dense Visual Vector
+       │         • Multi-View Vision Backbone (CLIP ViT-B/32 feature extraction)
+       │         • View-Weighted Aggregator (Front: 0.5, Back: 0.2, Detail: 0.3)
+       │         • Color & Pattern Extractor (Dominant color, secondary accents, texture)
+       │
+       ├───► [Phase P3: Product Text Encoder] ───────► 512D Dense Semantic Vector
+       │         • CLIP Text Transformer (Title, micro-copy, fabric description encoding)
+       │         • Chunking & Semantic Contradiction Detector
+       │
+       └───► [Phase P4: Attribute Encoder] ──────────► 128D Multi-Hot Categorical Vector
+                 • Hierarchical Taxonomy Vectorizer (Category, Subcategory, Silhouette)
+                 • Material Composition Breakdown (Cotton, Silk, Linen, Wool, Synthetics)
+                 • Occasion & Seasonality Multi-Tagging (Formal, Wedding, Sport, Casual)
+       │
+   [Phase P5: Product Insight Aggregation]
+       ├── AttributeEvidenceCollector (Visual + Textual evidence triangulation)
+       ├── Cross-Modal Attribute Aligner (Visual color vs attribute label verification)
+       ├── ProductConflictDetector (Resolves discrepancies between image & text)
+       └── UnifiedProductProfile Builder (Canonical product specification)
+       │
+   [Phase P6: Multimodal Fusion & Projection Layer]
+       ├── Orthogonal Projection Matrix (Aligning Visual 512D + Attribute 128D + Fit 22D)
+       ├── L2 Spherical Normalization (||v||₂ = 1.0)
+       └── UnifiedProductRepresentation Generation
+       │
+   [Phase P7: Dual Persistence Engine]
+       ├── PostgreSQL (Supabase `zyra_product_profiles` JSONB storage)
+       └── Qdrant Vector Engine (`zyra_product_embeddings` collection indexing)
+```
+
+---
+
+## 🎯 5. Zyra Multi-Model Recommendation Engine
+
+When a user visits the **ZeraCollection** or **Virtual Wardrobe**, Zyra executes a 6-stage real-time inference pipeline in under 500ms:
+
+```
+                         ZYRA INFERENCE & RECOMMENDATION PIPELINE
+
+   User Representation (662D) + Target Occasion (e.g. Wedding, College, Formal)
+       │
+   [Step 1: Vector Candidate Retrieval]
+       • High-speed Cosine Vector Search in Qdrant over product embeddings:
+         CosineSimilarity(u, v) = (u · v) / (||u||₂ ||v||₂)
+       • Pulls top 50-100 nearest candidates
+       │
+   [Step 2: Profile Hydration & Gender/Age Guardrails]
+       • Real-time batch hydration of structured product profiles from PostgreSQL
+       • Strict gender & age filtering: Male users never receive women's/kids items;
+         Female accounts only receive Women's + Unisex fashion.
+       │
+   [Step 3: Model 1 — Outfit Compatibility (S_outfit)]
+       • Graph-based synergy scoring across item categories (Tops, Bottoms, Outerwear, Footwear)
+       • Color harmony matrix (monochromatic, complementary, split-complementary, analogous)
+       • Pattern clash prevention & formality level cohesion
+       │
+   [Step 4: Model 2 — Person x Garment Suitability (S_person)]
+       • Biometric fit evaluation (Shoulder width, chest ease, drape characteristics)
+       • Melanin undertone & color season palette alignment
+       • Fashion archetype resonance (Minimalist, Classic, Streetwear, Ethnic, Sporty)
+       │
+   [Step 5: Model 3 — Occasion Suitability Matrix (S_occasion)]
+       • Contextual occasion affinity:
+         - Wedding / Formal: Bandhgala, Tuxedos, Blazers, Sherwanis, Evening Gowns
+         - College / Casual: Oversized Tees, Denim, Hoodies, Sneakers
+         - Sport / Gym: Performance activewear, dry-fit tees, trainers
+       │
+   [Step 6: Dynamic Multi-Objective Re-Ranker & Top-10 Generator]
+       • Final blended suitability score:
+         S_final = 0.20 * S_retrieval + 0.30 * S_person + 0.25 * S_outfit + 0.25 * S_occasion
+       • Title & Image Deduplication (Zero repeated cards or identical thumbnail previews)
+       • Sequential rank assignment (Ranks 1..10)
+       • Real-time Indian Rupees (₹) pricing formatting
+```
+
+---
+
+## 🚀 6. Infrastructure Setup (Docker)
+
+Before starting the application services, launch the vector database and message broker:
 
 ```bash
 # Clone the repository
@@ -97,9 +231,9 @@ Verify your infrastructure is humming:
 
 ---
 
-## 🛠️ 4. Starting Each Service Individually
+## 🛠️ 7. Starting Each Service Individually
 
-Don't panic. Open three terminal tabs like a professional.
+Open three terminal tabs to run the services concurrently:
 
 ```
 ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐
@@ -155,7 +289,7 @@ npm run dev
 
 ---
 
-## 🧪 5. Testing & Evaluation Framework (Phase P5)
+## 🧪 8. Testing & Evaluation Framework (Phase P5)
 
 We test our neural algorithms before deploying them to mission-critical operations.
 
@@ -175,7 +309,7 @@ Generated reports:
 
 ---
 
-## 💥 6. Troubleshooting & Conflict Resolution Protocol
+## 💥 9. Troubleshooting & Conflict Resolution Protocol
 
 Things went sideways? Calm down. Here is how we fix it cleanly.
 
@@ -235,7 +369,7 @@ git push origin main
 
 ---
 
-## 🔒 7. Security, Environment & Secrets
+## 🔒 10. Security, Environment & Secrets
 
 Never commit real API keys, Supabase service keys, or private JWT secrets to public repositories. Always duplicate `.env.example` into `.env.local` or environment variables:
 
@@ -254,7 +388,7 @@ NEXT_PUBLIC_ZYRA_API_URL=http://localhost:8001/api/v1/zyra
 
 ---
 
-## 🏆 8. Creator & Mission
+## 🏆 11. Creator & Mission
 
 Built with precision engineering, modern aesthetics, and unyielding attention to detail.
 
