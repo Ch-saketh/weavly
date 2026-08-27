@@ -1,7 +1,7 @@
 # ⚡ WEAVLY — Next-Gen AI Fashion Intelligence & Neural Commerce OS
 
-> *"Look, I could explain how the Arc Reactor works in two minutes, but instead, I built something even more sophisticated: an AI that actually knows what you should wear before you even look in the mirror. Welcome to **Weavly**."*  
-> — **Tony Stark** *(Genius, Billionaire, Lead System Architect)*
+> *"Look, I could explain the neural architecture behind multi-modal embeddings in two minutes, but instead, I built something even better: an AI system that actually knows what you should wear before you even look in the mirror. Welcome to **Weavly**."*  
+> — **Saketh Chokkapu** *(Creator & Lead System Architect)*
 
 ---
 
@@ -19,7 +19,7 @@
 
 ## 🕶️ 1. What on Earth is Weavly?
 
-Think of **Weavly** as the JARVIS of high-fashion commerce. 
+Think of **Weavly** as the intelligent copilot of high-fashion commerce. 
 
 Most e-commerce platforms do something embarrassing: they show you clothes based on basic keyword searches and whatever sponsored brand threw cash at them. That’s stone-age tech. 
 
@@ -28,7 +28,7 @@ Most e-commerce platforms do something embarrassing: they show you clothes based
 2. **Dense 662-Dimensional Multi-Modal Vector Embeddings:** Zero-shot CLIP visual encoders fused with categorical taxonomies.
 3. **Multi-Occasion Suitability Matrices:** Distinct dynamic re-ranking for College, Formal, Wedding, Date Night, Work, Sport, and Casual.
 
-If you don't look like you just walked out of a Milan runway or a Stark Industries gala, that’s a bug, not a feature.
+If you don't look like you just walked out of a high-fashion runway, that’s a bug, not a feature.
 
 ---
 
@@ -175,9 +175,9 @@ Generated reports:
 
 ---
 
-## 💥 6. Troubleshooting & Conflict Resolution (The Stark Protocol)
+## 💥 6. Troubleshooting & Conflict Resolution Protocol
 
-Things went sideways? Calm down. Here is how we fix it without blowing up the workshop.
+Things went sideways? Calm down. Here is how we fix it cleanly.
 
 ### 🔴 Problem 1: `Port 8001` or `Port 8080` is Already in Use
 > *Symptoms:* `[Errno 48] Address already in use` or `Web server failed to start. Port 8080 was already in use.`
@@ -254,15 +254,15 @@ NEXT_PUBLIC_ZYRA_API_URL=http://localhost:8001/api/v1/zyra
 
 ---
 
-## 🏆 8. Contributors & Mission
+## 🏆 8. Creator & Mission
 
 Built with precision engineering, modern aesthetics, and unyielding attention to detail.
 
-- **Lead Engineer & Architect:** [Ch-Saketh](https://github.com/Ch-saketh)
+- **Creator & Lead System Architect:** **Saketh Chokkapu** ([@Ch-saketh](https://github.com/Ch-saketh))
 - **AI Core:** Zyra Neural Engine (`core-model`)
 - **Commerce Hub:** Weavly Server (`weavly-server`)
 - **Client Studio:** LUXZERA (`weavly-client`)
 
 ---
 
-> *"Part of the journey is the end... but for your wardrobe, it's just the beginning."* 🦾⚡
+> *"Precision engineering meets aesthetic intelligence — for your wardrobe, this is just the beginning."* ⚡👔
