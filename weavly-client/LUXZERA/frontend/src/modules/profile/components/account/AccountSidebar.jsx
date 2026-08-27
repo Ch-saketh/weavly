@@ -4,7 +4,7 @@ import { User, Lock, MapPin, Sliders, Sparkles, CreditCard, Package, LifeBuoy, C
 const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
   const sections = [
     {
-      label: "PROFILE",
+      label: "Profile",
       items: [
         { id: 'profile', label: 'My Profile', icon: User },
         { id: 'measurements', label: 'Fit & Style', icon: Sliders },
@@ -12,7 +12,7 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
       ]
     },
     {
-      label: "ACCOUNT",
+      label: "Account",
       items: [
         { id: 'orders', label: 'Orders', icon: Package },
         { id: 'addresses', label: 'Addresses', icon: MapPin },
@@ -21,7 +21,7 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
       ]
     },
     {
-      label: "HELP",
+      label: "Help",
       items: [
         { id: 'support', label: 'Customer Care', icon: LifeBuoy },
       ]
@@ -29,17 +29,17 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
   ];
 
   return (
-    <nav className="w-full font-satoshi bg-white rounded-2xl border border-slate-200 p-3 sm:p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-y-auto max-h-[calc(100vh-120px)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-      <div className="space-y-4 sm:space-y-5">
+    <nav className="w-full bg-white rounded-2xl border border-neutral-200/80 p-2.5 sm:p-3 shadow-[0_1px_4px_rgba(0,0,0,0.02)] overflow-y-auto max-h-[calc(100vh-120px)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <div className="space-y-4">
         {sections.map((section, sIdx) => (
           <div key={section.label}>
             {/* Section Category Label */}
-            <p className="text-[10.5px] sm:text-[11px] font-black tracking-[0.16em] text-slate-700 font-satoshi uppercase mb-2 px-2">
+            <p className="text-[10px] font-bold tracking-[0.14em] text-neutral-400 uppercase mb-1.5 px-3">
               {section.label}
             </p>
 
             {/* Section Items */}
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -49,39 +49,34 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
                     key={item.id}
                     type="button"
                     onClick={() => onTabChange?.(item.id)}
-                    className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-[14.5px] transition-all duration-200 text-left font-satoshi relative group ${
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[13.5px] transition-all duration-150 text-left relative group ${
                       isActive
-                        ? "bg-[#F5EDE4] text-slate-950 font-extrabold border border-[#E8DFD4] shadow-xs"
-                        : "text-slate-800 hover:bg-slate-100/80 hover:text-slate-950 font-bold border border-transparent"
+                        ? "bg-neutral-900 text-white font-semibold shadow-xs"
+                        : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100/80 font-medium"
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      {/* Left accent indicator bar */}
-                      {isActive && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[4px] h-5 bg-[#C8702A] rounded-r-full" />
-                      )}
-                      
+                    <div className="flex items-center gap-2.5 min-w-0">
                       <Icon 
-                        size={19} 
-                        strokeWidth={isActive ? 2.4 : 2.0}
-                        className={`transition-colors duration-200 flex-shrink-0 ${
-                          isActive ? "text-[#C8702A]" : "text-slate-600 group-hover:text-slate-950"
+                        size={16} 
+                        strokeWidth={isActive ? 2.2 : 1.8}
+                        className={`transition-colors duration-150 shrink-0 ${
+                          isActive ? "text-white" : "text-neutral-400 group-hover:text-neutral-900"
                         }`}
                       />
-                      <span>{item.label}</span>
+                      <span className="truncate">{item.label}</span>
                     </div>
 
                     {isActive && (
-                      <ChevronRight size={16} strokeWidth={2.5} className="text-[#C8702A]" />
+                      <ChevronRight size={14} strokeWidth={2.4} className="text-neutral-400 shrink-0" />
                     )}
                   </button>
                 );
               })}
             </div>
 
-            {/* Section Divider */}
+            {/* Subtle Divider */}
             {sIdx < sections.length - 1 && (
-              <div className="mt-4 border-b border-slate-200/80" />
+              <div className="mt-3.5 mb-1 border-b border-neutral-100" />
             )}
           </div>
         ))}

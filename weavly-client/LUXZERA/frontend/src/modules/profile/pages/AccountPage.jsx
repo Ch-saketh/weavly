@@ -234,15 +234,15 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
         }
       `}</style>
 
-      {/* Unified 1-Line Header */}
-      <div className="border-b border-[#E8E5E0]/70 bg-white/80 backdrop-blur-md sticky top-0 z-20">
+      {/* Minimal Luxury Top Bar */}
+      <div className="border-b border-neutral-200/70 bg-[#FAF9F6]/80 backdrop-blur-md sticky top-0 z-20">
         <div className="max-w-[1120px] mx-auto px-6 sm:px-8 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#C8702A] bg-[#F5EDE4] px-2.5 py-0.5 rounded-md shrink-0">Account</span>
-            <span className="text-slate-300">/</span>
-            <h1 className="text-[16px] sm:text-[17px] font-bold text-slate-900 tracking-tight shrink-0">{currentTab.title}</h1>
-            <span className="hidden md:inline-block text-slate-300">•</span>
-            <p className="hidden md:inline-block text-[13px] text-slate-500 font-medium truncate">{currentTab.subtitle}</p>
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-neutral-400">Settings</span>
+            <span className="text-neutral-300 text-xs">/</span>
+            <h1 className="text-[14.5px] font-semibold text-neutral-900 tracking-tight shrink-0">{currentTab.title}</h1>
+            <span className="hidden md:inline-block text-neutral-300 text-xs">•</span>
+            <p className="hidden md:inline-block text-[12.5px] text-neutral-500 font-normal truncate">{currentTab.subtitle}</p>
           </div>
         </div>
       </div>
@@ -251,12 +251,12 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
       <div className="max-w-[1120px] mx-auto px-6 sm:px-8 py-6 sm:py-8">
         <div className="grid grid-cols-12 gap-8 lg:gap-10 items-start">
           
-          {/* Sticky Sidebar (No visible scrollbar, pinned in place) */}
-          <div className="col-span-12 md:col-span-3 md:sticky md:top-24 md:self-start z-10">
+          {/* Sticky Sidebar */}
+          <div className="col-span-12 md:col-span-3 md:sticky md:top-20 md:self-start z-10">
             <AccountSidebar activeTab={activeTab} onTabChange={(tab) => { setActiveTab(tab); }} />
           </div>
 
-          {/* Independent Content Panel */}
+          {/* Content Panel */}
           <div className="col-span-12 md:col-span-9 min-w-0">
             <div className="animate-acct-view-in" key={activeTab}>
               {/* Conditional view rendering depending on active tab */}
