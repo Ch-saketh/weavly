@@ -103,7 +103,7 @@ const AccountView = ({
         
         {/* Top Member Overview Card */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 rounded-2xl bg-gradient-to-r from-white via-[#FAF8F5] to-[#F5EDE4]/40 border border-slate-200/90 shadow-[0_2px_16px_rgba(0,0,0,0.02)]">
-          <div className="relative group cursor-pointer flex-shrink-0" onClick={() => fileInputRef.current?.click()}>
+          <div className="relative group cursor-pointer shrink-0 w-20 h-20 sm:w-24 sm:h-24" onClick={() => fileInputRef.current?.click()}>
             <input 
               type="file" 
               ref={fileInputRef} 
@@ -115,10 +115,10 @@ const AccountView = ({
               <img
                 src={profileImage}
                 alt="Profile photo"
-                className="w-22 h-22 rounded-full object-cover border-2 border-white shadow-md ring-2 ring-slate-200"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white shadow-md ring-2 ring-slate-200 block"
               />
             ) : (
-              <div className="w-22 h-22 rounded-full bg-slate-950 text-white border-2 border-white flex items-center justify-center text-2xl font-black uppercase shadow-md ring-2 ring-slate-200">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-950 text-white border-2 border-white flex items-center justify-center text-2xl font-black uppercase shadow-md ring-2 ring-slate-200">
                 {initial}
               </div>
             )}

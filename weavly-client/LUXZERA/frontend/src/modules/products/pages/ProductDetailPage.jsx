@@ -223,12 +223,12 @@ export default function ProductDetailPage() {
         <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-6 items-start">
           
           {/* Vertical Thumbnail Rail (Increased Spacing & Clean Indicator) */}
-          <div className="flex md:flex-col gap-4 shrink-0 overflow-x-auto md:overflow-y-auto max-w-full md:w-22">
+          <div className="flex md:flex-col gap-4 shrink-0 overflow-x-auto md:overflow-y-auto max-w-full md:w-20">
             {productImages.map((img, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSelectImg(img, idx)}
-                className={`w-16 h-20 md:w-22 md:h-28 rounded-xl overflow-hidden transition-all duration-300 transform cursor-pointer p-0 bg-[#FAF8F5] border-none shrink-0 ${
+                className={`w-16 h-20 md:w-20 md:h-28 rounded-xl overflow-hidden transition-all duration-300 transform cursor-pointer p-0 bg-[#FAF8F5] border-none shrink-0 ${
                   activeImgIndex === idx 
                     ? "ring-1 ring-[#1D1D1F] ring-offset-2 opacity-100 scale-102 shadow-xs" 
                     : "opacity-60 hover:opacity-100 hover:scale-103"
