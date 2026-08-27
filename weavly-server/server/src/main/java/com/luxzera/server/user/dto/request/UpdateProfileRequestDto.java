@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @Setter
@@ -22,6 +23,7 @@ public class UpdateProfileRequestDto {
 
     private Gender gender;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
 
     @Size(max = 500, message = "Bio cannot exceed 500 characters")

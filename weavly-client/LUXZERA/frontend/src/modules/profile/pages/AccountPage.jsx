@@ -40,6 +40,14 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
       const profileData = await getProfileDetails(currentUser.id);
       if (profileData) {
         setProfile(profileData);
+        setFormData({
+          firstName: profileData.firstName || currentUser.firstName || "",
+          lastName: profileData.lastName || currentUser.lastName || "",
+          phoneNumber: profileData.phoneNumber || "",
+          gender: profileData.gender || "",
+          dateOfBirth: profileData.dateOfBirth || "",
+          bio: profileData.bio || ""
+        });
         
         // Synchronize core user object with safe fallbacks
         const synchronizedUser = {
@@ -161,11 +169,19 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
         ...user,
         firstName: cleanFirstName,
         lastName: cleanLastName,
-        profilePicture: updatedProfile.profilePicture || user.profilePicture
+        profilePicture: updatedProfile?.profilePicture || user.profilePicture
       };
       
       setUser(nextUser);
       setProfile(updatedProfile);
+      setFormData({
+        firstName: cleanFirstName,
+        lastName: cleanLastName,
+        phoneNumber: updatedProfile?.phoneNumber || cleanPhone,
+        gender: updatedProfile?.gender || formData.gender,
+        dateOfBirth: updatedProfile?.dateOfBirth || formData.dateOfBirth,
+        bio: updatedProfile?.bio || formData.bio?.trim() || ""
+      });
       onUserChange?.(nextUser);
       setSuccessMsg("Profile details updated successfully!");
       setTimeout(() => setSuccessMsg(""), 3500);
