@@ -39,10 +39,14 @@ __pycache__/
 htmlcov/
 *.log
 
-# ML / Model Weights Cache
+# ML / Model Weights & Datasets Cache
 **/models/cache/
 *.pt
 *.bin
+*.pkl
+.ipynb_checkpoints/
+data/raw/
+p8_output/
 
 # Java / Spring Boot
 target/

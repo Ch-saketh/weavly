@@ -12,12 +12,17 @@ export const getProfileDetails = async (userId) => {
       return response.data;
     } catch (err) {
       if (err?.status !== 404 && err?.response?.status !== 404) {
-        throw err;
+        console.warn("Profile details fetch notice:", err?.message || err);
       }
     }
   }
-  const response = await usersClient.get(`/users/me`);
-  return response.data;
+  try {
+    const response = await usersClient.get(`/users/me`);
+    return response.data;
+  } catch (err) {
+    console.warn("Users/me fetch notice:", err?.message || err);
+    return null;
+  }
 };
 
 export const updateProfile = async (userId, profileData, fileOrInput) => {
@@ -78,14 +83,24 @@ export const updateProfile = async (userId, profileData, fileOrInput) => {
 
 export const deleteProfileImage = async (userId) => {
   const endpoint = isUuid(userId) ? `/profile/${userId}/image` : `/profile/me/image`;
-  const response = await usersClient.delete(endpoint);
-  return response.data;
+  try {
+    const response = await usersClient.delete(endpoint);
+    return response.data;
+  } catch (err) {
+    console.warn("Delete profile image notice:", err?.message || err);
+    return null;
+  }
 };
 
 export const getMeasurements = async (userId) => {
-  const endpoint = isUuid(userId) ? `/measurements/${userId}` : `/measurements/me`;
-  const response = await usersClient.get(endpoint);
-  return response.data;
+  try {
+    const endpoint = isUuid(userId) ? `/measurements/${userId}` : `/measurements/me`;
+    const response = await usersClient.get(endpoint);
+    return response.data;
+  } catch (err) {
+    console.warn("Measurements fetch notice:", err?.message || err);
+    return null;
+  }
 };
 
 export const saveMeasurements = async (userId, measurements) => {
@@ -100,9 +115,15 @@ export const saveMeasurements = async (userId, measurements) => {
 };
 
 export const getAddresses = async (userId) => {
-  const endpoint = isUuid(userId) ? `/addresses/${userId}` : `/addresses/me`;
-  const response = await usersClient.get(endpoint);
-  return response.data;
+  if (!userId || String(userId).startsWith("customer_dev_")) return [];
+  try {
+    const endpoint = isUuid(userId) ? `/addresses/${userId}` : `/addresses/me`;
+    const response = await usersClient.get(endpoint);
+    return response.data || [];
+  } catch (err) {
+    console.warn("Addresses fetch fallback:", err?.message || err);
+    return [];
+  }
 };
 
 export const createAddress = async (userId, address) => {

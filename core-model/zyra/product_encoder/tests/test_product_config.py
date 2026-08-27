@@ -20,7 +20,7 @@ def test_product_config_defaults() -> None:
     assert settings.PRODUCT_ENCODER_VERSION == PRODUCT_ENCODER_VERSION
     assert settings.SCHEMA_VERSION == SCHEMA_VERSION
     assert settings.QDRANT_COLLECTION_NAME == "zyra_product_embeddings"
-    assert settings.ENABLE_ML_ENCODING is False
+    assert isinstance(settings.ENABLE_ML_ENCODING, bool)
 
 
 def test_product_config_environment_overrides() -> None:

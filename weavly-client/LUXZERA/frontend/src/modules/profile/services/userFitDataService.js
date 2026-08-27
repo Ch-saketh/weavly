@@ -10,9 +10,15 @@ const isUuid = (val) => typeof val === "string" && UUID_REGEX.test(val);
  * @returns {Promise<Object>} FitDataResponseDto
  */
 export const getFitData = async (userId) => {
-  const endpoint = isUuid(userId) ? `/user-fit-data/${userId}` : `/user-fit-data/me`;
-  const response = await usersClient.get(endpoint);
-  return response.data;
+  if (!userId || String(userId).startsWith("customer_dev_")) return null;
+  try {
+    const endpoint = isUuid(userId) ? `/user-fit-data/${userId}` : `/user-fit-data/me`;
+    const response = await usersClient.get(endpoint);
+    return response.data;
+  } catch (err) {
+    console.warn("Fit data fetch notice:", err?.message || err);
+    return null;
+  }
 };
 
 /**

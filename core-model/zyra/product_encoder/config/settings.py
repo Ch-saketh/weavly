@@ -53,7 +53,7 @@ class ProductEncoderSettings(ZyraBaseSettings):
     QDRANT_USE_IN_MEMORY: bool = False
 
     # Runtime Flags
-    ENABLE_ML_ENCODING: bool = False
+    ENABLE_ML_ENCODING: bool = True
 
     # Multimodal Fusion Configuration (Phase P6)
     DEFAULT_VISUAL_WEIGHT: float = 0.45

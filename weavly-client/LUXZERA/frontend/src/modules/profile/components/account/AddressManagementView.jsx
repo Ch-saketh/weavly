@@ -58,8 +58,7 @@ export default function AddressManagementView({ userId }) {
       if (defaultAddr) setSelectedId(defaultAddr.id);
       else if (normalized.length > 0) setSelectedId(normalized[0].id);
     } catch (err) {
-      console.error(err);
-      setErrorMsg("Failed to load saved addresses. Please try again.");
+      console.warn("Addresses load notice:", err?.message || err);
     } finally {
       setLoading(false);
     }

@@ -25,9 +25,14 @@ const RecommendationImagesView = ({ userId }) => {
       const data = await getRecommendationImages(userId);
       if (Array.isArray(data)) {
         setImages(data);
+      } else if (data && Array.isArray(data.content)) {
+        setImages(data.content);
+      } else {
+        setImages([]);
       }
     } catch (err) {
-      console.error("Failed to load recommendation images", err);
+      console.warn("Recommendation images sync note:", err?.message || err);
+      setImages([]);
     } finally {
       setLoading(false);
     }

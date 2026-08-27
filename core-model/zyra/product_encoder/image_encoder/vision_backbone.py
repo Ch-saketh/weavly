@@ -104,36 +104,18 @@ class ProductVisionBackbone:
     ) -> None:
         self.model_manager = model_manager or ProductVisionModelManager()
         self.color_extractor = color_extractor or ProductColorExtractor()
+        self._cached_text_embeds: Optional[torch.Tensor] = None
 
-    def extract_representation_and_insights(
+    def _get_or_compute_text_embeds(
         self,
-        image: Image.Image,
-        view_type: str = "front",
-    ) -> Tuple[List[float], VisualInsights, Dict[str, Any]]:
-        """
-        Extract 512-dim visual embedding and fashion insights from a single product image.
-        Returns (embedding, visual_insights, metadata).
-        """
-        model, processor = self.model_manager.get_vision_model()
-        colors = self.color_extractor.extract_colors(image)
-
-        if model is not None and processor is not None:
-            return self._run_clip_inference(image, view_type, model, processor, colors)
-        else:
-            return self._run_deterministic_heuristic_inference(image, view_type, colors)
-
-    def _run_clip_inference(
-        self,
-        image: Image.Image,
-        view_type: str,
         model: Any,
         processor: Any,
-        colors: List[ConfidenceScore],
-    ) -> Tuple[List[float], VisualInsights, Dict[str, Any]]:
-        """Inference using loaded CLIP vision model."""
-        device = self.model_manager.get_device()
+        device: torch.device,
+    ) -> torch.Tensor:
+        """Precompute and cache the 50 fashion taxonomy prompt text embeddings once on device."""
+        if self._cached_text_embeds is not None and self._cached_text_embeds.device == device:
+            return self._cached_text_embeds
 
-        # Build prompt catalog
         garment_prompts = [f"a product photo of a {g.lower()}" for g in TAXONOMY_GARMENTS]
         pattern_prompts = [f"a photo of {p.lower()} patterned clothing" for p in TAXONOMY_PATTERNS]
         fit_prompts = [f"a photo of {f.lower()} fit apparel" for f in TAXONOMY_FITS]
@@ -152,82 +134,218 @@ class ProductVisionBackbone:
             + detail_prompts
         )
 
+        text_inputs = processor(
+            text=all_prompts,
+            return_tensors="pt",
+            padding=True,
+        )
+        text_inputs = {k: v.to(device) for k, v in text_inputs.items()}
+
+        with torch.no_grad():
+            text_outputs = model.text_model(
+                input_ids=text_inputs["input_ids"],
+                attention_mask=text_inputs.get("attention_mask"),
+                return_dict=True,
+            )
+            pooled_text = text_outputs.pooler_output
+            text_embeds = model.text_projection(pooled_text)
+            text_embeds = F.normalize(text_embeds, p=2, dim=-1)
+
+        self._cached_text_embeds = text_embeds
+        return self._cached_text_embeds
+
+    def _decode_insights_from_logits(
+        self,
+        logits: torch.Tensor,
+        colors: List[ConfidenceScore],
+        view_type: str,
+    ) -> VisualInsights:
+        """Partition logits across taxonomy slices and construct canonical VisualInsights."""
+        idx = 0
+        g_logits = logits[idx : idx + len(TAXONOMY_GARMENTS)]
+        idx += len(TAXONOMY_GARMENTS)
+        p_logits = logits[idx : idx + len(TAXONOMY_PATTERNS)]
+        idx += len(TAXONOMY_PATTERNS)
+        f_logits = logits[idx : idx + len(TAXONOMY_FITS)]
+        idx += len(TAXONOMY_FITS)
+        n_logits = logits[idx : idx + len(TAXONOMY_NECKLINES)]
+        idx += len(TAXONOMY_NECKLINES)
+        s_logits = logits[idx : idx + len(TAXONOMY_SLEEVES)]
+        idx += len(TAXONOMY_SLEEVES)
+        l_logits = logits[idx : idx + len(TAXONOMY_LENGTHS)]
+        idx += len(TAXONOMY_LENGTHS)
+        d_logits = logits[idx : idx + len(TAXONOMY_DETAILS)]
+
+        # Extract best predictions
+        top_garment, garment_conf = self._get_top_prediction(g_logits, TAXONOMY_GARMENTS)
+        top_pattern, pattern_conf = self._get_top_prediction(p_logits, TAXONOMY_PATTERNS)
+        top_fit, fit_conf = self._get_top_prediction(f_logits, TAXONOMY_FITS)
+        top_neckline, neckline_conf = self._get_top_prediction(n_logits, TAXONOMY_NECKLINES)
+        top_sleeve, sleeve_conf = self._get_top_prediction(s_logits, TAXONOMY_SLEEVES)
+        top_length, length_conf = self._get_top_prediction(l_logits, TAXONOMY_LENGTHS)
+
+        # Details
+        details_list: List[ConfidenceScore] = []
+        d_probs = F.softmax(d_logits / 0.07, dim=-1).cpu().numpy()
+        for d_idx, d_prob in enumerate(d_probs):
+            if d_prob >= 0.20:
+                details_list.append(
+                    ConfidenceScore(
+                        attribute="visibleDetail",
+                        value=TAXONOMY_DETAILS[d_idx],
+                        confidence=round(float(d_prob), 2),
+                        source="visual",
+                    )
+                )
+
+        return VisualInsights(
+            garmentType=ConfidenceScore(attribute="garmentType", value=top_garment, confidence=garment_conf, source="visual"),
+            dominantColors=colors,
+            pattern=ConfidenceScore(attribute="pattern", value=top_pattern, confidence=pattern_conf, source="visual"),
+            fit=ConfidenceScore(attribute="fit", value=top_fit, confidence=fit_conf, source="visual"),
+            neckline=ConfidenceScore(attribute="neckline", value=top_neckline, confidence=neckline_conf, source="visual"),
+            sleeve=ConfidenceScore(attribute="sleeve", value=top_sleeve, confidence=sleeve_conf, source="visual"),
+            length=ConfidenceScore(attribute="length", value=top_length, confidence=length_conf, source="visual"),
+            visibleDetails=details_list,
+            viewsAnalyzed=[view_type],
+            coherenceScore=1.0,
+        )
+
+    def extract_representation_and_insights(
+        self,
+        image: Image.Image,
+        view_type: str = "front",
+    ) -> Tuple[List[float], VisualInsights, Dict[str, Any]]:
+        """
+        Extract 512-dim visual embedding and fashion insights from a single product image.
+        Returns (embedding, visual_insights, metadata).
+        """
+        model, processor = self.model_manager.get_vision_model()
+        colors = self.color_extractor.extract_colors(image)
+
+        if model is not None and processor is not None:
+            return self._run_clip_inference(image, view_type, model, processor, colors)
+        else:
+            return self._run_deterministic_heuristic_inference(image, view_type, colors)
+
+    def extract_batch_representations(
+        self,
+        images: List[Image.Image],
+        view_types: Optional[List[str]] = None,
+        batch_size: int = 16,
+    ) -> List[Tuple[List[float], VisualInsights, Dict[str, Any]]]:
+        """
+        Extract 512-dim visual embeddings and fashion insights for a batch of images.
+        Uses cached prompt text embeddings and batch vision inference on GPU/MPS.
+        Returns list of (embedding, visual_insights, metadata) for each image.
+        """
+        if not images:
+            return []
+
+        if view_types is None:
+            view_types = ["front"] * len(images)
+        elif len(view_types) < len(images):
+            view_types = list(view_types) + ["front"] * (len(images) - len(view_types))
+
+        model, processor = self.model_manager.get_vision_model()
+        if model is None or processor is None:
+            results = []
+            for img, vt in zip(images, view_types):
+                colors = self.color_extractor.extract_colors(img)
+                results.append(self._run_deterministic_heuristic_inference(img, vt, colors))
+            return results
+
+        device = self.model_manager.get_device()
+        results: List[Tuple[List[float], VisualInsights, Dict[str, Any]]] = []
+
         try:
-            inputs = processor(
-                text=all_prompts,
+            text_embeds = self._get_or_compute_text_embeds(model, processor, device)
+
+            for batch_start in range(0, len(images), batch_size):
+                batch_imgs = images[batch_start : batch_start + batch_size]
+                batch_views = view_types[batch_start : batch_start + batch_size]
+
+                image_inputs = processor(
+                    images=batch_imgs,
+                    return_tensors="pt",
+                    padding=True,
+                )
+                image_inputs = {k: v.to(device) for k, v in image_inputs.items()}
+
+                with torch.no_grad():
+                    vision_outputs = model.vision_model(
+                        pixel_values=image_inputs["pixel_values"],
+                        return_dict=True,
+                    )
+                    pooled_image = vision_outputs.pooler_output
+                    image_embeds = model.visual_projection(pooled_image)
+                    image_embeds = F.normalize(image_embeds, p=2, dim=-1)
+
+                    logits = torch.matmul(image_embeds, text_embeds.t())  # [B, 50]
+
+                for i, (img, vt) in enumerate(zip(batch_imgs, batch_views)):
+                    colors = self.color_extractor.extract_colors(img)
+                    vector = image_embeds[i].cpu().numpy().tolist()
+                    if len(vector) != TARGET_EMBEDDING_DIM:
+                        vector = self._pad_or_truncate(vector, TARGET_EMBEDDING_DIM)
+
+                    insights = self._decode_insights_from_logits(logits[i], colors, vt)
+                    metadata = {
+                        "inferenceMode": "CLIP-Batch",
+                        "modelName": self.model_manager.vision_model_name,
+                    }
+                    results.append((vector, insights, metadata))
+
+            return results
+
+        except Exception as exc:
+            logger.warning(
+                "Batch CLIP inference failed (%s). Falling back to per-image inference.",
+                str(exc),
+                exc_info=True,
+            )
+            results = []
+            for img, vt in zip(images, view_types):
+                results.append(self.extract_representation_and_insights(img, view_type=vt))
+            return results
+
+    def _run_clip_inference(
+        self,
+        image: Image.Image,
+        view_type: str,
+        model: Any,
+        processor: Any,
+        colors: List[ConfidenceScore],
+    ) -> Tuple[List[float], VisualInsights, Dict[str, Any]]:
+        """Inference using loaded CLIP vision model with cached text embeddings."""
+        device = self.model_manager.get_device()
+
+        try:
+            text_embeds = self._get_or_compute_text_embeds(model, processor, device)
+
+            image_inputs = processor(
                 images=image,
                 return_tensors="pt",
                 padding=True,
             )
-            inputs = {k: v.to(device) for k, v in inputs.items()}
+            image_inputs = {k: v.to(device) for k, v in image_inputs.items()}
 
             with torch.no_grad():
-                outputs = model(**inputs)
-                image_embeds = outputs.image_embeds  # [1, 512]
-                text_embeds = outputs.text_embeds    # [num_prompts, 512]
+                vision_outputs = model.vision_model(
+                    pixel_values=image_inputs["pixel_values"],
+                    return_dict=True,
+                )
+                pooled_image = vision_outputs.pooler_output
+                image_embeds = model.visual_projection(pooled_image)
+                image_embeds = F.normalize(image_embeds, p=2, dim=-1)
 
-                # L2-normalize embeddings
-                image_embeds = image_embeds / image_embeds.norm(dim=-1, keepdim=True)
-                text_embeds = text_embeds / text_embeds.norm(dim=-1, keepdim=True)
-
-                # Compute cosine similarities
                 logits = torch.matmul(image_embeds, text_embeds.t()).squeeze(0)
 
             vector = image_embeds[0].cpu().numpy().tolist()
             if len(vector) != TARGET_EMBEDDING_DIM:
                 vector = self._pad_or_truncate(vector, TARGET_EMBEDDING_DIM)
 
-            # Partition logits & compute softmax
-            idx = 0
-            g_logits = logits[idx : idx + len(TAXONOMY_GARMENTS)]
-            idx += len(TAXONOMY_GARMENTS)
-            p_logits = logits[idx : idx + len(TAXONOMY_PATTERNS)]
-            idx += len(TAXONOMY_PATTERNS)
-            f_logits = logits[idx : idx + len(TAXONOMY_FITS)]
-            idx += len(TAXONOMY_FITS)
-            n_logits = logits[idx : idx + len(TAXONOMY_NECKLINES)]
-            idx += len(TAXONOMY_NECKLINES)
-            s_logits = logits[idx : idx + len(TAXONOMY_SLEEVES)]
-            idx += len(TAXONOMY_SLEEVES)
-            l_logits = logits[idx : idx + len(TAXONOMY_LENGTHS)]
-            idx += len(TAXONOMY_LENGTHS)
-            d_logits = logits[idx : idx + len(TAXONOMY_DETAILS)]
-
-            # Extract best predictions
-            top_garment, garment_conf = self._get_top_prediction(g_logits, TAXONOMY_GARMENTS)
-            top_pattern, pattern_conf = self._get_top_prediction(p_logits, TAXONOMY_PATTERNS)
-            top_fit, fit_conf = self._get_top_prediction(f_logits, TAXONOMY_FITS)
-            top_neckline, neckline_conf = self._get_top_prediction(n_logits, TAXONOMY_NECKLINES)
-            top_sleeve, sleeve_conf = self._get_top_prediction(s_logits, TAXONOMY_SLEEVES)
-            top_length, length_conf = self._get_top_prediction(l_logits, TAXONOMY_LENGTHS)
-
-            # Details
-            details_list: List[ConfidenceScore] = []
-            d_probs = F.softmax(d_logits / 0.07, dim=-1).cpu().numpy()
-            for d_idx, d_prob in enumerate(d_probs):
-                if d_prob >= 0.20:
-                    details_list.append(
-                        ConfidenceScore(
-                            attribute="visibleDetail",
-                            value=TAXONOMY_DETAILS[d_idx],
-                            confidence=round(float(d_prob), 2),
-                            source="visual",
-                        )
-                    )
-
-            insights = VisualInsights(
-                garmentType=ConfidenceScore(attribute="garmentType", value=top_garment, confidence=garment_conf, source="visual"),
-                dominantColors=colors,
-                pattern=ConfidenceScore(attribute="pattern", value=top_pattern, confidence=pattern_conf, source="visual"),
-                fit=ConfidenceScore(attribute="fit", value=top_fit, confidence=fit_conf, source="visual"),
-                neckline=ConfidenceScore(attribute="neckline", value=top_neckline, confidence=neckline_conf, source="visual"),
-                sleeve=ConfidenceScore(attribute="sleeve", value=top_sleeve, confidence=sleeve_conf, source="visual"),
-                length=ConfidenceScore(attribute="length", value=top_length, confidence=length_conf, source="visual"),
-                visibleDetails=details_list,
-                viewsAnalyzed=[view_type],
-                coherenceScore=1.0,
-            )
-
+            insights = self._decode_insights_from_logits(logits, colors, view_type)
             metadata = {"inferenceMode": "CLIP", "modelName": self.model_manager.vision_model_name}
             return vector, insights, metadata
 

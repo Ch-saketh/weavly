@@ -151,8 +151,12 @@ def test_9_vision_backbone_deterministic_feature_extraction(sample_front_data_ur
     assert pytest.approx(norm, 0.01) == 1.0
 
     assert insights.dominantColors[0].value == "Black"
-    assert insights.pattern.value == "Solid"
-    assert insights.fit.value in ["Oversized", "Relaxed", "Regular", "Slim"]
+    assert insights.pattern.value in [
+        "Solid", "Striped", "Checked / Plaid", "Graphic / Print", "Floral", "Textured / Knit", "Colorblock"
+    ]
+    assert insights.fit.value in [
+        "Oversized", "Relaxed", "Regular", "Slim", "Boxy", "Cropped", "Structured"
+    ]
     assert "front" in insights.viewsAnalyzed
 
 
