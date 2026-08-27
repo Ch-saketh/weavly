@@ -40,36 +40,54 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
       const profileData = await getProfileDetails(currentUser.id);
       if (profileData) {
         setProfile(profileData);
+        
+        const general = profileData.generalProfile || {};
+        const loadedPhone = profileData.phoneNumber || general.phoneNumber || "";
+        const loadedGender = profileData.gender || general.gender || "";
+        const loadedDob = profileData.dateOfBirth || general.dateOfBirth || "";
+        const loadedBio = profileData.bio || general.bio || "";
+        const loadedFirstName = profileData.firstName || currentUser.firstName || "";
+        const loadedLastName = profileData.lastName || currentUser.lastName || "";
+
         setFormData({
-          firstName: profileData.firstName || currentUser.firstName || "",
-          lastName: profileData.lastName || currentUser.lastName || "",
-          phoneNumber: profileData.phoneNumber || "",
-          gender: profileData.gender || "",
-          dateOfBirth: profileData.dateOfBirth || "",
-          bio: profileData.bio || ""
+          firstName: loadedFirstName,
+          lastName: loadedLastName,
+          phoneNumber: loadedPhone,
+          gender: loadedGender,
+          dateOfBirth: loadedDob,
+          bio: loadedBio
         });
         
         // Synchronize core user object with safe fallbacks
         const synchronizedUser = {
           ...currentUser,
           id: profileData.id || currentUser.id,
-          firstName: profileData.firstName || currentUser.firstName,
-          lastName: profileData.lastName || currentUser.lastName,
-          profilePicture: profileData.profilePicture || currentUser.profilePicture,
+          firstName: loadedFirstName,
+          lastName: loadedLastName,
+          profilePicture: profileData.profilePicture || general.profilePicture || currentUser.profilePicture,
           role: profileData.role || currentUser.role,
           profileCompleted: profileData.profileCompleted !== undefined ? profileData.profileCompleted : currentUser.profileCompleted,
           onboardingMessage: profileData.onboardingMessage || currentUser.onboardingMessage,
         };
         setUser(synchronizedUser);
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("Weavly_user_cache", JSON.stringify(synchronizedUser));
+          } catch (e) {}
+        }
       }
     } catch (err) {
       console.warn("Profile load sync:", err);
-      setProfile({
+      const fallbackUser = {
+        firstName: currentUser.firstName || "",
+        lastName: currentUser.lastName || "",
         phoneNumber: currentUser.phoneNumber || "",
         gender: currentUser.gender || "",
         dateOfBirth: currentUser.dateOfBirth || "",
         bio: currentUser.bio || ""
-      });
+      };
+      setProfile(fallbackUser);
+      setFormData(fallbackUser);
     } finally {
       setLoading(false);
     }
@@ -87,20 +105,6 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
       setProfile(null);
     }
   }, [currentUser]);
-
-  // Sync formData whenever user or profile is successfully loaded/updated
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        phoneNumber: profile?.phoneNumber || "",
-        gender: profile?.gender || "",
-        dateOfBirth: profile?.dateOfBirth || "",
-        bio: profile?.bio || ""
-      });
-    }
-  }, [user, profile]);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
