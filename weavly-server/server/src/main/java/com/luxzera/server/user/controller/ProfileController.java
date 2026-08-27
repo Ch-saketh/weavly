@@ -27,7 +27,8 @@ public class ProfileController {
         if (principal == null) {
             throw new ResourceNotFoundException("Authenticated session not found");
         }
-        User user = userRepository.findByEmail(principal.getName())
+        User user = userRepository.findByEmailIgnoreCase(principal.getName())
+                .or(() -> userRepository.findByEmail(principal.getName()))
                 .orElseThrow(() -> new ResourceNotFoundException("User account not found"));
         return profileService.getProfile(user.getId());
     }
@@ -49,7 +50,8 @@ public class ProfileController {
         if (principal == null) {
             throw new ResourceNotFoundException("Authenticated session not found");
         }
-        User user = userRepository.findByEmail(principal.getName())
+        User user = userRepository.findByEmailIgnoreCase(principal.getName())
+                .or(() -> userRepository.findByEmail(principal.getName()))
                 .orElseThrow(() -> new ResourceNotFoundException("User account not found"));
         MultipartFile selectedImage = firstPresent(image, file, avatar, profilePicture);
         return profileService.updateProfile(user.getId(), request, selectedImage);

@@ -36,7 +36,8 @@ public class UserController {
 
         String email = principal.getName();
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .or(() -> userRepository.findByEmail(email))
                 .orElseThrow(() -> new RuntimeException("Authenticated user profile session not found"));
 
         return ResponseEntity.ok(profileService.getProfile(user.getId()));
@@ -50,7 +51,8 @@ public class UserController {
         if (principal == null) {
             return ResponseEntity.status(401).build();
         }
-        User user = userRepository.findByEmail(principal.getName())
+        User user = userRepository.findByEmailIgnoreCase(principal.getName())
+                .or(() -> userRepository.findByEmail(principal.getName()))
                 .orElseThrow(() -> new RuntimeException("Authenticated user profile session not found"));
         try {
             UserResponseDto updatedUser = userService.updateUser(user.getId(), request);

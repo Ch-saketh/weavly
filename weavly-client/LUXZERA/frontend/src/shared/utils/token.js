@@ -18,11 +18,15 @@ export const setToken = (token) => {
 
 export const getToken = () => {
   if (typeof window === "undefined") return null;
-  return (
-    localStorage.getItem(ADMIN_TOKEN_KEY) ||
+  const token = (
     localStorage.getItem(TOKEN_KEY) ||
-    localStorage.getItem(LEGACY_TOKEN_KEY)
+    localStorage.getItem(LEGACY_TOKEN_KEY) ||
+    localStorage.getItem(ADMIN_TOKEN_KEY)
   );
+  if (!token || token === "undefined" || token === "null" || token.trim() === "") {
+    return null;
+  }
+  return token;
 };
 
 export const removeToken = () => {

@@ -27,7 +27,8 @@ public class AddressController {
         if (principal == null) {
             throw new ResourceNotFoundException("Authenticated session not found");
         }
-        return userRepository.findByEmail(principal.getName())
+        return userRepository.findByEmailIgnoreCase(principal.getName())
+                .or(() -> userRepository.findByEmail(principal.getName()))
                 .orElseThrow(() -> new ResourceNotFoundException("User account not found"));
     }
 

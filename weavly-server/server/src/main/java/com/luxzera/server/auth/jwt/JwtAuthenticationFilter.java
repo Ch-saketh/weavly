@@ -57,7 +57,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("EMAIL EXTRACTED: " + email);
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                List<SimpleGrantedAuthority> authorities = userRepository.findByEmail(email)
+                List<SimpleGrantedAuthority> authorities = userRepository.findByEmailIgnoreCase(email)
+                        .or(() -> userRepository.findByEmail(email))
                         .map(user -> List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())))
                         .orElseGet(List::of);
 

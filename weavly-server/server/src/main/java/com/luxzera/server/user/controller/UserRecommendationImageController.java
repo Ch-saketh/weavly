@@ -27,7 +27,8 @@ public class UserRecommendationImageController {
         if (principal == null) {
             throw new ResourceNotFoundException("Authenticated session not found");
         }
-        User user = userRepository.findByEmail(principal.getName())
+        User user = userRepository.findByEmailIgnoreCase(principal.getName())
+                .or(() -> userRepository.findByEmail(principal.getName()))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return imageService.getImages(user.getId(), principal.getName());
     }
@@ -40,7 +41,8 @@ public class UserRecommendationImageController {
         if (principal == null) {
             throw new ResourceNotFoundException("Authenticated session not found");
         }
-        User user = userRepository.findByEmail(principal.getName())
+        User user = userRepository.findByEmailIgnoreCase(principal.getName())
+                .or(() -> userRepository.findByEmail(principal.getName()))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return imageService.addImage(user.getId(), file, principal.getName());
     }
