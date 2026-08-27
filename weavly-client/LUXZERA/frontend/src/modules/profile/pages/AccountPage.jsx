@@ -101,39 +101,76 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
 
   const handleSave = async (fileInput) => {
     if (!user?.id) return;
-    setSaving(true);
     setErrorMsg("");
     setSuccessMsg("");
+
+    // 1. First Name Validation
+    const cleanFirstName = formData.firstName?.trim() || "";
+    if (!cleanFirstName || cleanFirstName.length < 2) {
+      setErrorMsg("First name must be at least 2 characters long.");
+      return;
+    }
+    if (!/^[a-zA-Z\s'-]{2,50}$/.test(cleanFirstName)) {
+      setErrorMsg("First name can only contain letters, spaces, hyphens, and apostrophes.");
+      return;
+    }
+
+    // 2. Last Name Validation
+    const cleanLastName = formData.lastName?.trim() || "";
+    if (cleanLastName && !/^[a-zA-Z\s'-]{1,50}$/.test(cleanLastName)) {
+      setErrorMsg("Last name can only contain letters, spaces, hyphens, and apostrophes.");
+      return;
+    }
+
+    // 3. Mobile Number Validation
+    const cleanPhone = formData.phoneNumber?.replace(/\D/g, "") || "";
+    if (formData.phoneNumber && cleanPhone.length !== 10) {
+      setErrorMsg("Please enter a valid 10-digit mobile phone number.");
+      return;
+    }
+
+    // 4. Date of Birth Validation (Minimum 12 years of age)
+    if (formData.dateOfBirth) {
+      const dob = new Date(formData.dateOfBirth);
+      const minAgeLimit = new Date();
+      minAgeLimit.setFullYear(minAgeLimit.getFullYear() - 12);
+      if (isNaN(dob.getTime()) || dob > minAgeLimit) {
+        setErrorMsg("You must be at least 12 years old to set your date of birth.");
+        return;
+      }
+    }
+
+    setSaving(true);
     try {
       // 1. Update Core User Details
       await updateUserDetails(user.id, {
-        firstName: formData.firstName,
-        lastName: formData.lastName
+        firstName: cleanFirstName,
+        lastName: cleanLastName
       });
 
       // 2. Update Extended Profile Details
       const updatedProfile = await updateProfile(user.id, {
-        phoneNumber: formData.phoneNumber,
+        phoneNumber: cleanPhone,
         gender: formData.gender,
         dateOfBirth: formData.dateOfBirth,
-        bio: formData.bio
+        bio: formData.bio?.trim() || ""
       }, fileInput);
 
       // 3. Update local state and trigger navbar re-render
       const nextUser = {
         ...user,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        firstName: cleanFirstName,
+        lastName: cleanLastName,
         profilePicture: updatedProfile.profilePicture || user.profilePicture
       };
       
       setUser(nextUser);
       setProfile(updatedProfile);
       onUserChange?.(nextUser);
-      setSuccessMsg("Changes saved successfully!");
-      setTimeout(() => setSuccessMsg(""), 3000);
+      setSuccessMsg("Profile details updated successfully!");
+      setTimeout(() => setSuccessMsg(""), 3500);
     } catch (err) {
-      console.error(err);
+      console.warn("Profile update error:", err?.message || err);
       setErrorMsg(err.message || "Failed to update profile details. Please try again.");
     } finally {
       setSaving(false);
