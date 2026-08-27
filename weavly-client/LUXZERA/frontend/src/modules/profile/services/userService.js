@@ -6,13 +6,18 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-
 const isUuid = (val) => typeof val === "string" && UUID_REGEX.test(val);
 
 export const getProfileDetails = async (userId) => {
-  if (isUuid(userId)) {
-    try {
-      const response = await usersClient.get(`/profile/${userId}`);
+  try {
+    const response = await usersClient.get(`/profile/me`);
+    if (response.data) {
       return response.data;
-    } catch (err) {
-      if (err?.status !== 404 && err?.response?.status !== 404) {
-        console.warn("Profile details fetch notice:", err?.message || err);
+    }
+  } catch (err) {
+    if (isUuid(userId) && err?.status !== 403) {
+      try {
+        const fallbackRes = await usersClient.get(`/profile/${userId}`);
+        if (fallbackRes.data) return fallbackRes.data;
+      } catch (innerErr) {
+        // Fallback to /users/me
       }
     }
   }

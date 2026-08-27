@@ -182,6 +182,11 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
         dateOfBirth: updatedProfile?.dateOfBirth || formData.dateOfBirth,
         bio: updatedProfile?.bio || formData.bio?.trim() || ""
       });
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("Weavly_user_cache", JSON.stringify(nextUser));
+        } catch (e) {}
+      }
       onUserChange?.(nextUser);
       setSuccessMsg("Profile details updated successfully!");
       setTimeout(() => setSuccessMsg(""), 3500);
