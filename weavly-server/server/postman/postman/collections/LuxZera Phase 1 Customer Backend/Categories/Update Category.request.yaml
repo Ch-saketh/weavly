@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/categories/{{categoryId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"name":"Men Updated","slug":"men-updated","description":"Updated collection","parentId":null,"hidden":false,"displayOrder":2}'
+order: 3000

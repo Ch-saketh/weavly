@@ -1,0 +1,132 @@
+"use client";
+
+// src/components/ProductCard.jsx
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Bookmark } from "lucide-react";
+import { useCart }     from "@/modules/cart/store/CartContext";
+import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
+import MobileProductCard from "@/modules/products/components/MobileProductCard";
+
+export default function ProductCard({ product, onViewProduct }) {
+  const [added, setAdded] = useState(false);
+  const router = useRouter();
+  const { addToCart }          = useCart();
+  const { isSaved, toggleWardrobe } = useWardrobe();
+
+  const productId = product.id || product.productId;
+  const productName = product.name || product.title || "Product";
+  const productPrice = typeof product.price === "number" ? product.price : Number(product.price) || 2999.0;
+  const productImage = product.images?.[0] || product.image || product.imageUrl || "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=80";
+
+  const saved = isSaved(productId);
+  const defaultSize = product.sizes?.[0] ?? "M";
+
+  const handleAdd = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setAdded(true);
+    addToCart({ ...product, id: productId, size: defaultSize });
+    setTimeout(() => setAdded(false), 1800);
+  };
+
+  const handleBookmark = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWardrobe({ ...product, id: productId });
+  };
+
+  const handleView = () => {
+    if (onViewProduct) { onViewProduct(product); return; }
+    router.push(`/product/${productId}`);
+  };
+
+  const getDesignerDetails = (brandName) => {
+    const brandMap = {
+      "Nocturne":   { origin: "London Studio",  season: "SS26"  },
+      "Voidwear":   { origin: "Paris Atelier",   season: "Limited"  },
+      "Axle Studio":{ origin: "Tokyo Design",    season: "Runway"   },
+    };
+    return brandMap[brandName] || { origin: "Milan Studio", season: "Seasonal" };
+  };
+
+  const { origin, season } = getDesignerDetails(product.brand);
+
+  return (
+    <>
+      <div className="sm:hidden">
+        <MobileProductCard product={product} onViewProduct={onViewProduct} />
+      </div>
+      <a
+        href={`/product/${productId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hidden sm:flex group relative flex-col bg-transparent cursor-pointer text-left font-sans select-none"
+      >
+        {/* Image */}
+        <div className="relative aspect-[3/4.2] overflow-hidden bg-white border border-[#ECECEC] select-none flex items-center justify-center rounded-2xl shadow-[0_1px_2px_rgba(0,0,0,0.01)] transition-shadow duration-300 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.03)]">
+          <img
+            src={product.images?.[0] || product.image || "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=80"}
+            alt={product.name || product.title || "Product"}
+            className="w-full h-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.src = "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=80";
+            }}
+          />
+
+          {/* Quick Add panel */}
+          <div className="absolute bottom-0 left-0 right-0 bg-[#1D1D1F] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20">
+            <button
+              onClick={handleAdd}
+              className="w-full py-3.5 text-[12px] uppercase tracking-[0.2em] font-semibold text-white hover:bg-black transition-colors duration-200"
+            >
+              {added ? "Added to Bag ✓" : "Add to Bag"}
+            </button>
+          </div>
+
+          {/* Optional Badge */}
+          {product.badge && (
+            <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-[#111111] border border-[#ECECEC] text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 z-10 rounded-full shadow-2xs">
+              {product.badge}
+            </span>
+          )}
+
+          {/* Save to Wardrobe — top-right */}
+          <button
+            onClick={handleBookmark}
+            className={`absolute top-3 right-3 z-30 w-8.5 h-8.5 rounded-full flex items-center justify-center transition-all duration-300 ${
+              saved
+                ? "bg-white shadow-md scale-110 border border-[#ECECEC]"
+                : "bg-white/75 backdrop-blur-md text-[#111111] opacity-85 hover:opacity-100 hover:bg-white hover:scale-110 border border-white/60"
+            }`}
+            title={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
+          >
+            <Bookmark
+              size={15}
+              className={`transition-colors ${
+                saved ? "fill-[#F07020] text-[#F07020]" : "text-[#111111]"
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Details */}
+        <div className="pt-4 pb-2 flex flex-col font-sans">
+          <div className="flex items-center justify-between text-[12px] font-semibold tracking-[0.15em] text-[#86868B] uppercase mb-1">
+            <span>{product.brand || "Weavly DIRECTORY"} · {origin}</span>
+            <span className="text-[#86868B]/60 font-mono text-[12px]">{season}</span>
+          </div>
+          <div className="flex items-baseline justify-between gap-4">
+            <h3 className="font-semibold text-[14px] text-[#1D1D1F] uppercase tracking-wider group-hover:text-[#5B6EF5] transition-colors leading-tight truncate flex-1">
+              {product.name}
+            </h3>
+            <span className="text-[14px] font-bold text-[#1D1D1F] tracking-wide shrink-0">
+              ${product.price.toFixed(2)}
+            </span>
+          </div>
+        </div>
+      </a>
+    </>
+  );
+}

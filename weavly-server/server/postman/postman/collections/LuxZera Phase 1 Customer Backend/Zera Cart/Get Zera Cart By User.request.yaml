@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/api/zera-cart/users/{{userId}}"
+method: GET
+order: 1000

@@ -1,0 +1,479 @@
+{
+  "info": {
+    "_postman_id": "8e4f9dd2-9468-4ce0-9a66-luxzera-phase1",
+    "name": "LuxZera Phase 1 Customer Backend",
+    "description": "Customer backend foundation APIs for products, categories, brands, inventory, orders, reviews, coupons, homepage, and Zera Cart.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "productId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "key": "variantId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "key": "categoryId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "key": "brandId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "key": "inventoryItemId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "key": "orderId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "key": "userId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "key": "homepageSectionId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get Products",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/products"
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "product",
+                  "value": "{\"name\":\"Luxury Silk Shirt\",\"sku\":\"LS-SHIRT-001\",\"description\":\"Premium silk shirt\",\"basePrice\":249.99,\"salePrice\":199.99,\"currency\":\"USD\",\"audience\":\"MEN\",\"status\":\"ACTIVE\",\"categoryId\":\"{{categoryId}}\",\"subcategoryId\":\"{{categoryId}}\",\"brandIds\":[\"{{brandId}}\"],\"thumbnailUrl\":\"https://example.com/shirt-thumb.jpg\",\"featured\":true,\"trending\":false,\"newArrival\":true,\"tags\":[\"silk\",\"luxury\"],\"seoSlug\":\"luxury-silk-shirt\",\"variants\":[{\"sku\":\"LS-SHIRT-001-M-BLACK\",\"stockQuantity\":25,\"priceOverride\":209.99,\"attributes\":{\"size\":\"M\",\"color\":\"Black\"},\"imageUrl\":\"https://example.com/shirt-black.jpg\"}]}",
+                  "type": "text"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [],
+                  "disabled": true
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/products"
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "product",
+                  "value": "{\"name\":\"Luxury Silk Shirt Updated\",\"salePrice\":189.99,\"status\":\"ACTIVE\",\"featured\":true,\"tags\":[\"silk\",\"luxury\",\"edited\"],\"existingImageUrls\":[],\"variants\":[{\"sku\":\"LS-SHIRT-001-M-BLACK\",\"stockQuantity\":30,\"priceOverride\":199.99,\"attributes\":{\"size\":\"M\",\"color\":\"Black\"},\"imageUrl\":\"https://example.com/shirt-black.jpg\"}]}",
+                  "type": "text"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [],
+                  "disabled": true
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/products/{{productId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get Categories",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/categories"
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Men\",\"slug\":\"men\",\"description\":\"Menswear collection\",\"parentId\":null,\"hidden\":false,\"displayOrder\":1}"
+            },
+            "url": "{{baseUrl}}/api/categories"
+          }
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Men Updated\",\"slug\":\"men-updated\",\"description\":\"Updated collection\",\"parentId\":null,\"hidden\":false,\"displayOrder\":2}"
+            },
+            "url": "{{baseUrl}}/api/categories/{{categoryId}}"
+          }
+        },
+        {
+          "name": "Hide or Show Category",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/categories/{{categoryId}}/visibility?hidden=true"
+          }
+        },
+        {
+          "name": "Change Category Display Order",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/categories/{{categoryId}}/display-order?displayOrder=3"
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/categories/{{categoryId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Brands",
+      "item": [
+        {
+          "name": "Get Brands",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/brands"
+          }
+        },
+        {
+          "name": "Create Brand",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"LuxZera Atelier\",\"logoUrl\":\"https://example.com/logo.png\",\"description\":\"Luxury house brand\",\"active\":true,\"categoryIds\":[\"{{categoryId}}\"]}"
+            },
+            "url": "{{baseUrl}}/api/brands"
+          }
+        },
+        {
+          "name": "Update Brand",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"LuxZera Atelier Updated\",\"logoUrl\":\"https://example.com/logo-updated.png\",\"description\":\"Updated brand\",\"active\":true,\"categoryIds\":[\"{{categoryId}}\"]}"
+            },
+            "url": "{{baseUrl}}/api/brands/{{brandId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "Get Inventory",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/inventory"
+          }
+        },
+        {
+          "name": "Upsert Inventory",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productId\":\"{{productId}}\",\"variantId\":\"{{variantId}}\",\"currentStock\":100,\"reservedStock\":5,\"lowStockThreshold\":10}"
+            },
+            "url": "{{baseUrl}}/api/inventory"
+          }
+        },
+        {
+          "name": "Restock Inventory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"quantity\":50,\"note\":\"Supplier restock\"}"
+            },
+            "url": "{{baseUrl}}/api/inventory/{{inventoryItemId}}/restock"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\":\"{{userId}}\",\"discountTotal\":10.00,\"currency\":\"USD\",\"items\":[{\"productId\":\"{{productId}}\",\"variantId\":\"{{variantId}}\",\"quantity\":1,\"unitPrice\":199.99}]}"
+            },
+            "url": "{{baseUrl}}/api/orders"
+          }
+        },
+        {
+          "name": "Get Orders By User",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/orders/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/orders/{{orderId}}/status?status=PROCESSING"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Create Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\":\"{{userId}}\",\"productId\":\"{{productId}}\",\"rating\":5,\"comment\":\"Excellent quality.\"}"
+            },
+            "url": "{{baseUrl}}/api/reviews"
+          }
+        },
+        {
+          "name": "Get Reviews By Product",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/reviews/products/{{productId}}"
+          }
+        },
+        {
+          "name": "Get Reviews By User",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/reviews/users/{{userId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Coupons",
+      "item": [
+        {
+          "name": "Get Coupons",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/coupons"
+          }
+        },
+        {
+          "name": "Create Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"code\":\"LUX20\",\"discountType\":\"PERCENTAGE\",\"discountValue\":20,\"expiresAt\":\"2026-12-31T23:59:59\",\"usageLimit\":100,\"minimumOrderValue\":150,\"active\":true}"
+            },
+            "url": "{{baseUrl}}/api/coupons"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Homepage",
+      "item": [
+        {
+          "name": "Get Homepage Sections",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/homepage"
+          }
+        },
+        {
+          "name": "Create Homepage Section",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"type\":\"HERO_BANNER\",\"title\":\"Luxury Collection\",\"displayOrder\":1,\"active\":true,\"content\":{\"headline\":\"New arrivals\",\"imageUrl\":\"https://example.com/hero.jpg\",\"productIds\":[\"{{productId}}\"]}}"
+            },
+            "url": "{{baseUrl}}/api/homepage/sections"
+          }
+        },
+        {
+          "name": "Delete Homepage Section",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/homepage/sections/{{homepageSectionId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Zera Cart",
+      "item": [
+        {
+          "name": "Get Zera Cart By User",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/zera-cart/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Add Product To Zera Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\":\"{{userId}}\",\"productId\":\"{{productId}}\",\"source\":\"MANUAL\",\"recommendationContext\":{\"reason\":\"Saved by customer\"}}"
+            },
+            "url": "{{baseUrl}}/api/zera-cart"
+          }
+        },
+        {
+          "name": "Remove Product From Zera Cart",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/zera-cart/users/{{userId}}/products/{{productId}}"
+          }
+        },
+        {
+          "name": "Move Product To Shopping Cart",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/zera-cart/users/{{userId}}/products/{{productId}}/move-to-cart"
+          }
+        }
+      ]
+    }
+  ]
+}

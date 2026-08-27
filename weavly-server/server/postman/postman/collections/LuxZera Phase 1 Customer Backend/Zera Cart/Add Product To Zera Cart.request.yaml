@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/zera-cart"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"userId":"{{userId}}","productId":"{{productId}}","source":"MANUAL","recommendationContext":{"reason":"Saved by customer"}}'
+order: 2000

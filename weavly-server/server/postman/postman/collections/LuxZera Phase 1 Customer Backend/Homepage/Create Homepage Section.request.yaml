@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/homepage/sections"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"type":"HERO_BANNER","title":"Luxury Collection","displayOrder":1,"active":true,"content":{"headline":"New arrivals","imageUrl":"https://example.com/hero.jpg","productIds":["{{productId}}"]}}'
+order: 2000

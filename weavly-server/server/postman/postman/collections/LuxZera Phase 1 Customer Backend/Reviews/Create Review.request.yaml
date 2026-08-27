@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/reviews"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"userId":"{{userId}}","productId":"{{productId}}","rating":5,"comment":"Excellent quality."}'
+order: 1000

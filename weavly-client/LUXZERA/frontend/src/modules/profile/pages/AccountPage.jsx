@@ -1,0 +1,313 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/modules/auth/store/useAuth";
+import AccountSidebar from "@/modules/profile/components/account/AccountSidebar";
+import AccountView from "@/modules/profile/components/account/AccountView";
+import PasswordView from "@/modules/profile/components/account/PasswordView";
+import AddressManagementView from "@/modules/profile/components/account/AddressManagementView";
+import FitPreferencesView from "@/modules/profile/components/account/FitPreferencesView";
+import RecommendationImagesView from "@/modules/profile/components/account/RecommendationImagesView";
+import PaymentMethodsView from "@/modules/profile/components/account/PaymentMethodsView";
+import OrdersView from "@/modules/profile/components/account/OrdersView";
+import CustomerCareView from "@/modules/profile/components/account/CustomerCareView";
+import { getProfileDetails, updateProfile, updateUserDetails, deleteProfileImage } from "@/modules/profile/services/userService";
+import Loader from "@/shared/components/ui/Loader";
+
+const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUserChange: propOnUserChange }) => {
+  const router = useRouter();
+  const { user: contextUser, loading: contextAuthLoading, setUser: setContextUser } = useAuth();
+  
+  const currentUser = propUser ?? contextUser;
+  const authLoading = propAuthLoading ?? contextAuthLoading;
+  const onUserChange = propOnUserChange ?? setContextUser;
+
+  const [activeTab, setActiveTab] = useState("profile");
+  const [user, setUser] = useState(currentUser ?? null);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const [formData, setFormData] = useState({});
+
+  const loadProfileData = async () => {
+    if (!currentUser?.id) return;
+    setLoading(true);
+    setErrorMsg("");
+    try {
+      const profileData = await getProfileDetails(currentUser.id);
+      if (profileData) {
+        setProfile(profileData);
+        
+        // Synchronize core user object with safe fallbacks
+        const synchronizedUser = {
+          ...currentUser,
+          id: profileData.id || currentUser.id,
+          firstName: profileData.firstName || currentUser.firstName,
+          lastName: profileData.lastName || currentUser.lastName,
+          profilePicture: profileData.profilePicture || currentUser.profilePicture,
+          role: profileData.role || currentUser.role,
+          profileCompleted: profileData.profileCompleted !== undefined ? profileData.profileCompleted : currentUser.profileCompleted,
+          onboardingMessage: profileData.onboardingMessage || currentUser.onboardingMessage,
+        };
+        setUser(synchronizedUser);
+      }
+    } catch (err) {
+      console.warn("Profile load sync:", err);
+      setProfile({
+        phoneNumber: currentUser.phoneNumber || "",
+        gender: currentUser.gender || "",
+        dateOfBirth: currentUser.dateOfBirth || "",
+        bio: currentUser.bio || ""
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser) {
+      const isNewUser = !user || user.id !== currentUser.id;
+      setUser(currentUser);
+      if (!profile || isNewUser) {
+        loadProfileData();
+      }
+    } else {
+      setUser(null);
+      setProfile(null);
+    }
+  }, [currentUser]);
+
+  // Sync formData whenever user or profile is successfully loaded/updated
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        phoneNumber: profile?.phoneNumber || "",
+        gender: profile?.gender || "",
+        dateOfBirth: profile?.dateOfBirth || "",
+        bio: profile?.bio || ""
+      });
+    }
+  }, [user, profile]);
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = async (fileInput) => {
+    if (!user?.id) return;
+    setSaving(true);
+    setErrorMsg("");
+    setSuccessMsg("");
+    try {
+      // 1. Update Core User Details
+      await updateUserDetails(user.id, {
+        firstName: formData.firstName,
+        lastName: formData.lastName
+      });
+
+      // 2. Update Extended Profile Details
+      const updatedProfile = await updateProfile(user.id, {
+        phoneNumber: formData.phoneNumber,
+        gender: formData.gender,
+        dateOfBirth: formData.dateOfBirth,
+        bio: formData.bio
+      }, fileInput);
+
+      // 3. Update local state and trigger navbar re-render
+      const nextUser = {
+        ...user,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        profilePicture: updatedProfile.profilePicture || user.profilePicture
+      };
+      
+      setUser(nextUser);
+      setProfile(updatedProfile);
+      onUserChange?.(nextUser);
+      setSuccessMsg("Changes saved successfully!");
+      setTimeout(() => setSuccessMsg(""), 3000);
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(err.message || "Failed to update profile details. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    if (!user?.id) return;
+    setSaving(true);
+    setErrorMsg("");
+    setSuccessMsg("");
+    try {
+      if (!String(user.id).startsWith("customer_dev_")) {
+        await deleteProfileImage(user.id);
+      }
+      const nextUser = { ...user, profilePicture: null, avatarUrl: null };
+      setUser(nextUser);
+      setProfile((prev) => prev ? { ...prev, profilePicture: null, profileImage: null } : null);
+      onUserChange?.(nextUser);
+      setSuccessMsg("Profile picture removed.");
+      setTimeout(() => setSuccessMsg(""), 3000);
+    } catch (err) {
+      setErrorMsg(err.message || "Failed to remove profile picture.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const CreativeLoader = () => (
+    <Loader className="py-16" />
+  );
+
+  // Tab title mapping for dynamic content header
+  const tabMeta = {
+    profile: { title: "My Profile", subtitle: "Manage your personal information and preferences" },
+    measurements: { title: "Fit & Style Preferences", subtitle: "Fine-tune your measurements and style criteria" },
+    fitPreferences: { title: "Fit & Style Preferences", subtitle: "Fine-tune your measurements and style criteria" },
+    recommendations: { title: "Style Inspiration", subtitle: "Curate your personal style gallery" },
+    recommendationImages: { title: "Style Inspiration", subtitle: "Curate your personal style gallery" },
+    orders: { title: "Order History", subtitle: "Track shipments and review past purchases" },
+    addresses: { title: "Saved Addresses", subtitle: "Manage your delivery locations" },
+    password: { title: "Password & Security", subtitle: "Keep your account secure" },
+    payments: { title: "Payment Methods", subtitle: "Manage linked cards and payment options" },
+    support: { title: "Customer Care", subtitle: "Get help from our concierge team" },
+  };
+
+  const currentTab = tabMeta[activeTab] || tabMeta.profile;
+
+  if (!isMounted || authLoading) {
+    return (
+      <div className="min-h-screen bg-[#FEFDFB] flex items-center justify-center">
+        <CreativeLoader />
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-[#FEFDFB] flex items-center justify-center px-6 font-['Plus_Jakarta_Sans',sans-serif]">
+        <div className="max-w-md rounded-2xl border border-[#E8E5E0] bg-white p-10 text-center shadow-[0_2px_16px_rgba(0,0,0,0.03)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8C8C8C]">Account unavailable</p>
+          <h1 className="mt-4 text-[22px] font-semibold text-[#1A1A1A] tracking-[-0.02em] leading-tight">Sign in to view your profile</h1>
+          <p className="mt-2.5 text-[13px] text-[#8C8C8C] leading-relaxed">Access your style preferences, order history, and account settings.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#FEFDFB] antialiased font-satoshi animate-acct-fade-in">
+      <style>{`
+        .animate-acct-fade-in {
+          animation: acct-fade-in 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes acct-fade-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-acct-view-in {
+          animation: acct-view-in 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes acct-view-in {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      {/* Page Header */}
+      <div className="border-b border-[#E8E5E0]/60">
+        <div className="max-w-[1120px] mx-auto px-6 sm:px-8 py-7 sm:py-9">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8C8C8C] mb-1.5">Account</p>
+          <h1 className="text-[26px] sm:text-[30px] font-bold text-[#1A1A1A] tracking-[-0.03em] leading-none">Settings</h1>
+        </div>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="max-w-[1120px] mx-auto px-6 sm:px-8 py-8 sm:py-10">
+        <div className="grid grid-cols-12 gap-8 lg:gap-12 items-start">
+          
+          {/* Sidebar */}
+          <div className="col-span-12 md:col-span-3">
+            <AccountSidebar activeTab={activeTab} onTabChange={(tab) => { setActiveTab(tab); }} />
+          </div>
+
+          {/* Content Panel */}
+          <div className="col-span-12 md:col-span-9">
+            <div className="animate-acct-view-in" key={activeTab}>
+              {/* Conditional view rendering depending on active tab */}
+              {activeTab === "profile" && (
+                <>
+                  {loading ? (
+                    <CreativeLoader />
+                  ) : (
+                    <AccountView 
+                      formData={formData}
+                      user={user} 
+                      profile={profile}
+                      onFormChange={handleFormChange}
+                      onSave={handleSave}
+                      onRemovePhoto={handleRemoveImage}
+                      saving={saving}
+                      successMsg={successMsg}
+                      errorMsg={errorMsg}
+                    />
+                  )}
+                </>
+              )}
+
+              {(activeTab === "measurements" || activeTab === "fitPreferences") && (
+                <FitPreferencesView 
+                  userId={user.id} 
+                  onSaveSuccess={() => loadProfileData()}
+                />
+              )}
+
+              {(activeTab === "recommendations" || activeTab === "recommendationImages") && (
+                <RecommendationImagesView userId={user.id} />
+              )}
+
+              {activeTab === "password" && (
+                <PasswordView userId={user.id} />
+              )}
+
+              {activeTab === "addresses" && (
+                <AddressManagementView userId={user.id} />
+              )}
+
+              {activeTab === "payments" && (
+                <PaymentMethodsView userId={user.id} />
+              )}
+
+              {activeTab === "orders" && (
+                <OrdersView 
+                  userId={user.id} 
+                  onNavigateToTab={(tab) => setActiveTab(tab)} 
+                />
+              )}
+
+              {activeTab === "support" && (
+                <CustomerCareView userId={user.id} />
+              )}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AccountPage;

@@ -1,0 +1,12 @@
+workspace:
+  id: 13fcd9ed-9823-44aa-809f-548b84d970ec
+
+localResources:
+  collections:
+    - ../LuxZera_Phase_1_Customer_Backend.postman_collection.json
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../postman/collections/LuxZera Phase 1 Customer Backend: e78b4484-678e-4143-9b5a-2f0bff5fd5da

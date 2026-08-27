@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/brands/{{brandId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"name":"LuxZera Atelier Updated","logoUrl":"https://example.com/logo-updated.png","description":"Updated brand","active":true,"categoryIds":["{{categoryId}}"]}'
+order: 3000

@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/brands"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"name":"LuxZera Atelier","logoUrl":"https://example.com/logo.png","description":"Luxury house brand","active":true,"categoryIds":["{{categoryId}}"]}'
+order: 2000

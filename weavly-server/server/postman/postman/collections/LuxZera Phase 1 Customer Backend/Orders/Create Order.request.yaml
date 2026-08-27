@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/orders"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"userId":"{{userId}}","discountTotal":10.00,"currency":"USD","items":[{"productId":"{{productId}}","variantId":"{{variantId}}","quantity":1,"unitPrice":199.99}]}'
+order: 1000

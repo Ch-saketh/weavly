@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/products/{{productId}}"
+method: PUT
+body:
+  type: formdata
+  content:
+    - type: text
+      key: product
+      value: '{"name":"Luxury Silk Shirt Updated","salePrice":189.99,"status":"ACTIVE","featured":true,"tags":["silk","luxury","edited"],"existingImageUrls":[],"variants":[{"sku":"LS-SHIRT-001-M-BLACK","stockQuantity":30,"priceOverride":199.99,"attributes":{"size":"M","color":"Black"},"imageUrl":"https://example.com/shirt-black.jpg"}]}'
+    - type: file
+      key: images
+      src: []
+      disabled: true
+order: 3000

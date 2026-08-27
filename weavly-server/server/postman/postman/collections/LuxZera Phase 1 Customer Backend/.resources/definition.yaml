@@ -1,0 +1,18 @@
+$kind: collection
+name: LuxZera Phase 1 Customer Backend
+description: Customer backend foundation APIs for products, categories, brands, inventory, orders, reviews, coupons, homepage, and Zera Cart.
+variables:
+  baseUrl: http://localhost:8080
+  token: ""
+  productId: 00000000-0000-0000-0000-000000000000
+  variantId: 00000000-0000-0000-0000-000000000000
+  categoryId: 00000000-0000-0000-0000-000000000000
+  brandId: 00000000-0000-0000-0000-000000000000
+  inventoryItemId: 00000000-0000-0000-0000-000000000000
+  orderId: 00000000-0000-0000-0000-000000000000
+  userId: 00000000-0000-0000-0000-000000000000
+  homepageSectionId: 00000000-0000-0000-0000-000000000000
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"

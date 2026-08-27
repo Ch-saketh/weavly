@@ -1,0 +1,6 @@
+package com.luxzera.server.auth.service;
+
+public interface EmailService {
+    void sendOtpEmail(String email, String otp);
+    void sendPasswordResetEmail(String email, String otp);
+}

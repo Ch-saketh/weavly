@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/coupons"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"code":"LUX20","discountType":"PERCENTAGE","discountValue":20,"expiresAt":"2026-12-31T23:59:59","usageLimit":100,"minimumOrderValue":150,"active":true}'
+order: 2000

@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/api/categories"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"name":"Men","slug":"men","description":"Menswear collection","parentId":null,"hidden":false,"displayOrder":1}'
+examples: .resources/Create Category.resources/examples
+order: 2000

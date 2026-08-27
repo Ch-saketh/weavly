@@ -1,0 +1,36 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Agent & AI config directories
+.agents/
+.gemini/
+.antigravity/
+
+# Node & Build Outputs
+node_modules/
+admin-service/node_modules/
+frontend/node_modules/
+.next/
+admin-service/.next/
+frontend/.next/
+dist/
+dist-ssr/
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE & Editors
+.idea/
+.vscode/
+.nx/

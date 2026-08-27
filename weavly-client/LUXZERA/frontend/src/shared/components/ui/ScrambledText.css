@@ -1,0 +1,11 @@
+.scrambled-text-root {
+  display: inline;
+}
+
+.scrambled-char {
+  display: inline-block;
+  will-change: transform;
+  white-space: pre;
+  text-align: center;
+  vertical-align: baseline;
+}

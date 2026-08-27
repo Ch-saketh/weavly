@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/api/categories/{{categoryId}}/display-order?displayOrder=3"
+method: PATCH
+queryParams:
+  displayOrder: "3"
+order: 5000

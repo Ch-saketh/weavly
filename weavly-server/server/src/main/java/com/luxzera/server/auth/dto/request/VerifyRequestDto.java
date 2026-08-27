@@ -1,0 +1,15 @@
+package com.luxzera.server.auth.dto.request;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class VerifyRequestDto {
+    private String email;
+    private String code; // 🛠️ FIXED: Changed from 'otp' to 'code'
+}

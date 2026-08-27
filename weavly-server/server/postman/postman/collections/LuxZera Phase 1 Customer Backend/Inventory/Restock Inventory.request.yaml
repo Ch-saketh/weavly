@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/inventory/{{inventoryItemId}}/restock"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"quantity":50,"note":"Supplier restock"}'
+order: 3000

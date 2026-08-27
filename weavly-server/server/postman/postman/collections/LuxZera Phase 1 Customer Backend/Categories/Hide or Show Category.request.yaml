@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/api/categories/{{categoryId}}/visibility?hidden=true"
+method: PATCH
+queryParams:
+  hidden: "true"
+order: 4000

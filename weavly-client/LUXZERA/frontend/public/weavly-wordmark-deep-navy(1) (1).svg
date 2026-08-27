@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" role="img" aria-labelledby="title desc">
+  <title id="title">Weavly wordmark</title>
+  <desc id="desc">The Weavly wordmark in deep navy, without the symbol.</desc>
+  <text x="450" y="205"
+        text-anchor="middle"
+        fill="#111A33"
+        font-family="Brush Script MT, Segoe Script, cursive"
+        font-size="190"
+        font-weight="500"
+        letter-spacing="-7">Weavly</text>
+</svg>

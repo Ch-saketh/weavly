@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-08-26T12:58:23.113520+00:00",
+  "total": 10,
+  "encoded": 10,
+  "failed": 0,
+  "skipped": 0,
+  "qdrant_upserted": 10,
+  "vector_dimension": 662,
+  "processing_time_seconds": 9.39,
+  "average_ms_per_product": 939.0,
+  "errors": {},
+  "status": "COMPLETED"
+}

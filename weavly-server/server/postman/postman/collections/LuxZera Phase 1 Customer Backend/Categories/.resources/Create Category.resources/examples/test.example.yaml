@@ -1,0 +1,16 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/categories"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: '{"name":"Men","slug":"men","description":"Menswear collection","parentId":null,"hidden":false,"displayOrder":1}'
+response:
+  statusCode: 200
+  statusText: ""
+  body:
+    type: json
+    content: ""
+order: 1785856923282

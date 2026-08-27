@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/products"
+method: POST
+body:
+  type: formdata
+  content:
+    - type: text
+      key: product
+      value: '{"name":"Luxury Silk Shirt","sku":"LS-SHIRT-001","description":"Premium silk shirt","basePrice":249.99,"salePrice":199.99,"currency":"USD","audience":"MEN","status":"ACTIVE","categoryId":"{{categoryId}}","subcategoryId":"{{categoryId}}","brandIds":["{{brandId}}"],"thumbnailUrl":"https://example.com/shirt-thumb.jpg","featured":true,"trending":false,"newArrival":true,"tags":["silk","luxury"],"seoSlug":"luxury-silk-shirt","variants":[{"sku":"LS-SHIRT-001-M-BLACK","stockQuantity":25,"priceOverride":209.99,"attributes":{"size":"M","color":"Black"},"imageUrl":"https://example.com/shirt-black.jpg"}]}'
+    - type: file
+      key: images
+      src: []
+      disabled: true
+order: 2000

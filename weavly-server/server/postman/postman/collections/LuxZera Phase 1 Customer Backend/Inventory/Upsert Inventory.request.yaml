@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/inventory"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: '{"productId":"{{productId}}","variantId":"{{variantId}}","currentStock":100,"reservedStock":5,"lowStockThreshold":10}'
+order: 2000
