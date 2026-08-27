@@ -2,6 +2,25 @@ import React, { useRef, useState, useMemo } from "react";
 import { Camera, Check, User, Phone, Calendar, FileText, Copy, Upload, Trash2, ShieldCheck, Sparkles } from "lucide-react";
 import Loader from "@/shared/components/ui/Loader";
 
+// Reusable minimal form field wrapper defined at module level to preserve DOM focus
+const FormField = ({ label, icon: Icon, children, className = "" }) => (
+  <div className={className}>
+    <label className="block text-[11px] font-bold text-neutral-600 uppercase tracking-wider mb-1.5 font-sans">
+      {label}
+    </label>
+    <div className="relative flex items-center">
+      {Icon && (
+        <div className="absolute left-3.5 text-neutral-500 pointer-events-none flex items-center justify-center z-10">
+          <Icon size={16} strokeWidth={2.4} />
+        </div>
+      )}
+      {children}
+    </div>
+  </div>
+);
+
+const inputBase = "w-full h-11 rounded-xl border border-neutral-200 bg-white hover:border-neutral-300 focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10 text-[13.5px] font-medium text-neutral-900 placeholder-neutral-400 outline-none transition-all duration-150 shadow-2xs";
+
 const AccountView = ({ 
   formData, 
   user, 
@@ -66,25 +85,6 @@ const AccountView = ({
 
   const initial = user?.firstName?.[0] || user?.email?.[0] || "U";
   const fullName = user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : (user?.firstName || "User Profile");
-
-  // Reusable minimal form field wrapper with proper icon positioning and clearance
-  const FormField = ({ label, icon: Icon, children, className = "" }) => (
-    <div className={className}>
-      <label className="block text-[11px] font-bold text-neutral-600 uppercase tracking-wider mb-1.5 font-sans">
-        {label}
-      </label>
-      <div className="relative flex items-center">
-        {Icon && (
-          <div className="absolute left-3.5 text-neutral-500 pointer-events-none flex items-center justify-center z-10">
-            <Icon size={16} strokeWidth={2.4} />
-          </div>
-        )}
-        {children}
-      </div>
-    </div>
-  );
-
-  const inputBase = "w-full h-11 rounded-xl border border-neutral-200 bg-white hover:border-neutral-300 focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10 text-[13.5px] font-medium text-neutral-900 placeholder-neutral-400 outline-none transition-all duration-150 shadow-2xs";
 
   return (
     <div className="relative space-y-5">
