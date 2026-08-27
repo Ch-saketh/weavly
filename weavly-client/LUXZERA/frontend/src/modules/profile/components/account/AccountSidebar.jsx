@@ -29,12 +29,12 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
   ];
 
   return (
-    <nav className="w-full font-satoshi bg-white rounded-2xl border border-slate-200 p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-      <div className="space-y-5">
+    <nav className="w-full font-satoshi bg-white rounded-2xl border border-slate-200 p-3 sm:p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-y-auto max-h-[calc(100vh-120px)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <div className="space-y-4 sm:space-y-5">
         {sections.map((section, sIdx) => (
           <div key={section.label}>
-            {/* Section Category Label - Increased contrast & weight */}
-            <p className="text-[11px] font-black tracking-[0.16em] text-slate-700 font-satoshi uppercase mb-2.5 px-2">
+            {/* Section Category Label */}
+            <p className="text-[10.5px] sm:text-[11px] font-black tracking-[0.16em] text-slate-700 font-satoshi uppercase mb-2 px-2">
               {section.label}
             </p>
 
