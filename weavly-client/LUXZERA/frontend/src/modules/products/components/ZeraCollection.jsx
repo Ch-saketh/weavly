@@ -53,28 +53,38 @@ export default function ZeraCollection({
       setError(null);
       try {
         if (forceRefresh) {
-          const generated = await generateUserRecommendations("10009781", 50);
-          setRecommendations(generated.recommendations || []);
-          return;
+          try {
+            const generated = await generateUserRecommendations("10009781", 50);
+            if (generated.recommendations && generated.recommendations.length > 0) {
+              setRecommendations(generated.recommendations);
+              return;
+            }
+          } catch (genErr) {
+            console.warn("Recommendation generation notice:", genErr);
+          }
         }
 
         const data = await getMyRecommendations();
         if (data.recommendations && data.recommendations.length > 0) {
           setRecommendations(data.recommendations);
         } else {
-          // Fallback if no user generation exists yet
-          const fallback = await fetchZyraRecommendations({
-            userId,
-            occasion: selectedOccasion,
-            limit: 10,
-            forceRefresh,
-            gender: userGender,
-          });
-          setRecommendations(fallback.recommendations || []);
+          // First-time user or empty collection: load curated catalog pieces
+          const fallback = await getProducts({ limit: 12, gender: userGender });
+          if (fallback && fallback.length > 0) {
+            setRecommendations(fallback);
+          } else {
+            setRecommendations([]);
+          }
         }
       } catch (err) {
-        console.error("Failed to load Zyra recommendations:", err);
-        setError(err.message || "Unable to load personalized recommendations.");
+        console.warn("Zera recommendation retrieval note:", err.message);
+        // Load fallback catalog so UI stays responsive and beautiful
+        try {
+          const fallback = await getProducts({ limit: 12, gender: userGender });
+          setRecommendations(fallback || []);
+        } catch (catErr) {
+          setRecommendations([]);
+        }
       } finally {
         setLoading(false);
       }

@@ -5,6 +5,9 @@ const getBaseUrl = () => {
   if (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL;
   }
+  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+    return "http://localhost:8081/api";
+  }
   return "https://zera-server.onrender.com/api";
 };
 
@@ -91,8 +94,8 @@ export const getMyRecommendations = async () => {
     },
   });
 
-  if (res.status === 401 || res.status === 403) {
-    // Return empty collection without crashing
+  if (res.status === 401 || res.status === 403 || res.status === 404) {
+    // Return empty collection without throwing for unauthenticated or first-time users
     return normalizeRecommendationCollection(null);
   }
 
