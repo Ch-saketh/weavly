@@ -3,6 +3,9 @@ package com.luxzera.server.zyra.service;
 import com.luxzera.server.products.entity.Product;
 import com.luxzera.server.products.repository.ProductRepository;
 import com.luxzera.server.user.entity.User;
+import com.luxzera.server.user.entity.UserProfile;
+import com.luxzera.server.user.enums.Gender;
+import com.luxzera.server.user.repository.UserProfileRepository;
 import com.luxzera.server.zyra.client.ZyraClient;
 import com.luxzera.server.zyra.dto.response.ZyraRecommendationItem;
 import com.luxzera.server.zyra.dto.response.ZyraRecommendationResponse;
@@ -31,6 +34,7 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     private final ZyraClient zyraClient;
     private final UserRecommendationGenerationRepository generationRepository;
     private final ProductRepository productRepository;
+    private final UserProfileRepository userProfileRepository;
 
     private void enrichRecommendationItemImages(List<ZyraRecommendationItem> items) {
         if (items == null || items.isEmpty()) return;
@@ -68,26 +72,40 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             throw new ZyraValidationException("productId must not be null or empty");
         }
 
-        log.info("Generating and persisting recommendations for userId={}, productId={}, topK={}",
-                user.getId(), productId, topK);
+        // 1. Resolve user profile gender from authenticated Principal / User context
+        String userGender = null;
+        Optional<UserProfile> profileOpt = userProfileRepository.findByUserId(user.getId());
+        if (profileOpt.isPresent() && profileOpt.get().getGender() != null) {
+            Gender g = profileOpt.get().getGender();
+            if (g == Gender.MALE) {
+                userGender = "Men";
+            } else if (g == Gender.FEMALE) {
+                userGender = "Women";
+            } else {
+                userGender = "Unisex";
+            }
+        }
 
-        // 1. Call inference engine
-        ZyraRecommendationResponse zyraResponse = zyraClient.getRecommendations(productId, topK);
+        log.info("Generating and persisting recommendations for userId={}, profileGender={}, productId={}, topK={}",
+                user.getId(), userGender, productId, topK);
+
+        // 2. Call inference engine conditioned on user profile gender
+        ZyraRecommendationResponse zyraResponse = zyraClient.getRecommendations(productId, topK, userGender);
         if (zyraResponse == null || zyraResponse.getRecommendations() == null || zyraResponse.getRecommendations().isEmpty()) {
             throw new ZyraValidationException("Zyra engine returned empty recommendation response for product: " + productId);
         }
 
         enrichRecommendationItemImages(zyraResponse.getRecommendations());
 
-        // 2. Map response and user to persistent entity
+        // 3. Map response and user to persistent entity
         UserRecommendationGeneration generation = ZyraRecommendationMapper.toEntity(user, zyraResponse);
 
-        // 3. Atomically persist generation + 50 items
+        // 4. Atomically persist generation + 50 items
         UserRecommendationGeneration savedGeneration = generationRepository.save(generation);
         log.info("Successfully persisted recommendation generation id={} with {} items for user={}",
                 savedGeneration.getId(), savedGeneration.getItems().size(), user.getId());
 
-        // 4. Return user DTO
+        // 5. Return user DTO
         ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(savedGeneration);
         enrichRecommendationItemImages(responseDto.getRecommendations());
         return responseDto;

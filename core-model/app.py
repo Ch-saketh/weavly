@@ -129,9 +129,15 @@ def recommend() -> Tuple[Any, int]:
             404,
         )
 
+    user_gender = data.get("userGender")
+
     # Run inference
     try:
-        engine_result = zyra.recommend(product_id=product_id_str, top_k=top_k)
+        engine_result = zyra.recommend(
+            product_id=product_id_str,
+            top_k=top_k,
+            user_gender=user_gender,
+        )
     except ValueError as exc:
         return jsonify({"error": str(exc), "productId": product_id_str}), 400
     except Exception as exc:

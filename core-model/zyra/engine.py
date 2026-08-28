@@ -17,6 +17,7 @@ from zyra.metadata import (
     compute_price_score,
     get_product_metadata,
     is_gender_compatible,
+    normalize_gender,
     normalize_product_id,
     validate_metadata_dataframe,
 )
@@ -167,29 +168,21 @@ class ZyraV1:
 
     def recommend(
         self,
-        product_id: Union[str, int],
+        product_id: Any,
         top_k: int = 50,
+        user_gender: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Generate top-K product recommendations for a query product.
-
-        Process:
-        1. Resolve product ID -> row index.
-        2. Retrieve query embedding.
-        3. Calculate cosine similarity against the catalog.
-        4. Exclude query product from candidate pool (no self).
-        5. Select candidate pool up to Candidate K (200).
-        6. Apply HARD gender compatibility filter.
-        7. Calculate frozen relevance score.
-        8. Apply frozen diversity reranking (brand penalties).
-        9. Apply minimum similarity threshold (0.88).
-        10. Return top-K recommendations in standard contract format.
+        """Generate top_k recommendations for a given query product.
 
         Parameters
         ----------
-        product_id : Union[str, int]
+        product_id : Any
             The query product ID.
         top_k : int
             Number of recommendations to return (default 50, max 50).
+        user_gender : Optional[str]
+            Authenticated user profile gender constraint (e.g. 'Men', 'Women', 'Kids', 'Unisex').
+            If provided, hard compatibility is enforced for the user. If None, query product gender is used.
 
         Returns
         -------
@@ -245,8 +238,9 @@ class ZyraV1:
         ]
 
         # 5. HARD Gender Compatibility & Similarity Threshold Filtering
+        target_gender = normalize_gender(user_gender) if user_gender else query_gender
         compatible_genders = set(
-            self.config.gender_compatibility.get(query_gender, [query_gender])
+            self.config.gender_compatibility.get(target_gender, [target_gender])
         )
         min_similarity = self.config.minimum_similarity
 

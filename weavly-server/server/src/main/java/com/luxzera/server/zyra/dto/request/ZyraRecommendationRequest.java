@@ -23,4 +23,7 @@ public class ZyraRecommendationRequest {
     @Max(value = 50, message = "topK cannot exceed 50")
     @JsonProperty("topK")
     private Integer topK;
+
+    @JsonProperty("userGender")
+    private String userGender;
 }

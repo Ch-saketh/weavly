@@ -48,6 +48,11 @@ public class ZyraClientImpl implements ZyraClient {
 
     @Override
     public ZyraRecommendationResponse getRecommendations(String productId, Integer topK) {
+        return getRecommendations(productId, topK, null);
+    }
+
+    @Override
+    public ZyraRecommendationResponse getRecommendations(String productId, Integer topK, String userGender) {
         if (productId == null || productId.trim().isEmpty()) {
             throw new ZyraValidationException("productId must not be null or empty");
         }
@@ -61,9 +66,11 @@ public class ZyraClientImpl implements ZyraClient {
         ZyraRecommendationRequest requestPayload = ZyraRecommendationRequest.builder()
                 .productId(cleanProductId)
                 .topK(effectiveTopK)
+                .userGender(userGender)
                 .build();
 
-        log.debug("Sending POST /recommend to Zyra Flask for productId={}, topK={}", cleanProductId, effectiveTopK);
+        log.debug("Sending POST /recommend to Zyra Flask for productId={}, topK={}, userGender={}",
+                cleanProductId, effectiveTopK, userGender);
 
         ZyraRecommendationResponse response;
         try {
@@ -109,54 +116,45 @@ public class ZyraClientImpl implements ZyraClient {
             throw new ZyraValidationException("Received null recommendation response from Zyra service");
         }
 
-        if (response.getProductId() == null || response.getProductId().trim().isEmpty()) {
-            throw new ZyraValidationException("Recommendation response is missing query productId");
-        }
-
-        if (response.getModelVersion() == null || response.getModelVersion().trim().isEmpty()) {
-            throw new ZyraValidationException("Recommendation response is missing modelVersion");
+        if (response.getProductId() == null || !response.getProductId().equals(queryProductId)) {
+            throw new ZyraValidationException(String.format(
+                    "Recommendation response productId '%s' does not match query '%s'",
+                    response.getProductId(), queryProductId));
         }
 
         List<ZyraRecommendationItem> items = response.getRecommendations();
         if (items == null) {
-            throw new ZyraValidationException("Recommendation response contains null recommendations list");
+            throw new ZyraValidationException("Recommendation items list is null in Zyra response");
         }
 
-        if (items.size() != expectedTopK) {
-            throw new ZyraValidationException(
-                    String.format("Expected %d recommendations but received %d", expectedTopK, items.size())
-            );
-        }
+        Set<Integer> ranksSeen = new HashSet<>();
+        Set<String> productIdsSeen = new HashSet<>();
 
-        Set<String> seenProductIds = new HashSet<>();
         for (int i = 0; i < items.size(); i++) {
             ZyraRecommendationItem item = items.get(i);
-            int expectedRank = i + 1;
+            if (item.getRank() == null || item.getRank() != (i + 1)) {
+                throw new ZyraValidationException(String.format(
+                        "Recommendation item at index %d has invalid rank '%s' (expected %d)",
+                        i, item.getRank(), (i + 1)));
+            }
+            if (!ranksSeen.add(item.getRank())) {
+                throw new ZyraValidationException("Duplicate rank detected in recommendations: " + item.getRank());
+            }
 
             if (item.getProductId() == null || item.getProductId().trim().isEmpty()) {
-                throw new ZyraValidationException("Recommendation item at rank " + expectedRank + " has null/empty productId");
+                throw new ZyraValidationException("Recommendation item at rank " + item.getRank() + " has null/empty productId");
+            }
+            if (item.getProductId().equals(queryProductId)) {
+                throw new ZyraValidationException("Self-recommendation detected: query product returned as recommendation at rank " + item.getRank());
+            }
+            if (!productIdsSeen.add(item.getProductId())) {
+                throw new ZyraValidationException("Duplicate productId detected in recommendations: " + item.getProductId());
             }
 
-            String recPid = item.getProductId().trim();
-
-            if (recPid.equalsIgnoreCase(queryProductId)) {
-                throw new ZyraValidationException("Self-recommendation detected: " + recPid + " is identical to query productId");
-            }
-
-            if (!seenProductIds.add(recPid)) {
-                throw new ZyraValidationException("Duplicate recommendation detected for productId: " + recPid);
-            }
-
-            if (item.getRank() == null || item.getRank() != expectedRank) {
-                throw new ZyraValidationException(
-                        String.format("Invalid rank at index %d: expected %d, got %s", i, expectedRank, item.getRank())
-                );
-            }
-
-            if (item.getSimilarity() == null || item.getSimilarity() < 0.0 || item.getSimilarity() > 1.0001) {
-                throw new ZyraValidationException(
-                        String.format("Invalid similarity score for %s: %s", recPid, item.getSimilarity())
-                );
+            if (item.getSimilarity() == null || item.getSimilarity() < 0.0 || item.getSimilarity() > 1.0) {
+                throw new ZyraValidationException(String.format(
+                        "Recommendation item at rank %d has invalid similarity score: %s",
+                        item.getRank(), item.getSimilarity()));
             }
         }
     }
