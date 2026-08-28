@@ -57,10 +57,8 @@ export default function ProductCard({ product, onViewProduct }) {
       <div className="sm:hidden">
         <MobileProductCard product={product} onViewProduct={onViewProduct} />
       </div>
-      <a
-        href={`/product/${productId}`}
-        target="_blank"
-        rel="noopener noreferrer"
+      <div
+        onClick={handleView}
         className="hidden sm:flex group relative flex-col bg-transparent cursor-pointer text-left font-sans select-none"
       >
         {/* Image */}
@@ -126,7 +124,7 @@ export default function ProductCard({ product, onViewProduct }) {
             </span>
           </div>
         </div>
-      </a>
+      </div>
     </>
   );
 }
