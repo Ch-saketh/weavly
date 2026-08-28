@@ -11,6 +11,17 @@ const getBaseUrl = () => {
   return "https://zera-server.onrender.com/api";
 };
 
+const ensureHttps = (url) => {
+  if (!url || typeof url !== "string") return null;
+  if (url.startsWith("http://assets.myntassets.com")) {
+    return url.replace("http://assets.myntassets.com", "https://assets.myntassets.com");
+  }
+  if (url.startsWith("http://")) {
+    return "https://" + url.slice(7);
+  }
+  return url;
+};
+
 /**
  * Normalizes a single recommendation item from the Spring Boot API.
  */
@@ -23,7 +34,8 @@ export const normalizeRecommendationItem = (item, index = 0) => {
   const category = item.category || "Tops";
   const price = Number(item.price || 999);
   const similarity = Number(item.similarity || 0.0);
-  const imageUrl = item.imageUrl || item.image || null;
+  const rawImg = item.imageUrl || item.image || (item.images && item.images[0]) || null;
+  const imageUrl = ensureHttps(rawImg);
   const productUrl = item.productUrl || (productId ? `/product/${productId}` : "#");
 
   return {
