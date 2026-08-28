@@ -13,16 +13,25 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "products")
+@Table(name = "products", indexes = {
+        @Index(name = "idx_products_product_id", columnList = "product_id"),
+        @Index(name = "idx_products_audience", columnList = "audience"),
+        @Index(name = "idx_products_category_name", columnList = "category_name"),
+        @Index(name = "idx_products_brand_name", columnList = "brand_name")
+})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(name = "product_id", unique = true)
+    private String productId;
 
     @Column(nullable = false)
     private String name;
@@ -40,14 +49,26 @@ public class Product {
     @Column(nullable = false)
     private Audience audience;
 
+    @Column(name = "brand_name")
+    private String brandName;
+
+    @Column(name = "category_name")
+    private String categoryName;
+
+    @Column(name = "image_url", columnDefinition = "TEXT")
+    private String imageUrl;
+
+    @Column(name = "product_url", columnDefinition = "TEXT")
+    private String productUrl;
+
     @Column(name = "embedding", columnDefinition = "text")
     private String embedding;
 
-    @Column(name = "category_id", nullable = false)
+    @Column(name = "category_id")
     private UUID categoryId;
 
     // 🌉 The Bridge Table for Collaborations (EAGER loaded to prevent session errors)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_brands",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -55,8 +76,8 @@ public class Product {
     )
     private Set<Brand> brands;
 
-    // 📸 The General Gallery (EAGER loaded to prevent session errors)
-    @ElementCollection(fetch = FetchType.EAGER)
+    // 📸 The General Gallery
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")
     private List<String> imageUrls;

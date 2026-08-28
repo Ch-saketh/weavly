@@ -13,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import { SlidersHorizontal, X, Loader2 } from "lucide-react";
 import ProductCard from "@/modules/products/components/ProductCard";
 import FiltersSidebar from "@/modules/products/components/FiltersSidebar";
+import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
 import { PRODUCTS } from "@/modules/products/data/products";
 import { getPaginatedProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
@@ -358,6 +359,14 @@ export default function ShopPage({ initialDepartment = "All" }) {
             </div>
           </div>
         </section>
+
+        {/* ── ZERA PERSONALIZED RECOMMENDATIONS SECTION ── */}
+        <ZeraRecommendationsSection
+          title={`${department || "Curated"} Recommendations`}
+          subtitle={`Personalized For You • ${department || "All"}`}
+          genderFilter={department}
+        />
+
         {/* ── STACKED CATEGORY SECTIONS ── */}
         <div className="space-y-16 pt-4">
           {categorySections.map((group) => (

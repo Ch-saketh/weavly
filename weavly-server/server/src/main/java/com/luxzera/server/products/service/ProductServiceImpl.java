@@ -8,22 +8,20 @@ import com.luxzera.server.products.entity.Brand;
 import com.luxzera.server.products.entity.Category;
 import com.luxzera.server.products.entity.Product;
 import com.luxzera.server.products.entity.ProductVariant;
+import com.luxzera.server.products.enums.Audience;
 import com.luxzera.server.products.repository.BrandRepository;
 import com.luxzera.server.products.repository.CategoryRepository;
 import com.luxzera.server.products.repository.ProductRepository;
 import com.luxzera.server.products.repository.ProductVariantRepository;
 import com.luxzera.server.products.storage.service.ImageStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,22 +37,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request) {
-        // 1. Check for duplicates
         if (productRepository.existsByName(request.getName())) {
             throw new RuntimeException("Product with this name already exists");
         }
 
-        // 2. Verify Category exists
-        categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+        if (request.getCategoryId() != null) {
+            categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+        }
 
-        // 3. Fetch all Brands that match the IDs sent from the frontend (Null-safe)
         List<Brand> matchedBrands = request.getBrandIds() != null
                 ? brandRepository.findAllById(request.getBrandIds())
                 : List.of();
         Set<Brand> productBrands = new HashSet<>(matchedBrands);
 
-        // 4. Build the new Product Entity (The Blueprint)
         Product newProduct = new Product();
         newProduct.setName(request.getName());
         newProduct.setDescription(request.getDescription());
@@ -64,15 +60,11 @@ public class ProductServiceImpl implements ProductService {
         newProduct.setCategoryId(request.getCategoryId());
         newProduct.setBrands(productBrands);
 
-        // 5. Consolidate Image URLs (Handles both Step 1 Pre-uploaded URLs & Direct Multipart files)
         List<String> finalImageUrls = new ArrayList<>();
-
-        // Add pre-uploaded Cloudflare R2 string URLs passed in JSON
         if (request.getImageUrls() != null && !request.getImageUrls().isEmpty()) {
             finalImageUrls.addAll(request.getImageUrls());
         }
 
-        // Process any raw multi-part file uploads directly to Cloudflare R2
         if (request.getImages() != null && !request.getImages().isEmpty()) {
             for (MultipartFile file : request.getImages()) {
                 if (!file.isEmpty()) {
@@ -83,11 +75,12 @@ public class ProductServiceImpl implements ProductService {
         }
 
         newProduct.setImageUrls(finalImageUrls);
+        if (!finalImageUrls.isEmpty()) {
+            newProduct.setImageUrl(finalImageUrls.get(0));
+        }
 
-        // 6. Save the main product to DB
         Product savedProduct = productRepository.save(newProduct);
 
-        // 7. Loop through the variants and save them
         if (request.getVariants() != null && !request.getVariants().isEmpty()) {
             List<ProductVariant> variantsToSave = request.getVariants().stream().map(vReq -> {
                 ProductVariant variant = new ProductVariant();
@@ -136,7 +129,6 @@ public class ProductServiceImpl implements ProductService {
             product.setBrands(new HashSet<>(matchedBrands));
         }
 
-        // Handle Image merging (Retained existing URLs + Newly uploaded files to R2)
         List<String> finalImageUrls = new ArrayList<>();
         if (request.getExistingImageUrls() != null) {
             finalImageUrls.addAll(request.getExistingImageUrls());
@@ -151,11 +143,11 @@ public class ProductServiceImpl implements ProductService {
         }
         if (!finalImageUrls.isEmpty()) {
             product.setImageUrls(finalImageUrls);
+            product.setImageUrl(finalImageUrls.get(0));
         }
 
         Product updatedProduct = productRepository.save(product);
 
-        // Sync variants if provided (replaces existing variants with the updated list)
         if (request.getVariants() != null) {
             List<ProductVariant> existingVariants = productVariantRepository.findByProductId(id);
             productVariantRepository.deleteAll(existingVariants);
@@ -178,12 +170,62 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
-        Map<UUID, String> categoryNames = categoryRepository.findAll().stream()
-                .collect(Collectors.toMap(Category::getId, Category::getName));
-
         return productRepository.findAll().stream()
-                .map(product -> toResponse(product, categoryNames.get(product.getCategoryId())))
+                .map(product -> toResponse(product, null))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getFilteredProducts(String gender, String category, String search, Pageable pageable) {
+        Collection<Audience> audiences = null;
+        if (gender != null && !gender.isBlank() && !gender.equalsIgnoreCase("All")) {
+            String g = gender.trim().toUpperCase();
+            if (g.startsWith("MEN") || g.startsWith("MAN") || g.startsWith("MALE")) {
+                audiences = List.of(Audience.MEN, Audience.UNISEX);
+            } else if (g.startsWith("WOM") || g.startsWith("FEMALE")) {
+                audiences = List.of(Audience.WOMEN, Audience.UNISEX);
+            } else if (g.startsWith("KID")) {
+                audiences = List.of(Audience.KIDS);
+            } else if (g.startsWith("UNI")) {
+                audiences = List.of(Audience.UNISEX);
+            }
+        }
+
+        String catFilter = (category != null && !category.isBlank() && !category.equalsIgnoreCase("All")) ? category.trim() : null;
+        String searchFilter = (search != null && !search.isBlank()) ? search.trim() : null;
+
+        Page<Product> page = productRepository.findFilteredProducts(audiences, catFilter, searchFilter, pageable);
+        return page.map(product -> toResponse(product, null));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProductResponse getProductByIdOrProductId(String identifier) {
+        if (identifier == null || identifier.isBlank()) {
+            throw new ResourceNotFoundException("Product identifier cannot be empty");
+        }
+
+        try {
+            UUID uuid = UUID.fromString(identifier);
+            Optional<Product> byId = productRepository.findById(uuid);
+            if (byId.isPresent()) {
+                return toResponse(byId.get(), null);
+            }
+        } catch (IllegalArgumentException ignored) {
+            // Not a UUID, search by productId
+        }
+
+        Product product = productRepository.findByProductId(identifier)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + identifier));
+
+        return toResponse(product, null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long getProductCount() {
+        return productRepository.count();
     }
 
     @Override
@@ -192,12 +234,10 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 
-        // 1. Delete image files from Cloudflare R2 storage
         if (product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
             imageStorageService.deleteImages(product.getImageUrls());
         }
 
-        // 2. Delete main product record from PostgreSQL database
         productRepository.delete(product);
     }
 
@@ -209,35 +249,41 @@ public class ProductServiceImpl implements ProductService {
         }
 
         List<Product> products = productRepository.findAllById(ids);
-
-        // 1. Delete image files from Cloudflare R2 storage for all target products
         for (Product product : products) {
             if (product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
                 imageStorageService.deleteImages(product.getImageUrls());
             }
         }
-
-        // 2. Bulk delete database records
         productRepository.deleteAll(products);
     }
 
     private ProductResponse toResponse(Product product, String categoryName) {
-        // Safe check for brand mapping context
-        Set<String> brandNames = product.getBrands() == null
-                ? Set.of()
-                : product.getBrands().stream()
-                .map(Brand::getName)
-                .collect(Collectors.toSet());
+        String effectiveCategory = product.getCategoryName() != null ? product.getCategoryName() : categoryName;
+        String effectiveBrand = product.getBrandName();
+        if (effectiveBrand == null && product.getBrands() != null && !product.getBrands().isEmpty()) {
+            effectiveBrand = product.getBrands().iterator().next().getName();
+        }
+
+        String primaryImage = product.getImageUrl();
+        if (primaryImage == null && product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
+            primaryImage = product.getImageUrls().get(0);
+        }
 
         return ProductResponse.builder()
                 .id(product.getId())
+                .productId(product.getProductId() != null ? product.getProductId() : (product.getId() != null ? product.getId().toString() : null))
                 .name(product.getName())
                 .description(product.getDescription())
+                .brand(effectiveBrand)
+                .category(effectiveCategory)
                 .basePrice(product.getBasePrice())
                 .salePrice(product.getSalePrice())
                 .categoryId(product.getCategoryId())
                 .audience(product.getAudience())
-                .imageUrls(product.getImageUrls())
+                .gender(product.getAudience() != null ? product.getAudience().name() : "UNISEX")
+                .imageUrl(primaryImage)
+                .productUrl(product.getProductUrl())
+                .imageUrls(product.getImageUrls() != null ? product.getImageUrls() : (primaryImage != null ? List.of(primaryImage) : List.of()))
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();

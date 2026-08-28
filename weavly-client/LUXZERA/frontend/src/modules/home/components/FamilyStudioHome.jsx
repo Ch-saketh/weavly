@@ -6,6 +6,7 @@ import { getProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useCart } from "@/modules/cart/store/CartContext";
+import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
 
 export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const router = useRouter();
@@ -312,9 +313,11 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                 T-SHIRT
               </span>
             </div>
-
           </div>
         </section>
+
+        {/* ── ZERA PERSONALIZED RECOMMENDATIONS (Zyra V1 Engine) ── */}
+        <ZeraRecommendationsSection />
 
         {/* ════════════════════════════════════════════════════════════
             3. NEW COLLECTION (Product Cards + ADD TO BAG Option)

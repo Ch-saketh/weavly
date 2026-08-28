@@ -47,6 +47,9 @@ export default function MobileProductCard({ product, onViewProduct }) {
           alt={productName}
           className="h-full w-full object-cover object-top"
           loading="lazy"
+          onError={(e) => {
+            e.currentTarget.src = "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=80";
+          }}
         />
         {product.badge && (
           <span className="absolute left-3 top-3 rounded-lg bg-[#FFFFFF] border border-[#ECECEC] px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.15em] text-[#1D1D1F] shadow-xs">

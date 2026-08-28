@@ -4,10 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luxzera.server.products.dto.request.CreateProductRequest;
 import com.luxzera.server.products.dto.request.UpdateProductRequest;
 import com.luxzera.server.products.dto.response.ProductResponse;
+import com.luxzera.server.products.service.ProductCatalogImportService;
 import com.luxzera.server.products.service.ProductService;
 import com.luxzera.server.products.storage.service.ImageStorageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +21,82 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductCatalogImportService productCatalogImportService;
     private final ImageStorageService imageStorageService;
     private final ObjectMapper objectMapper;
+
+    /**
+     * Trigger Catalog Import from CSV
+     * POST /api/products/import-catalog
+     */
+    @PostMapping("/import-catalog")
+    public ResponseEntity<Map<String, Object>> importCatalog() {
+        int count = productCatalogImportService.importCatalogFromCsv();
+        return ResponseEntity.ok(Map.of(
+                "message", "Catalog import completed successfully",
+                "count", count
+        ));
+    }
+
+    /**
+     * Get Products (with pagination, gender, category, and keyword filters)
+     * GET /api/products
+     */
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getProducts(
+            @RequestParam(value = "gender", required = false) String gender,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "limit", required = false, defaultValue = "50") int limit,
+            @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "size", required = false) Integer size
+    ) {
+        int pageIndex = (page != null) ? Math.max(0, page) : (offset > 0 && limit > 0 ? offset / limit : 0);
+        int pageSize = (size != null) ? Math.min(100, Math.max(1, size)) : Math.min(100, Math.max(1, limit));
+
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<ProductResponse> productPage = productService.getFilteredProducts(gender, category, search, pageable);
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("products", productPage.getContent());
+        response.put("total", productPage.getTotalElements());
+        response.put("totalPages", productPage.getTotalPages());
+        response.put("page", productPage.getNumber());
+        response.put("size", productPage.getSize());
+        response.put("hasMore", productPage.hasNext());
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Get Single Product by UUID or Zyra Product ID
+     * GET /api/products/{id}
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable String id) {
+        ProductResponse product = productService.getProductByIdOrProductId(id);
+        return ResponseEntity.ok(product);
+    }
+
+    /**
+     * Get Total Product Catalog Count
+     * GET /api/products/count
+     */
+    @GetMapping("/count")
+    public ResponseEntity<Map<String, Object>> getProductCount() {
+        long count = productService.getProductCount();
+        return ResponseEntity.ok(Map.of("count", count));
+    }
 
     /**
      * Create Product (JSON Payload)
@@ -79,15 +148,6 @@ public class ProductController {
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse update product JSON: " + e.getMessage(), e);
         }
-    }
-
-    /**
-     * Get All Products
-     * GET /api/products
-     */
-    @GetMapping
-    public ResponseEntity<List<ProductResponse>> getProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     /**

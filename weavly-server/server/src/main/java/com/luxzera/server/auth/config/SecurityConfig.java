@@ -75,6 +75,7 @@ public class SecurityConfig {
                                 "/api/search/ai",
                                 "/api/recommendations/product/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/products/import-catalog").permitAll()
 
                         // ── Spring error page ────────────────────────────
                         .requestMatchers("/error").permitAll()

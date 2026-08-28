@@ -7,6 +7,10 @@ import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useCart } from "@/modules/cart/store/CartContext";
 import { fetchZyraRecommendations } from "@/infrastructure/api/zyra/zyraService";
+import {
+  getMyRecommendations,
+  generateUserRecommendations,
+} from "@/modules/recommendations/services/recommendationService";
 
 const OCCASIONS = [
   { id: "college", label: "College" },
@@ -48,14 +52,26 @@ export default function ZeraCollection({
       setLoading(true);
       setError(null);
       try {
-        const data = await fetchZyraRecommendations({
-          userId,
-          occasion: selectedOccasion,
-          limit: 10,
-          forceRefresh,
-          gender: userGender,
-        });
-        setRecommendations(data.recommendations || []);
+        if (forceRefresh) {
+          const generated = await generateUserRecommendations("10009781", 50);
+          setRecommendations(generated.recommendations || []);
+          return;
+        }
+
+        const data = await getMyRecommendations();
+        if (data.recommendations && data.recommendations.length > 0) {
+          setRecommendations(data.recommendations);
+        } else {
+          // Fallback if no user generation exists yet
+          const fallback = await fetchZyraRecommendations({
+            userId,
+            occasion: selectedOccasion,
+            limit: 10,
+            forceRefresh,
+            gender: userGender,
+          });
+          setRecommendations(fallback.recommendations || []);
+        }
       } catch (err) {
         console.error("Failed to load Zyra recommendations:", err);
         setError(err.message || "Unable to load personalized recommendations.");
