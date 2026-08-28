@@ -1,0 +1,39 @@
+{
+  "engineVersion": "zyra-v1-p9",
+  "candidateK": 200,
+  "finalK": 50,
+  "minimumSimilarity": 0.88,
+  "embeddingDimension": 662,
+  "weights": {
+    "similarity": 0.55,
+    "gender": 0.2,
+    "category": 0.15,
+    "brand": 0.05,
+    "price": 0.05
+  },
+  "diversityPenalties": {
+    "count0": 0.0,
+    "count1": 0.015,
+    "count2": 0.05,
+    "count3Plus": 0.12
+  },
+  "genderCompatibility": {
+    "Women": [
+      "Women",
+      "Unisex"
+    ],
+    "Men": [
+      "Men",
+      "Unisex"
+    ],
+    "Unisex": [
+      "Women",
+      "Men",
+      "Unisex"
+    ],
+    "Kids": [
+      "Kids"
+    ]
+  },
+  "catalogSize": 12465
+}

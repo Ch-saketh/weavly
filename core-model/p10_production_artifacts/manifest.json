@@ -1,0 +1,17 @@
+{
+  "engine": "ZYRA V1",
+  "version": "zyra-v1-p9",
+  "pipeline": "P8 embeddings \u2192 P9 ranking \u2192 P10 production package",
+  "catalogProducts": 12465,
+  "embeddingRecords": 12465,
+  "embeddingDimension": 662,
+  "candidateK": 200,
+  "finalK": 50,
+  "minimumSimilarity": 0.88,
+  "artifacts": {
+    "embeddings": "product_embeddings.npy",
+    "metadata": "product_metadata.csv",
+    "productIndex": "product_id_to_index.json",
+    "configuration": "zyra_v1_config.json"
+  }
+}

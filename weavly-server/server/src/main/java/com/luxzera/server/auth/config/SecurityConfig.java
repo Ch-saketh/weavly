@@ -68,10 +68,12 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/api/admin/onboarding").permitAll()
 
-                        // ── Product browsing & AI search (public GET) ────
+                        // ── Product browsing & AI search & Recommendations (public GET) ────
                         .requestMatchers(HttpMethod.GET,
                                 "/api/products",
-                                "/api/search/ai"
+                                "/api/products/**",
+                                "/api/search/ai",
+                                "/api/recommendations/product/**"
                         ).permitAll()
 
                         // ── Spring error page ────────────────────────────
