@@ -217,31 +217,37 @@ export default function ZeraCollection({
       {/* ── TOP-10 PRODUCT CARDS GRID ── */}
       {!loading && !error && recommendations.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-          {recommendations.map((item) => {
-            const saved = isSaved?.(item.productId);
-            const isAdded = addedProductIds[item.productId];
-            const matchPercent = Math.round((item.score || 0.90) * 100);
+          {recommendations.map((item, idx) => {
+            const pid = item.productId || item.id;
+            const saved = isSaved?.(pid);
+            const isAdded = addedProductIds[pid];
+            const simValue = Number(item.similarity || item.score || 0.90);
+            const matchPercent = Math.round(simValue * 100);
+            const displayImg = item.imageUrl || item.image || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80";
 
             return (
               <div
-                key={item.productId}
-                onClick={() => handleCardClick(item.productId)}
+                key={pid || `zera-${idx}`}
+                onClick={() => handleCardClick(pid)}
                 className="group cursor-pointer flex flex-col gap-3"
               >
                 {/* Image Container with Rank & Match Score */}
                 <div className="aspect-[3/4] bg-[#FAF8F5] rounded-[22px] overflow-hidden border border-[#E7E3DD] relative shadow-xs group-hover:shadow-md transition-shadow">
                   <img
-                    src={
-                      item.imageUrl ||
-                      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80"
-                    }
-                    alt={item.title || item.productId}
+                    src={displayImg}
+                    alt={item.name || item.title || pid}
+                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80";
+                    }}
                     className="w-full h-full object-cover object-top group-hover:scale-103 transition-transform duration-500"
                   />
 
                   {/* Top Left Rank Badge */}
                   <span className="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-[#1D1D1F]/90 backdrop-blur-md text-white text-[10px] font-bold tracking-wider shadow-xs">
-                    #{item.rank}
+                    #{item.rank || idx + 1}
                   </span>
 
                   {/* Top Right Match Score Pill */}

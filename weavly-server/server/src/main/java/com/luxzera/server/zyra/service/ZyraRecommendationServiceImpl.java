@@ -1,7 +1,10 @@
 package com.luxzera.server.zyra.service;
 
+import com.luxzera.server.products.entity.Product;
+import com.luxzera.server.products.repository.ProductRepository;
 import com.luxzera.server.user.entity.User;
 import com.luxzera.server.zyra.client.ZyraClient;
+import com.luxzera.server.zyra.dto.response.ZyraRecommendationItem;
 import com.luxzera.server.zyra.dto.response.ZyraRecommendationResponse;
 import com.luxzera.server.zyra.dto.response.ZyraUserRecommendationGenerationResponse;
 import com.luxzera.server.zyra.entity.UserRecommendationGeneration;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,11 +30,28 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
 
     private final ZyraClient zyraClient;
     private final UserRecommendationGenerationRepository generationRepository;
+    private final ProductRepository productRepository;
+
+    private void enrichRecommendationItemImages(List<ZyraRecommendationItem> items) {
+        if (items == null || items.isEmpty()) return;
+        for (ZyraRecommendationItem item : items) {
+            if (item.getImageUrl() == null || item.getImageUrl().isBlank()) {
+                Optional<Product> prodOpt = productRepository.findByProductId(item.getProductId());
+                if (prodOpt.isPresent() && prodOpt.get().getImageUrl() != null) {
+                    item.setImageUrl(prodOpt.get().getImageUrl());
+                }
+            }
+        }
+    }
 
     @Override
     public ZyraRecommendationResponse getRecommendationsForProduct(String productId, Integer topK) {
         log.debug("Fetching public recommendations for product={} with topK={}", productId, topK);
-        return zyraClient.getRecommendations(productId, topK);
+        ZyraRecommendationResponse response = zyraClient.getRecommendations(productId, topK);
+        if (response != null && response.getRecommendations() != null) {
+            enrichRecommendationItemImages(response.getRecommendations());
+        }
+        return response;
     }
 
     @Override
@@ -56,6 +77,8 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             throw new ZyraValidationException("Zyra engine returned empty recommendation response for product: " + productId);
         }
 
+        enrichRecommendationItemImages(zyraResponse.getRecommendations());
+
         // 2. Map response and user to persistent entity
         UserRecommendationGeneration generation = ZyraRecommendationMapper.toEntity(user, zyraResponse);
 
@@ -65,7 +88,9 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
                 savedGeneration.getId(), savedGeneration.getItems().size(), user.getId());
 
         // 4. Return user DTO
-        return ZyraRecommendationMapper.toUserResponse(savedGeneration);
+        ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(savedGeneration);
+        enrichRecommendationItemImages(responseDto.getRecommendations());
+        return responseDto;
     }
 
     @Override
@@ -80,7 +105,9 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
                 .or(() -> generationRepository.findFirstByUserIdOrderByGeneratedAtDesc(user.getId()))
                 .orElseThrow(() -> new ZyraGenerationNotFoundException("No recommendation collections found for user: " + user.getId()));
 
-        return ZyraRecommendationMapper.toUserResponse(generation);
+        ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(generation);
+        enrichRecommendationItemImages(responseDto.getRecommendations());
+        return responseDto;
     }
 
     @Override
@@ -106,7 +133,9 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             throw new ZyraAccessDeniedException("Cross-user access denied: generation does not belong to the authenticated user");
         }
 
-        return ZyraRecommendationMapper.toUserResponse(generation);
+        ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(generation);
+        enrichRecommendationItemImages(responseDto.getRecommendations());
+        return responseDto;
     }
 
     @Override
@@ -121,6 +150,7 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
 
         return generations.stream()
                 .map(ZyraRecommendationMapper::toUserResponse)
+                .peek(resp -> enrichRecommendationItemImages(resp.getRecommendations()))
                 .collect(Collectors.toList());
     }
 }
