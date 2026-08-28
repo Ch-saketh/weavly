@@ -64,12 +64,14 @@ export default function ProductCard({ product, onViewProduct }) {
         {/* Image */}
         <div className="relative aspect-[3/4.2] overflow-hidden bg-white border border-[#ECECEC] select-none flex items-center justify-center rounded-2xl shadow-[0_1px_2px_rgba(0,0,0,0.01)] transition-shadow duration-300 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.03)]">
           <img
-            src={product.images?.[0] || product.image || "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=80"}
+            src={product.imageUrl || product.image || product.images?.[0] || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80"}
             alt={product.name || product.title || "Product"}
             className="w-full h-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
             loading="lazy"
+            referrerPolicy="no-referrer"
             onError={(e) => {
-              e.currentTarget.src = "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=80";
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80";
             }}
           />
 

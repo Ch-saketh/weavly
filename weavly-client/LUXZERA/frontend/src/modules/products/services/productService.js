@@ -24,12 +24,29 @@ const categoryToFilter = (categoryName) => {
   return "Tops";
 };
 
+const ensureHttps = (url) => {
+  if (!url || typeof url !== "string") return url;
+  if (url.startsWith("http://assets.myntassets.com")) {
+    return url.replace("http://assets.myntassets.com", "https://assets.myntassets.com");
+  }
+  if (url.startsWith("http://")) {
+    return "https://" + url.slice(7);
+  }
+  return url;
+};
+
 export const normalizeProduct = (product, index = 0) => {
-  const images = product.images?.length
+  const rawList = product.images?.length
     ? product.images
     : product.imageUrls?.length
     ? product.imageUrls
-    : [product.image || product.imageUrl || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]].filter(Boolean);
+    : [product.imageUrl || product.image].filter(Boolean);
+
+  const images = rawList.map(ensureHttps).filter(Boolean);
+  if (images.length === 0) {
+    images.push(FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]);
+  }
+  const primaryImage = images[0];
 
   const salePrice = Number(product.price || product.salePrice);
   const basePrice = Number(product.mrp || product.basePrice);
@@ -41,7 +58,7 @@ export const normalizeProduct = (product, index = 0) => {
     name: product.name || product.title,
     title: product.title || product.name,
     description: product.description,
-    brand: product.brand || product.brandNames?.[0] || "Luxzera Studio",
+    brand: product.brand || product.brandNames?.[0] || product.brandName || "Luxzera Studio",
     department: audienceToDepartment(product.gender || product.audience),
     gender: product.gender || audienceToDepartment(product.audience),
     price: Number.isFinite(price) ? price : 2999.0,
@@ -49,8 +66,8 @@ export const normalizeProduct = (product, index = 0) => {
     discountPercent: product.discountPercent || (basePrice > price ? Math.round((1 - price / basePrice) * 100) : 0),
     rating: product.rating || 4.2,
     ratingCount: product.ratingCount || 120,
-    image: images[0],
-    imageUrl: images[0],
+    image: primaryImage,
+    imageUrl: primaryImage,
     images,
     badge: product.badge || null,
     sizes: product.sizes?.length ? product.sizes : ["S", "M", "L", "XL"],

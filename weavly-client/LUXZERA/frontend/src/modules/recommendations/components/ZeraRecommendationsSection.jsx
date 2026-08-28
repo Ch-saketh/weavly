@@ -159,6 +159,7 @@ export default function ZeraRecommendationsSection({
                   src={displayImg}
                   alt={item.name}
                   loading="lazy"
+                  referrerPolicy="no-referrer"
                   onError={(e) => {
                     e.currentTarget.onerror = null;
                     e.currentTarget.src = DEFAULT_FALLBACK_IMAGE;

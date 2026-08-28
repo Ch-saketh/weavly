@@ -360,8 +360,13 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                   {/* Clean Full-Bleed Product Card Container */}
                   <div className="aspect-[3/4] bg-[#FAF8F5] rounded-[24px] overflow-hidden border border-[#E7E3DD] relative shadow-xs">
                     <img 
-                      src={product.image} 
+                      src={product.imageUrl || product.image || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80"} 
                       alt={product.name} 
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80";
+                      }}
                       className="w-full h-full object-cover object-top" 
                     />
 

@@ -136,11 +136,11 @@ export default function ShopPage({ initialDepartment = "All" }) {
       setLoadingProducts(true);
       setProductError("");
       try {
-        const genderParam = userGender === "male" ? "men" : userGender === "female" ? "women" : undefined;
+        const effectiveDept = initialDepartment !== "All" ? initialDepartment : (userGender === "male" ? "men" : userGender === "female" ? "women" : undefined);
         const res = await getPaginatedProducts({
           limit: 24,
           offset: 0,
-          gender: genderParam,
+          gender: effectiveDept,
         });
         if (!ignore) {
           setProducts(res.products || []);
@@ -171,11 +171,11 @@ export default function ShopPage({ initialDepartment = "All" }) {
     if (loadingMore || !hasMore || loadingProducts) return;
     setLoadingMore(true);
     try {
-      const genderParam = userGender === "male" ? "men" : userGender === "female" ? "women" : undefined;
+      const effectiveDept = initialDepartment !== "All" ? initialDepartment : (userGender === "male" ? "men" : userGender === "female" ? "women" : undefined);
       const res = await getPaginatedProducts({
         limit: 24,
         offset: products.length,
-        gender: genderParam,
+        gender: effectiveDept,
       });
       if (res.products && res.products.length > 0) {
         setProducts((prev) => {

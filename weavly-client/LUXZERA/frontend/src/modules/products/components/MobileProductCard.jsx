@@ -14,7 +14,7 @@ export default function MobileProductCard({ product, onViewProduct }) {
 
   const productId = product.id || product.productId;
   const productName = product.name || product.title || "Product";
-  const productImage = product.images?.[0] || product.image || product.imageUrl || "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=80";
+  const productImage = product.imageUrl || product.image || product.images?.[0] || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80";
 
   const saved = isSaved(productId);
   const defaultSize = product.sizes?.[0] ?? "M";
@@ -47,8 +47,10 @@ export default function MobileProductCard({ product, onViewProduct }) {
           alt={productName}
           className="h-full w-full object-cover object-top"
           loading="lazy"
+          referrerPolicy="no-referrer"
           onError={(e) => {
-            e.currentTarget.src = "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=80";
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80";
           }}
         />
         {product.badge && (
