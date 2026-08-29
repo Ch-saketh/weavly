@@ -65,6 +65,7 @@ public class SecurityConfig {
 
                         // ── Auth endpoints (all public) ──────────────────
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/designer/auth/**").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/api/admin/onboarding").permitAll()
 
@@ -77,6 +78,15 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/products/import-catalog").permitAll()
 
+                        // ── Designer & Designs Public Discovery ─────────────
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/designers",
+                                "/api/designers/**",
+                                "/api/designs",
+                                "/api/designs/**"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/customization-requests").permitAll()
+
                         // ── Spring error page ────────────────────────────
                         .requestMatchers("/error").permitAll()
 
@@ -85,6 +95,9 @@ public class SecurityConfig {
 
                         // 🚀 ── Image Upload Testing (Temporary Public Access) ──
                         .requestMatchers("/api/v1/test/images/**").permitAll()
+
+                        // ── Designer Studio Management (requires Designer JWT) ──
+                        .requestMatchers("/api/designer/me/**").hasRole("DESIGNER")
 
                         // Everything else requires a valid JWT
                         .anyRequest().authenticated()

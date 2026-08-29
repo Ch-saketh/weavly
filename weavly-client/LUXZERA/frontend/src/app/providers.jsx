@@ -5,6 +5,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { CartProvider } from "@/modules/cart/store/CartContext";
 import { WardrobeProvider } from "@/modules/wishlist/store/WardrobeContext";
 import { AuthProvider } from "@/modules/auth/store/AuthContext";
+import { DesignerAuthProvider } from "@/modules/designer/store/DesignerAuthContext";
 import ErrorBoundary from "@/shared/components/ui/ErrorBoundary";
 
 const googleClientId = (
@@ -19,7 +20,9 @@ export default function Providers({ children }) {
         <CartProvider>
           <WardrobeProvider>
             <AuthProvider>
-              {children}
+              <DesignerAuthProvider>
+                {children}
+              </DesignerAuthProvider>
             </AuthProvider>
           </WardrobeProvider>
         </CartProvider>

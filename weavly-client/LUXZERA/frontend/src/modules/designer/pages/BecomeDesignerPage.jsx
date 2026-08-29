@@ -117,19 +117,16 @@ export default function BecomeDesignerPage() {
 
           <div className="flex flex-wrap gap-4 mt-3">
             <button
-              onClick={() => router.push("/designer-onboarding")}
+              onClick={() => router.push("/designer/register")}
               className="px-6 py-3.5 rounded-full bg-[#F07020] hover:bg-[#1D1D1F] text-white text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all duration-300 shadow-[0_6px_20px_rgba(240,112,32,0.25)] flex items-center gap-2"
             >
               Register as a Designer <ArrowRight size={13} />
             </button>
             <button
-              onClick={() => successRef.current?.scrollIntoView({ behavior:"smooth" })}
+              onClick={() => router.push("/designer/login")}
               className="flex items-center gap-2 px-6 py-3.5 rounded-full border border-[#1D1D1F]/20 hover:border-[#1D1D1F] text-[12px] font-extrabold uppercase tracking-[0.18em] text-[#1D1D1F] transition-all duration-300"
             >
-              <span className="w-7 h-7 rounded-full bg-[#1D1D1F]/8 flex items-center justify-center">
-                <Play size={10} fill="#1D1D1F" />
-              </span>
-              Explore Success Stories
+              Sign In to Studio
             </button>
           </div>
 
@@ -759,19 +756,16 @@ export default function BecomeDesignerPage() {
             
             <div className="flex flex-wrap gap-4 mt-1">
               <button
-                onClick={() => router.push("/designer-onboarding")}
+                onClick={() => router.push("/designer/register")}
                 className="flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#F07020] hover:bg-[#1D1D1F] text-white text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all duration-300 shadow-[0_6px_20px_rgba(240,112,32,0.2)]"
               >
                 Register as a Designer <ArrowRight size={13} />
               </button>
               <button
-                onClick={() => successRef.current?.scrollIntoView({ behavior:"smooth" })}
+                onClick={() => router.push("/designer/login")}
                 className="flex items-center gap-2 px-6 py-3.5 rounded-full border border-[#1D1D1F]/20 hover:border-[#1D1D1F] text-[12px] font-extrabold uppercase tracking-[0.18em] text-[#1D1D1F] transition-all duration-300 bg-white"
               >
-                <span className="w-7 h-7 rounded-full bg-[#1D1D1F]/8 flex items-center justify-center">
-                  <Play size={10} fill="#1D1D1F" />
-                </span>
-                Learn More
+                Sign In to Studio
               </button>
             </div>
 
