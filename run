@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Weavly Ecosystem CLI (`run`)
+# ==============================================================================
+# Usage:
+#   run servers       -> Start Python, Spring Boot, and Next.js servers
+#   run stop          -> Stop all running servers
+#   run status        -> Check status of all 3 servers
+#   run push [msg]    -> Sync all code to 4 GitHub repositories
+# ==============================================================================
+
+# Locate Weavly repo root
+if [ -f "./scripts/run_servers.sh" ]; then
+    REPO_ROOT="$(pwd)"
+elif [ -d "/Users/saketh/Desktop/Projects/weavly" ]; then
+    REPO_ROOT="/Users/saketh/Desktop/Projects/weavly"
+else
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+fi
+
+COMMAND="${1:-servers}"
+shift 2>/dev/null || true
+
+case "$COMMAND" in
+    servers|start)
+        "$REPO_ROOT/scripts/run_servers.sh"
+        ;;
+    stop)
+        echo "🛑 Stopping all Weavly processes on ports 5001, 8081, 3000..."
+        for port in 5001 8081 3000; do
+            pids=$(lsof -ti tcp:$port 2>/dev/null || true)
+            if [ -n "$pids" ]; then
+                for p in $pids; do kill -9 $p 2>/dev/null || true; done
+                echo "   ✓ Cleared port $port"
+            else
+                echo "   - Port $port is not running"
+            fi
+        done
+        echo "✓ All servers stopped."
+        ;;
+    status)
+        echo "======================================================================"
+        echo "🔍 WEAVLY SERVERS STATUS"
+        echo "======================================================================"
+        # Python
+        if curl -s http://127.0.0.1:5001/health 2>/dev/null | grep -q "ok"; then
+            echo -e "🧠 Zyra ML Engine (5001)   : \033[1;32mONLINE\033[0m"
+        else
+            echo -e "🧠 Zyra ML Engine (5001)   : \033[1;31mOFFLINE\033[0m"
+        fi
+        # Spring Boot
+        if curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8081/api 2>/dev/null | grep -qE "200|401|404"; then
+            echo -e "⚙️  Spring Boot API (8081)  : \033[1;32mONLINE\033[0m"
+        else
+            echo -e "⚙️  Spring Boot API (8081)  : \033[1;31mOFFLINE\033[0m"
+        fi
+        # Next.js
+        if curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000 2>/dev/null | grep -qE "200|404"; then
+            echo -e "🎨 Next.js Frontend (3000) : \033[1;32mONLINE\033[0m"
+        else
+            echo -e "🎨 Next.js Frontend (3000) : \033[1;31mOFFLINE\033[0m"
+        fi
+        echo "======================================================================"
+        ;;
+    push|sync)
+        "$REPO_ROOT/scripts/sync_all_repos.sh" "$@"
+        ;;
+    *)
+        echo "Usage: run [servers | stop | status | push <commit-message>]"
+        exit 1
+        ;;
+esac

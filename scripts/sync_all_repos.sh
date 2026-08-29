@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Weavly — Multi-Repository Unified Sync Tool
-# Author: Saketh Chokkapu
+# Weavly — Multi-Repository Unified Git Push & Sync Tool
 # ==============================================================================
 # Synchronizes the monorepo and its three component repositories:
 # 1. Root Monorepo:  https://github.com/Ch-saketh/weavly.git
@@ -15,13 +14,16 @@ set -e
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-COMMIT_MSG="${1:-"sync: update latest code across monorepo and sub-repos"}"
+COMMIT_MSG="${1:-"feat(sync): update latest changes across monorepo and sub-repos"}"
 
 echo "======================================================================"
-echo "🚀 SYNCING WEAVLY MULTI-REPOSITORY ECOSYSTEM"
+echo "🚀 SYNCING WEAVLY MULTI-REPOSITORY ECOSYSTEM TO GITHUB"
 echo "======================================================================"
+echo "Commit message: \"$COMMIT_MSG\""
+echo "Root directory: $REPO_ROOT"
+echo "----------------------------------------------------------------------"
 
-# 1. Ensure remotes are configured
+# 1. Configure remotes if not already set
 git remote add client https://github.com/Ch-saketh/weavly-public.git 2>/dev/null || git remote set-url client https://github.com/Ch-saketh/weavly-public.git
 git remote add backend https://github.com/Ch-saketh/Weavly-render.git 2>/dev/null || git remote set-url backend https://github.com/Ch-saketh/Weavly-render.git
 git remote add core https://github.com/Ch-saketh/Zyra.git 2>/dev/null || git remote set-url core https://github.com/Ch-saketh/Zyra.git
@@ -29,31 +31,33 @@ git remote add origin https://github.com/Ch-saketh/weavly.git 2>/dev/null || git
 
 # 2. Stage and commit in root monorepo if there are changes
 if [[ -n $(git status -s) ]]; then
-  echo "📦 Committing changes in root monorepo..."
+  echo "📦 [1/4] Staging and committing changes in root monorepo..."
   git add .
   git commit -m "$COMMIT_MSG"
+else
+  echo "📦 [1/4] No uncommitted working tree changes."
 fi
 
-# 3. Push Root Monorepo
-echo "📡 Pushing to main monorepo (Ch-saketh/weavly)..."
+# 3. Push Root Monorepo to Origin
+echo "📡 [2/4] Pushing to Monorepo (Ch-saketh/weavly)..."
 git push origin main
 
-# 4. Push weavly-client -> weavly-public
-echo "🎨 Pushing weavly-client -> (Ch-saketh/weavly-public)..."
+# 4. Push weavly-client/LUXZERA/frontend -> weavly-public
+echo "🎨 [3/4] Splitting and pushing Frontend -> (Ch-saketh/weavly-public)..."
 git branch -D split-client 2>/dev/null || true
-git subtree split --prefix=weavly-client -b split-client
+git subtree split --prefix=weavly-client/LUXZERA/frontend -b split-client
 git push client split-client:main --force
 git branch -D split-client 2>/dev/null || true
 
-# 5. Push weavly-server -> Weavly-render
-echo "⚙️ Pushing weavly-server -> (Ch-saketh/Weavly-render)..."
+# 5. Push weavly-server/server -> Weavly-render
+echo "⚙️ [4/4] Splitting and pushing Backend -> (Ch-saketh/Weavly-render)..."
 git branch -D split-backend 2>/dev/null || true
-git subtree split --prefix=weavly-server -b split-backend
+git subtree split --prefix=weavly-server/server -b split-backend
 git push backend split-backend:main --force
 git branch -D split-backend 2>/dev/null || true
 
 # 6. Push core-model -> Zyra
-echo "🧠 Pushing core-model -> (Ch-saketh/Zyra)..."
+echo "🧠 [+] Splitting and pushing Zyra ML Core -> (Ch-saketh/Zyra)..."
 git branch -D split-core 2>/dev/null || true
 git subtree split --prefix=core-model -b split-core
 git push core split-core:main --force
@@ -61,4 +65,8 @@ git branch -D split-core 2>/dev/null || true
 
 echo "======================================================================"
 echo "✅ ALL 4 REPOSITORIES ARE FULLY SYNCHRONIZED AND UP TO DATE!"
+echo "   1. https://github.com/Ch-saketh/weavly"
+echo "   2. https://github.com/Ch-saketh/weavly-public"
+echo "   3. https://github.com/Ch-saketh/Weavly-render"
+echo "   4. https://github.com/Ch-saketh/Zyra"
 echo "======================================================================"
