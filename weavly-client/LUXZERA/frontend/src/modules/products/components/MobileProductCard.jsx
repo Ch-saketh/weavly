@@ -93,7 +93,7 @@ export default function MobileProductCard({ product, onViewProduct }) {
             {product.name}
           </h3>
           <span className="shrink-0 text-[14px] font-bold text-[#1D1D1F] tracking-wide">
-            ${product.price.toFixed(0)}
+            ₹{Math.round(product.price || 999).toLocaleString("en-IN")}
           </span>
         </div>
         <div className="mt-4 flex items-center gap-2">

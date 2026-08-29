@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowUpRight, ShoppingBag, Bookmark } from "lucide-react";
-import { PRODUCTS } from "@/modules/products/data/products";
 import { getProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
@@ -27,21 +26,20 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const initialGender = userGenderNorm || "MEN";
   const [activeTab, setActiveTab] = useState("ALL");
   const [genderFilter, setGenderFilter] = useState(initialGender);
-  const [productsList, setProductsList] = useState(() => PRODUCTS);
+  const [productsList, setProductsList] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
-    // Fetch with gender filter to get backend-filtered results
-    const genderParam = userGenderNorm === "MEN" ? "men" : userGenderNorm === "WOMAN" ? "women" : undefined;
-    getProducts({ limit: 100, gender: genderParam }).then((items) => {
-      if (isMounted && Array.isArray(items) && items.length > 0) {
-        setProductsList(items);
+    const genderParam = genderFilter === "MEN" ? "men" : genderFilter === "WOMAN" ? "women" : undefined;
+    getProducts({ limit: 60, gender: genderParam }).then((items) => {
+      if (isMounted) {
+        setProductsList(Array.isArray(items) ? items : []);
       }
     });
     return () => {
       isMounted = false;
     };
-  }, [userGenderNorm]);
+  }, [genderFilter]);
 
   // Products Data mapping with Gender & Category Filtering
   const categoryProducts = productsList.filter((p) => {

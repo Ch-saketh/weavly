@@ -14,7 +14,6 @@ import { SlidersHorizontal, X, Loader2 } from "lucide-react";
 import ProductCard from "@/modules/products/components/ProductCard";
 import FiltersSidebar from "@/modules/products/components/FiltersSidebar";
 import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
-import { PRODUCTS } from "@/modules/products/data/products";
 import { getPaginatedProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 
@@ -141,17 +140,18 @@ export default function ShopPage({ initialDepartment = "All" }) {
           limit: 24,
           offset: 0,
           gender: effectiveDept,
+          search: query || undefined,
         });
         if (!ignore) {
           setProducts(res.products || []);
           setHasMore(res.hasMore);
         }
       } catch (error) {
-        console.error("Product API unavailable, using local catalog:", error);
+        console.error("Product API error:", error);
         if (!ignore) {
-          setProducts(PRODUCTS);
+          setProducts([]);
           setHasMore(false);
-          setProductError("Live product API is unavailable. Showing temporary catalog photos.");
+          setProductError("Unable to load products. Please check server connection.");
         }
       } finally {
         if (!ignore) {
@@ -164,7 +164,7 @@ export default function ShopPage({ initialDepartment = "All" }) {
     return () => {
       ignore = true;
     };
-  }, [userGender, initialDepartment]);
+  }, [userGender, initialDepartment, query]);
 
   // Load more on scroll
   const loadMore = useCallback(async () => {
@@ -176,6 +176,7 @@ export default function ShopPage({ initialDepartment = "All" }) {
         limit: 24,
         offset: products.length,
         gender: effectiveDept,
+        search: query || undefined,
       });
       if (res.products && res.products.length > 0) {
         setProducts((prev) => {
@@ -193,7 +194,7 @@ export default function ShopPage({ initialDepartment = "All" }) {
     } finally {
       setLoadingMore(false);
     }
-  }, [loadingMore, hasMore, loadingProducts, products.length, userGender]);
+  }, [loadingMore, hasMore, loadingProducts, products.length, userGender, initialDepartment, query]);
 
   // Infinite scroll observer
   useEffect(() => {

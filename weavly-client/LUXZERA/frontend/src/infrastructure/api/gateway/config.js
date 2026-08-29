@@ -14,7 +14,8 @@ const getZyraApiUrl = () => {
 
 const getProductsApiUrl = () => {
   if (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_PRODUCTS_API_URL) {
-    return process.env.NEXT_PUBLIC_PRODUCTS_API_URL;
+    const raw = process.env.NEXT_PUBLIC_PRODUCTS_API_URL.replace(/\/$/, "");
+    return raw.endsWith("/products") ? raw : `${raw}/products`;
   }
   return `${getApiBaseUrl()}/products`;
 };

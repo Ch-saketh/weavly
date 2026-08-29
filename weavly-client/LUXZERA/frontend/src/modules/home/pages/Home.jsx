@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { ArrowRight, Clock, Shirt, Tag, Heart, Plus, Sparkles, ChevronDown, User, ShoppingBag, TrendingUp, Search, Check } from "lucide-react";
 import ProductCard from "@/modules/products/components/ProductCard";
-import { PRODUCTS } from "@/modules/products/data/products";
 import { getProducts } from "@/modules/products/services/productService";
 
 const MODEL_A = "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&q=80";
@@ -37,7 +36,7 @@ const DESIGNERS = [
 ];
 
 export default function Home({ onShopNow }) {
-  const [products, setProducts] = useState(() => PRODUCTS);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     let isMounted = true;

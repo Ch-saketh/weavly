@@ -16,8 +16,8 @@ export default function ProductCard({ product, onViewProduct }) {
 
   const productId = product.id || product.productId;
   const productName = product.name || product.title || "Product";
-  const productPrice = typeof product.price === "number" ? product.price : Number(product.price) || 2999.0;
-  const productImage = product.images?.[0] || product.image || product.imageUrl || "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=80";
+  const productPrice = typeof product.price === "number" ? product.price : Number(product.price) || 999.0;
+  const productImage = product.images?.[0] || product.image || product.imageUrl || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23F4F1EC'/%3E%3C/svg%3E";
 
   const saved = isSaved(productId);
   const defaultSize = product.sizes?.[0] ?? "M";
@@ -26,14 +26,14 @@ export default function ProductCard({ product, onViewProduct }) {
     e.preventDefault();
     e.stopPropagation();
     setAdded(true);
-    addToCart({ ...product, id: productId, size: defaultSize });
+    addToCart({ ...product, id: productId, size: defaultSize, price: productPrice });
     setTimeout(() => setAdded(false), 1800);
   };
 
   const handleBookmark = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleWardrobe({ ...product, id: productId });
+    toggleWardrobe({ ...product, id: productId, price: productPrice });
   };
 
   const handleView = () => {
@@ -41,23 +41,12 @@ export default function ProductCard({ product, onViewProduct }) {
     router.push(`/product/${productId}`);
   };
 
-  const getDesignerDetails = (brandName) => {
-    const brandMap = {
-      "Nocturne":   { origin: "London Studio",  season: "SS26"  },
-      "Voidwear":   { origin: "Paris Atelier",   season: "Limited"  },
-      "Axle Studio":{ origin: "Tokyo Design",    season: "Runway"   },
-    };
-    return brandMap[brandName] || { origin: "Milan Studio", season: "Seasonal" };
+  const NEUTRAL_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23F4F1EC'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='16' font-weight='500' fill='%239E9484' text-anchor='middle' letter-spacing='2'%3ELUXZERA%3C/text%3E%3C/svg%3E";
+
+  const ensureHttps = (url) => {
+    if (!url || typeof url !== "string") return "";
+    return url.replace(/^http:\/\//i, "https://");
   };
-
-  const { origin, season } = getDesignerDetails(product.brand);
-
-const NEUTRAL_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23F4F1EC'/%3E%3Cpath d='M260 360C260 337.909 277.909 320 300 320C322.091 320 340 337.909 340 360V420C340 442.091 322.091 460 300 460C277.909 460 260 442.091 260 420V360Z' stroke='%23C5BCAD' stroke-width='8'/%3E%3Cpath d='M230 460C230 440 250 420 300 420C350 420 370 440 370 460V500H230V460Z' stroke='%23C5BCAD' stroke-width='8'/%3E%3Ctext x='50%25' y='560' font-family='sans-serif' font-size='16' font-weight='500' fill='%239E9484' text-anchor='middle' letter-spacing='2'%3ELUXZERA%3C/text%3E%3C/svg%3E";
-
-const ensureHttps = (url) => {
-  if (!url || typeof url !== "string") return "";
-  return url.replace(/^http:\/\//i, "https://");
-};
 
   const rawImg = product.imageUrl || product.image || product.images?.[0];
   const displayImage = rawImg ? ensureHttps(rawImg) : NEUTRAL_FALLBACK_IMAGE;

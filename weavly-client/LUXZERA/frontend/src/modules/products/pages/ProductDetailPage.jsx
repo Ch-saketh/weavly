@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { PRODUCTS } from "@/modules/products/data/products";
-import { getProductById, getProducts } from "@/modules/products/services/productService";
+import { getProductById } from "@/modules/products/services/productService";
 import { useCart } from "@/modules/cart/store/CartContext";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
@@ -54,15 +53,7 @@ export default function ProductDetailPage() {
       setLoading(true);
       getProductById(id).then((fetched) => {
         if (isMounted) {
-          if (fetched) {
-            setProduct(fetched);
-          } else {
-            // Local fallback if offline
-            const local = PRODUCTS.find(
-              (p) => String(p.id) === String(id) || String(p.productId) === String(id)
-            );
-            setProduct(local || PRODUCTS[0]);
-          }
+          setProduct(fetched || null);
           setLoading(false);
         }
       });

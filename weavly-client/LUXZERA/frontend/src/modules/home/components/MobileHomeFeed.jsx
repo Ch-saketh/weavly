@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Sparkles, ArrowRight, Heart, ShoppingBag, TrendingUp, ChevronRight, Zap } from "lucide-react";
-import { PRODUCTS } from "@/modules/products/data/products";
 import MobileProductCard from "@/modules/products/components/MobileProductCard";
 import { useCart } from "@/modules/cart/store/CartContext";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useAuth } from "@/modules/auth/store/useAuth";
+import { getProducts } from "@/modules/products/services/productService";
 
 const STORIES = [
   { id: "new", name: "New Drop", tag: "Just In", img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&q=80", color: "#F07020" },
@@ -21,8 +21,6 @@ const STORIES = [
   { id: "designers", name: "Atelier", tag: "Exclusive", img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&q=80", color: "#C6A15B" },
 ];
 
-import { getProducts } from "@/modules/products/services/productService";
-
 const CATEGORY_TAGS = ["All", "Tops", "Outerwear", "Bottoms", "Denim", "Belts & Acc", "Footwear", "Luxury"];
 
 export default function MobileHomeFeed({ onShopNow }) {
@@ -31,7 +29,7 @@ export default function MobileHomeFeed({ onShopNow }) {
   const { toggleWardrobe, isSaved } = useWardrobe();
   const { user } = useAuth();
   const [activeCategory, setActiveCategory] = useState("All");
-  const [products, setProducts] = useState(() => PRODUCTS);
+  const [products, setProducts] = useState([]);
 
   // Derive gender for backend filter
   const userGenderRaw = (user?.gender || "").toLowerCase();
