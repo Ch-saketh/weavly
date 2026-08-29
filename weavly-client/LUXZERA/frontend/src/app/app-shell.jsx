@@ -70,7 +70,13 @@ export default function AppShell({ children }) {
       "/admin/apply",
       "/login",
     ];
-    const isPublic = publicPaths.includes(pathname);
+    const isDesignerRoute =
+      pathname.startsWith("/designer") ||
+      pathname.startsWith("/designs") ||
+      pathname === "/become-designer" ||
+      pathname === "/custom-design";
+
+    const isPublic = publicPaths.includes(pathname) || isDesignerRoute;
 
     if (!currentUser && !isPublic && !pathname.startsWith("/admin")) {
       router.replace("/?openLogin=true");
@@ -125,7 +131,7 @@ export default function AppShell({ children }) {
 
   const authPaths = ["/verify-otp", "/forgot-password", "/reset-password", "/complete-google-signup", "/login"];
   const isGuestOnboarding = mounted && !authLoading && pathname === "/" && !currentUser;
-  const isHideLayout = pathname === "/designer-onboarding" || pathname === "/designer-studio" || pathname.startsWith("/admin") || authPaths.includes(pathname) || isGuestOnboarding;
+  const isHideLayout = pathname === "/designer-studio" || pathname === "/designer/dashboard" || pathname.startsWith("/admin") || authPaths.includes(pathname) || isGuestOnboarding;
   const showFloatingCart = cartCount > 0 && pathname !== "/cart" && !isHideLayout;
   const showNavbar = !isHideLayout;
 
@@ -158,13 +164,7 @@ export default function AppShell({ children }) {
           onLogout={handleLogout}
           onSearch={handleSearch}
           onBetaClick={() => setBetaNoticeOpen(true)}
-          onDesignerClick={() => {
-            if (currentUser && (currentUser.role === "DESIGNER" || currentUser.isDesigner)) {
-              router.push("/designer-studio");
-            } else {
-              router.push("/become-designer");
-            }
-          }}
+          onDesignerClick={() => router.push("/designer-studio")}
         />
       )}
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ShoppingBag, User, LogOut, X, Menu, Search, ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ShoppingBag, User, LogOut, X, Menu, Search, ChevronDown, Sparkles, Scissors, Palette } from "lucide-react";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import StaggeredMenu from "@/shared/components/ui/StaggeredMenu";
 import branding from "@/config/branding";
@@ -28,6 +29,7 @@ export default function Navbar({
   onDesignerClick,
   onBetaClick,
 }) {
+  const router = useRouter();
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedNav, setExpandedNav] = useState(null);
@@ -443,8 +445,11 @@ export default function Navbar({
                   { label: "Shop All", onClick: () => onShopClick?.() },
                   { label: "Men's Sartorial", onClick: () => onMenClick?.() },
                   { label: "Women's Atelier", onClick: () => onWomenClick?.() },
-                  { label: "Unisex Drops", onClick: () => onUnisexClick?.() },
-                  { label: "Designer Studio", onClick: () => onDesignerClick?.() },
+                  { label: "Discover Designers", onClick: () => router.push("/designers") },
+                  { label: "Creator Lookbooks", onClick: () => router.push("/designs") },
+                  { label: "Custom Commission", onClick: () => router.push("/custom-design") },
+                  { label: "Designer Studio", onClick: () => router.push("/designer-studio") },
+                  { label: "Become a Designer", onClick: () => router.push("/become-designer") },
                   ...(currentUser
                     ? [
                         { label: "My Account", onClick: () => onAccountClick?.() },

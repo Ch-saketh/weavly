@@ -89,25 +89,35 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
               </ul>
             </div>
 
-            {/* Column 2: Studio */}
+            {/* Column 2: Studio & Designers */}
             <div className="space-y-3">
               <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#FFFFFF]">
-                Studio
+                Designer Atelier
               </h4>
               <ul className="space-y-2 text-[#FFFFFF] font-medium p-0 m-0 list-none">
                 <li>
-                  <button onClick={() => handleLinkClick("/become-designer")} className="hover:opacity-80 transition-opacity border-none bg-transparent cursor-pointer p-0 text-left text-white text-xs">
-                    Become Designer
+                  <button onClick={() => handleLinkClick("/designers")} className="hover:opacity-80 transition-opacity border-none bg-transparent cursor-pointer p-0 text-left text-white text-xs">
+                    Discover Designers
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handleLinkClick("/designs")} className="hover:opacity-80 transition-opacity border-none bg-transparent cursor-pointer p-0 text-left text-white text-xs">
+                    Creator Lookbooks
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handleLinkClick("/custom-design")} className="hover:opacity-80 transition-opacity border-none bg-transparent cursor-pointer p-0 text-left text-white text-xs">
+                    Commission Garment
                   </button>
                 </li>
                 <li>
                   <button onClick={() => handleLinkClick("/designer-studio")} className="hover:opacity-80 transition-opacity border-none bg-transparent cursor-pointer p-0 text-left text-white text-xs">
-                    Designer Portal
+                    Designer Studio
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleLinkClick("/faqs")} className="hover:opacity-80 transition-opacity border-none bg-transparent cursor-pointer p-0 text-left text-white text-xs">
-                    Help &amp; FAQs
+                  <button onClick={() => handleLinkClick("/become-designer")} className="hover:opacity-80 transition-opacity border-none bg-transparent cursor-pointer p-0 text-left text-white text-xs">
+                    Become a Designer
                   </button>
                 </li>
               </ul>
