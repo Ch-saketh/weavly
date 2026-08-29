@@ -22,15 +22,29 @@ public final class ZyraRecommendationMapper {
             User user,
             ZyraRecommendationResponse zyraResponse
     ) {
+        return toEntity(user, zyraResponse, null);
+    }
+
+    public static UserRecommendationGeneration toEntity(
+            User user,
+            ZyraRecommendationResponse zyraResponse,
+            String occasion
+    ) {
         if (zyraResponse == null) {
             return null;
         }
 
         ZyraMetadataDto meta = zyraResponse.getMetadata();
 
+        String qPid = zyraResponse.getProductId();
+        if (qPid == null || qPid.trim().isEmpty()) {
+            qPid = occasion != null ? "occasion:" + occasion.toLowerCase() : "personalized";
+        }
+
         UserRecommendationGeneration generation = UserRecommendationGeneration.builder()
                 .user(user)
-                .queryProductId(zyraResponse.getProductId())
+                .queryProductId(qPid)
+                .occasion(occasion != null ? occasion.toLowerCase() : null)
                 .modelVersion(zyraResponse.getModelVersion() != null ? zyraResponse.getModelVersion() : "zyra-v1-p9")
                 .itemCount(zyraResponse.getRecommendations() != null ? zyraResponse.getRecommendations().size() : 0)
                 .candidateK(meta != null ? meta.getCandidateK() : null)

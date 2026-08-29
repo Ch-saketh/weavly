@@ -133,7 +133,7 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
         enrichRecommendationItemImages(zyraResponse.getRecommendations());
 
         // 4. Map response and user to persistent entity
-        UserRecommendationGeneration generation = ZyraRecommendationMapper.toEntity(user, zyraResponse);
+        UserRecommendationGeneration generation = ZyraRecommendationMapper.toEntity(user, zyraResponse, targetOccasion);
 
         // 5. Atomically persist generation + items
         UserRecommendationGeneration savedGeneration = generationRepository.save(generation);
@@ -147,22 +147,44 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ZyraUserRecommendationGenerationResponse getLatestUserRecommendations(User user) {
         return getLatestUserRecommendations(user, null);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ZyraUserRecommendationGenerationResponse getLatestUserRecommendations(User user, String occasion) {
         if (user == null || user.getId() == null) {
             throw new ZyraValidationException("Authenticated user context is required");
         }
 
         log.debug("Retrieving latest Zera recommendations for userId={}, occasion={}", user.getId(), occasion);
+
+        if (occasion != null && !occasion.trim().isEmpty() && !occasion.equalsIgnoreCase("all")) {
+            String normOcc = occasion.trim().toLowerCase();
+            Optional<UserRecommendationGeneration> occGen = generationRepository
+                    .findLatestByUserIdAndOccasionWithItems(user.getId(), normOcc);
+            if (occGen.isPresent()) {
+                ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(occGen.get());
+                enrichRecommendationItemImages(responseDto.getRecommendations());
+                return responseDto;
+            }
+            // Generate fresh occasion recommendations on demand
+            log.info("No prior recommendation cache for user={} and occasion={}, generating on demand", user.getId(), normOcc);
+            return generateAndSaveUserRecommendations(user, null, 50, normOcc);
+        }
+
         UserRecommendationGeneration generation = generationRepository.findLatestByUserIdWithItems(user.getId())
                 .or(() -> generationRepository.findFirstByUserIdOrderByGeneratedAtDesc(user.getId()))
-                .orElseThrow(() -> new ZyraGenerationNotFoundException("No recommendation collections found for user: " + user.getId()));
+                .orElseGet(() -> {
+                    log.info("No prior recommendation cache for user={}, generating default recommendations", user.getId());
+                    return null;
+                });
+
+        if (generation == null) {
+            return generateAndSaveUserRecommendations(user, null, 50, null);
+        }
 
         ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(generation);
         enrichRecommendationItemImages(responseDto.getRecommendations());

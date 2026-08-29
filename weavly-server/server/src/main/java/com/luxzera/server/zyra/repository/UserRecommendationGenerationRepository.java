@@ -26,6 +26,12 @@ public interface UserRecommendationGenerationRepository extends JpaRepository<Us
     @Query("SELECT g FROM UserRecommendationGeneration g LEFT JOIN FETCH g.items WHERE g.user.id = :userId ORDER BY g.generatedAt DESC LIMIT 1")
     Optional<UserRecommendationGeneration> findLatestByUserIdWithItems(@Param("userId") UUID userId);
 
+    @Query("SELECT g FROM UserRecommendationGeneration g LEFT JOIN FETCH g.items WHERE g.user.id = :userId AND LOWER(g.occasion) = LOWER(:occasion) ORDER BY g.generatedAt DESC LIMIT 1")
+    Optional<UserRecommendationGeneration> findLatestByUserIdAndOccasionWithItems(
+            @Param("userId") UUID userId,
+            @Param("occasion") String occasion
+    );
+
     Optional<UserRecommendationGeneration> findFirstByUserIdOrderByGeneratedAtDesc(UUID userId);
 
     List<UserRecommendationGeneration> findByUserIdOrderByGeneratedAtDesc(UUID userId);

@@ -13,7 +13,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "user_recommendation_generations", indexes = {
         @Index(name = "idx_urg_user_id", columnList = "user_id"),
-        @Index(name = "idx_urg_user_generated_at", columnList = "user_id, generated_at DESC")
+        @Index(name = "idx_urg_user_generated_at", columnList = "user_id, generated_at DESC"),
+        @Index(name = "idx_urg_user_occasion", columnList = "user_id, occasion, generated_at DESC")
 })
 @Getter
 @Setter
@@ -30,8 +31,11 @@ public class UserRecommendationGeneration {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "query_product_id", nullable = false)
+    @Column(name = "query_product_id")
     private String queryProductId;
+
+    @Column(name = "occasion", length = 64)
+    private String occasion;
 
     @Column(name = "model_version", nullable = false, length = 64)
     private String modelVersion;

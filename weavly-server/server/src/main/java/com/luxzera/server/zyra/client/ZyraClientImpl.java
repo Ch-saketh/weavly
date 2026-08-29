@@ -125,10 +125,12 @@ public class ZyraClientImpl implements ZyraClient {
             throw new ZyraValidationException("Received null recommendation response from Zyra service");
         }
 
-        if (response.getProductId() == null || !response.getProductId().equals(queryProductId)) {
-            throw new ZyraValidationException(String.format(
-                    "Recommendation response productId '%s' does not match query '%s'",
-                    response.getProductId(), queryProductId));
+        if (queryProductId != null) {
+            if (response.getProductId() == null || !response.getProductId().equals(queryProductId)) {
+                throw new ZyraValidationException(String.format(
+                        "Recommendation response productId '%s' does not match query '%s'",
+                        response.getProductId(), queryProductId));
+            }
         }
 
         List<ZyraRecommendationItem> items = response.getRecommendations();
@@ -153,7 +155,7 @@ public class ZyraClientImpl implements ZyraClient {
             if (item.getProductId() == null || item.getProductId().trim().isEmpty()) {
                 throw new ZyraValidationException("Recommendation item at rank " + item.getRank() + " has null/empty productId");
             }
-            if (item.getProductId().equals(queryProductId)) {
+            if (queryProductId != null && item.getProductId().equals(queryProductId)) {
                 throw new ZyraValidationException("Self-recommendation detected: query product returned as recommendation at rank " + item.getRank());
             }
             if (!productIdsSeen.add(item.getProductId())) {
