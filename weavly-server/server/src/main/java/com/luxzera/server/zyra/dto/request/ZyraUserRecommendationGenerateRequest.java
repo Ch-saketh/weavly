@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +27,10 @@ public class ZyraUserRecommendationGenerateRequest {
     @JsonProperty("topK")
     @Builder.Default
     private Integer topK = 50;
+
+    public Integer getTopK() {
+        if (topK == null || topK < 1) return 50;
+        if (topK > 50) return 50;
+        return topK;
+    }
 }

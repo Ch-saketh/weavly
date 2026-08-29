@@ -51,6 +51,19 @@ public class GlobalExceptionHandler {
                 .body(Map.of("message", ex.getMessage(), "error", "Bad Request"));
     }
 
+    @ExceptionHandler({org.springframework.web.bind.MethodArgumentNotValidException.class, org.springframework.validation.BindException.class})
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(Exception ex) {
+        String msg = "Validation failed";
+        if (ex instanceof org.springframework.web.bind.MethodArgumentNotValidException manve) {
+            if (manve.getBindingResult().getFieldError() != null) {
+                msg = manve.getBindingResult().getFieldError().getField() + ": " + manve.getBindingResult().getFieldError().getDefaultMessage();
+            }
+        }
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("message", msg, "error", "Bad Request"));
+    }
+
     @ExceptionHandler(ZyraServiceUnavailableException.class)
     public ResponseEntity<Map<String, String>> handleZyraServiceUnavailableException(
             ZyraServiceUnavailableException ex

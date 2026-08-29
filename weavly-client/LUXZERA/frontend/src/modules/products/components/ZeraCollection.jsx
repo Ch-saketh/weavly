@@ -7,6 +7,7 @@ import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useCart } from "@/modules/cart/store/CartContext";
 import { fetchZyraRecommendations } from "@/infrastructure/api/zyra/zyraService";
+import { getProducts } from "@/modules/products/services/productService";
 import {
   getMyRecommendations,
   generateUserRecommendations,

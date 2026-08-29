@@ -135,18 +135,18 @@ export const generateUserRecommendations = async (params = {}, fallbackTopK = 50
   const token = getToken();
   const url = `${getBaseUrl()}/recommendations/generate`;
 
-  let payload = {};
+  const payload = {};
   if (typeof params === "string" || typeof params === "number") {
-    payload = {
-      productId: String(params),
-      topK: fallbackTopK,
-    };
+    payload.productId = String(params).trim();
+    payload.topK = fallbackTopK || 50;
   } else if (params && typeof params === "object") {
-    payload = {
-      productId: params.productId ? String(params.productId) : null,
-      occasion: params.occasion ? String(params.occasion) : null,
-      topK: params.topK || fallbackTopK || 50,
-    };
+    if (params.productId && String(params.productId).trim()) {
+      payload.productId = String(params.productId).trim();
+    }
+    if (params.occasion && String(params.occasion).trim()) {
+      payload.occasion = String(params.occasion).trim();
+    }
+    payload.topK = typeof params.topK === "number" && params.topK >= 1 && params.topK <= 50 ? params.topK : (fallbackTopK || 50);
   }
 
   const res = await fetch(url, {
