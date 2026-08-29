@@ -97,7 +97,7 @@ The monorepo automatically synchronizes with 3 separate standalone component rep
 
 ```
  Local Monorepo (/weavly)
-   ├── weavly-client/LUXZERA/frontend ──► https://github.com/Ch-saketh/weavly-public.git
+   ├── weavly-client/LUXZERA/frontend ──► https://github.com/Ch-saketh/weavly-client.git
    ├── weavly-server/server           ──► https://github.com/Ch-saketh/Weavly-render.git
    ├── core-model                     ──► https://github.com/Ch-saketh/Zyra.git
    └── Root (Monorepo)                ──► https://github.com/Ch-saketh/weavly.git

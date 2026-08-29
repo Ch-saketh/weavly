@@ -4,7 +4,7 @@
 # ==============================================================================
 # Synchronizes the monorepo and its three component repositories:
 # 1. Root Monorepo:  https://github.com/Ch-saketh/weavly.git
-# 2. Client (UI):    https://github.com/Ch-saketh/weavly-public.git
+# 2. Client (UI):    https://github.com/Ch-saketh/weavly-client.git
 # 3. Server (Java):  https://github.com/Ch-saketh/Weavly-render.git
 # 4. Core (ML/Zyra): https://github.com/Ch-saketh/Zyra.git
 # ==============================================================================
@@ -24,7 +24,7 @@ echo "Root directory: $REPO_ROOT"
 echo "----------------------------------------------------------------------"
 
 # 1. Configure remotes if not already set
-git remote add client https://github.com/Ch-saketh/weavly-public.git 2>/dev/null || git remote set-url client https://github.com/Ch-saketh/weavly-public.git
+git remote add client https://github.com/Ch-saketh/weavly-client.git 2>/dev/null || git remote set-url client https://github.com/Ch-saketh/weavly-client.git
 git remote add backend https://github.com/Ch-saketh/Weavly-render.git 2>/dev/null || git remote set-url backend https://github.com/Ch-saketh/Weavly-render.git
 git remote add core https://github.com/Ch-saketh/Zyra.git 2>/dev/null || git remote set-url core https://github.com/Ch-saketh/Zyra.git
 git remote add origin https://github.com/Ch-saketh/weavly.git 2>/dev/null || git remote set-url origin https://github.com/Ch-saketh/weavly.git
@@ -42,8 +42,8 @@ fi
 echo "📡 [2/4] Pushing to Monorepo (Ch-saketh/weavly)..."
 git push origin main
 
-# 4. Push weavly-client/LUXZERA/frontend -> weavly-public
-echo "🎨 [3/4] Splitting and pushing Frontend -> (Ch-saketh/weavly-public)..."
+# 4. Push weavly-client/LUXZERA/frontend -> weavly-client
+echo "🎨 [3/4] Splitting and pushing Frontend -> (Ch-saketh/weavly-client)..."
 git branch -D split-client 2>/dev/null || true
 git subtree split --prefix=weavly-client/LUXZERA/frontend -b split-client
 git push client split-client:main --force
@@ -66,7 +66,7 @@ git branch -D split-core 2>/dev/null || true
 echo "======================================================================"
 echo "✅ ALL 4 REPOSITORIES ARE FULLY SYNCHRONIZED AND UP TO DATE!"
 echo "   1. https://github.com/Ch-saketh/weavly"
-echo "   2. https://github.com/Ch-saketh/weavly-public"
+echo "   2. https://github.com/Ch-saketh/weavly-client"
 echo "   3. https://github.com/Ch-saketh/Weavly-render"
 echo "   4. https://github.com/Ch-saketh/Zyra"
 echo "======================================================================"
