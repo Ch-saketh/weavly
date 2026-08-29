@@ -68,11 +68,41 @@ If you don't look like you just walked out of a high-fashion runway, that’s a 
 | Service | Technology | Port | What It Does (In Human Words) |
 | :--- | :--- | :---: | :--- |
 | **`weavly-client`** | Next.js 14, React, Tailwind, Framer Motion | `3000` | The user-facing storefront, 3D try-on studio, infinite catalogue flow, and interactive ZeraCollection stylist. |
-| **`core-model (Zyra)`**| Python 3.13, FastAPI, PyTorch, HuggingFace CLIP | `8001` | The AI brain. Calculates 662D vector cosine similarities, outfit synergy, body-fit compatibility, and occasion ranks in < 500ms. |
-| **`weavly-server`** | Java 21, Spring Boot 3.3, Hibernate, Security | `8080` | The enterprise commerce backbone. Handles authentication, transactions, order fulfillment, and asynchronous event streaming. |
-| **`Qdrant Vector DB`** | Rust-powered Vector Engine | `6333` | Hyper-fast vector search over 662D unified embeddings. |
-| **`PostgreSQL`** | Supabase Cloud / Dedicated DB | `5432` | Relational ground truth for users, products, orders, and persistent recommendation snapshots. |
-| **`RabbitMQ`** | AMQP Message Broker | `5672` | Event-driven neural cache invalidation whenever user biometrics or fit data changes. |
+| **`core-model (Zyra)`**| Python 3.13, Flask / PyTorch, NumPy | `5001` | The AI brain. Calculates 662D vector cosine similarities, occasion-aware scoring, and progressive category diversity reranking. |
+| **`weavly-server`** | Java 21, Spring Boot 3.3, Hibernate, Security | `8081` | The enterprise commerce backbone. Handles authentication, user profile conditioning, transactions, and Zyra client proxy. |
+| **`PostgreSQL`** | PostgreSQL 16 (Supabase / Render) | `5432` | Relational ground truth for users, products, fit data, occasions, and persistent recommendation snapshots. |
+
+---
+
+## ⚡ 2.1 Unified Developer CLI (`run`)
+
+Weavly includes a single unified CLI tool to manage all servers and synchronize multi-repo codebases with single-line commands.
+
+```bash
+# 🚀 Start all 3 servers in one command (Python 5001, Spring Boot 8081, Next.js 3000)
+run servers
+
+# 🔍 Check status of all servers (ONLINE / OFFLINE)
+run status
+
+# 🛑 Stop all running servers cleanly and release ports
+run stop
+
+# 📡 Commit and push all code across all 4 GitHub repositories in one go
+run push "feat: your commit message"
+```
+
+### 📦 Multi-Repository Sync Architecture
+The monorepo automatically synchronizes with 3 separate standalone component repositories using `git subtree split`:
+
+```
+ Local Monorepo (/weavly)
+   ├── weavly-client/LUXZERA/frontend ──► https://github.com/Ch-saketh/weavly-public.git
+   ├── weavly-server/server           ──► https://github.com/Ch-saketh/Weavly-render.git
+   ├── core-model                     ──► https://github.com/Ch-saketh/Zyra.git
+   └── Root (Monorepo)                ──► https://github.com/Ch-saketh/weavly.git
+```
+
 
 ---
 
