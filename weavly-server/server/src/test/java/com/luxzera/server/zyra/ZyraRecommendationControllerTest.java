@@ -161,7 +161,7 @@ class ZyraRecommendationControllerTest {
                 .recommendations(items)
                 .build();
 
-        when(zyraRecommendationService.generateAndSaveUserRecommendations(any(User.class), eq("10009781"), eq(50)))
+        when(zyraRecommendationService.generateAndSaveUserRecommendations(any(User.class), eq("10009781"), eq(50), any()))
                 .thenReturn(genResponse);
 
         mockMvc.perform(post("/api/recommendations/generate")
@@ -194,7 +194,7 @@ class ZyraRecommendationControllerTest {
                 .recommendations(List.of(ZyraRecommendationItem.builder().rank(1).productId("rec_1").similarity(0.95).build()))
                 .build();
 
-        when(zyraRecommendationService.getLatestUserRecommendations(any(User.class)))
+        when(zyraRecommendationService.getLatestUserRecommendations(any(User.class), any()))
                 .thenReturn(genResponse);
 
         mockMvc.perform(get("/api/recommendations/my")

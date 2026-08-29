@@ -17,6 +17,11 @@ import com.luxzera.server.zyra.exception.ZyraValidationException;
 import com.luxzera.server.zyra.mapper.ZyraRecommendationMapper;
 import com.luxzera.server.zyra.repository.UserRecommendationGenerationRepository;
 import lombok.RequiredArgsConstructor;
+import com.luxzera.server.user.entity.UserFitData;
+import com.luxzera.server.user.entity.UserMetadata;
+import com.luxzera.server.user.repository.UserFitDataRepository;
+import com.luxzera.server.user.repository.UserMetadataRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +40,8 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     private final UserRecommendationGenerationRepository generationRepository;
     private final ProductRepository productRepository;
     private final UserProfileRepository userProfileRepository;
+    private final UserMetadataRepository userMetadataRepository;
+    private final UserFitDataRepository userFitDataRepository;
 
     private void enrichRecommendationItemImages(List<ZyraRecommendationItem> items) {
         if (items == null || items.isEmpty()) return;
@@ -65,11 +72,19 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             String productId,
             Integer topK
     ) {
+        return generateAndSaveUserRecommendations(user, productId, topK, null);
+    }
+
+    @Override
+    @Transactional
+    public ZyraUserRecommendationGenerationResponse generateAndSaveUserRecommendations(
+            User user,
+            String productId,
+            Integer topK,
+            String occasion
+    ) {
         if (user == null || user.getId() == null) {
             throw new ZyraValidationException("Authenticated user context is required for recommendation generation");
-        }
-        if (productId == null || productId.trim().isEmpty()) {
-            throw new ZyraValidationException("productId must not be null or empty");
         }
 
         // 1. Resolve user profile gender from authenticated Principal / User context
@@ -86,26 +101,46 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             }
         }
 
-        log.info("Generating and persisting recommendations for userId={}, profileGender={}, productId={}, topK={}",
-                user.getId(), userGender, productId, topK);
+        // 2. Resolve user fit data / occasion preferences
+        List<String> userOccasions = null;
+        String primaryOccasion = null;
+        Optional<UserMetadata> metadataOpt = userMetadataRepository.findByUserId(user.getId());
+        if (metadataOpt.isPresent()) {
+            Optional<UserFitData> fitDataOpt = userFitDataRepository.findByUserMetadataId(metadataOpt.get().getId());
+            if (fitDataOpt.isPresent()) {
+                userOccasions = fitDataOpt.get().getOccasions();
+                primaryOccasion = fitDataOpt.get().getPrimaryOccasion();
+            }
+        }
 
-        // 2. Call inference engine conditioned on user profile gender
-        ZyraRecommendationResponse zyraResponse = zyraClient.getRecommendations(productId, topK, userGender);
+        String targetOccasion = (occasion != null && !occasion.trim().isEmpty()) ? occasion.trim() : primaryOccasion;
+
+        log.info("Generating and persisting recommendations for userId={}, profileGender={}, occasion={}, userOccasions={}, productId={}, topK={}",
+                user.getId(), userGender, targetOccasion, userOccasions, productId, topK);
+
+        // 3. Call inference engine conditioned on user profile gender, occasion, and preferences
+        ZyraRecommendationResponse zyraResponse = zyraClient.getRecommendations(
+                productId,
+                topK,
+                userGender,
+                targetOccasion,
+                userOccasions
+        );
         if (zyraResponse == null || zyraResponse.getRecommendations() == null || zyraResponse.getRecommendations().isEmpty()) {
-            throw new ZyraValidationException("Zyra engine returned empty recommendation response for product: " + productId);
+            throw new ZyraValidationException("Zyra engine returned empty recommendation response");
         }
 
         enrichRecommendationItemImages(zyraResponse.getRecommendations());
 
-        // 3. Map response and user to persistent entity
+        // 4. Map response and user to persistent entity
         UserRecommendationGeneration generation = ZyraRecommendationMapper.toEntity(user, zyraResponse);
 
-        // 4. Atomically persist generation + 50 items
+        // 5. Atomically persist generation + items
         UserRecommendationGeneration savedGeneration = generationRepository.save(generation);
         log.info("Successfully persisted recommendation generation id={} with {} items for user={}",
                 savedGeneration.getId(), savedGeneration.getItems().size(), user.getId());
 
-        // 5. Return user DTO
+        // 6. Return user DTO
         ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(savedGeneration);
         enrichRecommendationItemImages(responseDto.getRecommendations());
         return responseDto;
@@ -114,11 +149,17 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     @Override
     @Transactional(readOnly = true)
     public ZyraUserRecommendationGenerationResponse getLatestUserRecommendations(User user) {
+        return getLatestUserRecommendations(user, null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ZyraUserRecommendationGenerationResponse getLatestUserRecommendations(User user, String occasion) {
         if (user == null || user.getId() == null) {
             throw new ZyraValidationException("Authenticated user context is required");
         }
 
-        log.debug("Retrieving latest Zera recommendations for userId={}", user.getId());
+        log.debug("Retrieving latest Zera recommendations for userId={}, occasion={}", user.getId(), occasion);
         UserRecommendationGeneration generation = generationRepository.findLatestByUserIdWithItems(user.getId())
                 .or(() -> generationRepository.findFirstByUserIdOrderByGeneratedAtDesc(user.getId()))
                 .orElseThrow(() -> new ZyraGenerationNotFoundException("No recommendation collections found for user: " + user.getId()));

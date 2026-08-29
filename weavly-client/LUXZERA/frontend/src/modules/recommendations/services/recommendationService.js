@@ -90,13 +90,16 @@ export const normalizeRecommendationCollection = (data) => {
  * Fetch the authenticated user's latest persisted Zera recommendations.
  * GET /api/recommendations/my
  */
-export const getMyRecommendations = async () => {
+export const getMyRecommendations = async (occasion = null) => {
   if (!isLoggedIn()) {
     return normalizeRecommendationCollection(null);
   }
 
   const token = getToken();
-  const url = `${getBaseUrl()}/recommendations/my`;
+  let url = `${getBaseUrl()}/recommendations/my`;
+  if (occasion) {
+    url += `?occasion=${encodeURIComponent(occasion)}`;
+  }
 
   const res = await fetch(url, {
     method: "GET",
@@ -124,7 +127,7 @@ export const getMyRecommendations = async () => {
  * Trigger recommendation generation for the authenticated user.
  * POST /api/recommendations/generate
  */
-export const generateUserRecommendations = async (productId, topK = 50) => {
+export const generateUserRecommendations = async (params = {}, fallbackTopK = 50) => {
   if (!isLoggedIn()) {
     throw new Error("Authentication required to generate recommendations");
   }
@@ -132,16 +135,27 @@ export const generateUserRecommendations = async (productId, topK = 50) => {
   const token = getToken();
   const url = `${getBaseUrl()}/recommendations/generate`;
 
+  let payload = {};
+  if (typeof params === "string" || typeof params === "number") {
+    payload = {
+      productId: String(params),
+      topK: fallbackTopK,
+    };
+  } else if (params && typeof params === "object") {
+    payload = {
+      productId: params.productId ? String(params.productId) : null,
+      occasion: params.occasion ? String(params.occasion) : null,
+      topK: params.topK || fallbackTopK || 50,
+    };
+  }
+
   const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({
-      productId: String(productId),
-      topK,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {

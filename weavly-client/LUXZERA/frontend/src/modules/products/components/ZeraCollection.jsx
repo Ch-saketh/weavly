@@ -59,9 +59,14 @@ export default function ZeraCollection({
       setLoading(true);
       setError(null);
       try {
+        const occParam = selectedOccasion && selectedOccasion.toLowerCase() !== "all" ? selectedOccasion : null;
+
         if (forceRefresh) {
           try {
-            const generated = await generateUserRecommendations("10009781", 50);
+            const generated = await generateUserRecommendations({
+              occasion: occParam,
+              topK: 50,
+            });
             if (generated.recommendations && generated.recommendations.length > 0) {
               setRecommendations(generated.recommendations);
               return;
@@ -71,11 +76,25 @@ export default function ZeraCollection({
           }
         }
 
-        const data = await getMyRecommendations();
+        const data = await getMyRecommendations(occParam);
         if (data.recommendations && data.recommendations.length > 0) {
           setRecommendations(data.recommendations);
         } else {
-          // First-time user or empty collection: load curated catalog pieces
+          // First-time generation with occasion preference
+          try {
+            const generated = await generateUserRecommendations({
+              occasion: occParam,
+              topK: 50,
+            });
+            if (generated.recommendations && generated.recommendations.length > 0) {
+              setRecommendations(generated.recommendations);
+              return;
+            }
+          } catch (genErr) {
+            console.warn("Occasion generation notice:", genErr);
+          }
+
+          // Fallback to catalog pieces
           const fallback = await getProducts({ limit: 12, gender: userGender });
           if (fallback && fallback.length > 0) {
             setRecommendations(fallback);
@@ -85,7 +104,6 @@ export default function ZeraCollection({
         }
       } catch (err) {
         console.warn("Zera recommendation retrieval note:", err.message);
-        // Load fallback catalog so UI stays responsive and beautiful
         try {
           const fallback = await getProducts({ limit: 12, gender: userGender });
           setRecommendations(fallback || []);

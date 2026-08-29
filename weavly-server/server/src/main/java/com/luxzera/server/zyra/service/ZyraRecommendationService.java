@@ -29,12 +29,32 @@ public interface ZyraRecommendationService {
     ZyraUserRecommendationGenerationResponse generateAndSaveUserRecommendations(User user, String productId, Integer topK);
 
     /**
+     * Generate Zyra occasion-aware recommendations for an authenticated user and persist the generation and items transactionally.
+     *
+     * @param user      Authenticated user entity
+     * @param productId Canonical product ID to base recommendations on (optional)
+     * @param topK      Requested recommendation count (1..50)
+     * @param occasion  Target occasion filter (e.g. 'casual', 'party', 'formal', 'wedding', 'date', 'college', 'sport')
+     * @return Full persisted user recommendation response
+     */
+    ZyraUserRecommendationGenerationResponse generateAndSaveUserRecommendations(User user, String productId, Integer topK, String occasion);
+
+    /**
      * Retrieve the authenticated user's latest persisted Zera recommendation collection.
      *
      * @param user Authenticated user entity
      * @return Latest recommendation generation with all items
      */
     ZyraUserRecommendationGenerationResponse getLatestUserRecommendations(User user);
+
+    /**
+     * Retrieve the authenticated user's latest persisted Zera recommendation collection for a specific occasion.
+     *
+     * @param user     Authenticated user entity
+     * @param occasion Target occasion filter
+     * @return Latest recommendation generation with all items
+     */
+    ZyraUserRecommendationGenerationResponse getLatestUserRecommendations(User user, String occasion);
 
     /**
      * Retrieve a specific recommendation generation by ID for the authenticated user, enforcing user isolation.

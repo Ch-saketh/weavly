@@ -184,3 +184,49 @@ def validate_metadata_dataframe(
         raise ValueError(
             f"Duplicate product IDs detected in metadata: {unique_count} unique vs {expected_count} expected"
         )
+
+
+def detect_product_occasions(row: Any) -> Set[str]:
+    """Detect occasion affinities from product name, description, and category."""
+    name = str(row.get("name", "") if hasattr(row, "get") else getattr(row, "name", "")).lower()
+    desc = str(row.get("description", "") if hasattr(row, "get") else getattr(row, "description", "")).lower()
+    cat = str(row.get("category_clean", "") if hasattr(row, "get") else getattr(row, "category_clean", "")).lower()
+    full_text = f"{name} {desc} {cat}"
+
+    occasions: Set[str] = set()
+
+    # Keyword detection
+    if any(w in full_text for w in ["party", "clubwear", "cocktail", "celebration", "evening", "night out"]):
+        occasions.add("party")
+    if any(w in full_text for w in ["wedding", "bridal", "groom", "festive", "saree", "sherwani", "lehenga"]):
+        occasions.add("wedding")
+    if any(w in full_text for w in ["formal", "office", "work", "corporate", "business", "suit", "blazer", "tuxedo", "oxford"]):
+        occasions.add("formal")
+        occasions.add("work")
+    if any(w in full_text for w in ["sport", "running", "gym", "training", "athletic", "jogger", "track", "sneaker"]):
+        occasions.add("sport")
+    if any(w in full_text for w in ["date", "dinner", "stylish", "romantic", "dress", "heels", "perfume", "fragrance"]):
+        occasions.add("date")
+    if any(w in full_text for w in ["college", "campus", "streetwear", "casual", "denim", "jeans", "tshirt", "t-shirt", "hoodie", "shorts"]):
+        occasions.add("casual")
+        occasions.add("college")
+
+    # Fashion category affinities
+    if cat in ["suit"]:
+        occasions.update(["formal", "wedding", "work", "party"])
+    elif cat in ["saree", "kurta"]:
+        occasions.update(["wedding", "festive", "party", "ethnic"])
+    elif cat in ["dress", "playsuit"]:
+        occasions.update(["party", "date", "casual"])
+    elif cat in ["trousers", "shirt"]:
+        occasions.update(["formal", "work", "casual", "date"])
+    elif cat in ["tshirt", "jeans", "shorts", "sweatshirt"]:
+        occasions.update(["casual", "college"])
+    elif cat in ["shoes", "watch", "bag", "accessory", "jacket"]:
+        occasions.update(["casual", "party", "formal", "date", "work"])
+
+    if not occasions:
+        occasions.add("casual")
+
+    return occasions
+

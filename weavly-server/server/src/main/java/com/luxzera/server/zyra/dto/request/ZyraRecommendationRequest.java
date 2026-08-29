@@ -26,4 +26,10 @@ public class ZyraRecommendationRequest {
 
     @JsonProperty("userGender")
     private String userGender;
+
+    @JsonProperty("occasion")
+    private String occasion;
+
+    @JsonProperty("userOccasions")
+    private java.util.List<String> userOccasions;
 }

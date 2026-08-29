@@ -82,16 +82,18 @@ def recommend() -> Tuple[Any, int]:
     t_start = time.perf_counter()
 
     data: Optional[Dict[str, Any]] = request.get_json(silent=True)
-    if data is None:
-        return jsonify({"error": "productId is required"}), 400
+    raw_pid = data.get("productId")
+    product_id_str = str(raw_pid).strip() if raw_pid is not None else None
+    if product_id_str == "":
+        product_id_str = None
 
-    if "productId" not in data or data["productId"] is None:
-        return jsonify({"error": "productId is required"}), 400
+    user_gender = data.get("userGender")
+    occasion = data.get("occasion")
+    user_occasions = data.get("userOccasions")
 
-    raw_pid = data["productId"]
-    product_id_str = str(raw_pid).strip()
-    if not product_id_str:
-        return jsonify({"error": "productId cannot be empty"}), 400
+    # If no product_id and no occasion context provided, error
+    if product_id_str is None and not occasion and not user_occasions:
+        return jsonify({"error": "productId or occasion is required"}), 400
 
     # Parse and validate topK
     top_k = zyra.config.final_k
@@ -117,19 +119,18 @@ def recommend() -> Tuple[Any, int]:
             )
         top_k = raw_top_k
 
-    # Check product existence
-    if product_id_str not in zyra.product_id_to_index:
-        return (
-            jsonify(
-                {
-                    "error": "Product not found",
-                    "productId": product_id_str,
-                }
-            ),
-            404,
-        )
-
-    user_gender = data.get("userGender")
+    # Check product existence if productId is supplied
+    if product_id_str is not None and product_id_str not in zyra.product_id_to_index:
+        if not occasion and not user_occasions:
+            return (
+                jsonify(
+                    {
+                        "error": "Product not found",
+                        "productId": product_id_str,
+                    }
+                ),
+                404,
+            )
 
     # Run inference
     try:
@@ -137,6 +138,8 @@ def recommend() -> Tuple[Any, int]:
             product_id=product_id_str,
             top_k=top_k,
             user_gender=user_gender,
+            occasion=occasion,
+            user_occasions=user_occasions,
         )
     except ValueError as exc:
         return jsonify({"error": str(exc), "productId": product_id_str}), 400
@@ -146,8 +149,10 @@ def recommend() -> Tuple[Any, int]:
 
     latency_ms = round((time.perf_counter() - t_start) * 1000.0, 2)
     logger.info(
-        "[ZYRA] productId=%s topK=%d latency=%.2fms",
+        "[ZYRA] productId=%s occasion=%s userGender=%s topK=%d latency=%.2fms",
         product_id_str,
+        occasion,
+        user_gender,
         top_k,
         latency_ms,
     )

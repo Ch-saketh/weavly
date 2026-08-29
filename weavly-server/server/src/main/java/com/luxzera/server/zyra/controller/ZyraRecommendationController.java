@@ -47,15 +47,19 @@ public class ZyraRecommendationController {
      */
     @PostMapping("/generate")
     public ResponseEntity<ZyraUserRecommendationGenerationResponse> generateUserRecommendations(
-            @Valid @RequestBody ZyraUserRecommendationGenerateRequest request,
+            @Valid @RequestBody(required = false) ZyraUserRecommendationGenerateRequest request,
             Principal principal
     ) {
         User user = getAuthenticatedUser(principal);
-        log.info("Received recommendation generation request for user={}, productId={}, topK={}",
-                user.getId(), request.getProductId(), request.getTopK());
+        String productId = request != null ? request.getProductId() : null;
+        Integer topK = request != null ? request.getTopK() : 50;
+        String occasion = request != null ? request.getOccasion() : null;
+
+        log.info("Received recommendation generation request for user={}, productId={}, topK={}, occasion={}",
+                user.getId(), productId, topK, occasion);
 
         ZyraUserRecommendationGenerationResponse response = zyraRecommendationService
-                .generateAndSaveUserRecommendations(user, request.getProductId(), request.getTopK());
+                .generateAndSaveUserRecommendations(user, productId, topK, occasion);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -66,13 +70,14 @@ public class ZyraRecommendationController {
      */
     @GetMapping({"/my", "/my/latest"})
     public ResponseEntity<ZyraUserRecommendationGenerationResponse> getLatestUserRecommendations(
+            @RequestParam(value = "occasion", required = false) String occasion,
             Principal principal
     ) {
         User user = getAuthenticatedUser(principal);
-        log.info("Fetching latest Zera recommendations for user={}", user.getId());
+        log.info("Fetching latest Zera recommendations for user={}, occasion={}", user.getId(), occasion);
 
         ZyraUserRecommendationGenerationResponse response = zyraRecommendationService
-                .getLatestUserRecommendations(user);
+                .getLatestUserRecommendations(user, occasion);
 
         return ResponseEntity.ok(response);
     }

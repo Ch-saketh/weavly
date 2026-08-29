@@ -17,9 +17,11 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZyraUserRecommendationGenerateRequest {
 
-    @NotBlank(message = "productId must not be blank")
     @JsonProperty("productId")
     private String productId;
+
+    @JsonProperty("occasion")
+    private String occasion;
 
     @Min(value = 1, message = "topK must be at least 1")
     @Max(value = 50, message = "topK cannot exceed 50")

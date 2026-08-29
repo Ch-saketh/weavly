@@ -42,6 +42,18 @@ class ZyraUserRecommendationPersistenceTest {
     @Mock
     private UserRecommendationGenerationRepository generationRepository;
 
+    @Mock
+    private com.luxzera.server.products.repository.ProductRepository productRepository;
+
+    @Mock
+    private com.luxzera.server.user.repository.UserProfileRepository userProfileRepository;
+
+    @Mock
+    private com.luxzera.server.user.repository.UserMetadataRepository userMetadataRepository;
+
+    @Mock
+    private com.luxzera.server.user.repository.UserFitDataRepository userFitDataRepository;
+
     @InjectMocks
     private ZyraRecommendationServiceImpl recommendationService;
 
@@ -102,7 +114,7 @@ class ZyraUserRecommendationPersistenceTest {
                         .build())
                 .build();
 
-        when(zyraClient.getRecommendations(eq(queryProductId), eq(topK))).thenReturn(zyraResponse);
+        when(zyraClient.getRecommendations(eq(queryProductId), eq(topK), any(), any(), any())).thenReturn(zyraResponse);
 
         when(generationRepository.save(any(UserRecommendationGeneration.class)))
                 .thenAnswer(invocation -> {

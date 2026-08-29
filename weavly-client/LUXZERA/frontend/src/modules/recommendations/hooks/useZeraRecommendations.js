@@ -24,7 +24,7 @@ export function useZeraRecommendations() {
   const [error, setError] = useState(null);
   const fetchedRef = useRef(false);
 
-  const fetchRecommendations = useCallback(async (force = false) => {
+  const fetchRecommendations = useCallback(async (occasion = null) => {
     if (!isLoggedIn() && !user) {
       setCollection(null);
       setRecommendations([]);
@@ -36,7 +36,7 @@ export function useZeraRecommendations() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getMyRecommendations();
+      const data = await getMyRecommendations(occasion);
       setCollection(data);
       setRecommendations(data.recommendations || []);
     } catch (err) {
@@ -56,12 +56,12 @@ export function useZeraRecommendations() {
   }, [fetchRecommendations, user]);
 
   const triggerGeneration = useCallback(
-    async (productId = "10009781", topK = 50) => {
+    async (params = {}, topK = 50) => {
       if (!isLoggedIn() && !user) return null;
       setLoading(true);
       setError(null);
       try {
-        const data = await generateUserRecommendations(productId, topK);
+        const data = await generateUserRecommendations(params, topK);
         setCollection(data);
         setRecommendations(data.recommendations || []);
         return data;
