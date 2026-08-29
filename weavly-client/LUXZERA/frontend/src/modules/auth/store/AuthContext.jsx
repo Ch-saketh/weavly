@@ -112,17 +112,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = async () => {
-    setLoading(true);
-    try {
-      await apiLogout();
-    } catch (error) {
-      // Ignore API logout error
-    } finally {
-      removeToken();
-      setUser(null);
-      setLoading(false);
+  const logout = () => {
+    // 1. Synchronously remove authentication and user state
+    removeToken();
+    setUserRaw(null);
+    setLoading(false);
+
+    // 2. Clear all user-specific storage caches immediately
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem("Weavly_user_cache");
+        localStorage.removeItem("Weavly-wardrobe");
+        localStorage.removeItem("Weavly-cart-items");
+        sessionStorage.clear();
+        document.cookie = "Weavly_user_cache=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      } catch (e) {
+        console.warn("Storage cleanup notice:", e);
+      }
     }
+
+    // 3. Fire-and-forget backend session cleanup in the background
+    try {
+      apiLogout().catch((err) => console.warn("Background API logout:", err?.message));
+    } catch (e) {}
   };
 
   const refreshUser = async () => {

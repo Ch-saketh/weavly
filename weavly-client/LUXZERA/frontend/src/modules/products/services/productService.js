@@ -83,8 +83,13 @@ export const normalizeProduct = (product) => {
   };
 };
 
+// In-memory request deduplication and TTL cache (30s)
+const requestCache = new Map();
+const inFlightRequests = new Map();
+const CACHE_TTL_MS = 30000;
+
 /**
- * Fetch products from Spring Boot Product API.
+ * Fetch products from Spring Boot Product API with deduplication & caching.
  */
 export const getProducts = async (params = {}) => {
   const { category, gender, limit = 50, offset = 0, search } = params;
@@ -97,22 +102,47 @@ export const getProducts = async (params = {}) => {
   url.searchParams.append("limit", limit.toString());
   url.searchParams.append("offset", offset.toString());
 
-  try {
-    const res = await fetch(url.toString(), {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const rawProducts = data.products || (Array.isArray(data) ? data : []);
-      return rawProducts.map(normalizeProduct).filter(Boolean);
+  const cacheKey = url.toString();
+  const now = Date.now();
+
+  // Check TTL cache
+  if (requestCache.has(cacheKey)) {
+    const cached = requestCache.get(cacheKey);
+    if (now - cached.timestamp < CACHE_TTL_MS) {
+      return cached.data;
     }
-    console.warn(`Product API returned status ${res.status} for ${url.toString()}`);
-  } catch (err) {
-    console.error("Failed to fetch products from backend API:", err);
+    requestCache.delete(cacheKey);
   }
 
-  return [];
+  // Deduplicate in-flight concurrent requests
+  if (inFlightRequests.has(cacheKey)) {
+    return inFlightRequests.get(cacheKey);
+  }
+
+  const fetchPromise = (async () => {
+    try {
+      const res = await fetch(url.toString(), {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const rawProducts = data.products || (Array.isArray(data) ? data : []);
+        const normalized = rawProducts.map(normalizeProduct).filter(Boolean);
+        requestCache.set(cacheKey, { data: normalized, timestamp: Date.now() });
+        return normalized;
+      }
+      console.warn(`Product API returned status ${res.status} for ${url.toString()}`);
+    } catch (err) {
+      console.error("Failed to fetch products from backend API:", err);
+    } finally {
+      inFlightRequests.delete(cacheKey);
+    }
+    return [];
+  })();
+
+  inFlightRequests.set(cacheKey, fetchPromise);
+  return fetchPromise;
 };
 
 /**
@@ -129,32 +159,55 @@ export const getPaginatedProducts = async (params = {}) => {
   url.searchParams.append("limit", limit.toString());
   url.searchParams.append("offset", offset.toString());
 
-  try {
-    const res = await fetch(url.toString(), {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const rawProducts = data.products || (Array.isArray(data) ? data : []);
-      const total = Number(data.total ?? rawProducts.length);
-      const hasMore = Boolean(data.hasMore ?? (offset + rawProducts.length < total));
-      return {
-        products: rawProducts.map(normalizeProduct).filter(Boolean),
-        total,
-        hasMore,
-      };
+  const cacheKey = "paginated:" + url.toString();
+  const now = Date.now();
+
+  if (requestCache.has(cacheKey)) {
+    const cached = requestCache.get(cacheKey);
+    if (now - cached.timestamp < CACHE_TTL_MS) {
+      return cached.data;
     }
-    console.warn(`Paginated product API returned status ${res.status} for ${url.toString()}`);
-  } catch (err) {
-    console.error("Failed to fetch paginated products from backend API:", err);
+    requestCache.delete(cacheKey);
   }
 
-  return {
-    products: [],
-    total: 0,
-    hasMore: false,
-  };
+  if (inFlightRequests.has(cacheKey)) {
+    return inFlightRequests.get(cacheKey);
+  }
+
+  const fetchPromise = (async () => {
+    try {
+      const res = await fetch(url.toString(), {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const rawProducts = data.products || (Array.isArray(data) ? data : []);
+        const total = Number(data.total ?? rawProducts.length);
+        const hasMore = Boolean(data.hasMore ?? (offset + rawProducts.length < total));
+        const result = {
+          products: rawProducts.map(normalizeProduct).filter(Boolean),
+          total,
+          hasMore,
+        };
+        requestCache.set(cacheKey, { data: result, timestamp: Date.now() });
+        return result;
+      }
+      console.warn(`Paginated product API returned status ${res.status} for ${url.toString()}`);
+    } catch (err) {
+      console.error("Failed to fetch paginated products from backend API:", err);
+    } finally {
+      inFlightRequests.delete(cacheKey);
+    }
+    return {
+      products: [],
+      total: 0,
+      hasMore: false,
+    };
+  })();
+
+  inFlightRequests.set(cacheKey, fetchPromise);
+  return fetchPromise;
 };
 
 /**
@@ -163,21 +216,46 @@ export const getPaginatedProducts = async (params = {}) => {
 export const getProductById = async (productId) => {
   if (!productId) return null;
   const url = `${config.productsApiUrl}/${encodeURIComponent(productId)}`;
-  try {
-    const res = await fetch(url, {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-    });
-    if (res.ok) {
-      const data = await res.json();
-      return normalizeProduct(data);
+  const cacheKey = "product:" + productId;
+  const now = Date.now();
+
+  if (requestCache.has(cacheKey)) {
+    const cached = requestCache.get(cacheKey);
+    if (now - cached.timestamp < CACHE_TTL_MS) {
+      return cached.data;
     }
-    console.warn(`Product detail API returned ${res.status} for ID ${productId}`);
-  } catch (err) {
-    console.error(`Failed to fetch product by ID (${productId}):`, err);
+    requestCache.delete(cacheKey);
   }
 
-  return null;
+  if (inFlightRequests.has(cacheKey)) {
+    return inFlightRequests.get(cacheKey);
+  }
+
+  const fetchPromise = (async () => {
+    try {
+      const res = await fetch(url, {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const normalized = normalizeProduct(data);
+        if (normalized) {
+          requestCache.set(cacheKey, { data: normalized, timestamp: Date.now() });
+        }
+        return normalized;
+      }
+      console.warn(`Product detail API returned ${res.status} for ID ${productId}`);
+    } catch (err) {
+      console.error(`Failed to fetch product ${productId}:`, err);
+    } finally {
+      inFlightRequests.delete(cacheKey);
+    }
+    return null;
+  })();
+
+  inFlightRequests.set(cacheKey, fetchPromise);
+  return fetchPromise;
 };
 
 /**

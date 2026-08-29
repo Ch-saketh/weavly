@@ -22,12 +22,9 @@ export default function AppShell({ children }) {
   const { wardrobeCount } = useWardrobe();
   const { user: currentUser, loading: authLoading, logout: logoutUser } = useAuth();
 
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-    } finally {
-      router.push("/");
-    }
+  const handleLogout = () => {
+    logoutUser();
+    router.push("/");
   };
 
   const [authOpen, setAuthOpen] = useState(false);
@@ -127,7 +124,7 @@ export default function AppShell({ children }) {
   })();
 
   const authPaths = ["/verify-otp", "/forgot-password", "/reset-password", "/complete-google-signup", "/login"];
-  const isGuestOnboarding = mounted && pathname === "/" && !currentUser;
+  const isGuestOnboarding = mounted && !authLoading && pathname === "/" && !currentUser;
   const isHideLayout = pathname === "/designer-onboarding" || pathname === "/designer-studio" || pathname.startsWith("/admin") || authPaths.includes(pathname) || isGuestOnboarding;
   const showFloatingCart = cartCount > 0 && pathname !== "/cart" && !isHideLayout;
   const showNavbar = !isHideLayout;

@@ -6,6 +6,7 @@ import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useCart } from "@/modules/cart/store/CartContext";
 import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
+import { ProductGridSkeleton } from "@/shared/components/ui/Skeleton";
 
 export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const router = useRouter();
@@ -27,13 +28,16 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [activeTab, setActiveTab] = useState("ALL");
   const [genderFilter, setGenderFilter] = useState(initialGender);
   const [productsList, setProductsList] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
+    setLoadingProducts(true);
     const genderParam = genderFilter === "MEN" ? "men" : genderFilter === "WOMAN" ? "women" : undefined;
     getProducts({ limit: 60, gender: genderParam }).then((items) => {
       if (isMounted) {
         setProductsList(Array.isArray(items) ? items : []);
+        setLoadingProducts(false);
       }
     });
     return () => {
@@ -345,73 +349,77 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
           </div>
 
           {/* Product Cards Grid with ADD TO BAG Option */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            {categoryProducts.map((product) => {
-              const saved = isSaved?.(product.id);
-              const isAdded = addedProductIds[product.id];
-              return (
-                <div 
-                  key={product.id}
-                  onClick={() => router.push(`/product/${product.id}`)}
-                  className="group cursor-pointer flex flex-col gap-3"
-                >
-                  {/* Clean Full-Bleed Product Card Container */}
-                  <div className="aspect-[3/4] bg-[#FAF8F5] rounded-[24px] overflow-hidden border border-[#E7E3DD] relative shadow-xs">
-                    <img 
-                      src={product.imageUrl || product.image || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80"} 
-                      alt={product.name} 
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80";
-                      }}
-                      className="w-full h-full object-cover object-top" 
-                    />
-
-                    {/* Top Right Bookmark Badge */}
-                    <button
-                      onClick={(e) => handleToggleLike(e, product)}
-                      className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-[#E7E3DD] flex items-center justify-center cursor-pointer shadow-xs p-0 z-10 hover:bg-white transition-transform hover:scale-105"
-                      aria-label="Save to Wardrobe"
-                      title={saved ? "Saved in Wardrobe" : "Save to Wardrobe"}
-                    >
-                      <Bookmark 
-                        size={15}
-                        className={`transition-colors ${
-                          saved ? "fill-[#F07020] text-[#F07020]" : "text-[#71717A]"
-                        }`} 
+          {loadingProducts ? (
+            <ProductGridSkeleton count={8} />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+              {categoryProducts.map((product) => {
+                const saved = isSaved?.(product.id);
+                const isAdded = addedProductIds[product.id];
+                return (
+                  <div 
+                    key={product.id}
+                    onClick={() => router.push(`/product/${product.id}`)}
+                    className="group cursor-pointer flex flex-col gap-3"
+                  >
+                    {/* Clean Full-Bleed Product Card Container */}
+                    <div className="aspect-[3/4] bg-[#FAF8F5] rounded-[24px] overflow-hidden border border-[#E7E3DD] relative shadow-xs">
+                      <img 
+                        src={product.imageUrl || product.image || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80"} 
+                        alt={product.name} 
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80";
+                        }}
+                        className="w-full h-full object-cover object-top" 
                       />
-                    </button>
 
-                    {/* Bottom ADD TO BAG Quick Action Button (Reveals on Hover) */}
-                    <div className="absolute bottom-3 left-3 right-3 z-10 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                      {/* Top Right Bookmark Badge */}
                       <button
-                        onClick={(e) => handleAddToCart(e, product)}
-                        className={`w-full h-9 rounded-full text-[11px] font-semibold tracking-wider flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer border-none shadow-md ${
-                          isAdded
-                            ? "bg-[#2E7D32] text-white"
-                            : "bg-[#1D1D1F]/95 hover:bg-[#F07020] text-white backdrop-blur-md"
-                        }`}
+                        onClick={(e) => handleToggleLike(e, product)}
+                        className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-[#E7E3DD] flex items-center justify-center cursor-pointer shadow-xs p-0 z-10 hover:bg-white transition-transform hover:scale-105"
+                        aria-label="Save to Wardrobe"
+                        title={saved ? "Saved in Wardrobe" : "Save to Wardrobe"}
                       >
-                        <ShoppingBag size={13} />
-                        <span>{isAdded ? "ADDED TO BAG ✓" : "ADD TO BAG"}</span>
+                        <Bookmark 
+                          size={15}
+                          className={`transition-colors ${
+                            saved ? "fill-[#F07020] text-[#F07020]" : "text-[#71717A]"
+                          }`} 
+                        />
                       </button>
+
+                      {/* Bottom ADD TO BAG Quick Action Button (Reveals on Hover) */}
+                      <div className="absolute bottom-3 left-3 right-3 z-10 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                        <button
+                          onClick={(e) => handleAddToCart(e, product)}
+                          className={`w-full h-9 rounded-full text-[11px] font-semibold tracking-wider flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer border-none shadow-md ${
+                            isAdded
+                              ? "bg-[#2E7D32] text-white"
+                              : "bg-[#1D1D1F]/95 hover:bg-[#F07020] text-white backdrop-blur-md"
+                          }`}
+                        >
+                          <ShoppingBag size={13} />
+                          <span>{isAdded ? "ADDED TO BAG ✓" : "ADD TO BAG"}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Below Image Text: Title + Price */}
+                    <div className="flex justify-between items-baseline pt-1 px-1">
+                      <h3 className="text-sm font-semibold text-[#1D1D1F] group-hover:text-[#F07020] transition-colors truncate max-w-[200px]">
+                        {product.name}
+                      </h3>
+                      <span className="text-sm font-semibold text-[#1D1D1F]">
+                        ₹{Math.round(product.price || product.salePrice || 999).toLocaleString('en-IN')}
+                      </span>
                     </div>
                   </div>
-
-                  {/* Below Image Text: Title + Price */}
-                  <div className="flex justify-between items-baseline pt-1 px-1">
-                    <h3 className="text-sm font-semibold text-[#1D1D1F] group-hover:text-[#F07020] transition-colors truncate max-w-[200px]">
-                      {product.name}
-                    </h3>
-                    <span className="text-sm font-semibold text-[#1D1D1F]">
-                      ₹{Math.round(product.price || 999).toLocaleString('en-IN')}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </section>
 
         {/* ════════════════════════════════════════════════════════════

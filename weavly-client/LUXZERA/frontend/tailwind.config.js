@@ -14,8 +14,13 @@ export default {
       animation: {
         'marquee': 'marquee 25s linear infinite',
         'fade-in-up': 'fadeInUp 520ms ease-out both',
+        'shimmer': 'shimmer 1.8s ease-in-out infinite',
       },
       keyframes: {
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
         marquee: {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-50%)' },

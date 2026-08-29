@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import FamilyStudioHome from "@/modules/home/components/FamilyStudioHome";
 import GuestOnboardingPage from "@/modules/onboarding/pages/GuestOnboardingPage";
+import { HomeSkeleton } from "@/shared/components/ui/Skeleton";
 
 export default function HomePage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -26,8 +27,13 @@ export default function HomePage() {
     router.push(`/?openLogin=true&v=${view}&t=${Date.now()}`);
   };
 
-  // Keep initial SSR and client hydration render identical
-  if (!mounted || !user) {
+  // While client is mounting or auth is hydrating, render the neutral skeleton to prevent visual flash
+  if (!mounted || loading) {
+    return <HomeSkeleton />;
+  }
+
+  // Once authentication resolution is complete:
+  if (!user) {
     return <GuestOnboardingPage onOpenAuth={handleOpenAuth} />;
   }
 

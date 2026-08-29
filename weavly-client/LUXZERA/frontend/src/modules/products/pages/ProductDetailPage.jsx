@@ -6,6 +6,7 @@ import { getProductById } from "@/modules/products/services/productService";
 import { useCart } from "@/modules/cart/store/CartContext";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
+import { ProductDetailSkeleton } from "@/shared/components/ui/Skeleton";
 import {
   ShoppingBag,
   Truck,
@@ -165,14 +166,7 @@ export default function ProductDetailPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#FFFFFF] flex flex-col items-center justify-center gap-4">
-        <Loader2 size={36} className="animate-spin text-[#F07020]" />
-        <p className="text-xs uppercase tracking-widest text-[#86868B] font-semibold">
-          Loading Curated Piece...
-        </p>
-      </div>
-    );
+    return <ProductDetailSkeleton />;
   }
 
   if (!product) {

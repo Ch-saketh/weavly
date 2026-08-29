@@ -45,13 +45,10 @@ export default function Navbar({
     : "My Account";
   const profileEmail = currentUser?.email || "";
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     setProfileOpen(false);
     setMobileOpen(false);
-    await onLogout?.();
-    if (typeof window !== "undefined") {
-      window.location.href = "/";
-    }
+    onLogout?.();
   };
 
   const handleSearchSubmit = (event) => {
