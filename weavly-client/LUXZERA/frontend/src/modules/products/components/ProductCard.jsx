@@ -52,6 +52,16 @@ export default function ProductCard({ product, onViewProduct }) {
 
   const { origin, season } = getDesignerDetails(product.brand);
 
+const NEUTRAL_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23F4F1EC'/%3E%3Cpath d='M260 360C260 337.909 277.909 320 300 320C322.091 320 340 337.909 340 360V420C340 442.091 322.091 460 300 460C277.909 460 260 442.091 260 420V360Z' stroke='%23C5BCAD' stroke-width='8'/%3E%3Cpath d='M230 460C230 440 250 420 300 420C350 420 370 440 370 460V500H230V460Z' stroke='%23C5BCAD' stroke-width='8'/%3E%3Ctext x='50%25' y='560' font-family='sans-serif' font-size='16' font-weight='500' fill='%239E9484' text-anchor='middle' letter-spacing='2'%3ELUXZERA%3C/text%3E%3C/svg%3E";
+
+const ensureHttps = (url) => {
+  if (!url || typeof url !== "string") return "";
+  return url.replace(/^http:\/\//i, "https://");
+};
+
+  const rawImg = product.imageUrl || product.image || product.images?.[0];
+  const displayImage = rawImg ? ensureHttps(rawImg) : NEUTRAL_FALLBACK_IMAGE;
+
   return (
     <>
       <div className="sm:hidden">
@@ -64,14 +74,14 @@ export default function ProductCard({ product, onViewProduct }) {
         {/* Image */}
         <div className="relative aspect-[3/4.2] overflow-hidden bg-white border border-[#ECECEC] select-none flex items-center justify-center rounded-2xl shadow-[0_1px_2px_rgba(0,0,0,0.01)] transition-shadow duration-300 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.03)]">
           <img
-            src={product.imageUrl || product.image || product.images?.[0] || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80"}
+            src={displayImage}
             alt={product.name || product.title || "Product"}
             className="w-full h-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
             loading="lazy"
             referrerPolicy="no-referrer"
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80";
+              e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
             }}
           />
 
