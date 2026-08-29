@@ -15,7 +15,7 @@ import {
   X,
   CheckCircle2,
 } from "lucide-react";
-import { getPublicDesignerProfile, submitCustomizationRequest } from "../services/designerService";
+import { getPublicDesignerProfile, submitCustomizationRequest, recordProfileView } from "../services/designerService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 
 export default function PublicDesignerProfilePage() {
@@ -53,6 +53,7 @@ export default function PublicDesignerProfilePage() {
   useEffect(() => {
     if (!designerId) return;
     setLoading(true);
+    recordProfileView(designerId);
     getPublicDesignerProfile(designerId)
       .then((res) => setData(res))
       .catch((err) => setError(err.message || "Failed to load designer profile"))
@@ -258,6 +259,18 @@ export default function PublicDesignerProfilePage() {
                     {profile.experienceYears ? `${profile.experienceYears} Years of Practice` : "Established Atelier"}
                   </span>
                 </div>
+                {profile.qualifications && (
+                  <div>
+                    <span className="text-[#86868B] block">Qualifications</span>
+                    <span className="font-semibold text-[#1D1D1F]">{profile.qualifications}</span>
+                  </div>
+                )}
+                {profile.skills && (
+                  <div>
+                    <span className="text-[#86868B] block">Core Skills & Techniques</span>
+                    <span className="font-medium text-[#1D1D1F]">{profile.skills}</span>
+                  </div>
+                )}
                 <div>
                   <span className="text-[#86868B] block">Customization</span>
                   <span className="font-semibold text-[#1D1D1F]">

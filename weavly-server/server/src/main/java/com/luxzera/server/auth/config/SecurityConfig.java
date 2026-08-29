@@ -85,7 +85,12 @@ public class SecurityConfig {
                                 "/api/designs",
                                 "/api/designs/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/customization-requests").permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/customization-requests",
+                                "/api/designers/*/view",
+                                "/api/designs/*/view",
+                                "/api/designs/*/like"
+                        ).permitAll()
 
                         // ── Spring error page ────────────────────────────
                         .requestMatchers("/error").permitAll()

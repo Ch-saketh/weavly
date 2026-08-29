@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +45,18 @@ public class DesignerPublicController {
     }
 
     /**
+     * Record public profile view event
+     * POST /api/designers/{designerId}/view
+     */
+    @PostMapping("/api/designers/{designerId}/view")
+    public ResponseEntity<Map<String, String>> recordProfileView(
+            @PathVariable("designerId") String designerId
+    ) {
+        designerService.recordProfileView(designerId);
+        return ResponseEntity.ok(Map.of("message", "Profile view recorded"));
+    }
+
+    /**
      * Public discovery: Browse published creator designs
      * GET /api/designs?category=...&style=...&audience=...&page=0&size=24
      */
@@ -61,7 +74,7 @@ public class DesignerPublicController {
     }
 
     /**
-     * Public discovery: Single design details
+     * Public discovery: View single published design
      * GET /api/designs/{designId}
      */
     @GetMapping("/api/designs/{designId}")
@@ -70,5 +83,29 @@ public class DesignerPublicController {
     ) {
         DesignerDesignResponse design = designerService.getPublicDesignById(designId);
         return ResponseEntity.ok(design);
+    }
+
+    /**
+     * Record design view event
+     * POST /api/designs/{designId}/view
+     */
+    @PostMapping("/api/designs/{designId}/view")
+    public ResponseEntity<Map<String, String>> recordDesignView(
+            @PathVariable("designId") String designId
+    ) {
+        designerService.recordDesignView(designId);
+        return ResponseEntity.ok(Map.of("message", "Design view recorded"));
+    }
+
+    /**
+     * Record design like event
+     * POST /api/designs/{designId}/like
+     */
+    @PostMapping("/api/designs/{designId}/like")
+    public ResponseEntity<Map<String, String>> recordDesignLike(
+            @PathVariable("designId") String designId
+    ) {
+        designerService.recordDesignLike(designId);
+        return ResponseEntity.ok(Map.of("message", "Design like recorded"));
     }
 }

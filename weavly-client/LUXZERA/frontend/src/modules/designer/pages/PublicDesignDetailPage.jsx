@@ -10,8 +10,10 @@ import {
   CheckCircle2,
   X,
   ChevronLeft,
+  Heart,
+  Eye,
 } from "lucide-react";
-import { getPublicDesignById, submitCustomizationRequest } from "../services/designerService";
+import { getPublicDesignById, submitCustomizationRequest, recordDesignView, recordDesignLike } from "../services/designerService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 
 export default function PublicDesignDetailPage() {
@@ -24,6 +26,8 @@ export default function PublicDesignDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeImage, setActiveImage] = useState(null);
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   // Customization Modal State
   const [modalOpen, setModalOpen] = useState(false);
@@ -49,14 +53,27 @@ export default function PublicDesignDetailPage() {
   useEffect(() => {
     if (!designId) return;
     setLoading(true);
+    recordDesignView(designId);
     getPublicDesignById(designId)
       .then((data) => {
         setDesign(data);
         setActiveImage(data.primaryImageUrl);
+        setLikeCount(data.likeCount || 0);
       })
       .catch((err) => setError(err.message || "Failed to load design"))
       .finally(() => setLoading(false));
   }, [designId]);
+
+  const handleLike = async () => {
+    if (liked) return;
+    setLiked(true);
+    setLikeCount((prev) => prev + 1);
+    try {
+      await recordDesignLike(designId);
+    } catch (err) {
+      console.warn("Like action failed:", err);
+    }
+  };
 
   useEffect(() => {
     if (user) {

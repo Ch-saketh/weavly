@@ -33,6 +33,13 @@ public class DesignerStudioController {
         return ResponseEntity.ok(stats);
     }
 
+    @GetMapping("/analytics")
+    public ResponseEntity<DesignerAnalyticsResponse> getAnalytics(Principal principal) {
+        Designer designer = designerAuthService.getAuthenticatedDesigner(principal.getName());
+        DesignerAnalyticsResponse analytics = designerService.getAnalytics(designer);
+        return ResponseEntity.ok(analytics);
+    }
+
     @GetMapping("/profile")
     public ResponseEntity<DesignerProfileDto> getProfile(Principal principal) {
         DesignerProfileDto profile = designerAuthService.getAuthenticatedDesignerProfile(principal.getName());

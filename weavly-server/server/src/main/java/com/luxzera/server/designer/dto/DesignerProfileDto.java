@@ -23,12 +23,17 @@ public class DesignerProfileDto {
     private String location;
     private String specialization;
     private Integer experienceYears;
+    private String qualifications;
+    private String skills;
     private String designPhilosophy;
     private String servicesOffered;
     private Boolean customizationAvailable;
     private String externalWebsiteUrl;
     private String instagramHandle;
+    private String behanceUrl;
+    private String linkedinUrl;
     private String pricingTier;
+    private Long profileViews;
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

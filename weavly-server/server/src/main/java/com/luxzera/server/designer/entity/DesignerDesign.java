@@ -67,6 +67,18 @@ public class DesignerDesign {
     @Builder.Default
     private Boolean isCustomizable = true;
 
+    @Column(name = "view_count", nullable = false)
+    @Builder.Default
+    private Long viewCount = 0L;
+
+    @Column(name = "like_count", nullable = false)
+    @Builder.Default
+    private Long likeCount = 0L;
+
+    @Column(name = "save_count", nullable = false)
+    @Builder.Default
+    private Long saveCount = 0L;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 32)
     @Builder.Default

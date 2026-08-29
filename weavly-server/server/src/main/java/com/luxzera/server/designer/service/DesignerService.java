@@ -18,10 +18,18 @@ public interface DesignerService {
 
     DesignerDesignResponse getPublicDesignById(String designId);
 
+    void recordProfileView(String designerId);
+
+    void recordDesignView(String designId);
+
+    void recordDesignLike(String designId);
+
     // Private Designer Studio Management
     DesignerProfileDto updateDesignerProfile(Designer designer, DesignerProfileDto updateDto);
 
     DesignerDashboardStatsResponse getDashboardStats(Designer designer);
+
+    DesignerAnalyticsResponse getAnalytics(Designer designer);
 
     List<DesignerDesignResponse> getMyDesigns(Designer designer);
 

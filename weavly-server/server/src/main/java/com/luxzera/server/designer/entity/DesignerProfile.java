@@ -60,14 +60,30 @@ public class DesignerProfile {
     @Builder.Default
     private Boolean customizationAvailable = true;
 
+    @Column(name = "qualifications", columnDefinition = "TEXT")
+    private String qualifications;
+
+    @Column(name = "skills", length = 512)
+    private String skills;
+
     @Column(name = "external_website_url", length = 512)
     private String externalWebsiteUrl;
 
     @Column(name = "instagram_handle", length = 80)
     private String instagramHandle;
 
+    @Column(name = "behance_url", length = 512)
+    private String behanceUrl;
+
+    @Column(name = "linkedin_url", length = 512)
+    private String linkedinUrl;
+
     @Column(name = "pricing_tier", length = 40)
     private String pricingTier;
+
+    @Column(name = "profile_views", nullable = false)
+    @Builder.Default
+    private Long profileViews = 0L;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

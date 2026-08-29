@@ -22,9 +22,13 @@ public class DesignerPublicSummaryDto {
     private String location;
     private String specialization;
     private Integer experienceYears;
+    private String qualifications;
+    private String skills;
     private Boolean customizationAvailable;
     private String externalWebsiteUrl;
     private String instagramHandle;
+    private String behanceUrl;
+    private String linkedinUrl;
     private String pricingTier;
     private long publishedDesignsCount;
     private List<String> previewImageUrls;

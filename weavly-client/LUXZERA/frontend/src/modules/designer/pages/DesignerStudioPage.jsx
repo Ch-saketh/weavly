@@ -24,10 +24,15 @@ import {
   Globe,
   DollarSign,
   Calendar,
+  BarChart3,
+  Heart,
+  Bookmark,
+  TrendingUp,
 } from "lucide-react";
 import { useDesignerAuth } from "../store/useDesignerAuth";
 import {
   getDesignerDashboardStats,
+  getDesignerAnalytics,
   getMyDesignerDesigns,
   createDesignerDesign,
   updateDesignerDesign,
@@ -43,10 +48,11 @@ export default function DesignerStudioPage() {
   const router = useRouter();
   const { designer, isDesignerAuthenticated, loading: authLoading, logout, refreshDesigner } = useDesignerAuth();
 
-  const [activeTab, setActiveTab] = useState("dashboard"); // 'dashboard' | 'designs' | 'requests' | 'settings'
+  const [activeTab, setActiveTab] = useState("dashboard"); // 'dashboard' | 'designs' | 'requests' | 'analytics' | 'settings'
 
   // Data States
   const [stats, setStats] = useState(null);
+  const [analytics, setAnalytics] = useState(null);
   const [designs, setDesigns] = useState([]);
   const [requests, setRequests] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
@@ -78,10 +84,14 @@ export default function DesignerStudioPage() {
     location: "",
     specialization: "",
     experienceYears: "",
+    qualifications: "",
+    skills: "",
     designPhilosophy: "",
     servicesOffered: "",
     externalWebsiteUrl: "",
     instagramHandle: "",
+    behanceUrl: "",
+    linkedinUrl: "",
   });
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState(false);
@@ -89,12 +99,14 @@ export default function DesignerStudioPage() {
   const loadStudioData = useCallback(async () => {
     setLoadingData(true);
     try {
-      const [statsData, designsData, requestsData] = await Promise.all([
+      const [statsData, analyticsData, designsData, requestsData] = await Promise.all([
         getDesignerDashboardStats().catch(() => null),
+        getDesignerAnalytics().catch(() => null),
         getMyDesignerDesigns().catch(() => []),
         getMyDesignerRequests().catch(() => []),
       ]);
       setStats(statsData);
+      setAnalytics(analyticsData);
       setDesigns(designsData || []);
       setRequests(requestsData || []);
     } catch (err) {
@@ -125,10 +137,14 @@ export default function DesignerStudioPage() {
         location: designer.location || "",
         specialization: designer.specialization || "",
         experienceYears: designer.experienceYears || "",
+        qualifications: designer.qualifications || "",
+        skills: designer.skills || "",
         designPhilosophy: designer.designPhilosophy || "",
         servicesOffered: designer.servicesOffered || "",
         externalWebsiteUrl: designer.externalWebsiteUrl || "",
         instagramHandle: designer.instagramHandle || "",
+        behanceUrl: designer.behanceUrl || "",
+        linkedinUrl: designer.linkedinUrl || "",
       });
     }
   }, [designer]);
@@ -275,7 +291,7 @@ export default function DesignerStudioPage() {
                 <span className="font-bold text-sm text-[#1D1D1F] truncate block">
                   {designer.displayName}
                 </span>
-                <ShieldCheck size={13} className="text-[#F07020] shrink-0" />
+                <ShieldCheck size={13} className="text-[#F07020]" />
               </div>
               <span className="text-[10px] font-mono text-[#86868B] block">
                 {designer.designerId}
@@ -326,6 +342,17 @@ export default function DesignerStudioPage() {
                   {requests.filter((r) => r.status === "PENDING").length}
                 </span>
               )}
+            </button>
+
+            <button
+              onClick={() => setActiveTab("analytics")}
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                activeTab === "analytics"
+                  ? "bg-[#1D1D1F] text-white shadow-sm"
+                  : "text-[#6E6E73] hover:bg-[#FAFAF9] hover:text-[#1D1D1F]"
+              }`}
+            >
+              <BarChart3 size={16} /> Analytics
             </button>
 
             <button
@@ -536,6 +563,10 @@ export default function DesignerStudioPage() {
                           </span>
                           <span className="text-[#86868B] capitalize">{d.category}</span>
                         </div>
+                        <div className="flex items-center gap-3 pt-1 text-[11px] text-[#86868B]">
+                          <span className="flex items-center gap-1"><Eye size={11} /> {d.viewCount || 0}</span>
+                          <span className="flex items-center gap-1"><Heart size={11} /> {d.likeCount || 0}</span>
+                        </div>
                       </div>
                     </div>
 
@@ -692,12 +723,127 @@ export default function DesignerStudioPage() {
           </div>
         )}
 
-        {/* ── TAB 4: ATELIER SETTINGS ── */}
+        {/* ── TAB 4: PRIVATE ANALYTICS (ZERO MOCK DATA) ── */}
+        {activeTab === "analytics" && (
+          <div className="max-w-6xl mx-auto space-y-8">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1D1D1F] text-white text-[11px] font-semibold mb-2">
+                <BarChart3 size={13} className="text-[#F07020]" /> Private Atelier Analytics
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold font-serif text-[#1D1D1F]">
+                Performance & Audience Insights
+              </h1>
+              <p className="text-xs text-[#86868B] mt-1">
+                Real-time engagement telemetry tracked directly from customer interactions on your atelier and creations.
+              </p>
+            </div>
+
+            {/* Core Metrics Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="bg-white p-6 rounded-2xl border border-[#ECECEC] shadow-sm">
+                <div className="flex items-center justify-between text-[#86868B] mb-2">
+                  <span className="text-xs font-medium">Profile Views</span>
+                  <Eye size={16} />
+                </div>
+                <span className="text-3xl font-bold text-[#1D1D1F]">
+                  {analytics ? analytics.profileViews : 0}
+                </span>
+                <span className="text-[11px] text-[#86868B] mt-1 block">Visits to your public atelier</span>
+              </div>
+
+              <div className="bg-white p-6 rounded-2xl border border-[#ECECEC] shadow-sm">
+                <div className="flex items-center justify-between text-[#86868B] mb-2">
+                  <span className="text-xs font-medium">Lookbook Views</span>
+                  <TrendingUp size={16} className="text-[#F07020]" />
+                </div>
+                <span className="text-3xl font-bold text-[#1D1D1F]">
+                  {analytics ? analytics.totalDesignViews : 0}
+                </span>
+                <span className="text-[11px] text-[#86868B] mt-1 block">Total creation impressions</span>
+              </div>
+
+              <div className="bg-white p-6 rounded-2xl border border-[#ECECEC] shadow-sm">
+                <div className="flex items-center justify-between text-[#86868B] mb-2">
+                  <span className="text-xs font-medium">Creation Likes</span>
+                  <Heart size={16} className="text-rose-500" />
+                </div>
+                <span className="text-3xl font-bold text-[#1D1D1F]">
+                  {analytics ? analytics.totalDesignLikes : 0}
+                </span>
+                <span className="text-[11px] text-[#86868B] mt-1 block">Customer endorsements</span>
+              </div>
+
+              <div className="bg-white p-6 rounded-2xl border border-[#ECECEC] shadow-sm">
+                <div className="flex items-center justify-between text-[#86868B] mb-2">
+                  <span className="text-xs font-medium">Custom Inquiries</span>
+                  <Scissors size={16} className="text-purple-600" />
+                </div>
+                <span className="text-3xl font-bold text-[#1D1D1F]">
+                  {analytics ? analytics.totalRequests : 0}
+                </span>
+                <span className="text-[11px] text-[#86868B] mt-1 block">Total bespoke commissions</span>
+              </div>
+            </div>
+
+            {/* Top Performing Lookbooks */}
+            <div className="bg-white rounded-2xl border border-[#ECECEC] p-6 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-sm text-[#1D1D1F]">Top Performing Lookbooks</h3>
+                  <p className="text-xs text-[#86868B] mt-0.5">Creations ordered by customer engagement.</p>
+                </div>
+                <span className="text-xs text-[#86868B]">Real telemetry</span>
+              </div>
+
+              {analytics && analytics.topDesigns && analytics.topDesigns.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-left">
+                    <thead className="text-[10px] text-[#86868B] uppercase border-b border-[#ECECEC]">
+                      <tr>
+                        <th className="py-2.5 px-3">Creation</th>
+                        <th className="py-2.5 px-3">Category</th>
+                        <th className="py-2.5 px-3">Base Price</th>
+                        <th className="py-2.5 px-3 text-center">Views</th>
+                        <th className="py-2.5 px-3 text-center">Likes</th>
+                        <th className="py-2.5 px-3 text-right">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#ECECEC]">
+                      {analytics.topDesigns.map((d) => (
+                        <tr key={d.designId} className="hover:bg-[#FAFAF9]">
+                          <td className="py-3 px-3 flex items-center gap-3">
+                            <img src={d.primaryImageUrl} alt={d.title} className="w-8 h-8 rounded-lg object-cover bg-[#E5E5E5]" />
+                            <span className="font-medium text-[#1D1D1F]">{d.title}</span>
+                          </td>
+                          <td className="py-3 px-3 capitalize text-[#6E6E73]">{d.category}</td>
+                          <td className="py-3 px-3 font-semibold">{d.estimatedPrice ? `₹${d.estimatedPrice.toLocaleString()}` : "Upon Request"}</td>
+                          <td className="py-3 px-3 text-center font-mono">{d.viewCount || 0}</td>
+                          <td className="py-3 px-3 text-center font-mono text-rose-500">{d.likeCount || 0}</td>
+                          <td className="py-3 px-3 text-right">
+                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${
+                              d.status === "PUBLISHED" ? "bg-emerald-100 text-emerald-700" : "bg-zinc-100 text-zinc-600"
+                            }`}>
+                              {d.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-xs text-[#86868B] py-8 text-center">No lookbook analytics recorded yet.</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB 5: ATELIER SETTINGS ── */}
         {activeTab === "settings" && (
           <div className="max-w-3xl mx-auto bg-white rounded-3xl border border-[#ECECEC] p-8 sm:p-10 shadow-sm space-y-6">
             <div>
               <h1 className="text-2xl font-bold font-serif text-[#1D1D1F]">Atelier Profile Settings</h1>
-              <p className="text-xs text-[#86868B] mt-1">Update your creator biography, lookbook cover, social linkages, and atelier details.</p>
+              <p className="text-xs text-[#86868B] mt-1">Update your creator biography, qualifications, social links, and atelier portfolio information.</p>
             </div>
 
             {profileSuccess && (
@@ -738,6 +884,29 @@ export default function DesignerStudioPage() {
                   placeholder="Share your atelier background, signature cuts, and design heritage..."
                   className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none text-xs leading-relaxed"
                 />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-medium text-[#1D1D1F] mb-1">Qualifications & Education</label>
+                  <input
+                    type="text"
+                    value={profileForm.qualifications}
+                    onChange={(e) => setProfileForm({ ...profileForm, qualifications: e.target.value })}
+                    placeholder="e.g. NIFT Graduate, London College of Fashion"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block font-medium text-[#1D1D1F] mb-1">Core Skills & Techniques</label>
+                  <input
+                    type="text"
+                    value={profileForm.skills}
+                    onChange={(e) => setProfileForm({ ...profileForm, skills: e.target.value })}
+                    placeholder="e.g. Pattern Making, Draping, Hand Embroidery"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none text-xs"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -815,6 +984,29 @@ export default function DesignerStudioPage() {
                     value={profileForm.instagramHandle}
                     onChange={(e) => setProfileForm({ ...profileForm, instagramHandle: e.target.value })}
                     placeholder="@vance_couture"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none text-xs"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-medium text-[#1D1D1F] mb-1">Behance Portfolio URL</label>
+                  <input
+                    type="url"
+                    value={profileForm.behanceUrl}
+                    onChange={(e) => setProfileForm({ ...profileForm, behanceUrl: e.target.value })}
+                    placeholder="https://behance.net/..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block font-medium text-[#1D1D1F] mb-1">LinkedIn Profile URL</label>
+                  <input
+                    type="url"
+                    value={profileForm.linkedinUrl}
+                    onChange={(e) => setProfileForm({ ...profileForm, linkedinUrl: e.target.value })}
+                    placeholder="https://linkedin.com/in/..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none text-xs"
                   />
                 </div>

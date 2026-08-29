@@ -63,9 +63,13 @@ public class DesignerServiceImpl implements DesignerService {
                     .location(p != null ? p.getLocation() : null)
                     .specialization(p != null ? p.getSpecialization() : null)
                     .experienceYears(p != null ? p.getExperienceYears() : null)
+                    .qualifications(p != null ? p.getQualifications() : null)
+                    .skills(p != null ? p.getSkills() : null)
                     .customizationAvailable(p == null || Boolean.TRUE.equals(p.getCustomizationAvailable()))
                     .externalWebsiteUrl(p != null ? p.getExternalWebsiteUrl() : null)
                     .instagramHandle(p != null ? p.getInstagramHandle() : null)
+                    .behanceUrl(p != null ? p.getBehanceUrl() : null)
+                    .linkedinUrl(p != null ? p.getLinkedinUrl() : null)
                     .pricingTier(p != null ? p.getPricingTier() : null)
                     .publishedDesignsCount(published.size())
                     .previewImageUrls(previewImages)
@@ -98,12 +102,17 @@ public class DesignerServiceImpl implements DesignerService {
                 .location(profile != null ? profile.getLocation() : "")
                 .specialization(profile != null ? profile.getSpecialization() : "")
                 .experienceYears(profile != null ? profile.getExperienceYears() : null)
+                .qualifications(profile != null ? profile.getQualifications() : "")
+                .skills(profile != null ? profile.getSkills() : "")
                 .designPhilosophy(profile != null ? profile.getDesignPhilosophy() : "")
                 .servicesOffered(profile != null ? profile.getServicesOffered() : "")
                 .customizationAvailable(profile != null && Boolean.TRUE.equals(profile.getCustomizationAvailable()))
                 .externalWebsiteUrl(profile != null ? profile.getExternalWebsiteUrl() : "")
                 .instagramHandle(profile != null ? profile.getInstagramHandle() : "")
+                .behanceUrl(profile != null ? profile.getBehanceUrl() : "")
+                .linkedinUrl(profile != null ? profile.getLinkedinUrl() : "")
                 .pricingTier(profile != null ? profile.getPricingTier() : "")
+                .profileViews(profile != null && profile.getProfileViews() != null ? profile.getProfileViews() : 0L)
                 .status(designer.getStatus().name())
                 .createdAt(designer.getCreatedAt())
                 .updatedAt(designer.getUpdatedAt())
@@ -149,6 +158,36 @@ public class DesignerServiceImpl implements DesignerService {
 
     @Override
     @Transactional
+    public void recordProfileView(String designerId) {
+        designerRepository.findByDesignerId(designerId).ifPresent(d -> {
+            DesignerProfile p = d.getProfile();
+            if (p != null) {
+                p.setProfileViews((p.getProfileViews() != null ? p.getProfileViews() : 0L) + 1);
+                designerProfileRepository.save(p);
+            }
+        });
+    }
+
+    @Override
+    @Transactional
+    public void recordDesignView(String designId) {
+        designerDesignRepository.findByDesignId(designId).ifPresent(d -> {
+            d.setViewCount((d.getViewCount() != null ? d.getViewCount() : 0L) + 1);
+            designerDesignRepository.save(d);
+        });
+    }
+
+    @Override
+    @Transactional
+    public void recordDesignLike(String designId) {
+        designerDesignRepository.findByDesignId(designId).ifPresent(d -> {
+            d.setLikeCount((d.getLikeCount() != null ? d.getLikeCount() : 0L) + 1);
+            designerDesignRepository.save(d);
+        });
+    }
+
+    @Override
+    @Transactional
     public DesignerProfileDto updateDesignerProfile(Designer designer, DesignerProfileDto updateDto) {
         DesignerProfile profile = designer.getProfile();
         if (profile == null) {
@@ -179,6 +218,12 @@ public class DesignerServiceImpl implements DesignerService {
         if (updateDto.getExperienceYears() != null) {
             profile.setExperienceYears(updateDto.getExperienceYears());
         }
+        if (updateDto.getQualifications() != null) {
+            profile.setQualifications(updateDto.getQualifications().trim());
+        }
+        if (updateDto.getSkills() != null) {
+            profile.setSkills(updateDto.getSkills().trim());
+        }
         if (updateDto.getDesignPhilosophy() != null) {
             profile.setDesignPhilosophy(updateDto.getDesignPhilosophy().trim());
         }
@@ -193,6 +238,12 @@ public class DesignerServiceImpl implements DesignerService {
         }
         if (updateDto.getInstagramHandle() != null) {
             profile.setInstagramHandle(updateDto.getInstagramHandle().trim());
+        }
+        if (updateDto.getBehanceUrl() != null) {
+            profile.setBehanceUrl(updateDto.getBehanceUrl().trim());
+        }
+        if (updateDto.getLinkedinUrl() != null) {
+            profile.setLinkedinUrl(updateDto.getLinkedinUrl().trim());
         }
         if (updateDto.getPricingTier() != null) {
             profile.setPricingTier(updateDto.getPricingTier().trim());
@@ -211,12 +262,17 @@ public class DesignerServiceImpl implements DesignerService {
                 .location(saved.getLocation())
                 .specialization(saved.getSpecialization())
                 .experienceYears(saved.getExperienceYears())
+                .qualifications(saved.getQualifications())
+                .skills(saved.getSkills())
                 .designPhilosophy(saved.getDesignPhilosophy())
                 .servicesOffered(saved.getServicesOffered())
                 .customizationAvailable(saved.getCustomizationAvailable())
                 .externalWebsiteUrl(saved.getExternalWebsiteUrl())
                 .instagramHandle(saved.getInstagramHandle())
+                .behanceUrl(saved.getBehanceUrl())
+                .linkedinUrl(saved.getLinkedinUrl())
                 .pricingTier(saved.getPricingTier())
+                .profileViews(saved.getProfileViews() != null ? saved.getProfileViews() : 0L)
                 .status(designer.getStatus().name())
                 .createdAt(designer.getCreatedAt())
                 .updatedAt(saved.getUpdatedAt())
@@ -246,6 +302,48 @@ public class DesignerServiceImpl implements DesignerService {
                 .activeCommissions(inProgress)
                 .completedCommissions(completed)
                 .totalRequests(totalRequests)
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DesignerAnalyticsResponse getAnalytics(Designer designer) {
+        UUID designerId = designer.getId();
+        DesignerProfile profile = designer.getProfile();
+
+        List<DesignerDesign> myDesigns = designerDesignRepository.findAllByDesignerIdOrderByCreatedAtDesc(designerId);
+
+        long profileViews = profile != null && profile.getProfileViews() != null ? profile.getProfileViews() : 0L;
+        long totalDesignViews = myDesigns.stream().mapToLong(d -> d.getViewCount() != null ? d.getViewCount() : 0L).sum();
+        long totalDesignLikes = myDesigns.stream().mapToLong(d -> d.getLikeCount() != null ? d.getLikeCount() : 0L).sum();
+        long totalDesignSaves = myDesigns.stream().mapToLong(d -> d.getSaveCount() != null ? d.getSaveCount() : 0L).sum();
+
+        long pendingRequests = customizationRequestRepository.countByDesignerIdAndStatus(designerId, CustomizationRequestStatus.PENDING);
+        long activeCommissions = customizationRequestRepository.countByDesignerIdAndStatus(designerId, CustomizationRequestStatus.IN_PROGRESS)
+                + customizationRequestRepository.countByDesignerIdAndStatus(designerId, CustomizationRequestStatus.ACCEPTED);
+        long completedCommissions = customizationRequestRepository.countByDesignerIdAndStatus(designerId, CustomizationRequestStatus.COMPLETED);
+        long totalRequests = customizationRequestRepository.countByDesignerId(designerId);
+
+        List<DesignerDesignResponse> topDesigns = myDesigns.stream()
+                .sorted((a, b) -> Long.compare(
+                        (b.getViewCount() != null ? b.getViewCount() : 0L) + (b.getLikeCount() != null ? b.getLikeCount() : 0L),
+                        (a.getViewCount() != null ? a.getViewCount() : 0L) + (a.getLikeCount() != null ? a.getLikeCount() : 0L)
+                ))
+                .limit(5)
+                .map(this::mapToDesignResponse)
+                .collect(Collectors.toList());
+
+        return DesignerAnalyticsResponse.builder()
+                .designerId(designer.getDesignerId())
+                .profileViews(profileViews)
+                .totalDesignViews(totalDesignViews)
+                .totalDesignLikes(totalDesignLikes)
+                .totalDesignSaves(totalDesignSaves)
+                .totalRequests(totalRequests)
+                .pendingRequests(pendingRequests)
+                .activeCommissions(activeCommissions)
+                .completedCommissions(completedCommissions)
+                .topDesigns(topDesigns)
                 .build();
     }
 
@@ -281,6 +379,9 @@ public class DesignerServiceImpl implements DesignerService {
                 .materials(request.getMaterials() != null ? request.getMaterials().trim() : null)
                 .estimatedPrice(request.getEstimatedPrice())
                 .isCustomizable(request.getIsCustomizable() != null ? request.getIsCustomizable() : true)
+                .viewCount(0L)
+                .likeCount(0L)
+                .saveCount(0L)
                 .status(status)
                 .build();
 
@@ -396,6 +497,9 @@ public class DesignerServiceImpl implements DesignerService {
                 .materials(design.getMaterials())
                 .estimatedPrice(design.getEstimatedPrice())
                 .isCustomizable(Boolean.TRUE.equals(design.getIsCustomizable()))
+                .viewCount(design.getViewCount() != null ? design.getViewCount() : 0L)
+                .likeCount(design.getLikeCount() != null ? design.getLikeCount() : 0L)
+                .saveCount(design.getSaveCount() != null ? design.getSaveCount() : 0L)
                 .status(design.getStatus().name())
                 .createdAt(design.getCreatedAt())
                 .updatedAt(design.getUpdatedAt())

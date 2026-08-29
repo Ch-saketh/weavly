@@ -30,6 +30,9 @@ public class DesignerDesignResponse {
     private String materials;
     private BigDecimal estimatedPrice;
     private Boolean isCustomizable;
+    private Long viewCount;
+    private Long likeCount;
+    private Long saveCount;
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
