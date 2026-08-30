@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowDown, ShoppingBag, Bookmark, Loader2, Sparkles, CheckCircle2, Flame, Sliders } from "lucide-react";
+import { ArrowRight, ArrowDown, ShoppingBag, Bookmark, Loader2 } from "lucide-react";
 import { getProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
@@ -25,47 +25,34 @@ const chunkArray = (array, size) => {
   return chunked;
 };
 
-// Psychological Style Personas
-const STYLE_PERSONAS = [
+const HERO_CATEGORIES = [
   {
-    id: "luxury",
-    title: "Quiet Luxury",
-    tagline: "Effortless drape & pure linen blends",
-    query: "Luxury",
+    id: "men",
+    label: "Men's Essentials",
+    query: "Men",
     image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
-    hotspots: ["100% Silk-Linen", "Zero Synthetic Dyes", "Relaxed Shoulders"],
-    matchRate: "98.4%",
-    popularity: "482 shoppers browsing",
+    startPrice: "₹999",
   },
   {
-    id: "tailored",
-    title: "Executive Tailored",
-    tagline: "Structured blazers & crisp oxford collars",
-    query: "Oxford",
-    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80",
-    hotspots: ["Italian Wool Cut", "Wrinkle-Resistant", "Hand-Finished Lapels"],
-    matchRate: "96.8%",
-    popularity: "614 shoppers browsing",
+    id: "women",
+    label: "Women's Collection",
+    query: "Women",
+    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80",
+    startPrice: "₹1,299",
   },
   {
-    id: "resort",
-    title: "Weekend Resort",
-    tagline: "Camp collars & breathable relaxed knits",
-    query: "Comfort",
+    id: "shirts",
+    label: "Linen & Oxford Shirts",
+    query: "Shirts",
     image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80",
-    hotspots: ["Open Cuban Collar", "Breathable Mesh Weave", "Ultralight Feel"],
-    matchRate: "99.1%",
-    popularity: "890 shoppers browsing",
+    startPrice: "₹1,499",
   },
   {
-    id: "sustainable",
-    title: "Organic Sustainable",
-    tagline: "Earth pigments & artisanal zero-waste weaves",
-    query: "Sustainable",
-    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=80",
-    hotspots: ["Fair-Trade Organic", "Plant-Based Inks", "Lifetime Guarantee"],
-    matchRate: "97.5%",
-    popularity: "340 shoppers browsing",
+    id: "outerwear",
+    label: "Jackets & Outerwear",
+    query: "Jackets",
+    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80",
+    startPrice: "₹2,499",
   },
 ];
 
@@ -79,10 +66,8 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [productsList, setProductsList] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
 
-  // Interactive Persona State
-  const [selectedPersona, setSelectedPersona] = useState(STYLE_PERSONAS[0]);
-  const [selectedGender, setSelectedGender] = useState("Men");
-  const [selectedFit, setSelectedFit] = useState("Tailored");
+  // Active Category Selection
+  const [selectedCategory, setSelectedCategory] = useState(HERO_CATEGORIES[0]);
 
   // Infinite Scroll State (Row-by-Row)
   const [visibleRowsCount, setVisibleRowsCount] = useState(2);
@@ -164,7 +149,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     if (catalogSectionRef.current) {
       catalogSectionRef.current.scrollIntoView({ behavior: "smooth" });
     } else {
-      router.push(`/market?q=${encodeURIComponent(selectedPersona.query)}`);
+      router.push(`/market?q=${encodeURIComponent(selectedCategory.query)}`);
     }
   };
 
@@ -212,189 +197,98 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   return (
     <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
 
-      {/* MASTER CONTINUOUS ARCHITECTURAL GRID WRAPPER */}
-      <main className="max-w-[1440px] mx-auto border-x border-[#183B56]">
+      {/* MASTER CONTAINER WITH ELEGANT GAPS BETWEEN SECTIONS */}
+      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-12 sm:space-y-16 lg:space-y-20">
 
         {/* ════════════════════════════════════════════════════════════
-            1. PSYCHOLOGICAL HERO: INTERACTIVE PERSONA & FIT ARCHITECTURE
+            1. ULTRA-CLEAN 3-COLUMN HERO (LOW COGNITIVE LOAD)
         ════════════════════════════════════════════════════════════ */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 border-b border-[#183B56] divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
-          
-          {/* LEFT: Step 1 - Choose Your Wardrobe Persona (lg:col-span-4) */}
-          <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between space-y-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
-                <Sparkles size={11} className="text-[#183B56]" />
-                <span>01 • Choose Your Aesthetic</span>
+        <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
+          <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
+            
+            {/* LEFT: 1-Tap Category Selector (lg:col-span-4) */}
+            <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-center space-y-3">
+              <div className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#5A7184] mb-1">
+                Select Category
               </div>
-
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
-                What Defines Your Style?
-              </h2>
-
-              <p className="text-xs text-[#5A7184] leading-relaxed">
-                Select your silhouette profile to align Zyra AI with your proportions and daily occasions.
-              </p>
-
-              {/* Segmented Persona Options */}
-              <div className="space-y-2.5 pt-2">
-                {STYLE_PERSONAS.map((persona) => {
-                  const active = selectedPersona.id === persona.id;
+              
+              <div className="space-y-2">
+                {HERO_CATEGORIES.map((cat) => {
+                  const active = selectedCategory.id === cat.id;
                   return (
                     <button
-                      key={persona.id}
-                      onClick={() => setSelectedPersona(persona)}
-                      className={`w-full text-left p-3 border transition-all cursor-pointer flex flex-col gap-1 ${
+                      key={cat.id}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`w-full text-left py-3 px-4 border transition-all cursor-pointer flex items-center justify-between font-bold text-xs sm:text-sm ${
                         active
                           ? "bg-[#183B56] text-white border-[#183B56] shadow-xs"
                           : "bg-transparent text-[#183B56] border-[#183B56] hover:bg-[#183B56]/5"
                       }`}
                     >
-                      <div className="flex items-center justify-between font-bold text-xs sm:text-sm">
-                        <span>{persona.title}</span>
-                        <span className="text-xs font-normal opacity-80">{persona.matchRate} Match</span>
-                      </div>
-                      <div className={`text-[11px] leading-tight ${active ? "text-white/80" : "text-[#5A7184]"}`}>
-                        {persona.tagline}
-                      </div>
+                      <span>{cat.label}</span>
+                      <span className="text-base font-normal leading-none">→</span>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* Social Proof Footer in Left Box */}
-            <div className="pt-4 border-t border-[#183B56] flex items-center justify-between text-[11px] font-bold text-[#5A7184]">
-              <div className="flex items-center gap-1 text-[#183B56]">
-                <Flame size={12} className="text-[#183B56]" />
-                <span>{selectedPersona.popularity}</span>
-              </div>
-              <span className="text-[10px] tracking-wider uppercase">Active Live Feed</span>
-            </div>
-          </div>
+            {/* CENTER: Big Clean Garment Visual (lg:col-span-4) */}
+            <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col items-center justify-center bg-[#F5EFEB]">
+              <div className="w-full aspect-[3/3.6] bg-[#DFE7ED] border border-[#183B56] relative overflow-hidden flex items-center justify-center p-6 shadow-xs">
+                <img
+                  src={selectedCategory.image}
+                  alt={selectedCategory.label}
+                  className="w-full h-full object-contain mix-blend-multiply transition-all duration-500 hover:scale-105"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
+                  }}
+                />
 
-          {/* CENTER: Step 2 - Dynamic Look Anatomy & Hotspot Inspection (lg:col-span-4) */}
-          <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col items-center justify-between gap-5 bg-[#F5EFEB]">
-            {/* Top Indicator */}
-            <div className="w-full flex items-center justify-between text-[10px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
-              <span>02 • Silhouette Preview</span>
-              <span className="text-[#183B56] font-bold">{selectedPersona.title}</span>
-            </div>
-
-            {/* Main Interactive Garment Box */}
-            <div className="w-full aspect-[3/3.8] bg-[#DFE7ED] border border-[#183B56] relative overflow-hidden flex items-center justify-center p-6 shadow-xs">
-              <img
-                src={selectedPersona.image}
-                alt={selectedPersona.title}
-                className="w-full h-full object-contain mix-blend-multiply transition-all duration-700 hover:scale-105"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
-                }}
-              />
-
-              {/* Hotspot Anatomy Badges */}
-              <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5 justify-center">
-                {selectedPersona.hotspots.map((tag, idx) => (
-                  <span
-                    key={idx}
-                    className="text-[9px] font-bold bg-white/90 backdrop-blur-xs text-[#183B56] border border-[#183B56] px-2 py-0.5 rounded-xs"
-                  >
-                    ✓ {tag}
-                  </span>
-                ))}
+                <div className="absolute bottom-3 left-3 bg-white/90 border border-[#183B56] px-2.5 py-1 text-[10px] font-bold text-[#183B56]">
+                  From {selectedCategory.startPrice}
+                </div>
               </div>
             </div>
 
-            <div className="text-center text-xs text-[#5A7184] italic">
-              "Crafted with zero compromises on drape, weight, or longevity."
-            </div>
-          </div>
-
-          {/* RIGHT: Step 3 - Sizing & High-Converting Action Trigger (lg:col-span-4) */}
-          <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between space-y-6">
-            <div className="space-y-5">
-              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
-                <Sliders size={11} className="text-[#183B56]" />
-                <span>03 • Personal Fit Matrix</span>
-              </div>
-
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56] leading-tight">
-                  Build Your Signature Silhouette
+            {/* RIGHT: Big Bold Headline & 1 Direct Button (lg:col-span-4) */}
+            <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+              <div className="space-y-3">
+                <div className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
+                  Weavly Studio
+                </div>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#183B56] leading-[1.1]">
+                  Wear What <br />
+                  Endures.
                 </h1>
-                <p className="text-xs text-[#5A7184] leading-relaxed pt-1.5">
-                  Pieces are curated strictly from certified organic fabrics and tailored to your preference.
+                <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed pt-1">
+                  Sustainable natural fabrics. Clean tailored fits made for everyday wear.
                 </p>
               </div>
 
-              {/* Department / Gender Selector */}
-              <div className="space-y-1.5">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184]">
-                  Department
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {["Men", "Women", "Unisex"].map((g) => (
-                    <button
-                      key={g}
-                      onClick={() => setSelectedGender(g)}
-                      className={`py-2 text-xs font-bold border transition-all cursor-pointer ${
-                        selectedGender === g
-                          ? "bg-[#183B56] text-white border-[#183B56]"
-                          : "bg-transparent text-[#183B56] border-[#183B56] hover:bg-[#183B56]/5"
-                      }`}
-                    >
-                      {g}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Fit Preference Selector */}
-              <div className="space-y-1.5">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184]">
-                  Cut & Fit Preference
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {["Slim", "Tailored", "Relaxed"].map((fit) => (
-                    <button
-                      key={fit}
-                      onClick={() => setSelectedFit(fit)}
-                      className={`py-2 text-xs font-bold border transition-all cursor-pointer ${
-                        selectedFit === fit
-                          ? "bg-[#183B56] text-white border-[#183B56]"
-                          : "bg-transparent text-[#183B56] border-[#183B56] hover:bg-[#183B56]/5"
-                      }`}
-                    >
-                      {fit}
-                    </button>
-                  ))}
+              <div className="space-y-3">
+                <button
+                  onClick={handleScrollToCatalog}
+                  className="w-full py-4 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.2em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                >
+                  <span>Shop Collection</span>
+                  <ArrowDown size={14} className="animate-bounce" />
+                </button>
+                
+                <div className="text-center text-[10px] font-semibold text-[#5A7184]">
+                  ✓ Free Global Delivery • ✓ Easy 30-Day Returns
                 </div>
               </div>
             </div>
 
-            {/* High-Converting CTA & Friction-Free Assurances */}
-            <div className="space-y-3 pt-2">
-              <button
-                onClick={handleScrollToCatalog}
-                className="w-full py-4 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.2em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
-              >
-                <span>Curate My Wardrobe</span>
-                <ArrowDown size={14} className="animate-bounce" />
-              </button>
-
-              <div className="space-y-1 text-[10px] font-semibold text-[#5A7184] text-center">
-                <div>✓ Complimentary Global Courier • ✓ Tailored Fit Guarantee</div>
-              </div>
-            </div>
           </div>
-
         </section>
 
         {/* ════════════════════════════════════════════════════════════
             2. BEST SELLERS: CONTINUOUS 4-COLUMN REAL DATA WIREFRAME BOX GRID
         ════════════════════════════════════════════════════════════ */}
-        <section className="border-b border-[#183B56]">
+        <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
           
           {/* Header Bar */}
           <div className="flex items-center justify-between py-3.5 px-6 border-b border-[#183B56]">
@@ -488,74 +382,78 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         {/* ════════════════════════════════════════════════════════════
             3. OUR BRAND / ATELIER COLLAGE BENTO GRID
         ════════════════════════════════════════════════════════════ */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 border-b border-[#183B56] divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
-          
-          {/* Left: Brand Story & Atelier Labels (lg:col-span-5) */}
-          <div className="lg:col-span-5 p-6 sm:p-10 flex flex-col justify-between space-y-6">
-            <div className="space-y-3">
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
-                Our Brand
-              </h2>
-              <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed font-normal">
-                Elevated essentials for every moment. Crafted with care, designed to endure. Embrace simplicity, redefine style. Less clutter, more meaning. Craftsmanship at its finest, indulgent fabrics, timeless appeal. For those who appreciate the art of dressing. Where elegance meets excellence.
-              </p>
-              <button onClick={() => router.push("/about")} className="text-xs font-bold text-[#183B56] hover:underline bg-transparent border-none cursor-pointer p-0">
-                Read More...
-              </button>
-            </div>
-
-            {/* Brand Labels Table & Stamp Badge */}
-            <div className="flex items-center justify-between gap-6 pt-4 border-t border-[#183B56]">
-              <div className="space-y-1 text-xs font-bold text-[#183B56] flex-1">
-                <div className="py-1 border-b border-[#183B56]/30">GreenStitch</div>
-                <div className="py-1 border-b border-[#183B56]/30">Urban Code</div>
-                <div className="py-1 border-b border-[#183B56]/30">Threadline</div>
-                <div className="py-1">Sovereign</div>
+        <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
+          <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
+            
+            {/* Left: Brand Story & Atelier Labels (lg:col-span-5) */}
+            <div className="lg:col-span-5 p-6 sm:p-10 flex flex-col justify-between space-y-6">
+              <div className="space-y-3">
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
+                  Our Brand
+                </h2>
+                <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed font-normal">
+                  Elevated essentials for every moment. Crafted with care, designed to endure. Embrace simplicity, redefine style. Less clutter, more meaning. Craftsmanship at its finest, indulgent fabrics, timeless appeal.
+                </p>
+                <button onClick={() => router.push("/about")} className="text-xs font-bold text-[#183B56] hover:underline bg-transparent border-none cursor-pointer p-0">
+                  Read More...
+                </button>
               </div>
 
-              {/* Circular Atelier Stamp Badge */}
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-dashed border-[#183B56] flex flex-col items-center justify-center text-center p-2 rotate-12 hover:rotate-0 transition-transform shrink-0">
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-widest font-bold text-[#183B56]">Size M</span>
-                <span className="text-xs font-extrabold text-[#183B56]">→</span>
-                <span className="text-[8px] uppercase tracking-widest text-[#5A7184]">Atelier</span>
+              {/* Brand Labels Table & Stamp Badge */}
+              <div className="flex items-center justify-between gap-6 pt-4 border-t border-[#183B56]">
+                <div className="space-y-1 text-xs font-bold text-[#183B56] flex-1">
+                  <div className="py-1 border-b border-[#183B56]/30">GreenStitch</div>
+                  <div className="py-1 border-b border-[#183B56]/30">Urban Code</div>
+                  <div className="py-1 border-b border-[#183B56]/30">Threadline</div>
+                  <div className="py-1">Sovereign</div>
+                </div>
+
+                {/* Circular Atelier Stamp Badge */}
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-dashed border-[#183B56] flex flex-col items-center justify-center text-center p-2 rotate-12 hover:rotate-0 transition-transform shrink-0">
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-widest font-bold text-[#183B56]">Size M</span>
+                  <span className="text-xs font-extrabold text-[#183B56]">→</span>
+                  <span className="text-[8px] uppercase tracking-widest text-[#5A7184]">Atelier</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Right: Multi-Texture Fashion Lookbook Collage (lg:col-span-7) */}
-          <div className="lg:col-span-7 p-6 sm:p-10 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-            <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
-              <img
-                src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80"
-                alt="Lookbook 1"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
+            {/* Right: Multi-Texture Fashion Lookbook Collage (lg:col-span-7) */}
+            <div className="lg:col-span-7 p-6 sm:p-10 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80"
+                  alt="Lookbook 1"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80"
+                  alt="Lookbook 2"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80"
+                  alt="Lookbook 3"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
             </div>
-            <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
-              <img
-                src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80"
-                alt="Lookbook 2"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-            <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
-              <img
-                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80"
-                alt="Lookbook 3"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-          </div>
 
+          </div>
         </section>
 
         {/* ── ZERA PERSONALIZED RECOMMENDATIONS SECTION ── */}
-        <ZeraRecommendationsSection />
+        <div className="border border-[#183B56] shadow-xs">
+          <ZeraRecommendationsSection />
+        </div>
 
         {/* ════════════════════════════════════════════════════════════
             4. ATELIER CATALOG: ROW-BY-ROW INFINITE SCROLL PRODUCT GRID
         ════════════════════════════════════════════════════════════ */}
-        <section ref={catalogSectionRef} className="border-b border-[#183B56]">
+        <section ref={catalogSectionRef} className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 px-6 border-b border-[#183B56]">
             <div>
@@ -563,11 +461,11 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                 Atelier Catalog
               </h2>
               <p className="text-xs text-[#5A7184] pt-0.5">
-                Full collection feed • Matched for {selectedGender} ({selectedFit} Fit)
+                Full collection feed • {catalogPool.length} products loaded
               </p>
             </div>
             <button
-              onClick={() => router.push(`/market?gender=${selectedGender}`)}
+              onClick={() => router.push(`/market?category=${selectedCategory.query}`)}
               className="text-xs sm:text-sm font-semibold text-[#183B56] hover:underline flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0"
             >
               <span>View Full Market</span>
