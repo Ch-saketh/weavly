@@ -335,10 +335,6 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
             {/* RIGHT: Big Bold Headline & Bespoke Fit AI Action (lg:col-span-4) */}
             <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between space-y-6">
               <div className="space-y-3">
-                <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
-                  <Sparkles size={12} className="text-[#183B56]" />
-                  <span>Zyra Visual Intelligence</span>
-                </div>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#183B56] leading-[1.08]">
                   Wear What <br />
                   Truly Suits You.
