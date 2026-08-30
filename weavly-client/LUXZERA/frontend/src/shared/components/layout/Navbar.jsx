@@ -279,49 +279,7 @@ export default function Navbar({
                 }`}
               >
                 <span>New Arrivals</span>
-                <ChevronDown size={11} strokeWidth={1.5} className={`transition-colors ${isNewArrivalsActive ? "text-[#F07020]" : "text-[#9B9B9B] group-hover:text-[#F07020]"}`} />
               </button>
-
-              {/* CardNav-Style Dropdown Menu */}
-              <div className="absolute top-full -left-36 mt-3 w-[660px] bg-[#FFFFFF] border border-[#ECECEC] rounded-2xl shadow-2xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-[#1D1D1F] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#111113] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Fresh Drops</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/new-arrivals")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${pathname === "/new-arrivals" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Summer '26 Capsule
-                      </button>
-                      <button onClick={() => router.push("/market?sort=newest")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${currentSort === "newest" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Runway Pre-Orders
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-[#2F293A] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#25202e] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Trending</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/market?category=Outerwear")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${currentCategory === "Outerwear" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Tailored Outerwear
-                      </button>
-                      <button onClick={() => router.push("/market?category=Dresses")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${currentCategory === "Dresses" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Statement Dresses
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-[#252836] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#1c1e29] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Spotlight</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/designers")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${pathname === "/designers" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Designer Spotlight
-                      </button>
-                      <button onClick={() => router.push("/market?category=Footwear")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${currentCategory === "Footwear" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Limited Footwear
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Dropdown: Designer Studio */}
