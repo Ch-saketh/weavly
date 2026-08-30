@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { verifyOtp, resendOtp } from "@/modules/auth/services/authService";
 import { formatErrorMessage } from "@/shared/utils/errorUtils";
+import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 
 export default function VerifyOtpPage() {
   const router = useRouter();
@@ -69,7 +70,7 @@ export default function VerifyOtpPage() {
 
         <div className="flex flex-col items-center">
           <button onClick={() => router.push("/?openLogin=true")} className="cursor-pointer flex items-center justify-center border-none bg-transparent p-0 select-none" aria-label="Weavly home">
-            <img src="/logo.png" alt="Zyra Symbol" className="h-10 w-auto object-contain" />
+            <WeavlyLogo showBeta={true} size="lg" />
           </button>
           <h2 className="text-[28px] font-bold text-[#18181B] mt-5 tracking-tight">Verify Account</h2>
           <p className="text-[12.5px] text-[#515154] font-medium leading-relaxed mt-2 max-w-[280px]">

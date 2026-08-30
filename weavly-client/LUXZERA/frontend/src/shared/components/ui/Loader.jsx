@@ -1,16 +1,12 @@
 import React from "react";
+import { Loader2 } from "lucide-react";
 
-export default function Loader({ size = "w-10 h-10", className = "", text = "" }) {
+export default function Loader({ size = "w-8 h-8", className = "", text = "" }) {
   return (
     <div className={`flex flex-col items-center justify-center gap-3 ${className}`}>
-      <img
-        src="/logo.png"
-        alt="Loading..."
-        className={`${size} object-contain animate-spin`}
-        style={{ animationDuration: '1.2s' }}
-      />
+      <Loader2 className={`${size} text-[#183B56] animate-spin`} />
       {text && (
-        <span className="text-[12px] font-semibold text-[#71717A] tracking-wider uppercase">
+        <span className="text-[11px] font-bold text-[#5A7184] tracking-[0.18em] uppercase">
           {text}
         </span>
       )}

@@ -13,6 +13,7 @@ import { setToken } from "@/shared/utils/token";
 import { formatErrorMessage, isTechnicalOrServerError } from "@/shared/utils/errorUtils";
 import TypewriterText from "@/shared/components/ui/TypewriterText";
 import BetaNoticeModal from "@/shared/components/common/BetaNoticeModal";
+import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 
 export default function AuthModal({ isOpen, onClose, initialView = "login" }) {
   const router = useRouter();
@@ -806,8 +807,8 @@ export default function AuthModal({ isOpen, onClose, initialView = "login" }) {
           <X size={24} strokeWidth={1.5} />
         </button>
 
-        <div className="am-logo-container am-anim-item">
-          <img src="/logo.png" alt="Zyra Logo" className="am-logo-badge" />
+        <div className="am-logo-container am-anim-item flex items-center justify-center">
+          <WeavlyLogo size="lg" showBeta={true} />
         </div>
 
         <div className="am-header am-anim-item">
