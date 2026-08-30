@@ -6,7 +6,6 @@ import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useCart } from "@/modules/cart/store/CartContext";
 import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
-import WeavlyImmersiveHero from "@/shared/components/hero/WeavlyImmersiveHero";
 import { ProductGridSkeleton } from "@/shared/components/ui/Skeleton";
 
 export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
@@ -93,12 +92,8 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] text-[#1D1D1F] font-sans selection:bg-[#1D1D1F] selection:text-white pb-32">
-      
-      {/* ═══ IMMERSIVE MONOCHROME EDITORIAL HERO (DISCORD VISUAL LANGUAGE) ═══ */}
-      <WeavlyImmersiveHero onShopNow={onShopNow} onOpenAuth={onOpenAuth} />
-
       {/* ── MAIN WORKSPACE ── */}
-      <main className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 pt-12 space-y-16 lg:space-y-24">
+      <main className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 pt-8 space-y-16 lg:space-y-24">
 
 
         {/* ════════════════════════════════════════════════════════════
