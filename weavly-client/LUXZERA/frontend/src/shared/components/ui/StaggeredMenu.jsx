@@ -12,7 +12,7 @@ export const StaggeredMenu = ({
   displaySocials = true,
   displayItemNumbering = true,
   className,
-  logoUrl = '/zera_SVG.svg',
+  logoUrl = '/zyra_SVG.svg',
   menuButtonColor = '#1D1D1F',
   openMenuButtonColor = '#1D1D1F',
   accentColor = '#F07020',

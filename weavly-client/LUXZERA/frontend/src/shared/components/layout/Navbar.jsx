@@ -480,7 +480,7 @@ export default function Navbar({
                 aria-label="Zyra Wardrobe"
                 title="Zyra Wardrobe"
               >
-                <img src="/zera_SVG.svg" alt="Zyra Wardrobe" className="w-8 h-8 object-contain transition-transform hover:scale-105" />
+                <img src="/zyra_SVG.svg" alt="Zyra Wardrobe" className="w-8 h-8 object-contain transition-transform hover:scale-105" />
                 {mounted && wardrobeCount > 0 && (
                   <span className="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#F07020] text-[8px] font-bold text-white leading-none">
                     {wardrobeCount}
@@ -600,7 +600,7 @@ export default function Navbar({
               className="relative w-9 h-9 flex items-center justify-center rounded-full bg-[#FAFAF9] hover:bg-[#F2F2F7] transition-colors border-none cursor-pointer p-0 text-[#1D1D1F]"
               aria-label="Zyra Wardrobe"
             >
-              <img src="/zera_SVG.svg" alt="Zyra" className="w-5 h-5 object-contain" />
+              <img src="/zyra_SVG.svg" alt="Zyra" className="w-5 h-5 object-contain" />
               {mounted && wardrobeCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#F07020] text-[8px] font-bold text-white leading-none">
                   {wardrobeCount}

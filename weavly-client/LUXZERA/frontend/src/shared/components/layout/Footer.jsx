@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import * as THREE from "three";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import branding from "@/config/branding";
-import { Globe, ArrowUp, Sparkles, ShieldCheck } from "lucide-react";
+import { Globe, ArrowUp, ShieldCheck } from "lucide-react";
 
 /**
  * 3D Isometric Architectural Voxel Typography (WEAVLY / DECIMAL)
@@ -538,7 +538,7 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
               <ul className="space-y-2.5 font-normal p-0 m-0 list-none text-xs">
                 <li>
                   <button onClick={() => handleLinkClick("/wardrobe")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] flex items-center gap-1.5 group">
-                    <Sparkles size={11} className="text-white group-hover:scale-125 transition-transform" />
+                    <img src="/zyra_SVG.svg" alt="Zyra" className="w-3.5 h-3.5 object-contain group-hover:scale-110 transition-transform brightness-125" />
                     <span>Zyra Wardrobe</span>
                   </button>
                 </li>
