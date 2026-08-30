@@ -16,18 +16,18 @@
 }
 
 :root {
-  --primary-bg: #FFFFFF;
-  --white-bg: #FFFFFF;
-  --secondary-bg: #FAFAF9;
-  --brand-blue: #5B6EF5;
-  --brand-orange: #5B6EF5;
-  --accent-gold: #86868B;
-  --accent-terracotta: #5B6EF5;
-  --text-charcoal: #1D1D1F;
-  --text-muted: #86868B;
-  --border-light: #ECECEC;
-  --border-medium: #ECECEC;
-  --border-gray: #ECECEC;
+  --primary-bg: #F5EFEB;
+  --white-bg: #F5EFEB;
+  --secondary-bg: #EAE3DC;
+  --brand-blue: #183B56;
+  --brand-orange: #183B56;
+  --accent-gold: #5A7184;
+  --accent-terracotta: #183B56;
+  --text-charcoal: #183B56;
+  --text-muted: #5A7184;
+  --border-light: #183B56;
+  --border-medium: #183B56;
+  --border-gray: #183B56;
 }
 
 /* Hide scrollbars globally across all browsers */

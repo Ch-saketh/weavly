@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap" rel="stylesheet" />
       </head>
-      <body className="antialiased text-[#1D1D1F] bg-white">
+      <body className="antialiased text-[#183B56] bg-[#F5EFEB]">
         <Providers>
           <Suspense fallback={null}>
             <AppShell>{children}</AppShell>
