@@ -1,0 +1,535 @@
+product,dimension,original_value,cleaned_value,reason
+34-sleeve-lace-tunic#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+34-sleeve-shirt#White,,,,EMPTY_FILE
+ainsley-cape#CharcoalM,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+alanis-pastel-dinosaurs-sweatshirt#Oatmeal,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+alaska-knit#Stone,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+alexandria-long-cardi#Charcoal,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+alexandria-long-cardi#Indigo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+alexandria-long-cardi#Khaki,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+alskling-print-top#SeagullPr,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+alskling-print-top-1#Lrgaqua,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+alskling-print-top-3#LinesPrint,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+analia-top#White,sleeve,18cm,,OUT_OF_RANGE_20.0_140.0
+anja-top#IvoryCheck,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+avola-tunic#Sky,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+aya-top#White,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+bamboo-layer-tank#Black,sleeve,4cm,,OUT_OF_RANGE_20.0_140.0
+bamboo-layer-tank#Chalk,sleeve,4cm,,OUT_OF_RANGE_20.0_140.0
+bamboo-naturals-cami#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+bamboo-naturals-cami#Dusk,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+be-mine-top-1#Sage,hip,181cm,,OUT_OF_RANGE_50.0_180.0
+be-mine-top-1#Sage,hip,186cm,,OUT_OF_RANGE_50.0_180.0
+be-mine-top-1#Sage,hip,191cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Khaki,bust,184cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Khaki,bust,188cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Khaki,bust,192cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Khaki,bust,196cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Khaki,bust,200cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Khaki,bust,204cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Khaki,bust,208cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Stormy,bust,184cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Stormy,bust,188cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Stormy,bust,192cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Stormy,bust,196cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Stormy,bust,200cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Stormy,bust,204cm,,OUT_OF_RANGE_50.0_180.0
+beach-walk-shirt#Stormy,bust,208cm,,OUT_OF_RANGE_50.0_180.0
+belle-bolero-cardi#BlueBonnet,,,,EMPTY_FILE
+belle-flute-sleeve-tee#Navy,hip,181cm,,OUT_OF_RANGE_50.0_180.0
+belle-flute-sleeve-tee#Navy,hip,186cm,,OUT_OF_RANGE_50.0_180.0
+belle-handkerchief-printed-cami#RustFlwrs,sleeve,4cm,,OUT_OF_RANGE_20.0_140.0
+belle-handkerchief-printed-cami#RustFlwrs,sleeve,5cm,,OUT_OF_RANGE_20.0_140.0
+belle-handkerchief-printed-cami#RustFlwrs,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+belle-handkerchief-printed-cami#RustFlwrs,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+belle-handkerchief-printed-cami#RustFlwrs,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+belle-handkerchief-printed-cami#RustFlwrs,sleeve,10cm,,OUT_OF_RANGE_20.0_140.0
+belle-handkerchief-printed-cami#RustFlwrs,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+belle-handkerchief-printed-cami#RustFlwrs,sleeve,13cm,,OUT_OF_RANGE_20.0_140.0
+belle-lace-trim-tee#GreyMarle,hip,184cm,,OUT_OF_RANGE_50.0_180.0
+belle-lace-trim-tee#GreyMarle,hip,189cm,,OUT_OF_RANGE_50.0_180.0
+belle-mesh-cardi#Black,hip,194cm,,OUT_OF_RANGE_50.0_180.0
+belle-mesh-cardi#Black,hip,199cm,,OUT_OF_RANGE_50.0_180.0
+belle-mesh-cardi#Black,hip,204cm,,OUT_OF_RANGE_50.0_180.0
+belle-mesh-cardi#Black,hip,209cm,,OUT_OF_RANGE_50.0_180.0
+belle-mesh-cardi#Black,hip,214cm,,OUT_OF_RANGE_50.0_180.0
+belle-mesh-cardi#Black,hip,219cm,,OUT_OF_RANGE_50.0_180.0
+belle-mesh-cardi#Black,hip,224cm,,OUT_OF_RANGE_50.0_180.0
+belle-mesh-cardi#Black,hip,229cm,,OUT_OF_RANGE_50.0_180.0
+belle-off-the-shoulder-tee#Stripe,waist,1123cm,,OUT_OF_RANGE_50.0_180.0
+belle-poncho-sleeved-knit#BlueMarle,hip,182cm,,OUT_OF_RANGE_50.0_180.0
+belle-square-neck-drape-tee#Vanilla,sleeve,16cm,,OUT_OF_RANGE_20.0_140.0
+block-colour-cardi#IndigoComb,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+bondi-babe-tank#BondiBabe,,,,EMPTY_FILE
+bondi-bare-singlet#Black,,,,EMPTY_FILE
+bondi-bare-singlet#RoseBeige,,,,EMPTY_FILE
+bora-bora-layered-tank#BoraBora,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+boyfriend-cord-shirt#Moss,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+brighton-palm-rainbow-stripe-top#WhiteMulti,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+brighton-pocket-parrot-top#WhiteBlue,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+burleigh-sweater#BlueStripe,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+burleigh-sweater#KhakiStrip,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+cabin-shirt#DenimStrip,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+calice-cardigan#Natural,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+cambridge-henley#Indigo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+cambridge-henley#Khaki,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+cambridge-henley#Petrol,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+cambridge-henley#Stone,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+capri-tank-3#Black,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+capri-tank-3#NavyStripe,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+capri-tank-3#Navy,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+capri-tank-3#White,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+capri-tank-6#ClaySpot,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+capri-tank-6#HeatheGrey,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+capri-tank-6#Olive,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+cara-tee-2#BlackSpot,waist,11cm,,OUT_OF_RANGE_50.0_180.0
+cara-tee-2#Blush,waist,11cm,,OUT_OF_RANGE_50.0_180.0
+cara-tee-2#WhiteBlk,waist,11cm,,OUT_OF_RANGE_50.0_180.0
+central-park-jacket#Indigo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+cha-cha-top-1#Riverside,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+check-pea-coat#IndigoCom,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+cosmopolitan-top#White,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+crop-reversible-cardy#Avocado,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+cross-my-heart-bamboo-slouch-tee#White,bust,186cm,,OUT_OF_RANGE_50.0_180.0
+cross-my-heart-bamboo-slouch-tee#White,bust,190cm,,OUT_OF_RANGE_50.0_180.0
+cross-my-heart-bamboo-slouch-tee#White,bust,196cm,,OUT_OF_RANGE_50.0_180.0
+curved-hem-crew#Candycombo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+curved-hem-crew#Powdercom,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+daisy-chain-tassel-blouse#DeepBlue,hip,182cm,,OUT_OF_RANGE_50.0_180.0
+daisy-chain-tassel-blouse#DeepBlue,hip,186cm,,OUT_OF_RANGE_50.0_180.0
+daisy-chain-tassel-blouse#DeepBlue,hip,192cm,,OUT_OF_RANGE_50.0_180.0
+daisy-chain-tassel-blouse#DeepBlue,hip,196cm,,OUT_OF_RANGE_50.0_180.0
+deliah-knit#Charcoal,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+destiny-top#Natural,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+dulcis-tank-top#LightGreen,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+emma-scoop-tank#Black,,,,EMPTY_FILE
+emma-scoop-tank#SilverMarl,,,,EMPTY_FILE
+emma-scoop-tank#White,,,,EMPTY_FILE
+essential-top#Navy,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+everyday-cord-tunic#Rust,,,,EMPTY_FILE
+fairisle-pullover#IceCombo,,,,EMPTY_FILE
+fargo-top#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+first-mix-top#BlackPintr,,,,EMPTY_FILE
+first-mix-top#CloudDance,,,,EMPTY_FILE
+fleur-cupro-top#Teal,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+flow-with-me-slouch-top#Brick,hip,185cm,,OUT_OF_RANGE_50.0_180.0
+flow-with-me-slouch-top#Brick,bust,184cm,,OUT_OF_RANGE_50.0_180.0
+flow-with-me-slouch-top#Brick,waist,182cm,,OUT_OF_RANGE_50.0_180.0
+flow-with-me-slouch-top#Brick,hip,190cm,,OUT_OF_RANGE_50.0_180.0
+flow-with-me-slouch-top#Brick,bust,189cm,,OUT_OF_RANGE_50.0_180.0
+flow-with-me-slouch-top#Brick,waist,187cm,,OUT_OF_RANGE_50.0_180.0
+flow-with-me-slouch-top#Brick,hip,195cm,,OUT_OF_RANGE_50.0_180.0
+french-cut-top#Black,,,,EMPTY_FILE
+french-cut-top#White,,,,EMPTY_FILE
+freya-fringe-blouse#Navy,sleeve,18cm,,OUT_OF_RANGE_20.0_140.0
+glom-mig-inte-tunic#NavyTulip,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+glom-mig-inte-tunic-1#PaleTulip,,,,EMPTY_FILE
+glom-mig-inte-tunic-2#LrgPastel,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+glom-mig-inte-tunic-3#Daisies,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+goddess-upf-50-tunic#WhtStripe,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+harbour-top#YachtStrip,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+haze-swing-top#OffWhite,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+hem-frill-stripe-top#Frilled,hip,255cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#Frilled,hip,260cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#Frilled,hip,265cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#Frilled,hip,270cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#Frilled,hip,275cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#Frilled,hip,280cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#Frilled,hip,285cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#Frilled,hip,290cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#SoFrilled,hip,255cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#SoFrilled,hip,260cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#SoFrilled,hip,265cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#SoFrilled,hip,270cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#SoFrilled,hip,275cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#SoFrilled,hip,280cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#SoFrilled,hip,285cm,,OUT_OF_RANGE_50.0_180.0
+hem-frill-stripe-top#SoFrilled,hip,290cm,,OUT_OF_RANGE_50.0_180.0
+hi-low-top-1#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+hi-low-top-1#Navy,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+hooded-cardi-1#Fern,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+huddle-up-knit-1#Oatmeal,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+icing-sugar-top#Ivory,sleeve,14cm,,OUT_OF_RANGE_20.0_140.0
+icing-sugar-top#Ivory,sleeve,14cm,,OUT_OF_RANGE_20.0_140.0
+indica-dress#Violet,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+intarsia-v-neck#FlannelCo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+isa-top-1#Stripe,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+jules-coloured-stars-sweater#GreyMarl,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+karmen-top#HighRiskRe,sleeve,13cm,,OUT_OF_RANGE_20.0_140.0
+kendall-sweater#Indigo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+kendall-sweater#Khaki,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+lara-knit#CactusGree,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+layered-top-2#Navy,sleeve,15cm,,OUT_OF_RANGE_20.0_140.0
+layered-top-2#White,sleeve,15cm,,OUT_OF_RANGE_20.0_140.0
+layered-tunic-1#Natural,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+layered-tunic-1#PalePink,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+layered-tunic-1#White,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+leah-lace-top#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+leende-blouse#Abstract,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+leende-blouse#Berries,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+leopard-print-kimono#GoldMulti,bust,200cm,,OUT_OF_RANGE_50.0_180.0
+leopard-print-kimono#GoldMulti,waist,200cm,,OUT_OF_RANGE_50.0_180.0
+liberty-knit#Indigo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+linen-resort-shirt#Peach,,,,EMPTY_FILE
+linen-v-neck-cami-2#BlueWhite,sleeve,12cm,,OUT_OF_RANGE_20.0_140.0
+llama-long-sleeve-shirt#Mustard,hip,1230cm,,OUT_OF_RANGE_50.0_180.0
+long-sleeve-essential-top#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+long-sleeve-hi-low-top#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+long-sleeve-hi-low-top#Navy,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+long-sleeve-luxe-shirt#Black,,,,EMPTY_FILE
+long-sleeve-luxe-shirt#Navy,,,,EMPTY_FILE
+long-sleeve-spot-top#Multispot,bust,182cm,,OUT_OF_RANGE_50.0_180.0
+longline-stripe-cardi#FlannelCo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+longline-stripe-cardi#MintCom,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+lounge-tunic#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+lounge-tunic#Charcoal,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+madonna-ls-scoop-top#Black,,,,EMPTY_FILE
+madonna-ls-scoop-top#White,,,,EMPTY_FILE
+makeover-blouse#LimeGreen,bust,204cm,,OUT_OF_RANGE_50.0_180.0
+makeover-blouse#LimeGreen,waist,204cm,,OUT_OF_RANGE_50.0_180.0
+makeover-blouse#LimeGreen,hip,204cm,,OUT_OF_RANGE_50.0_180.0
+maternity-breast-feeding-cami#White,,,,EMPTY_FILE
+maya-purrfect-cats-top#CreamMulti,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-high-low-top-3#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-high-low-top-3#Navy,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-high-low-top-3#Wine,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-wool-knit-cowl-neck-top#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-wool-knit-rib-top-1#Mocha,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-wool-knit-rib-top-1#Navy,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-wool-knit-top-1#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-wool-top-with-zips-1#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-wool-top-with-zips-1#Wine,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-wrap-3#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+merino-wrap-3#Navy,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+metallic-trim-pullover#BlushCom,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+midtown-jumper#Denim,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+momo-top#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+montafon-long-cardi#Natural,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+moon-and-back-top#MoonBack,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+mosman-tee#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+mosman-tee#Indigo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+mosman-tee#Khaki,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+moulin-gauge-pullover#SeaCombo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+multi-texture-cardi#PebbleMix,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+myra-top#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+myra-top#Coral,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+natural-pattern-cocoon-cardigan#Blossom,bust,185cm,,OUT_OF_RANGE_50.0_180.0
+natural-pattern-cocoon-cardigan#Blossom,bust,190cm,,OUT_OF_RANGE_50.0_180.0
+newhaven-sweater#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+newhaven-sweater#BlushMarle,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+newhaven-sweater#Burgundy,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+newhaven-sweater#Indigo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+nova-lux-34-sleeve-top#AidaStripe,,,,EMPTY_FILE
+off-shoulder-top-1#Strawberry,sleeve,18cm,,OUT_OF_RANGE_20.0_140.0
+off-shoulder-top-1#Strawberry,sleeve,18cm,,OUT_OF_RANGE_20.0_140.0
+off-shoulder-top-1#Strawberry,sleeve,19cm,,OUT_OF_RANGE_20.0_140.0
+off-shoulder-top-1#Strawberry,sleeve,19cm,,OUT_OF_RANGE_20.0_140.0
+on-safari-blouse#Jewel,bust,220cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,bust,185cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,hip,183cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,bust,190cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,hip,188cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,bust,195cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,hip,193cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,bust,200cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,hip,198cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,hip,203cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,bust,210cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,hip,208cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,bust,215cm,,OUT_OF_RANGE_50.0_180.0
+on-the-horizon-swing-top-1#Khaki,hip,213cm,,OUT_OF_RANGE_50.0_180.0
+open-plains-kimono-throw#NavyFleur,,,,EMPTY_FILE
+orchid-tee-1#Indigo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+oslo-chunky-sweater#Charcoal,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+paige-top#Black,waist,42cm,,OUT_OF_RANGE_50.0_180.0
+paige-top#Black,waist,44cm,,OUT_OF_RANGE_50.0_180.0
+paige-top#Black,waist,47cm,,OUT_OF_RANGE_50.0_180.0
+paige-top#Black,waist,49cm,,OUT_OF_RANGE_50.0_180.0
+paradise-top#Red,sleeve,18cm,,OUT_OF_RANGE_20.0_140.0
+parisienne-cami-1#Black,,,,EMPTY_FILE
+parisienne-cami-1#White,,,,EMPTY_FILE
+parisienne-cami-cotton#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+parisienne-cami-cotton#White,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+petra-knit#CharcaolT,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+petra-knit#Oatmeal,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+picnic-cape#Vino,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+pin-spot-top#Black,,,,EMPTY_FILE
+reversible-scoopv-neck-tank#Black,sleeve,17cm,,OUT_OF_RANGE_20.0_140.0
+reversible-scoopv-neck-tank#Navy,sleeve,17cm,,OUT_OF_RANGE_20.0_140.0
+reversible-scoopv-neck-tank#White,sleeve,17cm,,OUT_OF_RANGE_20.0_140.0
+reversible-stripe-vee-scoop-neck-tank#BlackWhite,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+rosebud-cardi#Indigo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+rosebud-cardi#Khaki,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+rustler-shirt#Blush,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+saba-top-2#Catus,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+saffron-knit#Terracotta,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+sail-away-upf-50-top#BlkWhtStrp,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+salt-lake-ringer-tee-1#CloudStri,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+salva-t-shirt#Navy,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+shirt-in-a-box#Silver,sleeve,12cm,,OUT_OF_RANGE_20.0_140.0
+short-stripe-cardi#CandyCombo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+short-stripe-cardi#FernCombo,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+silk-blend-cardigan#Honey,,,,EMPTY_FILE
+softly-falling-bamboo-tunic#Copper,hip,192cm,,OUT_OF_RANGE_50.0_180.0
+softly-falling-bamboo-tunic#White,hip,192cm,,OUT_OF_RANGE_50.0_180.0
+soho-v-neck-blouse#SohoPrint,hip,202cm,,OUT_OF_RANGE_50.0_180.0
+stripe-me-happy-blouse#Ash,bust,12cm,,OUT_OF_RANGE_50.0_180.0
+sugar-snaps-round-neck-layer-tank#Black,sleeve,2cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#Black,sleeve,3cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#Black,sleeve,5cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#Black,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#Black,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#Black,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#Black,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#Black,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#DuckEgg,sleeve,2cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#DuckEgg,sleeve,3cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#DuckEgg,sleeve,5cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#DuckEgg,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#DuckEgg,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#DuckEgg,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#DuckEgg,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#DuckEgg,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#White,sleeve,2cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#White,sleeve,3cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#White,sleeve,5cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#White,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#White,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#White,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#White,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-round-neck-layer-tank#White,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+sugar-snaps-throw-jacket#Black,waist,1181cm,,OUT_OF_RANGE_50.0_180.0
+sugar-snaps-throw-jacket#Duckegg,waist,1181cm,,OUT_OF_RANGE_50.0_180.0
+sugar-snaps-throw-jacket#White,waist,1181cm,,OUT_OF_RANGE_50.0_180.0
+summer-whispers-kimono-1#Peacock,bust,181cm,,OUT_OF_RANGE_50.0_180.0
+summer-whispers-kimono-1#Peacock,waist,181cm,,OUT_OF_RANGE_50.0_180.0
+summer-whispers-kimono-1#Peacock,hip,189cm,,OUT_OF_RANGE_50.0_180.0
+summer-whispers-kimono-1#Peacock,bust,191cm,,OUT_OF_RANGE_50.0_180.0
+summer-whispers-kimono-1#Peacock,waist,191cm,,OUT_OF_RANGE_50.0_180.0
+summer-whispers-kimono-1#Peacock,hip,199cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#GreyMarle,hip,183cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#GreyMarle,hip,186cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#GreyMarle,hip,188cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#GreyMarle,hip,191cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#GreyMarle,hip,193cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#GreyMarle,hip,196cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#GreyMarle,hip,198cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#GreyMarle,hip,201cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#White,hip,183cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#White,hip,186cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#White,hip,188cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#White,hip,191cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#White,hip,193cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#White,hip,196cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#White,hip,198cm,,OUT_OF_RANGE_50.0_180.0
+sunshine-in-me-tee-1#White,hip,201cm,,OUT_OF_RANGE_50.0_180.0
+swiss-spot-knit#TanWhite,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+tab-sleeve-longline-shirt#Navy,hip,185cm,,OUT_OF_RANGE_50.0_180.0
+tab-sleeve-longline-shirt#Pink,hip,185cm,,OUT_OF_RANGE_50.0_180.0
+tab-sleeve-longline-shirt#Silver,hip,185cm,,OUT_OF_RANGE_50.0_180.0
+talbot-embroiderd-top#Talbot,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+the-asymmetrical-tank-top#HotPink,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#HotPink,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#HotPink,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#HotPink,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#HotPink,sleeve,10cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#HotPink,sleeve,12cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#HotPink,sleeve,13cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#HotPink,sleeve,14cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#Indigo,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#Indigo,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#Indigo,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#Indigo,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#Indigo,sleeve,10cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#Indigo,sleeve,12cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#Indigo,sleeve,13cm,,OUT_OF_RANGE_20.0_140.0
+the-asymmetrical-tank-top#Indigo,sleeve,14cm,,OUT_OF_RANGE_20.0_140.0
+the-batwing-tee#Black,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Black,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Black,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Black,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Black,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Black,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Black,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Black,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Black,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#FrenchBlue,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#FrenchBlue,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#FrenchBlue,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#FrenchBlue,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#FrenchBlue,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#FrenchBlue,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#FrenchBlue,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#FrenchBlue,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#FrenchBlue,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Sea,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Sea,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Sea,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Sea,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Sea,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Sea,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Sea,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Sea,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Sea,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Stone,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Stone,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Stone,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Stone,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Stone,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Stone,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Stone,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Stone,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-batwing-tee#Stone,bust,205cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,bust,39cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,waist,36cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,hip,44cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,bust,42cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,waist,38cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,hip,47cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,bust,44cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,waist,41cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,hip,49cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,bust,47cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,waist,43cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,bust,49cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,waist,46cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Black,waist,48cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,bust,39cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,waist,36cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,hip,44cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,bust,42cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,waist,38cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,hip,47cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,bust,44cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,waist,41cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,hip,49cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,bust,47cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,waist,43cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,bust,49cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,waist,46cm,,OUT_OF_RANGE_50.0_180.0
+the-boat-neck-top#Navy,waist,48cm,,OUT_OF_RANGE_50.0_180.0
+the-button-up-swing-tunic#Wine,hip,182cm,,OUT_OF_RANGE_50.0_180.0
+the-button-up-swing-tunic#Wine,hip,187cm,,OUT_OF_RANGE_50.0_180.0
+the-button-up-swing-tunic#Wine,hip,192cm,,OUT_OF_RANGE_50.0_180.0
+the-button-up-swing-tunic#Wine,hip,197cm,,OUT_OF_RANGE_50.0_180.0
+the-button-up-swing-tunic#Wine,hip,202cm,,OUT_OF_RANGE_50.0_180.0
+the-button-up-swing-tunic#Wine,hip,207cm,,OUT_OF_RANGE_50.0_180.0
+the-button-up-swing-tunic#Wine,hip,212cm,,OUT_OF_RANGE_50.0_180.0
+the-button-up-swing-tunic#Wine,hip,217cm,,OUT_OF_RANGE_50.0_180.0
+the-cross-over-blouse#Black,length,14cm,,OUT_OF_RANGE_30.0_150.0
+the-cross-over-blouse#Blue,length,14cm,,OUT_OF_RANGE_30.0_150.0
+the-cross-over-blouse#Mint,length,14cm,,OUT_OF_RANGE_30.0_150.0
+the-cross-over-blouse#Red,length,14cm,,OUT_OF_RANGE_30.0_150.0
+the-cross-over-blouse#RoyalBlue,length,14cm,,OUT_OF_RANGE_30.0_150.0
+the-cross-over-blouse#Silver,length,14cm,,OUT_OF_RANGE_30.0_150.0
+the-cross-over-blouse#Sunshine,length,14cm,,OUT_OF_RANGE_30.0_150.0
+the-cross-over-blouse#White,length,14cm,,OUT_OF_RANGE_30.0_150.0
+the-cross-over-poncho#Grey,hip,15cm,,OUT_OF_RANGE_50.0_180.0
+the-cross-over-poncho#Navy,hip,15cm,,OUT_OF_RANGE_50.0_180.0
+the-daily-cross-over-top#PinkPrint,length,6cm,,OUT_OF_RANGE_30.0_150.0
+the-daily-cross-over-top#SkyBlue,length,6cm,,OUT_OF_RANGE_30.0_150.0
+the-design-fold-tunic-top#PearlBlue,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+the-design-fold-tunic-top#PearlBlue,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+the-design-fold-tunic-top#PearlBlue,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+the-design-fold-tunic-top#PearlBlue,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+the-design-fold-tunic-top#PearlBlue,sleeve,10cm,,OUT_OF_RANGE_20.0_140.0
+the-design-fold-tunic-top#PearlBlue,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+the-french-cuff-shirt#White,length,678cm,,OUT_OF_RANGE_30.0_150.0
+the-half-sleeve-tee#Black,bust,201cm,,OUT_OF_RANGE_50.0_180.0
+the-half-sleeve-tee#White,bust,201cm,,OUT_OF_RANGE_50.0_180.0
+the-longline-waterfall-cardi#Black,waist,5cm,,OUT_OF_RANGE_50.0_180.0
+the-longline-waterfall-cardi#Black,waist,10cm,,OUT_OF_RANGE_50.0_180.0
+the-longline-waterfall-cardi#Black,waist,15cm,,OUT_OF_RANGE_50.0_180.0
+the-longline-waterfall-cardi#Black,bust,184cm,,OUT_OF_RANGE_50.0_180.0
+the-longline-waterfall-cardi#Black,waist,20cm,,OUT_OF_RANGE_50.0_180.0
+the-oversize-knit#GreyMarle,bust,186cm,,OUT_OF_RANGE_50.0_180.0
+the-oversize-knit#GreyMarle,bust,192cm,,OUT_OF_RANGE_50.0_180.0
+the-oversize-knit#GreyMarle,bust,198cm,,OUT_OF_RANGE_50.0_180.0
+the-oversize-knit#GreyMarle,bust,204cm,,OUT_OF_RANGE_50.0_180.0
+the-oversize-knit#Ink,bust,186cm,,OUT_OF_RANGE_50.0_180.0
+the-oversize-knit#Ink,bust,192cm,,OUT_OF_RANGE_50.0_180.0
+the-oversize-knit#Ink,bust,198cm,,OUT_OF_RANGE_50.0_180.0
+the-oversize-knit#Ink,bust,204cm,,OUT_OF_RANGE_50.0_180.0
+the-pocket-tee#GreyStripe,sleeve,19cm,,OUT_OF_RANGE_20.0_140.0
+the-pocket-tee#NavyStripe,sleeve,19cm,,OUT_OF_RANGE_20.0_140.0
+the-print-contrast-34-sleeve-top#Animal,sleeve,554cm,,OUT_OF_RANGE_20.0_140.0
+the-printed-v-split-top#Natural,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+the-printed-v-split-top#Natural,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+the-printed-v-split-top#Natural,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+the-printed-v-split-top#Natural,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+the-printed-v-split-top#Natural,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+the-printed-v-split-top#Natural,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+the-printed-v-split-top#Natural,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+the-printed-v-split-top#Natural,sleeve,10cm,,OUT_OF_RANGE_20.0_140.0
+the-ribbon-jersey-tank#Stripe,,,,EMPTY_FILE
+the-roll-neck-sleeveless-top-1#Black,sleeve,4cm,,OUT_OF_RANGE_20.0_140.0
+the-roll-neck-sleeveless-top-1#Black,sleeve,5cm,,OUT_OF_RANGE_20.0_140.0
+the-roll-neck-sleeveless-top-1#Black,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+the-roll-neck-sleeveless-top-1#Black,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+the-roll-neck-sleeveless-top-1#Black,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+the-roll-neck-sleeveless-top-1#Black,sleeve,10cm,,OUT_OF_RANGE_20.0_140.0
+the-roll-neck-sleeveless-top-1#Black,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+the-roll-neck-sleeveless-top-1#Black,sleeve,13cm,,OUT_OF_RANGE_20.0_140.0
+the-sleeveless-cross-over-blouse#Black,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+the-sleeveless-cross-over-blouse#Chambray,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+the-sleeveless-cross-over-blouse#Cobalt,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+the-sleeveless-cross-over-blouse#Mint,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+the-sleeveless-cross-over-blouse#Salmon,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+the-sleeveless-cross-over-blouse#Sunshine,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+the-sleeveless-cross-over-blouse#White,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+the-stripe-pocket-tank#Stripe,sleeve,16cm,,OUT_OF_RANGE_20.0_140.0
+the-stripe-tank-1#Hazelnut,hip,185cm,,OUT_OF_RANGE_50.0_180.0
+the-stripe-tank-1#Hazelnut,hip,190cm,,OUT_OF_RANGE_50.0_180.0
+the-swing-tank-top#Rose,sleeve,4cm,,OUT_OF_RANGE_20.0_140.0
+the-swing-tank-top#Rose,sleeve,5cm,,OUT_OF_RANGE_20.0_140.0
+the-swing-tank-top#Rose,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+the-swing-tank-top#Rose,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+the-swing-tank-top#Rose,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+the-swing-tank-top#Rose,sleeve,10cm,,OUT_OF_RANGE_20.0_140.0
+the-swing-tank-top#Rose,sleeve,11cm,,OUT_OF_RANGE_20.0_140.0
+the-swing-tank-top#Rose,sleeve,12cm,,OUT_OF_RANGE_20.0_140.0
+the-swing-tee-5#Green,,,,EMPTY_FILE
+the-tie-front-tank#Navy,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#Navy,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#Navy,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#Navy,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#Navy,sleeve,10cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#Navy,sleeve,12cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#Navy,sleeve,13cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#Navy,sleeve,14cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#White,sleeve,6cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#White,sleeve,7cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#White,sleeve,8cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#White,sleeve,9cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#White,sleeve,10cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#White,sleeve,12cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#White,sleeve,13cm,,OUT_OF_RANGE_20.0_140.0
+the-tie-front-tank#White,sleeve,14cm,,OUT_OF_RANGE_20.0_140.0
+tilila-top#Stripe,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+tillfallig-piped-sweatshirt#Navy,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+timberland-cardi-1#Bark,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+timberland-cardi-1#Charcoal,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+tina-singlet#Black,,,,EMPTY_FILE
+tina-singlet#White,,,,EMPTY_FILE
+to-the-beat-of-the-drum-kimono#Leaf,length,13cm,,OUT_OF_RANGE_30.0_150.0
+tori-long-sleeve-top#Vanilla,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+trindad-top#Lantana,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+trinity-tee#White,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+tuck-layer-shirt#White,hip,206cm,,OUT_OF_RANGE_50.0_180.0
+tuck-stripe-pullover#LtMarCom,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+turn-around-tunic#Black,,,,EMPTY_FILE
+turn-around-tunic#Navy,,,,EMPTY_FILE
+tystnad-blouse#YellowPtl,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+ulla-top#Graphite,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+ulverstone-sweater#Black,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+ulverstone-sweater#GreyMarle,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+ulverstone-sweater#White,,,,STRING_JSON_ERROR: Expecting value: line 2 column 5 (char 5)
+viola-kimono-radiant-floral#Grey,bust,212cm,,OUT_OF_RANGE_50.0_180.0
+viola-kimono-radiant-floral#Grey,bust,208cm,,OUT_OF_RANGE_50.0_180.0
+viola-kimono-radiant-floral#Grey,bust,220cm,,OUT_OF_RANGE_50.0_180.0
+viola-kimono-radiant-floral#Grey,bust,224cm,,OUT_OF_RANGE_50.0_180.0
+viola-kimono-radiant-floral#Grey,bust,228cm,,OUT_OF_RANGE_50.0_180.0
+viola-kimono-radiant-floral#Grey,bust,232cm,,OUT_OF_RANGE_50.0_180.0
+viola-kimono-radiant-floral#Grey,bust,236cm,,OUT_OF_RANGE_50.0_180.0
+viola-kimono-radiant-floral#Grey,bust,240cm,,OUT_OF_RANGE_50.0_180.0

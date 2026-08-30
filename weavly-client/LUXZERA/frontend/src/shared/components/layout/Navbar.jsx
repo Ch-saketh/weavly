@@ -41,6 +41,7 @@ export default function Navbar({
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [expandedNav, setExpandedNav] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -49,7 +50,9 @@ export default function Navbar({
   const [isSearching, setIsSearching] = useState(false);
   const [mounted, setMounted] = useState(false);
   const desktopSearchInputRef = useRef(null);
+  const mobileSearchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
+  const mobileSearchContainerRef = useRef(null);
 
   const isShopActive = pathname.startsWith("/market") || pathname.startsWith("/shop") || pathname.startsWith("/product");
   const isCollectionsActive = pathname === "/collections" || pathname === "/men" || pathname === "/women" || pathname === "/kids" || pathname === "/unisex";
@@ -609,14 +612,59 @@ export default function Navbar({
           MOBILE EDITORIAL NAVBAR WITH STAGGERED MENU (< 768px)
       ════════════════════════════════════════════ */}
       <header className="md:hidden sticky top-0 z-50 bg-[#FFFFFF] border-b border-[#ECECEC] w-full m-0 p-0">
-        <div className="w-full h-[64px] px-6 flex items-center justify-between">
-          {/* LEFT: Weavly Original Brand Logo */}
-          <button onClick={onLogoClick} aria-label="Weavly home" className="border-none bg-transparent cursor-pointer p-0">
-            <WeavlyLogo />
-          </button>
+        <div className="w-full h-[64px] px-4 sm:px-6 flex items-center justify-between gap-3">
+          {/* LEFT: Weavly Brand Logo (Mochiy Pop One) */}
+          <div onClick={onLogoClick} aria-label="Weavly home" className="border-none bg-transparent cursor-pointer p-0 shrink-0">
+            <WeavlyLogo size="sm" showBeta={true} onBetaClick={onBetaClick} />
+          </div>
 
-          {/* RIGHT: Staggered MENU Toggle Button ONLY */}
-          <div className="flex items-center">
+          {/* RIGHT: Mobile Action Buttons */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Mobile Search Toggle Button */}
+            <button
+              onClick={() => {
+                setMobileSearchOpen(!mobileSearchOpen);
+                if (!mobileSearchOpen) {
+                  setTimeout(() => mobileSearchInputRef.current?.focus(), 150);
+                }
+              }}
+              className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors border-none cursor-pointer p-0 ${
+                mobileSearchOpen ? "bg-[#F07020] text-white" : "bg-[#FAFAF9] text-[#1D1D1F] hover:bg-[#F2F2F7]"
+              }`}
+              aria-label="Search products"
+            >
+              {mobileSearchOpen ? <X size={18} /> : <Search size={18} strokeWidth={1.75} />}
+            </button>
+
+            {/* Mobile Zyra Wardrobe Icon */}
+            <button
+              onClick={onWardrobeClick}
+              className="relative w-9 h-9 flex items-center justify-center rounded-full bg-[#FAFAF9] hover:bg-[#F2F2F7] transition-colors border-none cursor-pointer p-0 text-[#1D1D1F]"
+              aria-label="Zyra Wardrobe"
+            >
+              <img src="/zera_SVG.svg" alt="Zyra" className="w-5 h-5 object-contain" />
+              {mounted && wardrobeCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#F07020] text-[8px] font-bold text-white leading-none">
+                  {wardrobeCount}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile Shopping Bag Icon */}
+            <button
+              onClick={onCartClick}
+              className="relative w-9 h-9 flex items-center justify-center rounded-full bg-[#FAFAF9] hover:bg-[#F2F2F7] transition-colors border-none cursor-pointer p-0 text-[#1D1D1F]"
+              aria-label="Shopping bag"
+            >
+              <ShoppingBag size={18} strokeWidth={1.75} />
+              {mounted && cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#1D1D1F] text-[8px] font-bold text-white leading-none">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {/* Staggered MENU Toggle */}
             {mounted ? (
               <StaggeredMenu
                 showToggleOnly={true}
@@ -649,11 +697,10 @@ export default function Navbar({
                         { label: "Sign In / Join", onClick: () => onAuthClick?.() },
                       ]),
                 ]}
-
                 socialItems={[
                   { label: "Instagram", link: "https://instagram.com" },
                   { label: "Twitter", link: "https://twitter.com" },
-                  { label: "Atelier", link: "https://Weavly.com" },
+                  { label: "Atelier", link: "https://weavly.store" },
                 ]}
                 displaySocials={true}
                 displayItemNumbering={true}
@@ -663,12 +710,96 @@ export default function Navbar({
                 accentColor="#F07020"
               />
             ) : (
-              <div className="w-10 h-10 flex items-center justify-center">
-                <div className="w-6 h-6 rounded-md bg-[#F4F4F5]" />
+              <div className="w-9 h-9 flex items-center justify-center">
+                <div className="w-5 h-5 rounded-md bg-[#F4F4F5]" />
               </div>
             )}
           </div>
         </div>
+
+        {/* ── EXPANDABLE MOBILE SEARCH BAR ── */}
+        {mobileSearchOpen && (
+          <div ref={mobileSearchContainerRef} className="px-4 py-3 bg-[#FFFFFF] border-t border-[#ECECEC] animate-in slide-in-from-top-2 duration-200">
+            <form onSubmit={handleSearchSubmit} className="relative flex items-center">
+              <input
+                ref={mobileSearchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search products, brands, styles..."
+                className="w-full h-11 pl-4 pr-11 bg-[#FAFAF9] border border-[#ECECEC] rounded-xl text-[13px] font-normal text-[#1D1D1F] placeholder:text-[#A1A1AA] outline-none focus:bg-white focus:border-[#1D1D1F] transition-all"
+              />
+              <button
+                type="submit"
+                className="absolute right-1.5 w-8 h-8 rounded-lg bg-[#1D1D1F] hover:bg-[#F07020] text-white flex items-center justify-center transition-colors border-none cursor-pointer"
+                aria-label="Search"
+              >
+                <Search size={14} />
+              </button>
+            </form>
+
+            {/* Mobile Recent Searches Chips */}
+            {searchQuery.trim().length < 2 && recentSearches.length > 0 && (
+              <div className="mt-2.5 pt-2 border-t border-[#F2F2F7]">
+                <div className="flex items-center justify-between text-[10px] uppercase font-semibold text-[#8E8E93] tracking-wider mb-2">
+                  <span className="flex items-center gap-1">
+                    <History size={10} />
+                    <span>Recent</span>
+                  </span>
+                  <button onClick={handleClearHistory} className="text-[10px] text-[#8E8E93] hover:text-[#FF3B30] border-none bg-transparent cursor-pointer">
+                    Clear
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {recentSearches.map((q, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setMobileSearchOpen(false);
+                        handleRecentClick(q);
+                      }}
+                      className="px-2.5 py-1 rounded-full bg-[#F2F2F7] text-[#1D1D1F] text-[11px] font-medium transition-colors border-none cursor-pointer active:bg-[#E5E5EA]"
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Mobile Instant Match Suggestions */}
+            {searchQuery.trim().length >= 2 && suggestions.length > 0 && (
+              <div className="mt-2.5 max-h-[220px] overflow-y-auto flex flex-col gap-1 border-t border-[#F2F2F7] pt-2">
+                {suggestions.map((item) => (
+                  <div
+                    key={item.productId}
+                    onClick={() => {
+                      setMobileSearchOpen(false);
+                      recordClickActivity(item, "MOBILE_SUGGESTION");
+                      recordSearchActivity(item.name || searchQuery);
+                      router.push(`/product/${item.productId}`);
+                    }}
+                    className="flex items-center gap-2.5 p-1.5 rounded-lg hover:bg-[#F8F8F8] active:bg-[#F2F2F7] cursor-pointer"
+                  >
+                    <div className="w-9 h-9 rounded-md bg-[#F2F2F7] overflow-hidden shrink-0">
+                      {item.imageUrl ? (
+                        <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[8px] text-[#A1A1AA]">Item</div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[12px] font-medium text-[#1D1D1F] truncate">{item.name}</p>
+                      <p className="text-[11px] font-semibold text-[#1D1D1F]">
+                        ₹{Number(item.price || 0).toLocaleString("en-IN")}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </header>
     </>
   );
