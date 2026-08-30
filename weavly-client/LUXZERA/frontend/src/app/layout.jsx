@@ -5,7 +5,7 @@ import AppShell from "@/app/app-shell";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
-  title: "Weavly — Premium Fashion Marketplace",
+  title: "Weavly",
   description: "Curated designer clothing for men, women, unisex, and kids.",
   icons: {
     icon: "/logo.png?v=3",
