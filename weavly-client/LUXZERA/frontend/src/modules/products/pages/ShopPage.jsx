@@ -8,8 +8,8 @@
 // • Clean Left Sidebar (using standalone FiltersSidebar component)
 // ──────────────────────────────────────────────────────────────────────────
 
-import { useState, useMemo, useEffect, useCallback, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useMemo, useEffect, useCallback, useRef, Suspense } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { SlidersHorizontal, X, Loader2 } from "lucide-react";
 import ProductCard from "@/modules/products/components/ProductCard";
 import FiltersSidebar from "@/modules/products/components/FiltersSidebar";
@@ -94,7 +94,9 @@ const DEPT_HERO_CONFIG = {
   }
 };
 
-export default function ShopPage({ initialDepartment = "All" }) {
+function ShopPageContent({ initialDepartment = "All" }) {
+  const router = useRouter();
+  const pathname = usePathname() || "";
   const searchParams = useSearchParams();
   const query = searchParams?.get("q")?.trim() || "";
   const { user } = useAuth();
@@ -428,5 +430,17 @@ export default function ShopPage({ initialDepartment = "All" }) {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ShopPage(props) {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 size={24} className="animate-spin text-[#F07020]" />
+      </div>
+    }>
+      <ShopPageContent {...props} />
+    </Suspense>
   );
 }
