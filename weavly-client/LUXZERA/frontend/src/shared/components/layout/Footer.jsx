@@ -596,36 +596,24 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
         </div>
       </div>
 
-      {/* ═══ INTERACTIVE WARP TEXT BRAND EXPERIENCE ═══ */}
-      <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-16 mb-8 sm:mb-12">
-        <div className="relative w-full rounded-2xl overflow-hidden bg-[#0A0A0E]/80 border border-white/[0.08] backdrop-blur-xl p-4 sm:p-6 shadow-2xl">
-          <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-[#71717A] px-2 pb-2">
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#F07020] animate-pulse" />
-              Bespoke Fluid Glass Canvas
-            </span>
-            <span className="text-[10px] text-[#8E8E93]">Hover to Distort</span>
-          </div>
-          <WarpText
-            text="Bend the moment"
-            color="#f8f5ff"
-            warpStrength={0.08}
-            warpScale={1.7}
-            speed={0.55}
-            pointerInfluence={0.42}
-            pointerStrength={0.38}
-            refraction={0.018}
-            ripple={true}
-            fontSize="clamp(2.2rem, 6vw, 4.5rem)"
-            fontWeight={800}
-            style={{ height: "180px" }}
-          />
-        </div>
-      </div>
-
-      {/* ═══ BOTTOM SECTION: 3D ISOMETRIC ARCHITECTURAL VOXEL TYPOGRAPHY (DECIMAL STYLE) ═══ */}
-      <div className="relative w-full">
-        <IsometricWeavly3D />
+      {/* ═══ BOTTOM SECTION: MONUMENTAL WEAVLY WARP TEXT TYPOGRAPHY ═══ */}
+      <div className="relative w-full overflow-hidden select-none pt-2 pb-0">
+        <WarpText
+          text="WEAVLY"
+          color="#F8F5FF"
+          warpStrength={0.07}
+          warpScale={1.6}
+          speed={0.45}
+          pointerInfluence={0.42}
+          pointerStrength={0.40}
+          refraction={0.02}
+          ripple={true}
+          fontSize="clamp(5rem, 16.5vw, 16rem)"
+          fontWeight={900}
+          letterSpacing="-0.03em"
+          className="w-full"
+          style={{ height: "340px", minHeight: "260px" }}
+        />
       </div>
 
     </footer>
