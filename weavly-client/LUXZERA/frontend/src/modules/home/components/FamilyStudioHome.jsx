@@ -210,8 +210,8 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [selectedCategory, setSelectedCategory] = useState(HERO_CATEGORIES[0]);
   const [activeCatalogTab, setActiveCatalogTab] = useState("All");
 
-  // Infinite Scroll State (Row-by-Row)
-  const [visibleRowsCount, setVisibleRowsCount] = useState(2);
+  // Infinite Scroll State (Smooth Fast-Scroll Batching)
+  const [visibleRowsCount, setVisibleRowsCount] = useState(8);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [isFitModalOpen, setIsFitModalOpen] = useState(false);
@@ -227,7 +227,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         const list = Array.isArray(items) ? items : [];
         setProductsList(list);
         setLoadingProducts(false);
-        if (list.length <= 8) {
+        if (list.length <= 16) {
           setHasMore(false);
         }
       }
@@ -268,25 +268,22 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const visibleCatalogProducts = filteredPool.slice(0, visibleRowsCount * 4);
   const catalogRows = chunkArray(visibleCatalogProducts, 4);
 
-  // Infinite scroll row-by-row loader with fast-scroll pacing
+  // High-performance infinite scroll: expands in large 4-row (16 items) batches instantly without lag
   const loadNextRow = useCallback(async () => {
     if (isLoadingMore || !hasMore) return;
 
     const currentlyVisible = visibleRowsCount * 4;
 
     if (currentlyVisible < filteredPool.length) {
-      setIsLoadingMore(true);
-      setTimeout(() => {
-        setVisibleRowsCount((prev) => prev + 1);
-        setIsLoadingMore(false);
-      }, 250);
+      // Instant expansion without artificial timers
+      setVisibleRowsCount((prev) => prev + 4);
     } else {
       setIsLoadingMore(true);
       try {
-        const moreItems = await getProducts({ limit: 20, offset: productsList.length });
+        const moreItems = await getProducts({ limit: 40, offset: productsList.length });
         if (Array.isArray(moreItems) && moreItems.length > 0) {
           setProductsList((prev) => [...prev, ...moreItems]);
-          setVisibleRowsCount((prev) => prev + 1);
+          setVisibleRowsCount((prev) => prev + 4);
         } else {
           setHasMore(false);
         }
@@ -299,7 +296,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     }
   }, [isLoadingMore, hasMore, filteredPool.length, productsList.length, visibleRowsCount]);
 
-  // IntersectionObserver on sentinel with 800px pre-fetch buffer
+  // IntersectionObserver on sentinel with generous 1600px lookahead buffer
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
@@ -310,7 +307,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
           loadNextRow();
         }
       },
-      { rootMargin: "800px" }
+      { rootMargin: "1600px" }
     );
 
     observer.observe(sentinel);
