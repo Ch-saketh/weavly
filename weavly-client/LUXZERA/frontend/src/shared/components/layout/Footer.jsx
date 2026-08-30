@@ -22,9 +22,8 @@ function ZyraFooterCharacter() {
     const handleMouseMove = (e) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      // Relative mouse vector centered on the Zyra container (-1 to 1)
-      const x = ((e.clientX - (rect.left + rect.width / 2)) / (window.innerWidth / 2));
-      const y = ((e.clientY - (rect.top + rect.height / 2)) / (window.innerHeight / 2));
+      const x = (e.clientX - (rect.left + rect.width / 2)) / (window.innerWidth / 2);
+      const y = (e.clientY - (rect.top + rect.height / 2)) / (window.innerHeight / 2);
 
       setTargetPos({
         x: Math.max(-1, Math.min(1, x)),
@@ -65,14 +64,14 @@ function ZyraFooterCharacter() {
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-full min-h-[300px] sm:min-h-[340px] flex items-center justify-center select-none overflow-visible group"
+      className="relative w-full h-full min-h-[280px] sm:min-h-[320px] flex items-center justify-center select-none overflow-visible group"
     >
-      {/* Ambient Soft Studio Glow behind Zyra */}
+      {/* Ambient Soft Glow behind Zyra */}
       <div
-        className="absolute w-[240px] sm:w-[280px] h-[240px] sm:h-[280px] rounded-full pointer-events-none transition-opacity duration-700 opacity-25 group-hover:opacity-40"
+        className="absolute w-[220px] sm:w-[260px] h-[220px] sm:h-[260px] rounded-full pointer-events-none transition-opacity duration-700 opacity-30 group-hover:opacity-50"
         style={{
-          background: "radial-gradient(ellipse at center, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 45%, transparent 70%)",
-          filter: "blur(36px)",
+          background: "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.12) 0%, rgba(0, 0, 0, 0.03) 50%, transparent 70%)",
+          filter: "blur(32px)",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
@@ -90,7 +89,7 @@ function ZyraFooterCharacter() {
         <img
           src="/zera_clean.svg?v=2"
           alt="Zyra AI Fashion Intelligence"
-          className="w-[220px] sm:w-[260px] lg:w-[290px] h-auto object-contain relative z-10 pointer-events-none drop-shadow-[0_12px_28px_rgba(0,0,0,0.8)]"
+          className="w-[200px] sm:w-[240px] lg:w-[260px] h-auto object-contain relative z-10 pointer-events-none drop-shadow-[0_10px_24px_rgba(0,0,0,0.12)]"
           draggable={false}
         />
 
@@ -100,18 +99,18 @@ function ZyraFooterCharacter() {
           style={{
             top: "48%",
             left: "52%",
-            transform: `translate(calc(-50% + ${smoothPos.x * 16}px), calc(-50% + ${smoothPos.y * 14}px))`,
+            transform: `translate(calc(-50% + ${smoothPos.x * 15}px), calc(-50% + ${smoothPos.y * 13}px))`,
             willChange: "transform",
           }}
         >
           {/* Eyebrows */}
-          <div className="flex items-center gap-7 mb-1.5 opacity-90 transition-all duration-200">
+          <div className="flex items-center gap-6 sm:gap-7 mb-1.5 opacity-90 transition-all duration-200">
             <div
-              className="w-[20px] sm:w-[22px] h-[2.5px] bg-[#111827] rounded-full transition-transform duration-150"
+              className="w-[18px] sm:w-[20px] h-[2.5px] bg-[#111827] rounded-full transition-transform duration-150"
               style={{ transform: `rotate(${-5 + smoothPos.x * 8}deg) translateY(${isMoving ? -1.5 : 0}px)` }}
             />
             <div
-              className="w-[20px] sm:w-[22px] h-[2.5px] bg-[#111827] rounded-full transition-transform duration-150"
+              className="w-[18px] sm:w-[20px] h-[2.5px] bg-[#111827] rounded-full transition-transform duration-150"
               style={{ transform: `rotate(${5 + smoothPos.x * 8}deg) translateY(${isMoving ? -1.5 : 0}px)` }}
             />
           </div>
@@ -119,26 +118,26 @@ function ZyraFooterCharacter() {
           {/* Glossy Eyes */}
           <div className="relative flex items-center justify-center gap-5 sm:gap-6">
             {/* Left Eye */}
-            <div className="w-[24px] sm:w-[26px] h-[24px] sm:h-[26px] rounded-full bg-[#111827] relative shadow-md overflow-hidden">
-              <div className="w-[9px] h-[9px] rounded-full bg-white absolute top-1 left-1 shadow-sm" />
-              <div className="w-[4px] h-[4px] rounded-full bg-white/90 absolute bottom-1 right-1" />
+            <div className="w-[22px] sm:w-[24px] h-[22px] sm:h-[24px] rounded-full bg-[#111827] relative shadow-sm overflow-hidden">
+              <div className="w-[8px] h-[8px] rounded-full bg-white absolute top-1 left-1 shadow-sm" />
+              <div className="w-[3.5px] h-[3.5px] rounded-full bg-white/90 absolute bottom-1 right-1" />
             </div>
 
             {/* Right Eye */}
-            <div className="w-[24px] sm:w-[26px] h-[24px] sm:h-[26px] rounded-full bg-[#111827] relative shadow-md overflow-hidden">
-              <div className="w-[9px] h-[9px] rounded-full bg-white absolute top-1 left-1 shadow-sm" />
-              <div className="w-[4px] h-[4px] rounded-full bg-white/90 absolute bottom-1 right-1" />
+            <div className="w-[22px] sm:w-[24px] h-[22px] sm:h-[24px] rounded-full bg-[#111827] relative shadow-sm overflow-hidden">
+              <div className="w-[8px] h-[8px] rounded-full bg-white absolute top-1 left-1 shadow-sm" />
+              <div className="w-[3.5px] h-[3.5px] rounded-full bg-white/90 absolute bottom-1 right-1" />
             </div>
           </div>
 
           {/* Mouth */}
-          <div className="mt-2 opacity-95 transition-all duration-150">
+          <div className="mt-1.5 opacity-95 transition-all duration-150">
             {isMoving ? (
-              <svg width="22" height="11" viewBox="0 0 28 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="20" height="10" viewBox="0 0 28 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="14" cy="7" r="5" fill="#111827" />
               </svg>
             ) : (
-              <svg width="24" height="11" viewBox="0 0 30 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="22" height="10" viewBox="0 0 30 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M 4 2 Q 15 12 26 2" stroke="#111827" strokeWidth="2.8" strokeLinecap="round" fill="none" />
               </svg>
             )}
@@ -147,9 +146,9 @@ function ZyraFooterCharacter() {
       </div>
 
       {/* Interactive Sub-Label */}
-      <div className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#121216]/90 border border-[#27272F] text-[11px] text-[#A1A1AA] pointer-events-none shadow-sm">
-        <Sparkles size={10} className="text-white" />
-        <span className="font-semibold text-white tracking-wider uppercase">Zyra Intelligence</span>
+      <div className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-[#E4E4E7] text-[11px] text-[#52525B] pointer-events-none shadow-sm backdrop-blur-sm">
+        <Sparkles size={10} className="text-black" />
+        <span className="font-semibold text-black tracking-wider uppercase">Zyra Intelligence</span>
       </div>
     </div>
   );
@@ -201,31 +200,15 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
   };
 
   return (
-    <footer className="relative w-full bg-[#000000] text-white font-sans select-none overflow-hidden pt-12 sm:pt-16 pb-10 border-t border-[#18181C]">
+    <footer className="relative w-full bg-white text-[#18181B] font-sans select-none border-t border-[#E4E4E7]">
       
-      {/* ═══ 1. SUBTLE BACKGROUND TONALITY & GRAIN ═══ */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 90% 70% at 50% 15%, #101014 0%, #060608 55%, #000000 100%)",
-        }}
-      />
-
-      {/* Tactile Fine-Grain Noise Overlay */}
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-[0.028] mix-blend-overlay"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-        }}
-      />
-
-      {/* ═══ 2. LARGE CENTERED FOOTER CONTAINER (GITHUB-STYLE STRUCTURE) ═══ */}
-      <div className="relative z-10 max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ═══ CENTERED FOOTER CONTAINER (GITHUB-STYLE STRUCTURE IN PURE WHITE) ═══ */}
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         
-        <div className="w-full bg-[#09090C] border border-[#1E1E24] rounded-2xl sm:rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden">
+        <div className="w-full bg-white border border-[#E4E4E7] rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] overflow-hidden">
           
           {/* ── TOP SECTION: WEAVLY BRANDING (LEFT) + NEWSLETTER (RIGHT) ── */}
-          <div className="px-6 sm:px-10 py-7 sm:py-8 border-b border-[#1E1E24] flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-[#0B0B0E]/60">
+          <div className="px-6 sm:px-10 py-6 border-b border-[#E4E4E7] flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-[#FAFAFA]">
             
             {/* Branding & Mission */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
@@ -236,12 +219,12 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
                 tabIndex={0}
                 aria-label={`${branding.name} home`}
               >
-                <WeavlyLogo size="md" showBeta={true} allWhite={true} onBetaClick={onBetaClick} />
+                <WeavlyLogo size="md" showBeta={true} allBlack={true} onBetaClick={onBetaClick} />
               </div>
 
-              <div className="hidden sm:block w-[1px] h-6 bg-[#27272F]" />
+              <div className="hidden sm:block w-[1px] h-6 bg-[#E4E4E7]" />
 
-              <p className="text-xs sm:text-[13px] text-[#8E8E98] max-w-md font-normal leading-relaxed">
+              <p className="text-xs sm:text-[13px] text-[#71717A] max-w-md font-normal leading-relaxed">
                 A curated fashion marketplace bringing together independent global designers for discerning sartorial buyers.
               </p>
             </div>
@@ -255,16 +238,16 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Subscribe to newsletter"
                   required
-                  className="w-full px-4 py-2 rounded-lg bg-[#141418] border border-[#27272F] text-white placeholder:text-[#6E6E78] text-xs focus:outline-none focus:border-white transition-colors"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-[#D4D4D8] text-black placeholder:text-[#A1A1AA] text-xs focus:outline-none focus:border-black transition-colors shadow-sm"
                 />
               </div>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-lg bg-white text-black text-xs font-bold uppercase tracking-wider hover:bg-[#E4E4E7] active:scale-[0.98] transition-all duration-200 cursor-pointer flex items-center gap-1.5 shadow-sm whitespace-nowrap"
+                className="px-4 py-2 rounded-lg bg-black text-white text-xs font-bold uppercase tracking-wider hover:bg-[#27272A] active:scale-[0.98] transition-all duration-200 cursor-pointer flex items-center gap-1.5 shadow-sm whitespace-nowrap"
               >
                 {subscribed ? (
                   <>
-                    <Check size={13} className="text-black" />
+                    <Check size={13} className="text-white" />
                     <span>Subscribed</span>
                   </>
                 ) : (
@@ -279,39 +262,39 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
           </div>
 
           {/* ── MIDDLE SECTION: 4-COLUMN NAVIGATION (LEFT) + ZYRA VISUAL (RIGHT) ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#1E1E24]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#E4E4E7]">
             
             {/* LEFT 4-COLUMN NAVIGATION (8 Columns on desktop) */}
             <div className="lg:col-span-8 p-6 sm:p-10 grid grid-cols-2 sm:grid-cols-4 gap-8">
               
               {/* Column 1: PRODUCT */}
               <div className="space-y-4">
-                <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#FFFFFF]">
+                <h4 className="text-[11px] font-bold uppercase tracking-[0.18em] text-black">
                   Product
                 </h4>
                 <ul className="space-y-2.5 font-medium p-0 m-0 list-none text-xs">
                   <li>
-                    <button onClick={() => handleLinkClick("/market")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/market")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       All Products
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/men")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/men")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Men's Sartorial
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/women")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/women")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Women's Atelier
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/unisex")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/unisex")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Unisex Drops
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/new-arrivals")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/new-arrivals")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       New Arrivals
                     </button>
                   </li>
@@ -320,32 +303,32 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
 
               {/* Column 2: ATELIER */}
               <div className="space-y-4">
-                <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#FFFFFF]">
+                <h4 className="text-[11px] font-bold uppercase tracking-[0.18em] text-black">
                   Atelier
                 </h4>
                 <ul className="space-y-2.5 font-medium p-0 m-0 list-none text-xs">
                   <li>
-                    <button onClick={() => handleLinkClick("/designers")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/designers")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Discover Designers
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/designs")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/designs")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Creator Lookbooks
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/custom-design")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/custom-design")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Commission Garment
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/designer-studio")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/designer-studio")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Designer Studio
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/become-designer")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/become-designer")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Become a Designer
                     </button>
                   </li>
@@ -354,28 +337,28 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
 
               {/* Column 3: WARDROBE */}
               <div className="space-y-4">
-                <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#FFFFFF]">
+                <h4 className="text-[11px] font-bold uppercase tracking-[0.18em] text-black">
                   Wardrobe
                 </h4>
                 <ul className="space-y-2.5 font-medium p-0 m-0 list-none text-xs">
                   <li>
-                    <button onClick={() => handleLinkClick("/wardrobe")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] flex items-center gap-1.5 group">
-                      <Sparkles size={11} className="text-white group-hover:scale-125 transition-transform" />
+                    <button onClick={() => handleLinkClick("/wardrobe")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] flex items-center gap-1.5 group">
+                      <Sparkles size={11} className="text-black group-hover:scale-125 transition-transform" />
                       <span>Zyra Wardrobe</span>
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/account")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/account")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       My Account
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/orders")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/orders")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       My Orders
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/bag")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/bag")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Shopping Bag
                     </button>
                   </li>
@@ -384,28 +367,28 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
 
               {/* Column 4: POLICIES */}
               <div className="space-y-4">
-                <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#FFFFFF]">
+                <h4 className="text-[11px] font-bold uppercase tracking-[0.18em] text-black">
                   Policies
                 </h4>
                 <ul className="space-y-2.5 font-medium p-0 m-0 list-none text-xs">
                   <li>
-                    <button onClick={() => handleLinkClick("/privacy")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/privacy")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Privacy Policy
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/terms")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/terms")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Terms of Service
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => handleLinkClick("/faq")} className="hover:text-white hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#9A9AA6] block">
+                    <button onClick={() => handleLinkClick("/faq")} className="hover:text-black hover:translate-x-0.5 transition-all duration-200 border-none bg-transparent cursor-pointer p-0 text-left text-[#52525B] block">
                       Help & FAQs
                     </button>
                   </li>
                   <li>
                     <span className="text-[#71717A] text-xs flex items-center gap-1.5 pt-1">
-                      <ShieldCheck size={12} className="text-white/80" />
+                      <ShieldCheck size={12} className="text-black" />
                       <span>Verified Atelier</span>
                     </span>
                   </li>
@@ -415,22 +398,22 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
             </div>
 
             {/* RIGHT DEDICATED ZYRA MASCOT VISUAL AREA (4 Columns on desktop) */}
-            <div className="lg:col-span-4 p-6 sm:p-8 flex items-center justify-center bg-[#07070A]/80 relative overflow-hidden">
+            <div className="lg:col-span-4 p-6 sm:p-8 flex items-center justify-center bg-[#FBFBFC] relative overflow-hidden">
               <ZyraFooterCharacter />
             </div>
 
           </div>
 
           {/* ── BOTTOM SECTION: LEGAL / COPYRIGHT (LEFT) + LANGUAGE & BACK TO TOP (RIGHT) ── */}
-          <div className="px-6 sm:px-10 py-5 border-t border-[#1E1E24] flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0B0B0E]/60 text-xs text-[#71717A]">
+          <div className="px-6 sm:px-10 py-4 border-t border-[#E4E4E7] flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#FAFAFA] text-xs text-[#71717A]">
             
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <span>&copy; {currentYear} {branding.name}, Inc.</span>
-              <span className="hidden sm:inline text-[#27272F]">•</span>
-              <button onClick={() => handleLinkClick("/privacy")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-[#71717A] text-xs">
+              <span className="hidden sm:inline text-[#D4D4D8]">•</span>
+              <button onClick={() => handleLinkClick("/privacy")} className="hover:text-black transition-colors border-none bg-transparent cursor-pointer p-0 text-[#71717A] text-xs">
                 Privacy Policy
               </button>
-              <button onClick={() => handleLinkClick("/terms")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-[#71717A] text-xs">
+              <button onClick={() => handleLinkClick("/terms")} className="hover:text-black transition-colors border-none bg-transparent cursor-pointer p-0 text-[#71717A] text-xs">
                 Terms of Service
               </button>
             </div>
@@ -439,17 +422,17 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
               {/* Language Selector */}
               <button
                 onClick={() => {}}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#141418] hover:bg-[#1C1C22] border border-[#27272F] text-[#C4C4CE] text-xs transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-white hover:bg-[#F4F4F6] border border-[#E4E4E7] text-[#52525B] text-xs transition-colors cursor-pointer shadow-sm"
               >
-                <Globe size={12} className="text-[#8E8E98]" />
+                <Globe size={12} className="text-[#71717A]" />
                 <span>English (US)</span>
-                <span className="text-[10px] text-[#71717A]">▾</span>
+                <span className="text-[10px] text-[#A1A1AA]">▾</span>
               </button>
 
               {/* Back to Top */}
               <button
                 onClick={scrollToTop}
-                className="flex items-center gap-1 text-xs text-[#8E8E98] hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 font-medium group"
+                className="flex items-center gap-1 text-xs text-[#52525B] hover:text-black transition-colors border-none bg-transparent cursor-pointer p-0 font-medium group"
               >
                 <span>Back to top</span>
                 <ArrowUp size={12} className="group-hover:-translate-y-0.5 transition-transform duration-200" />
@@ -460,21 +443,6 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
 
         </div>
 
-      </div>
-
-      {/* ═══ 3. SUBTLE OVERSIZED BACKGROUND WEAVLY WORDMARK ═══ */}
-      <div className="relative w-full overflow-hidden select-none pointer-events-none leading-none pt-8 text-center opacity-30">
-        <span
-          style={{
-            fontFamily: "'Mochiy Pop One', cursive, sans-serif",
-            fontSize: "clamp(3rem, 16vw, 320px)",
-            lineHeight: 0.72,
-            letterSpacing: "-0.04em",
-          }}
-          className="block w-full text-center bg-gradient-to-b from-white/[0.08] via-white/[0.02] to-transparent bg-clip-text text-transparent transform translate-y-[10%]"
-        >
-          {branding.name}
-        </span>
       </div>
 
     </footer>
