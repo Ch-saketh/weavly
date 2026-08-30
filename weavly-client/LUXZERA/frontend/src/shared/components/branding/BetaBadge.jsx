@@ -2,7 +2,7 @@
 
 import branding from "@/config/branding";
 
-export default function BetaBadge({ onClick, className = "" }) {
+export default function BetaBadge({ onClick, allWhite = false, className = "" }) {
   if (!branding.isBeta) return null;
 
   return (
@@ -23,11 +23,14 @@ export default function BetaBadge({ onClick, className = "" }) {
           onClick?.();
         }
       }}
-      className={`inline-flex items-center justify-center text-[8px] font-bold uppercase tracking-[0.15em] leading-none text-white bg-[#F07020] hover:bg-black px-1.5 py-1 rounded-[4px] font-mono cursor-pointer select-none transition-colors shadow-xs ${className}`}
+      className={`inline-flex items-center justify-center text-[8px] font-bold uppercase tracking-[0.15em] leading-none px-1.5 py-1 rounded-[4px] font-mono cursor-pointer select-none transition-all shadow-xs ${
+        allWhite
+          ? "bg-white text-black hover:bg-neutral-200"
+          : "bg-[#1D1D1F] text-white hover:bg-black"
+      } ${className}`}
       title="Click for Beta Info"
     >
       {branding.betaBadgeText}
     </span>
-
   );
 }

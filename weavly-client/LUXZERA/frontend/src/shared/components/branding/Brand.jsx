@@ -35,7 +35,7 @@ export default function Brand({
         {branding.name}
       </span>
 
-      {showBeta && <BetaBadge onClick={onBetaClick} />}
+      {showBeta && <BetaBadge onClick={onBetaClick} allWhite={allWhite || light} />}
     </div>
   );
 }
