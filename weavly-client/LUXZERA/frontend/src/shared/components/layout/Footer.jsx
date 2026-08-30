@@ -9,16 +9,116 @@ import { Globe, ArrowUp, ShieldCheck } from "lucide-react";
 import WarpText from "@/shared/components/ui/WarpText";
 
 /**
- * 3D Isometric Architectural Voxel Typography (WEAVLY / DECIMAL)
- * Exact mathematical recreation of Decimal AI's iconic isometric extruded typography.
- * Features:
- * - Monumental horizontal letter alignment spanning the footer base
- * - 45° rotated voxel cubes on an isometric (u, v, y) grid
- * - Complete voxel alphabet dictionary (A-Z)
- * - Exact 35.264° axonometric elevation angle
- * - High-contrast studio lighting (silver top diamonds, medium-gray left facets, deep-charcoal right facets)
- * - Interactive cursor spotlight tracking across letters with smooth spring physics
+ * 3D Isometric Architectural Voxel Typography (WEAVLY) with React Bits Fluid Warp Distortion
+ * Combines mathematical 3D isometric voxel typography with a real-time WebGL fluid glass
+ * distortion shader pass (cursor lensing, ripple refraction, chromatic aberration).
  */
+const warpVertexShader = `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position.xy, 0.0, 1.0);
+}
+`;
+
+const warpFragmentShader = `
+precision highp float;
+
+uniform sampler2D tDiffuse;
+uniform vec2 uResolution;
+uniform vec2 uPointer;
+uniform float uPointerActive;
+uniform float uTime;
+uniform float uWarpStrength;
+uniform float uWarpScale;
+uniform float uSpeed;
+uniform float uPointerInfluence;
+uniform float uPointerStrength;
+uniform float uRefraction;
+uniform float uRipple;
+uniform float uMotion;
+
+varying vec2 vUv;
+
+float hash(vec2 p) {
+  p = fract(p * vec2(123.34, 456.21));
+  p += dot(p, p + 45.32);
+  return fract(p.x * p.y);
+}
+
+float noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+
+  float a = hash(i);
+  float b = hash(i + vec2(1.0, 0.0));
+  float c = hash(i + vec2(0.0, 1.0));
+  float d = hash(i + vec2(1.0, 1.0));
+
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
+float fbm(vec2 p) {
+  float value = 0.0;
+  float amplitude = 0.5;
+  for (int i = 0; i < 4; i++) {
+    value += amplitude * noise(p);
+    p *= 2.02;
+    amplitude *= 0.5;
+  }
+  return value;
+}
+
+vec4 sampleScene(vec2 uv) {
+  if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+    return vec4(0.0, 0.0, 0.0, 1.0);
+  }
+  return texture2D(tDiffuse, uv);
+}
+
+void main() {
+  vec2 uv = vUv;
+  float aspect = uResolution.x / max(uResolution.y, 1.0);
+  float time = uTime * uSpeed;
+  float scale = max(uWarpScale, 0.001);
+
+  vec2 drift = vec2(time * 0.055, -time * 0.045);
+  float n1 = fbm(uv * scale * 3.1 + drift);
+  float n2 = fbm((uv + 19.17) * scale * 3.4 - drift.yx);
+  vec2 ambient = (vec2(n1, n2) - 0.5) * uWarpStrength * 0.045 * uMotion;
+
+  vec2 pointerDelta = uv - uPointer;
+  vec2 aspectDelta = vec2(pointerDelta.x * aspect, pointerDelta.y);
+  float dist = length(aspectDelta);
+  float radius = max(uPointerInfluence, 0.001);
+  float t = clamp(dist / radius, 0.0, 1.0);
+  float lens = smoothstep(radius, 0.0, dist) * uPointerActive;
+  float bulge = t * (1.0 - t) * (1.0 - t) * 6.75 * uPointerActive;
+  vec2 dir = dist > 0.0001 ? vec2(aspectDelta.x / aspect, aspectDelta.y) / dist : vec2(0.0);
+
+  float rippleWave = sin(dist * 28.0 - time * 4.2) * 0.5 + 0.5;
+  float rippleRing = (rippleWave - 0.5) * uRipple;
+  vec2 pointerWarp = -dir * bulge * uPointerStrength * 0.045;
+  pointerWarp += dir * rippleRing * bulge * uPointerStrength * 0.016;
+
+  vec2 displaced = uv + ambient + pointerWarp;
+  vec2 splitDir = ambient + pointerWarp;
+  float splitLen = length(splitDir);
+  splitDir = splitLen > 0.00001 ? splitDir / splitLen : vec2(0.7071, 0.7071);
+  vec2 split = splitDir * uRefraction * 0.16 * (0.35 + lens * 1.65);
+
+  vec4 base = sampleScene(displaced);
+  float r = sampleScene(displaced + split).r;
+  float g = base.g;
+  float b = sampleScene(displaced - split).b;
+  float a = max(max(sampleScene(displaced + split).a, base.a), sampleScene(displaced - split).a);
+
+  vec3 color = vec3(r, g, b) + lens * base.a * 0.055;
+  gl_FragColor = vec4(color, a);
+}
+`;
+
 function IsometricWeavly3D({ word = "WEAVLY" }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
@@ -33,10 +133,6 @@ function IsometricWeavly3D({ word = "WEAVLY" }) {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Scene setup
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000);
-
     const getDimensions = () => {
       const w = container.clientWidth || window.innerWidth;
       const h = container.clientHeight || 460;
@@ -44,11 +140,10 @@ function IsometricWeavly3D({ word = "WEAVLY" }) {
     };
 
     let { w: width, h: height } = getDimensions();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    // Orthographic Camera looking directly from the front
     const aspect = width / height;
     
-    // Frustum view size scaled responsively for monumental scale
     const calculateViewSize = (w, wordLength) => {
       const baseScale = wordLength <= 6 ? 10.5 : 12.0;
       if (w < 480) return baseScale * 1.6;
@@ -70,6 +165,9 @@ function IsometricWeavly3D({ word = "WEAVLY" }) {
     camera.position.set(0, 0, 100);
     camera.lookAt(0, 0, 0);
 
+    const scene = new THREE.Scene();
+    scene.background = null;
+
     const renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
@@ -77,308 +175,209 @@ function IsometricWeavly3D({ word = "WEAVLY" }) {
       powerPreference: "high-performance",
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(dpr);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.32;
 
+    // ═══ OFF-SCREEN RENDER TARGET FOR POST-PROCESSING WARP SHADER ═══
+    let renderTarget = new THREE.WebGLRenderTarget(
+      Math.max(1, Math.floor(width * dpr)),
+      Math.max(1, Math.floor(height * dpr)),
+      {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBAFormat,
+      }
+    );
+
+    const postScene = new THREE.Scene();
+    const postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const quadGeo = new THREE.PlaneGeometry(2, 2);
+
+    const warpUniforms = {
+      tDiffuse: { value: renderTarget.texture },
+      uResolution: { value: new THREE.Vector2(width * dpr, height * dpr) },
+      uPointer: { value: new THREE.Vector2(0.5, 0.5) },
+      uPointerActive: { value: 0.0 },
+      uTime: { value: 0.0 },
+      uWarpStrength: { value: 0.08 },
+      uWarpScale: { value: 1.7 },
+      uSpeed: { value: 0.55 },
+      uPointerInfluence: { value: 0.42 },
+      uPointerStrength: { value: 0.38 },
+      uRefraction: { value: 0.018 },
+      uRipple: { value: 1.0 },
+      uMotion: { value: prefersReducedMotion ? 0.0 : 1.0 },
+    };
+
+    const warpMaterial = new THREE.ShaderMaterial({
+      vertexShader: warpVertexShader,
+      fragmentShader: warpFragmentShader,
+      uniforms: warpUniforms,
+      depthTest: false,
+      depthWrite: false,
+    });
+
+    const quadMesh = new THREE.Mesh(quadGeo, warpMaterial);
+    postScene.add(quadMesh);
+
     // ═══ LUMINOUS WHITE STUDIO LIGHTING & GLOW ═══
-    // Ambient Light: lifts shadow tones to keep all facets clearly visible
     const ambientLight = new THREE.AmbientLight(0x484c5c, 2.5);
     scene.add(ambientLight);
 
-    // Top Key Light: bright, crisp pure white illumination on diamond top faces
     const topLight = new THREE.DirectionalLight(0xffffff, 6.2);
     topLight.position.set(0, 80, 20);
     scene.add(topLight);
 
-    // Front-Left White Key Light: sharp, bright white illumination across front facets
     const frontLeftLight = new THREE.DirectionalLight(0xf0f4ff, 4.5);
     frontLeftLight.position.set(-45, 30, 45);
     scene.add(frontLeftLight);
 
-    // Right-Side White Rim Light: crisp edge definition and fill
     const rightRimLight = new THREE.DirectionalLight(0xdce5ff, 3.2);
     rightRimLight.position.set(55, 15, 35);
     scene.add(rightRimLight);
 
-    // Interactive Cursor Spotlight: glides across blocks with vivid white radiance
     const cursorPointLight = new THREE.PointLight(0xffffff, 6.0, 40, 1.0);
     cursorPointLight.position.set(0, 4, 15);
     scene.add(cursorPointLight);
 
     // ═══ COMPREHENSIVE ISOMETRIC VOXEL ALPHABET ═══
-    // Coordinates: (v, y) on 30° isometric down-right grid (y = 0..4)
     const voxelDictionary = {
-      W: {
-        width: 4,
-        coords: [
-          [0, 4], [0, 3], [0, 2], [0, 1], [0, 0],
-          [1, 1], [1, 0],
-          [2, 3], [2, 2], [2, 1], [2, 0],
-          [3, 1], [3, 0],
-          [4, 4], [4, 3], [4, 2], [4, 1], [4, 0],
-        ],
-      },
-      E: {
-        width: 3,
-        coords: [
-          [0, 4], [0, 3], [0, 2], [0, 1], [0, 0],
-          [1, 4], [2, 4], [3, 4],
-          [1, 2], [2, 2],
-          [1, 0], [2, 0], [3, 0],
-        ],
-      },
-      A: {
-        width: 3,
-        coords: [
-          [0, 4], [0, 3], [0, 2], [0, 1], [0, 0],
-          [1, 4], [2, 4],
-          [3, 4], [3, 3], [3, 2], [3, 1], [3, 0],
-          [1, 2], [2, 2],
-        ],
-      },
-      V: {
-        width: 4,
-        coords: [
-          [0, 4], [0, 3], [0, 2],
-          [1, 1], [1, 0],
-          [2, 0],
-          [3, 1], [3, 0],
-          [4, 4], [4, 3], [4, 2],
-        ],
-      },
-      L: {
-        width: 3,
-        coords: [
-          [0, 4], [0, 3], [0, 2], [0, 1], [0, 0],
-          [1, 0], [2, 0], [3, 0],
-        ],
-      },
-      Y: {
-        width: 2,
-        coords: [
-          [0, 4], [0, 3],
-          [2, 4], [2, 3],
-          [1, 2],
-          [1, 1], [1, 0],
-        ],
-      },
-      D: {
-        width: 3,
-        coords: [
-          [0, 4], [0, 3], [0, 2], [0, 1], [0, 0],
-          [1, 4], [2, 4],
-          [3, 4], [3, 3], [3, 2], [3, 1], [3, 0],
-          [1, 0], [2, 0],
-        ],
-      },
-      C: {
-        width: 3,
-        coords: [
-          [0, 4], [0, 3], [0, 2], [0, 1], [0, 0],
-          [1, 4], [2, 4], [3, 4],
-          [1, 0], [2, 0], [3, 0],
-        ],
-      },
-      I: {
-        width: 2,
-        coords: [
-          [0, 4], [1, 4], [2, 4],
-          [1, 3], [1, 2], [1, 1],
-          [0, 0], [1, 0], [2, 0],
-        ],
-      },
-      M: {
-        width: 4,
-        coords: [
-          [0, 4], [0, 3], [0, 2], [0, 1], [0, 0],
-          [1, 3],
-          [2, 2],
-          [3, 3],
-          [4, 4], [4, 3], [4, 2], [4, 1], [4, 0],
-        ],
-      },
+      W: { width: 4, coords: [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 1], [1, 0], [2, 3], [2, 2], [2, 1], [2, 0], [3, 1], [3, 0], [4, 4], [4, 3], [4, 2], [4, 1], [4, 0]] },
+      E: { width: 3, coords: [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 4], [2, 4], [3, 4], [1, 2], [2, 2], [1, 0], [2, 0], [3, 0]] },
+      A: { width: 3, coords: [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 4], [2, 4], [3, 4], [3, 3], [3, 2], [3, 1], [3, 0], [1, 2], [2, 2]] },
+      V: { width: 4, coords: [[0, 4], [0, 3], [0, 2], [1, 1], [1, 0], [2, 0], [3, 1], [3, 0], [4, 4], [4, 3], [4, 2]] },
+      L: { width: 3, coords: [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0]] },
+      Y: { width: 2, coords: [[0, 4], [0, 3], [2, 4], [2, 3], [1, 2], [1, 1], [1, 0]] },
     };
 
     const lettersOrder = word.toUpperCase().split("");
     const letterSpacing = 1.2;
-
-    const S = 0.96; // Block size
-    const sqrt2_over_2 = Math.SQRT2 / 2; // ~0.7071
+    const S = 0.96;
+    const sqrt2_over_2 = Math.SQRT2 / 2;
     const blockGeo = new THREE.BoxGeometry(S, S, S);
     const edgesGeo = new THREE.EdgesGeometry(blockGeo);
 
-    // Uniform Architectural Titanium Material (Crisp White Highlights)
-    const blockMaterial = new THREE.MeshStandardMaterial({
-      color: 0x757a8c,
-      roughness: 0.24,
-      metalness: 0.18,
-    });
-
-    const edgeMaterial = new THREE.LineBasicMaterial({
-      color: 0x1e2028,
-      linewidth: 1,
-      transparent: true,
-      opacity: 0.8,
-    });
+    const blockMaterial = new THREE.MeshStandardMaterial({ color: 0x757a8c, roughness: 0.24, metalness: 0.18 });
+    const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x1e2028, linewidth: 1, transparent: true, opacity: 0.8 });
 
     const rootGroup = new THREE.Group();
-    // Decimal axonometric pitch angle: 35.264°
-    const ISOMETRIC_PITCH = Math.atan(1 / Math.SQRT2); // 0.6154797 rad (~35.264°)
+    const ISOMETRIC_PITCH = Math.atan(1 / Math.SQRT2);
     rootGroup.rotation.x = ISOMETRIC_PITCH;
-    rootGroup.position.y = -2.6; // Anchor bottom row firmly to footer base
+    rootGroup.position.y = -2.6;
 
     const allBlocks = [];
-
-    // Calculate total word screen width for centering
     let totalWordWidth = 0;
     lettersOrder.forEach((char, idx) => {
       const data = voxelDictionary[char] || voxelDictionary.E;
-      const charWidth = data.width * sqrt2_over_2 * S;
-      totalWordWidth += charWidth;
-      if (idx < lettersOrder.length - 1) {
-        totalWordWidth += letterSpacing;
-      }
+      totalWordWidth += data.width * sqrt2_over_2 * S + (idx < lettersOrder.length - 1 ? letterSpacing : 0);
     });
 
     let currentX = -totalWordWidth / 2;
-
     lettersOrder.forEach((char) => {
       const data = voxelDictionary[char] || voxelDictionary.E;
-      const coords = data.coords;
-      const charWidth = data.width * sqrt2_over_2 * S;
-
-      coords.forEach(([v, y]) => {
-        // Single uniform material across all blocks
-        const mesh = new THREE.Mesh(blockGeo, blockMaterial);
-        
-        // Rotate each cube 45° on Y to reveal front diamond vertex & isometric facets
-        mesh.rotation.y = Math.PI / 4;
-
-        // Position on isometric grid
+      data.coords.forEach(([v, y]) => {
         const posX = currentX + v * sqrt2_over_2 * S;
         const posZ = v * sqrt2_over_2 * S;
         const posY = y * S;
-
+        const mesh = new THREE.Mesh(blockGeo, blockMaterial);
+        mesh.rotation.y = Math.PI / 4;
         mesh.position.set(posX, posY, posZ);
-
-        const wireframe = new THREE.LineSegments(edgesGeo, edgeMaterial);
-        mesh.add(wireframe);
-
+        mesh.add(new THREE.LineSegments(edgesGeo, edgeMaterial));
         rootGroup.add(mesh);
-        allBlocks.push({
-          mesh,
-          baseX: posX,
-          baseY: posY,
-          baseZ: posZ,
-        });
+        allBlocks.push({ mesh, baseY: posY, baseX: posX });
       });
-
-      currentX += charWidth + letterSpacing;
+      currentX += data.width * sqrt2_over_2 * S + letterSpacing;
     });
-
     scene.add(rootGroup);
 
-    // ═══ INTERACTIVE CURSOR SPOTLIGHT & SUBTLE TILT ═══
-    let targetRotX = ISOMETRIC_PITCH;
-    let targetRotY = 0;
-    let currentRotX = ISOMETRIC_PITCH;
-    let currentRotY = 0;
-    let targetLightX = 0;
-    let targetLightY = 4;
+    const pointer = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5, active: 0, activeTarget: 0 };
+    let targetRotX = ISOMETRIC_PITCH, targetRotY = 0, currentRotX = ISOMETRIC_PITCH, currentRotY = 0, targetLightX = 0, targetLightY = 4;
 
-    const handleMouseMove = (e) => {
+    const handlePointerMove = (e) => {
       const rect = container.getBoundingClientRect();
-      if (
-        e.clientX < rect.left - 200 ||
-        e.clientX > rect.right + 200 ||
-        e.clientY < rect.top - 200 ||
-        e.clientY > rect.bottom + 200
-      ) {
-        return;
-      }
-
+      pointer.tx = (e.clientX - rect.left) / rect.width;
+      pointer.ty = 1 - (e.clientY - rect.top) / rect.height;
+      pointer.activeTarget = 1;
       const normX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const normY = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-
-      // Micro-tilt responsive to cursor
       targetRotY = normX * 0.04;
       targetRotX = ISOMETRIC_PITCH - normY * 0.03;
-
-      // Spotlight glides across letters
       targetLightX = normX * (totalWordWidth / 1.8);
       targetLightY = 3 + normY * 5;
     };
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    const handlePointerLeave = () => { pointer.activeTarget = 0; };
+    container.addEventListener("pointermove", handlePointerMove, { passive: true });
+    container.addEventListener("pointerleave", handlePointerLeave, { passive: true });
 
-    // ═══ ANIMATION LOOP ═══
     const clock = new THREE.Clock();
-
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
       const elapsed = clock.getElapsedTime();
-
-      // Smooth lerp for interactive tilt
       currentRotX += (targetRotX - currentRotX) * 0.06;
       currentRotY += (targetRotY - currentRotY) * 0.06;
-
       rootGroup.rotation.x = currentRotX;
       rootGroup.rotation.y = currentRotY;
-
-      // Cursor spotlight smoothing
       cursorPointLight.position.x += (targetLightX - cursorPointLight.position.x) * 0.08;
       cursorPointLight.position.y += (targetLightY - cursorPointLight.position.y) * 0.08;
-
-      // Subtle architectural breathing wave
       if (!prefersReducedMotion) {
-        allBlocks.forEach((b) => {
-          b.mesh.position.y =
-            b.baseY + Math.sin(elapsed * 1.5 + b.baseX * 0.4) * 0.04;
-        });
+        allBlocks.forEach((b) => { b.mesh.position.y = b.baseY + Math.sin(elapsed * 1.5 + b.baseX * 0.4) * 0.04; });
       }
-
+      const idleX = 0.5 + Math.sin(elapsed * 0.33) * 0.12;
+      const idleY = 0.5 + Math.cos(elapsed * 0.27) * 0.1;
+      pointer.x += ((pointer.activeTarget > 0 ? pointer.tx : idleX) - pointer.x) * (pointer.activeTarget > 0 ? 0.12 : 0.035);
+      pointer.y += ((pointer.activeTarget > 0 ? pointer.ty : idleY) - pointer.y) * (pointer.activeTarget > 0 ? 0.12 : 0.035);
+      pointer.active += ((pointer.activeTarget > 0 ? 1 : 0.18) - pointer.active) * 0.06;
+      renderer.setRenderTarget(renderTarget);
+      renderer.clear();
       renderer.render(scene, camera);
+      renderer.setRenderTarget(null);
+      warpUniforms.uPointer.value.set(pointer.x, pointer.y);
+      warpUniforms.uPointerActive.value = prefersReducedMotion ? pointer.active * 0.35 : pointer.active;
+      warpUniforms.uTime.value = prefersReducedMotion ? 0.0 : elapsed;
+      renderer.render(postScene, postCamera);
     };
-
     animate();
 
     const handleResize = () => {
-      if (!container) return;
       const { w, h } = getDimensions();
       const newAspect = w / h;
       const newViewSize = calculateViewSize(w, word.length);
-
       camera.left = (-newViewSize * newAspect) / 2;
       camera.right = (newViewSize * newAspect) / 2;
       camera.top = newViewSize / 2;
       camera.bottom = -newViewSize / 2;
       camera.updateProjectionMatrix();
-
       renderer.setSize(w, h);
+      renderTarget.setSize(Math.max(1, Math.floor(w * dpr)), Math.max(1, Math.floor(h * dpr)));
+      warpUniforms.uResolution.value.set(w * dpr, h * dpr);
     };
-
     window.addEventListener("resize", handleResize);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("pointermove", handlePointerMove);
+      container.removeEventListener("pointerleave", handlePointerLeave);
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
+      renderTarget.dispose();
+      quadGeo.dispose();
+      warpMaterial.dispose();
       blockGeo.dispose();
       edgesGeo.dispose();
       blockMaterial.dispose();
       edgeMaterial.dispose();
       scene.clear();
+      postScene.clear();
     };
   }, [word]);
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[300px] sm:h-[380px] md:h-[440px] lg:h-[500px] overflow-hidden select-none"
+      className="relative w-full h-[300px] sm:h-[380px] md:h-[440px] lg:h-[500px] overflow-hidden select-none cursor-pointer"
     >
-      {/* Soft atmospheric white ambient glow */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_75%_60%_at_50%_88%,rgba(255,255,255,0.06),rgba(255,255,255,0.015)_50%,transparent_80%)]" />
       <canvas ref={canvasRef} className="relative z-10 w-full h-full block" />
     </div>
@@ -596,24 +595,9 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
         </div>
       </div>
 
-      {/* ═══ BOTTOM SECTION: MONUMENTAL WEAVLY WARP TEXT TYPOGRAPHY ═══ */}
-      <div className="relative w-full overflow-hidden select-none pt-2 pb-0">
-        <WarpText
-          text="WEAVLY"
-          color="#F8F5FF"
-          warpStrength={0.07}
-          warpScale={1.6}
-          speed={0.45}
-          pointerInfluence={0.42}
-          pointerStrength={0.40}
-          refraction={0.02}
-          ripple={true}
-          fontSize="clamp(5rem, 16.5vw, 16rem)"
-          fontWeight={900}
-          letterSpacing="-0.03em"
-          className="w-full"
-          style={{ height: "340px", minHeight: "260px" }}
-        />
+      {/* ═══ BOTTOM SECTION: 3D ISOMETRIC ARCHITECTURAL VOXEL TYPOGRAPHY WITH FLUID WARP DISTORTION ═══ */}
+      <div className="relative w-full">
+        <IsometricWeavly3D word="WEAVLY" />
       </div>
 
     </footer>
