@@ -21,6 +21,7 @@ export default function RootLayout({ children }) {
         <meta name="referrer" content="no-referrer" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap" rel="stylesheet" />
       </head>
       <body className="antialiased text-[#1D1D1F] bg-white">
         <Providers>

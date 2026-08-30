@@ -7,6 +7,7 @@ public final class EmailStyles {
     public static String styles() {
         return """
         <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap');
 
         *{
             margin:0;
@@ -64,6 +65,18 @@ public final class EmailStyles {
 
         .logo-link{
             display:inline-block;
+            text-decoration:none;
+        }
+
+        .logo-text{
+            font-family:'Mochiy Pop One', cursive, sans-serif;
+            font-size:32px;
+            font-weight:700;
+            color:#111111;
+            letter-spacing:-0.5px;
+            display:inline-block;
+            margin:0 auto 18px;
+            text-decoration:none;
         }
 
         .logo{
@@ -326,6 +339,17 @@ public final class EmailStyles {
 
             text-align:center;
 
+        }
+
+        .footer-logo-text{
+            font-family:'Mochiy Pop One', cursive, sans-serif;
+            font-size:22px;
+            font-weight:700;
+            color:#111111;
+            letter-spacing:-0.5px;
+            display:inline-block;
+            margin:0 auto 14px;
+            text-decoration:none;
         }
 
         .footer-logo{

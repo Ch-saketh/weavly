@@ -8,7 +8,7 @@ public final class EmailComponents {
     public static String header() {
         return "<div class=\"center\">"
                 + "<a class=\"logo-link\" href=\"" + EmailBranding.HOME_URL + "\" aria-label=\"" + EmailBranding.BRAND_NAME + " home\">"
-                + "<img class=\"logo\" src=\"" + EmailBranding.LOGO_URL + "\" alt=\"" + EmailBranding.BRAND_NAME + " logo\"/>"
+                + "<span class=\"logo-text\">" + EmailBranding.BRAND_NAME + "</span>"
                 + "</a>"
                 + "<div class=\"divider\"></div>"
                 + "</div>";
@@ -17,7 +17,7 @@ public final class EmailComponents {
     public static String footer() {
         return "<div class=\"footer\">"
                 + "<a class=\"logo-link\" href=\"" + EmailBranding.HOME_URL + "\" aria-label=\"" + EmailBranding.BRAND_NAME + " home\">"
-                + "<img class=\"footer-logo\" src=\"" + EmailBranding.LOGO_URL + "\" alt=\"" + EmailBranding.BRAND_NAME + " logo\"/>"
+                + "<span class=\"footer-logo-text\">" + EmailBranding.BRAND_NAME + "</span>"
                 + "</a>"
                 + "<div class=\"footer-text\">"
                 + "Crafting the future of fashion."
