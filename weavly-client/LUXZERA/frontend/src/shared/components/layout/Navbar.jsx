@@ -150,13 +150,13 @@ export default function Navbar({
   return (
     <>
       {/* ════════════════════════════════════════════
-          PURE WHITE EDITORIAL NAVBAR (OFFICIAL ZERA EMBLEM ICON)
+          EDITORIAL WARM LINEN NAVBAR (OFFICIAL ZERA EMBLEM ICON)
       ════════════════════════════════════════════ */}
       <header
-        className={`hidden md:block w-full select-none sticky top-0 z-[100] text-[#1D1D1F] font-sans m-0 p-0 transition-all duration-300 ${
+        className={`hidden md:block w-full select-none sticky top-0 z-[100] text-[#183B56] font-sans m-0 p-0 transition-all duration-300 ${
           isScrolled
-            ? "bg-[#FFFFFF]/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
-            : "bg-[#FFFFFF]"
+            ? "bg-[#F5EFEB]/90 backdrop-blur-md border-b border-[#183B56]/15 shadow-xs"
+            : "bg-[#F5EFEB]"
         }`}
       >
         <div className="h-[70px] w-full px-6 sm:px-8 lg:px-10 flex items-center justify-between gap-8">
@@ -719,8 +719,8 @@ export default function Navbar({
       <header
         className={`md:hidden sticky top-0 z-50 w-full m-0 p-0 transition-all duration-300 ${
           isScrolled
-            ? "bg-[#FFFFFF]/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
-            : "bg-[#FFFFFF]"
+            ? "bg-[#F5EFEB]/90 backdrop-blur-md border-b border-[#183B56]/15 shadow-xs"
+            : "bg-[#F5EFEB]"
         }`}
       >
         <div className="w-full h-[64px] px-4 sm:px-6 flex items-center justify-between gap-3">

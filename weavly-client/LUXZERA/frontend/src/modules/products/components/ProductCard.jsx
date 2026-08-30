@@ -63,11 +63,11 @@ export default function ProductCard({ product, onViewProduct, source = "MARKET" 
         className="hidden sm:flex group relative flex-col bg-transparent cursor-pointer text-left font-sans select-none"
       >
         {/* Image */}
-        <div className="relative aspect-[3/4.2] overflow-hidden bg-white border border-[#ECECEC] select-none flex items-center justify-center rounded-2xl shadow-[0_1px_2px_rgba(0,0,0,0.01)] transition-shadow duration-300 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.03)]">
+        <div className="relative aspect-[3/4.2] overflow-hidden bg-[#E5EEF3] border border-[#183B56]/20 select-none flex items-center justify-center rounded-2xl shadow-xs transition-shadow duration-300 group-hover:shadow-md p-4">
           <img
             src={displayImage}
             alt={product.name || product.title || "Product"}
-            className="w-full h-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
+            className="w-full h-full object-contain mix-blend-multiply transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
             loading="lazy"
             referrerPolicy="no-referrer"
             onError={(e) => {
@@ -77,10 +77,10 @@ export default function ProductCard({ product, onViewProduct, source = "MARKET" 
           />
 
           {/* Quick Add panel */}
-          <div className="absolute bottom-0 left-0 right-0 bg-[#1D1D1F] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20">
+          <div className="absolute bottom-0 left-0 right-0 bg-[#183B56] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20">
             <button
               onClick={handleAdd}
-              className="w-full py-3.5 text-[12px] uppercase tracking-[0.2em] font-semibold text-white hover:bg-black transition-colors duration-200"
+              className="w-full py-3.5 text-[11px] uppercase tracking-[0.2em] font-semibold text-white hover:bg-[#102A43] transition-colors duration-200 border-none cursor-pointer"
             >
               {added ? "Added to Bag ✓" : "Add to Bag"}
             </button>
@@ -88,7 +88,7 @@ export default function ProductCard({ product, onViewProduct, source = "MARKET" 
 
           {/* Optional Badge */}
           {product.badge && (
-            <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-[#111111] border border-[#ECECEC] text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 z-10 rounded-full shadow-2xs">
+            <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-[#183B56] border border-[#183B56]/20 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 z-10 rounded-full shadow-2xs">
               {product.badge}
             </span>
           )}
@@ -98,33 +98,34 @@ export default function ProductCard({ product, onViewProduct, source = "MARKET" 
             onClick={handleBookmark}
             className={`absolute top-3 right-3 z-30 w-8.5 h-8.5 rounded-full flex items-center justify-center transition-all duration-300 ${
               saved
-                ? "bg-white shadow-md scale-110 border border-[#ECECEC]"
-                : "bg-white/75 backdrop-blur-md text-[#111111] opacity-85 hover:opacity-100 hover:bg-white hover:scale-110 border border-white/60"
+                ? "bg-white shadow-md scale-110 border border-[#183B56]/30"
+                : "bg-white/85 backdrop-blur-md text-[#183B56] opacity-85 hover:opacity-100 hover:bg-white hover:scale-110 border border-[#183B56]/20"
             }`}
             title={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
           >
             <Bookmark
               size={15}
               className={`transition-colors ${
-                saved ? "fill-[#F07020] text-[#F07020]" : "text-[#111111]"
+                saved ? "fill-[#183B56] text-[#183B56]" : "text-[#5A7184]"
               }`}
             />
           </button>
         </div>
 
         {/* Details */}
-        <div className="pt-4 pb-2 flex flex-col font-sans">
-          <div className="flex items-center justify-between text-[12px] font-semibold tracking-[0.15em] text-[#86868B] uppercase mb-1">
-            <span className="truncate">{product.brand || "Weavly DIRECTORY"}</span>
+        <div className="pt-3 pb-1 flex flex-col font-sans">
+          <div className="flex items-center justify-between text-[11px] font-semibold tracking-[0.15em] text-[#5A7184] uppercase mb-0.5">
+            <span className="truncate">{product.brand || "Weavly ATELIER"}</span>
             {product.category && (
-              <span className="text-[#86868B]/70 text-[11px] uppercase tracking-wider shrink-0">{product.category}</span>
+              <span className="text-[#5A7184]/70 text-[10px] uppercase tracking-wider shrink-0">{product.category}</span>
             )}
           </div>
           <div className="flex items-baseline justify-between gap-3">
-            <h3 className="font-semibold text-[14px] text-[#1D1D1F] uppercase tracking-wider group-hover:text-[#F07020] transition-colors leading-tight truncate flex-1">
-              {product.name || product.title}
+            <h3 className="font-bold text-[13px] text-[#183B56] group-hover:text-[#102A43] transition-colors leading-tight truncate flex-1 flex items-center gap-1">
+              <span>{product.name || product.title}</span>
+              <span>→</span>
             </h3>
-            <span className="text-[14px] font-bold text-[#1D1D1F] tracking-wide shrink-0">
+            <span className="text-[13px] font-bold text-[#183B56] tracking-wide shrink-0">
               ₹{Math.round(productPrice).toLocaleString("en-IN")}
             </span>
           </div>

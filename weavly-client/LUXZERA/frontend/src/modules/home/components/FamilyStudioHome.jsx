@@ -1,6 +1,8 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowUpRight, ShoppingBag, Bookmark } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ShoppingBag, Bookmark, Star, Instagram, Twitter, Facebook, Youtube, Sparkles } from "lucide-react";
 import { getProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
@@ -14,27 +16,30 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const { toggleWardrobe, isSaved } = useWardrobe();
   const { addToCart } = useCart();
 
-  // Added animation state map
   const [addedProductIds, setAddedProductIds] = useState({});
-
-  // Category & Gender filter state
-  const userGenderRaw = (user?.gender || "").toLowerCase();
-  const userGenderNorm = ["male", "men", "man", "boy"].includes(userGenderRaw)
-    ? "MEN"
-    : ["female", "women", "woman", "girl"].includes(userGenderRaw)
-    ? "WOMAN"
-    : null;
-  const initialGender = userGenderNorm || "MEN";
-  const [activeTab, setActiveTab] = useState("ALL");
-  const [genderFilter, setGenderFilter] = useState(initialGender);
   const [productsList, setProductsList] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [activeHeroCategory, setActiveHeroCategory] = useState("Crafted Comfort");
+  const [activeHeroImage, setActiveHeroImage] = useState(0);
+
+  const heroThumbnails = [
+    "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&q=80",
+    "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&q=80",
+    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600&q=80",
+  ];
+
+  const heroCategoryLinks = [
+    { label: "Crafted Comfort", query: "Comfort" },
+    { label: "Everyday Luxury", query: "Luxury" },
+    { label: "Sustainability in Style", query: "Sustainable" },
+    { label: "Oxford", query: "Oxford" },
+    { label: "Flannel", query: "Flannel" },
+  ];
 
   useEffect(() => {
     let isMounted = true;
     setLoadingProducts(true);
-    const genderParam = genderFilter === "MEN" ? "men" : genderFilter === "WOMAN" ? "women" : undefined;
-    getProducts({ limit: 60, gender: genderParam }).then((items) => {
+    getProducts({ limit: 60 }).then((items) => {
       if (isMounted) {
         setProductsList(Array.isArray(items) ? items : []);
         setLoadingProducts(false);
@@ -43,35 +48,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     return () => {
       isMounted = false;
     };
-  }, [genderFilter]);
-
-  // Products Data mapping with Gender & Category Filtering
-  const categoryProducts = productsList.filter((p) => {
-    // 1. Gender filtering
-    const pGender = (p.gender || p.audience || "").toLowerCase();
-    if (genderFilter === "MEN") {
-      if (pGender && !["men", "male", "boys", "boy", "unisex"].includes(pGender)) {
-        return false;
-      }
-    } else if (genderFilter === "WOMAN") {
-      if (pGender && !["women", "female", "girls", "girl", "unisex"].includes(pGender)) {
-        return false;
-      }
-    }
-
-    // 2. Category filtering
-    if (activeTab === "ALL") return true;
-    if (activeTab === "SHORTS") return p.category?.toUpperCase() === "PANTS" || p.category?.toUpperCase() === "SHORTS" || p.category?.toUpperCase() === "BOTTOMS";
-    if (activeTab === "JACKETS") return p.category?.toUpperCase() === "JACKETS" || p.category?.toUpperCase() === "OUTERWEAR";
-    if (activeTab === "SHOES") return p.category?.toUpperCase() === "SHOES" || p.category?.toUpperCase() === "FOOTWEAR";
-    if (activeTab === "T-SHIRT") return p.category?.toUpperCase() === "SHIRTS" || p.category?.toUpperCase() === "TOPS";
-    return true;
-  });
-
-  const handleToggleLike = (e, product) => {
-    e.stopPropagation();
-    toggleWardrobe(product);
-  };
+  }, []);
 
   const handleAddToCart = (e, product) => {
     e.stopPropagation();
@@ -79,7 +56,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: product.imageUrl || product.image,
       color: product.color || "Default",
       size: "M",
       qty: 1,
@@ -90,330 +67,209 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     }, 1500);
   };
 
+  const handleToggleLike = (e, product) => {
+    e.stopPropagation();
+    toggleWardrobe(product);
+  };
+
+  // Best Sellers (first 4 products)
+  const bestSellers = productsList.slice(0, 4);
+
+  // New Collection (next 4 products)
+  const newCollection = productsList.slice(4, 8);
+
   return (
-    <div className="min-h-screen bg-[#FFFFFF] text-[#1D1D1F] font-sans selection:bg-[#1D1D1F] selection:text-white pb-32">
-      {/* ── MAIN WORKSPACE ── */}
-      <main className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 pt-8 space-y-16 lg:space-y-24">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
 
+      {/* ── TOP EDITORIAL SUB-BAR ── */}
+      <div className="w-full border-b border-[#183B56]/20 py-2.5 px-6 sm:px-12 flex items-center justify-between text-xs tracking-wider uppercase font-semibold text-[#183B56]">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#183B56] animate-pulse" />
+          <span>Atelier Spring/Summer Edition 2026</span>
+        </div>
+        <div className="hidden sm:flex items-center gap-6 text-[11px] font-medium text-[#5A7184]">
+          <span>Sustainable Organic Fibres</span>
+          <span>•</span>
+          <span>Complimentary Global Delivery</span>
+          <span>•</span>
+          <span>Bespoke Tailoring Guarantee</span>
+        </div>
+      </div>
+
+      <main className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 py-8 space-y-16 lg:space-y-24">
 
         {/* ════════════════════════════════════════════════════════════
-            1. HERO BENTO GRID (Clean, Professional, No Frame Noise)
+            1. HERO SECTION: ARCHITECTURAL 3-COLUMN EDITORIAL SHOWCASE
         ════════════════════════════════════════════════════════════ */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pt-2">
           
-          {/* LEFT COLUMN: Large Hero Banner + 2 Bottom Cards (lg:col-span-8) */}
-          <div className="lg:col-span-8 flex flex-col gap-6">
-            
-            {/* Top Large Hero Banner (Blue-Teal Backdrop + 50% OFF Badge + Models) */}
-            <div 
-              onClick={() => router.push("/market")}
-              className="bg-[#6B8594] rounded-[32px] overflow-hidden min-h-[380px] sm:min-h-[440px] relative group cursor-pointer p-8 sm:p-12 flex flex-col justify-between text-white shadow-xs"
-            >
-              <img 
-                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1400&q=80" 
-                alt="Summer Arrival of Outfit" 
-                className="absolute inset-0 w-full h-full object-cover object-top mix-blend-overlay opacity-90"
-              />
-
-              {/* Top 50% OFF Badge */}
-              <div className="relative z-10 flex items-start justify-between">
-                <div className="max-w-md space-y-3">
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.05] text-white drop-shadow-sm">
-                    Summer <br /> Arrival of <br />
-                    <span className="font-normal">Outfit</span>
-                  </h1>
-                  <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-normal pt-1 max-w-xs">
-                    Discover quality fashion that reflects your style and makes everyday living more enjoyable.
-                  </p>
-                </div>
-
-                <div className="text-right shrink-0">
-                  <span className="text-4xl sm:text-5xl font-light tracking-tighter">50%</span>
-                  <span className="text-xs font-semibold uppercase tracking-wider block">OFF</span>
-                </div>
+          {/* LEFT: Category Index with Angled Lines & Socials (lg:col-span-3) */}
+          <div className="lg:col-span-3 flex flex-col justify-between space-y-8 border-l-2 border-[#183B56] pl-6 py-2">
+            <div className="space-y-4">
+              <div className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
+                Categories
               </div>
+              <nav className="space-y-2">
+                {heroCategoryLinks.map((item) => (
+                  <button
+                    key={item.label}
+                    onClick={() => {
+                      setActiveHeroCategory(item.label);
+                      router.push(`/market?q=${encodeURIComponent(item.query)}`);
+                    }}
+                    className={`w-full text-left py-2 px-3 border border-[#183B56]/30 hover:border-[#183B56] flex items-center justify-between text-sm font-semibold tracking-tight transition-all cursor-pointer bg-transparent ${
+                      activeHeroCategory === item.label
+                        ? "bg-[#183B56] text-white border-[#183B56] shadow-xs"
+                        : "text-[#183B56] hover:bg-[#183B56]/5"
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    <span className="text-base font-normal">→</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
 
-              {/* Bottom Explore Product Pill Button */}
-              <div className="relative z-10 pt-6">
+            {/* Social Follow Badges */}
+            <div className="space-y-3 pt-6 border-t border-[#183B56]/20">
+              <div className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#5A7184]">
+                Follow Us
+              </div>
+              <div className="flex items-center gap-2">
+                <a href="#" className="w-8 h-8 rounded-full bg-[#183B56] text-white flex items-center justify-center hover:opacity-85 transition-opacity">
+                  <Facebook size={14} />
+                </a>
+                <a href="#" className="w-8 h-8 rounded-full bg-[#183B56] text-white flex items-center justify-center hover:opacity-85 transition-opacity">
+                  <Twitter size={14} />
+                </a>
+                <a href="#" className="w-8 h-8 rounded-full bg-[#183B56] text-white flex items-center justify-center hover:opacity-85 transition-opacity">
+                  <Instagram size={14} />
+                </a>
+                <a href="#" className="w-8 h-8 rounded-full bg-[#183B56] text-white flex items-center justify-center hover:opacity-85 transition-opacity">
+                  <Youtube size={14} />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* CENTER: Framed Hero Model & Arched Thumbnails (lg:col-span-5) */}
+          <div className="lg:col-span-5 flex flex-col items-center gap-6">
+            <div className="w-full aspect-[4/5] rounded-[36px] overflow-hidden bg-[#E2ECF1] border border-[#183B56]/25 relative shadow-md">
+              <img
+                src={heroThumbnails[activeHeroImage]}
+                alt="Craftsmanship that lasts"
+                className="w-full h-full object-cover object-top transition-all duration-700 hover:scale-105"
+              />
+            </div>
+
+            {/* 3 Arched Mini Preview Thumbnails */}
+            <div className="flex items-center justify-center gap-4">
+              {heroThumbnails.map((img, idx) => (
                 <button
-                  onClick={() => router.push("/market")}
-                  className="h-11 px-6 bg-[#1D1D1F] hover:bg-[#F07020] text-white text-xs font-semibold tracking-wider rounded-full inline-flex items-center gap-2 transition-all cursor-pointer border-none shadow-md"
-                >
-                  <span>EXPLORE PRODUCT</span>
-                  <ArrowRight size={14} />
-                </button>
-              </div>
-
-            </div>
-
-            {/* Bottom 2 Wide Cards Row (Sunglasses & Popular Shoes) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              
-              {/* Card 1: Trendy Sunglasses (Sage Green) */}
-              <div 
-                onClick={() => router.push("/market?cat=ACCESSORIES")}
-                className="bg-[#D8DFD5] rounded-[28px] overflow-hidden h-[180px] p-6 relative group cursor-pointer flex items-center justify-between shadow-xs border border-[#CBD3C8] hover:bg-[#CFD7CC] transition-colors"
-              >
-                <div className="space-y-1 z-10">
-                  <h3 className="text-2xl font-light tracking-tight text-[#1D1D1F] leading-tight">
-                    Trendy <br /> <span className="font-normal">Sunglass</span>
-                  </h3>
-                </div>
-                <div className="w-36 h-36 relative z-10 shrink-0">
-                  <img 
-                    src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=600&q=80" 
-                    alt="Trendy Sunglass" 
-                    className="w-full h-full object-contain" 
-                  />
-                </div>
-                <div className="absolute bottom-5 right-5 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-[#1D1D1F] z-10">
-                  <ArrowUpRight size={16} />
-                </div>
-              </div>
-
-              {/* Card 2: Popular Shoes (Warm Beige) */}
-              <div 
-                onClick={() => router.push("/market?cat=SHOES")}
-                className="bg-[#E7DACD] rounded-[28px] overflow-hidden h-[180px] p-6 relative group cursor-pointer flex items-center justify-between shadow-xs border border-[#DCBCAE] hover:bg-[#DFCDBF] transition-colors"
-              >
-                <div className="space-y-1 z-10">
-                  <h3 className="text-2xl font-light tracking-tight text-[#1D1D1F] leading-tight">
-                    Popular <br /> <span className="font-normal">Shoes</span>
-                  </h3>
-                </div>
-                <div className="w-36 h-36 relative z-10 shrink-0">
-                  <img 
-                    src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=600&q=80" 
-                    alt="Popular Shoes" 
-                    className="w-full h-full object-contain" 
-                  />
-                </div>
-                <div className="absolute bottom-5 right-5 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-[#1D1D1F] z-10">
-                  <ArrowUpRight size={16} />
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* RIGHT COLUMN: Vertical Fashion Style Card (lg:col-span-4) */}
-          <div className="lg:col-span-4">
-            <div 
-              onClick={() => router.push("/market")}
-              className="bg-[#EBE9E4] rounded-[32px] overflow-hidden h-full min-h-[500px] p-8 relative group cursor-pointer border border-[#E0DDD7] flex flex-col justify-between shadow-xs"
-            >
-              <div className="z-10">
-                <h3 className="text-3xl font-light tracking-tight text-[#1D1D1F] leading-tight">
-                  Fashion <br /> <span className="font-normal">Style</span>
-                </h3>
-              </div>
-
-              <img 
-                src="https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=800&q=80" 
-                alt="Fashion Style" 
-                className="absolute inset-0 w-full h-full object-cover object-top" 
-              />
-
-              <div className="absolute bottom-6 right-6 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-[#1D1D1F] z-10 shadow-sm">
-                <ArrowUpRight size={18} />
-              </div>
-            </div>
-          </div>
-
-        </section>
-
-        {/* ════════════════════════════════════════════════════════════
-            2. BROWSE CATEGORIES (Clean Category Cards)
-        ════════════════════════════════════════════════════════════ */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-[#E7E3DD] pb-4">
-            <h2 className="text-2xl sm:text-3xl font-normal tracking-tight text-[#1D1D1F] uppercase">
-              BROWSE CATEGORIES
-            </h2>
-
-            {/* Segmented Filter Toggle Pill: [ MEN | WOMAN ] */}
-            <div className="flex items-center gap-1 bg-[#EBE9E4] p-1 rounded-full border border-[#E0DDD7]">
-              <button
-                onClick={() => setGenderFilter("MEN")}
-                className={`px-4 py-1 rounded-full text-[11px] font-semibold tracking-wider transition-all cursor-pointer border-none ${
-                  genderFilter === "MEN" ? "bg-[#1D1D1F] text-white" : "text-[#71717A] hover:text-[#1D1D1F]"
-                }`}
-              >
-                MEN
-              </button>
-              <button
-                onClick={() => setGenderFilter("WOMAN")}
-                className={`px-4 py-1 rounded-full text-[11px] font-semibold tracking-wider transition-all cursor-pointer border-none ${
-                  genderFilter === "WOMAN" ? "bg-[#1D1D1F] text-white" : "text-[#71717A] hover:text-[#1D1D1F]"
-                }`}
-              >
-                WOMAN
-              </button>
-            </div>
-          </div>
-
-          {/* 4 Large Category Cards Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            {/* Category 1: SHOES */}
-            <div 
-              onClick={() => router.push("/market?cat=SHOES")}
-              className="bg-[#E5E4E0] rounded-[24px] overflow-hidden aspect-[4/3] relative group cursor-pointer border border-[#DDDCD7]"
-            >
-              <img 
-                src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=600&q=80" 
-                alt="Shoes" 
-                className="w-full h-full object-cover" 
-              />
-              <span className="absolute bottom-4 left-4 text-[10px] font-bold uppercase tracking-widest px-3 py-1 bg-white/90 text-[#1D1D1F] rounded-full shadow-2xs">
-                SHOES
-              </span>
-            </div>
-
-            {/* Category 2: BRASH / ACCESSORIES */}
-            <div 
-              onClick={() => router.push("/market?cat=ACCESSORIES")}
-              className="bg-[#E5E4E0] rounded-[24px] overflow-hidden aspect-[4/3] relative group cursor-pointer border border-[#DDDCD7]"
-            >
-              <img 
-                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80" 
-                alt="Accessories" 
-                className="w-full h-full object-cover" 
-              />
-              <span className="absolute bottom-4 left-4 text-[10px] font-bold uppercase tracking-widest px-3 py-1 bg-white/90 text-[#1D1D1F] rounded-full shadow-2xs">
-                ACCESSORIES
-              </span>
-            </div>
-
-            {/* Category 3: BAGE / HANDBAGS */}
-            <div 
-              onClick={() => router.push("/market?cat=BAGS")}
-              className="bg-[#E5E4E0] rounded-[24px] overflow-hidden aspect-[4/3] relative group cursor-pointer border border-[#DDDCD7]"
-            >
-              <img 
-                src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=600&q=80" 
-                alt="Bags" 
-                className="w-full h-full object-cover" 
-              />
-              <span className="absolute bottom-4 left-4 text-[10px] font-bold uppercase tracking-widest px-3 py-1 bg-white/90 text-[#1D1D1F] rounded-full shadow-2xs">
-                BAGS
-              </span>
-            </div>
-
-            {/* Category 4: T-SHIRT / WOMEN */}
-            <div 
-              onClick={() => router.push("/women")}
-              className="bg-[#E5E4E0] rounded-[24px] overflow-hidden aspect-[4/3] relative group cursor-pointer border border-[#DDDCD7]"
-            >
-              <img 
-                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80" 
-                alt="T-Shirt" 
-                className="w-full h-full object-cover object-top" 
-              />
-              <span className="absolute bottom-4 left-4 text-[10px] font-bold uppercase tracking-widest px-3 py-1 bg-white/90 text-[#1D1D1F] rounded-full shadow-2xs">
-                T-SHIRT
-              </span>
-            </div>
-          </div>
-        </section>
-
-        {/* ── ZERA PERSONALIZED RECOMMENDATIONS (Zyra V1 Engine) ── */}
-        <ZeraRecommendationsSection />
-
-        {/* ════════════════════════════════════════════════════════════
-            3. NEW COLLECTION (Product Cards + ADD TO BAG Option)
-        ════════════════════════════════════════════════════════════ */}
-        <section className="space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <h2 className="text-2xl sm:text-3xl font-normal tracking-tight text-[#1D1D1F]">
-              New Collection
-            </h2>
-
-            {/* Category Filter Pills */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-              {["ALL", "SHORTS", "JACKETS", "SHOES", "T-SHIRT"].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`h-8 px-5 rounded-full text-xs font-semibold tracking-wider transition-all cursor-pointer border-none ${
-                    activeTab === tab
-                      ? "bg-[#1D1D1F] text-white"
-                      : "bg-[#EBE9E4] text-[#515154] hover:bg-[#E0DDD7] hover:text-[#1D1D1F]"
+                  key={idx}
+                  onClick={() => setActiveHeroImage(idx)}
+                  className={`w-20 h-24 rounded-t-full overflow-hidden border-2 transition-all p-0 bg-white cursor-pointer ${
+                    activeHeroImage === idx
+                      ? "border-[#183B56] scale-105 shadow-md"
+                      : "border-[#183B56]/30 hover:border-[#183B56]/70 opacity-80"
                   }`}
                 >
-                  {tab}
+                  <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Product Cards Grid with ADD TO BAG Option */}
+          {/* RIGHT: Brand Manifesto Headline & CTA (lg:col-span-4) */}
+          <div className="lg:col-span-4 flex flex-col justify-between py-4 pl-0 lg:pl-6 space-y-8">
+            <div className="space-y-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold tracking-tight text-[#183B56] leading-[1.08]">
+                Craftsmanship <br />
+                That Lasts
+              </h1>
+              <p className="text-sm sm:text-base text-[#5A7184] leading-relaxed max-w-md font-normal">
+                Elevate your everyday with timeless, quality-crafted essentials. From sustainable organic materials to enduring designs, each piece is made to last.
+              </p>
+            </div>
+
+            <div className="pt-4">
+              <button
+                onClick={() => router.push("/market")}
+                className="px-8 py-4 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.2em] rounded-sm transition-all cursor-pointer border-none shadow-md hover:translate-x-1 inline-flex items-center gap-3"
+              >
+                <span>Explore Now</span>
+                <ArrowRight size={14} />
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+        {/* ════════════════════════════════════════════════════════════
+            2. BEST SELLERS: 4-COLUMN ARCHITECTURAL WIREFRAME GRID
+        ════════════════════════════════════════════════════════════ */}
+        <section className="border-t-2 border-b-2 border-[#183B56]">
+          
+          {/* Header Bar */}
+          <div className="flex items-center justify-between py-4 px-2 border-b border-[#183B56]/30">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
+              Best Sellers
+            </h2>
+            <button
+              onClick={() => router.push("/market?sort=popularity")}
+              className="text-xs sm:text-sm font-bold text-[#183B56] hover:underline flex items-center gap-1 bg-transparent border-none cursor-pointer p-0"
+            >
+              <span>All Products</span>
+              <span>→</span>
+            </button>
+          </div>
+
+          {/* 4 Architectural Columns */}
           {loadingProducts ? (
-            <ProductGridSkeleton count={8} />
+            <ProductGridSkeleton count={4} />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-              {categoryProducts.map((product) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]/30">
+              {bestSellers.map((product) => {
                 const saved = isSaved?.(product.id);
-                const isAdded = addedProductIds[product.id];
                 return (
-                  <div 
+                  <div
                     key={product.id}
                     onClick={() => router.push(`/product/${product.id}`)}
-                    className="group cursor-pointer flex flex-col gap-3"
+                    className="p-6 group cursor-pointer flex flex-col justify-between gap-6 hover:bg-[#183B56]/[0.02] transition-colors"
                   >
-                    {/* Clean Full-Bleed Product Card Container */}
-                    <div className="aspect-[3/4] bg-[#FAF8F5] rounded-[24px] overflow-hidden border border-[#E7E3DD] relative shadow-xs">
-                      <img 
-                        src={product.imageUrl || product.image || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80"} 
-                        alt={product.name} 
-                        referrerPolicy="no-referrer"
+                    {/* Cool-Tinted Garment Backdrop */}
+                    <div className="aspect-[3/4] bg-[#E5EEF3] rounded-2xl overflow-hidden p-6 relative flex items-center justify-center border border-[#183B56]/15">
+                      <img
+                        src={product.imageUrl || product.image || "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80"}
+                        alt={product.name}
+                        className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
                         onError={(e) => {
                           e.currentTarget.onerror = null;
-                          e.currentTarget.src = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80";
+                          e.currentTarget.src = "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80";
                         }}
-                        className="w-full h-full object-cover object-top" 
                       />
 
-                      {/* Top Right Bookmark Badge */}
+                      {/* Wardrobe Bookmark Icon */}
                       <button
                         onClick={(e) => handleToggleLike(e, product)}
-                        className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-[#E7E3DD] flex items-center justify-center cursor-pointer shadow-xs p-0 z-10 hover:bg-white transition-transform hover:scale-105"
-                        aria-label="Save to Wardrobe"
-                        title={saved ? "Saved in Wardrobe" : "Save to Wardrobe"}
+                        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 border border-[#183B56]/20 flex items-center justify-center p-0 cursor-pointer shadow-xs hover:scale-110 transition-transform"
                       >
-                        <Bookmark 
-                          size={15}
-                          className={`transition-colors ${
-                            saved ? "fill-[#F07020] text-[#F07020]" : "text-[#71717A]"
-                          }`} 
+                        <Bookmark
+                          size={14}
+                          className={saved ? "fill-[#183B56] text-[#183B56]" : "text-[#5A7184]"}
                         />
                       </button>
-
-                      {/* Bottom ADD TO BAG Quick Action Button (Reveals on Hover) */}
-                      <div className="absolute bottom-3 left-3 right-3 z-10 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                        <button
-                          onClick={(e) => handleAddToCart(e, product)}
-                          className={`w-full h-9 rounded-full text-[11px] font-semibold tracking-wider flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer border-none shadow-md ${
-                            isAdded
-                              ? "bg-[#2E7D32] text-white"
-                              : "bg-[#1D1D1F]/95 hover:bg-[#F07020] text-white backdrop-blur-md"
-                          }`}
-                        >
-                          <ShoppingBag size={13} />
-                          <span>{isAdded ? "ADDED TO BAG ✓" : "ADD TO BAG"}</span>
-                        </button>
-                      </div>
                     </div>
 
-                    {/* Below Image Text: Title + Price */}
-                    <div className="flex justify-between items-baseline pt-1 px-1">
-                      <h3 className="text-sm font-semibold text-[#1D1D1F] group-hover:text-[#F07020] transition-colors truncate max-w-[200px]">
-                        {product.name}
-                      </h3>
-                      <span className="text-sm font-semibold text-[#1D1D1F]">
-                        ₹{Math.round(product.price || product.salePrice || 999).toLocaleString('en-IN')}
-                      </span>
+                    {/* Product Meta */}
+                    <div className="text-center space-y-1">
+                      <div className="text-sm font-bold text-[#183B56] group-hover:text-[#102A43] flex items-center justify-center gap-1 truncate">
+                        <span>{product.name}</span>
+                        <span>→</span>
+                      </div>
+                      <div className="text-sm font-bold text-[#183B56]">
+                        ₹{Math.round(product.price || 1999).toLocaleString("en-IN")}
+                      </div>
                     </div>
                   </div>
                 );
@@ -423,45 +279,201 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            4. END OF SEASON SALE BANNER (Pitch Black Row)
+            3. OUR BRAND / ATELIER COLLAGE BENTO GRID
         ════════════════════════════════════════════════════════════ */}
-        <section className="bg-[#111111] text-white rounded-[32px] overflow-hidden p-8 sm:p-12 lg:p-14 relative group cursor-pointer border border-[#222222] shadow-lg">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <section className="border-t-2 border-b-2 border-[#183B56] py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            {/* Left Column Text */}
-            <div className="lg:col-span-8 space-y-4 z-10">
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#A1A1AA] block">
-                LAST CHANCE
-              </span>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight leading-tight text-white">
-                END OF SEASON SALE <br />
-                <span className="font-semibold">UP TO 50% OFF</span>
-              </h2>
-
-              <div className="pt-4">
-                <button
-                  onClick={() => router.push("/market?sale=true")}
-                  className="h-11 px-7 bg-white hover:bg-[#F07020] hover:text-white text-[#1D1D1F] text-xs font-bold uppercase tracking-wider rounded-full transition-all cursor-pointer border-none shadow-md"
-                >
-                  CHECK IT NOW
+            {/* Left: Brand Story & Atelier Labels (lg:col-span-5) */}
+            <div className="lg:col-span-5 space-y-8">
+              <div className="space-y-4">
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#183B56]">
+                  Our Brand
+                </h2>
+                <p className="text-sm text-[#5A7184] leading-relaxed font-normal">
+                  Elevated essentials for every moment. Crafted with care, designed to endure. Embrace simplicity, redefine style. Less clutter, more meaning. Craftsmanship at its finest, indulgent fabrics, timeless appeal. For those who appreciate the art of dressing. Where elegance meets excellence.
+                </p>
+                <button onClick={() => router.push("/about")} className="text-xs font-bold text-[#183B56] hover:underline bg-transparent border-none cursor-pointer p-0">
+                  Read More...
                 </button>
+              </div>
+
+              {/* Brand Labels Table & Stamp Badge */}
+              <div className="flex items-center justify-between gap-6 pt-4 border-t border-[#183B56]/20">
+                <div className="space-y-2 text-xs font-semibold text-[#183B56]">
+                  <div className="py-1 border-b border-[#183B56]/15">GreenStitch</div>
+                  <div className="py-1 border-b border-[#183B56]/15">Urban Code</div>
+                  <div className="py-1 border-b border-[#183B56]/15">Threadline</div>
+                  <div className="py-1">Sovereign</div>
+                </div>
+
+                {/* Circular Atelier Stamp Badge */}
+                <div className="w-24 h-24 rounded-full border-2 border-dashed border-[#183B56] flex flex-col items-center justify-center text-center p-2 rotate-12 hover:rotate-0 transition-transform">
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#183B56]">Atelier</span>
+                  <span className="text-xs font-extrabold text-[#183B56]">100%</span>
+                  <span className="text-[8px] uppercase tracking-widest text-[#5A7184]">Cotton</span>
+                </div>
               </div>
             </div>
 
-            {/* Right Column Image */}
-            <div className="lg:col-span-4 aspect-[4/3] rounded-[24px] overflow-hidden relative z-10 border border-[#333333]">
-              <img 
-                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80" 
-                alt="End of Season Sale" 
-                className="w-full h-full object-cover object-top" 
-              />
+            {/* Right: Multi-Texture Fashion Lookbook Collage (lg:col-span-7) */}
+            <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="aspect-[3/4] rounded-2xl overflow-hidden border border-[#183B56]/20 shadow-sm">
+                <img
+                  src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80"
+                  alt="Lookbook 1"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="aspect-[3/4] rounded-2xl overflow-hidden border border-[#183B56]/20 shadow-sm">
+                <img
+                  src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80"
+                  alt="Lookbook 2"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="aspect-[3/4] rounded-2xl overflow-hidden border border-[#183B56]/20 shadow-sm">
+                <img
+                  src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80"
+                  alt="Lookbook 3"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
             </div>
 
           </div>
         </section>
 
-      </main>
+        {/* ── ZERA PERSONALIZED RECOMMENDATIONS SECTION ── */}
+        <ZeraRecommendationsSection />
 
+        {/* ════════════════════════════════════════════════════════════
+            4. NEW COLLECTION: 4-COLUMN PRODUCT ARCHITECTURE
+        ════════════════════════════════════════════════════════════ */}
+        <section className="border-t-2 border-b-2 border-[#183B56]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 px-2 border-b border-[#183B56]/30">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
+                New Collection
+              </h2>
+              <p className="text-xs text-[#5A7184] pt-0.5">
+                A fresh take on the essentials. Modern silhouettes with timeless appeal.
+              </p>
+            </div>
+            <button
+              onClick={() => router.push("/market?sort=new")}
+              className="text-xs sm:text-sm font-bold text-[#183B56] hover:underline flex items-center gap-1 bg-transparent border-none cursor-pointer p-0"
+            >
+              <span>All Products</span>
+              <span>→</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]/30">
+            {newCollection.map((product) => {
+              const isAdded = addedProductIds[product.id];
+              return (
+                <div
+                  key={product.id}
+                  onClick={() => router.push(`/product/${product.id}`)}
+                  className="p-6 group cursor-pointer flex flex-col justify-between gap-4 hover:bg-[#183B56]/[0.02] transition-colors"
+                >
+                  <div className="aspect-[3/4] bg-white rounded-2xl overflow-hidden p-4 relative flex items-center justify-center border border-[#183B56]/15">
+                    <img
+                      src={product.imageUrl || product.image || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80"}
+                      alt={product.name}
+                      className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
+                    />
+
+                    {/* Quick Add Button */}
+                    <button
+                      onClick={(e) => handleAddToCart(e, product)}
+                      className={`absolute bottom-3 left-3 right-3 py-2.5 rounded-sm text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border-none cursor-pointer ${
+                        isAdded
+                          ? "bg-[#2E7D32] text-white"
+                          : "bg-[#183B56] text-white opacity-0 group-hover:opacity-100 shadow-md"
+                      }`}
+                    >
+                      <ShoppingBag size={12} />
+                      <span>{isAdded ? "Added ✓" : "Add to Bag"}</span>
+                    </button>
+                  </div>
+
+                  <div className="flex justify-between items-baseline pt-1">
+                    <h3 className="text-sm font-bold text-[#183B56] truncate max-w-[180px]">
+                      {product.name}
+                    </h3>
+                    <span className="text-sm font-bold text-[#183B56]">
+                      ₹{Math.round(product.price || 1999).toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════════════════
+            5. CUSTOMER REVIEWS & TESTIMONIALS (4-COLUMN EDITORIAL)
+        ════════════════════════════════════════════════════════════ */}
+        <section className="border-t-2 border-b-2 border-[#183B56] py-12">
+          <div className="text-center max-w-xl mx-auto space-y-2 mb-10">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
+              Customer Reviews
+            </h2>
+            <p className="text-xs text-[#5A7184]">
+              What Our Customers Are Saying: Comfort and Quality You Can Trust.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                name: "Geneva Williamson",
+                rating: 5,
+                img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80",
+                quote: "Incredible quality and drape. Feels bespoke and lasts through every wash.",
+              },
+              {
+                name: "Leslie Alexander",
+                rating: 5,
+                img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
+                quote: "The texture and tailoring are unmatched. A permanent staple in my wardrobe.",
+              },
+              {
+                name: "Robert Fox",
+                rating: 5,
+                img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80",
+                quote: "Soft organic fabrics, pristine cuts. Exactly what modern luxury should be.",
+              },
+              {
+                name: "Darlene Robertson",
+                rating: 5,
+                img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80",
+                quote: "Stunning craftsmanship and seamless fit recommendations from Zyra.",
+              },
+            ].map((review, i) => (
+              <div key={i} className="p-6 bg-white rounded-2xl border border-[#183B56]/20 space-y-4 shadow-xs">
+                <div className="w-16 h-16 rounded-full overflow-hidden border border-[#183B56]/30 mx-auto">
+                  <img src={review.img} alt={review.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex justify-center gap-1 text-[#183B56]">
+                  {[...Array(review.rating)].map((_, s) => (
+                    <Star key={s} size={12} className="fill-[#183B56]" />
+                  ))}
+                </div>
+                <p className="text-xs text-[#5A7184] text-center italic leading-relaxed">
+                  "{review.quote}"
+                </p>
+                <div className="text-center text-xs font-bold text-[#183B56]">
+                  {review.name}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+      </main>
     </div>
   );
 }

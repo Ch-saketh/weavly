@@ -288,7 +288,7 @@ function ShopPageContent({ initialDepartment = "All" }) {
   const heroConfig = DEPT_HERO_CONFIG[initialDepartment] || DEPT_HERO_CONFIG.All;
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] text-[#111111] font-sans pb-24">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans pb-24">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-12 md:space-y-16">
         
         {/* ── BENTO HERO BANNER (Matches Homepage Style) ── */}
@@ -389,12 +389,12 @@ function ShopPageContent({ initialDepartment = "All" }) {
             /* Stacked Category Sections for Catalog Browsing */
             categorySections.map((group) => (
               <section key={group.id} className="space-y-6">
-                <div className="flex items-center justify-between border-b border-[#ECECEC] pb-3">
+                <div className="flex items-center justify-between border-b border-[#183B56]/20 pb-3">
                   <div>
-                    <h2 className="text-2xl sm:text-3xl font-black text-[#111111] uppercase tracking-tight">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-[#183B56] uppercase tracking-tight">
                       {group.title}
                     </h2>
-                    <p className="text-xs font-semibold text-[#9B9B9B] mt-0.5">{group.subtitle}</p>
+                    <p className="text-xs font-medium text-[#5A7184] mt-0.5">{group.subtitle}</p>
                   </div>
                 </div>
 
