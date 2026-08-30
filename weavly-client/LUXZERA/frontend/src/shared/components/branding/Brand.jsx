@@ -24,7 +24,7 @@ export default function Brand({
       ? "text-[32px] sm:text-[36px]"
       : "text-[19px] sm:text-[21px]"; // md default
 
-  const textColorClass = allWhite || light ? "text-[#FFFFFF]" : "text-[#111111]";
+  const textColorClass = allWhite || light ? "text-[#FFFFFF]" : "text-[#183B56]";
 
   return (
     <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>

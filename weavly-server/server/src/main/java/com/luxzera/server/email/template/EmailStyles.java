@@ -72,7 +72,7 @@ public final class EmailStyles {
             font-family:'Mochiy Pop One', cursive, sans-serif;
             font-size:32px;
             font-weight:700;
-            color:#111111;
+            color:#183B56;
             letter-spacing:-0.5px;
             display:inline-block;
             margin:0 auto 18px;
@@ -86,7 +86,7 @@ public final class EmailStyles {
             font-size:9px;
             font-weight:700;
             letter-spacing:0.15em;
-            background:#111111;
+            background:#183B56;
             color:#FFFFFF;
             padding:3px 6px;
             border-radius:4px;

@@ -25,8 +25,8 @@ export default function BetaBadge({ onClick, allWhite = false, className = "" })
       }}
       className={`inline-flex items-center justify-center text-[8px] font-bold uppercase tracking-[0.15em] leading-none px-1.5 py-0.5 rounded-[4px] font-mono cursor-pointer select-none transition-all shadow-xs ${
         allWhite
-          ? "bg-white text-black hover:bg-neutral-100"
-          : "bg-[#111111] text-white hover:bg-black"
+          ? "bg-white text-[#183B56] hover:bg-[#F5EFEB]"
+          : "bg-[#183B56] text-white hover:bg-[#102A43]"
       } ${className}`}
       title="Click for Beta Info"
     >
