@@ -30,12 +30,12 @@ git remote add core https://github.com/Ch-saketh/Zyra.git 2>/dev/null || git rem
 git remote add origin https://github.com/Ch-saketh/weavly.git 2>/dev/null || git remote set-url origin https://github.com/Ch-saketh/weavly.git
 
 # 2. Stage and commit in root monorepo if there are changes
-if [[ -n $(git status -s) ]]; then
-  echo "📦 [1/4] Staging and committing changes in root monorepo..."
-  git add .
+git add .
+if ! git diff-index --quiet --cached HEAD 2>/dev/null; then
+  echo "📦 [1/4] Committing changes in root monorepo..."
   git commit -m "$COMMIT_MSG"
 else
-  echo "📦 [1/4] No uncommitted working tree changes."
+  echo "📦 [1/4] No staged changes to commit."
 fi
 
 # 3. Push Root Monorepo to Origin
