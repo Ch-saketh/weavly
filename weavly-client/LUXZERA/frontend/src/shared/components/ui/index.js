@@ -9,3 +9,6 @@ export * from './ErrorBoundary.jsx';
 
 export { default as ZeraIcon } from './ZeraIcon.jsx';
 export * from './ZeraIcon.jsx';
+
+export { default as WarpText } from './WarpText.jsx';
+export * from './WarpText.jsx';

@@ -6,6 +6,7 @@ import * as THREE from "three";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import branding from "@/config/branding";
 import { Globe, ArrowUp, ShieldCheck } from "lucide-react";
+import WarpText from "@/shared/components/ui/WarpText";
 
 /**
  * 3D Isometric Architectural Voxel Typography (WEAVLY / DECIMAL)
@@ -592,6 +593,33 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
 
           </div>
 
+        </div>
+      </div>
+
+      {/* ═══ INTERACTIVE WARP TEXT BRAND EXPERIENCE ═══ */}
+      <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-16 mb-8 sm:mb-12">
+        <div className="relative w-full rounded-2xl overflow-hidden bg-[#0A0A0E]/80 border border-white/[0.08] backdrop-blur-xl p-4 sm:p-6 shadow-2xl">
+          <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-[#71717A] px-2 pb-2">
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#F07020] animate-pulse" />
+              Bespoke Fluid Glass Canvas
+            </span>
+            <span className="text-[10px] text-[#8E8E93]">Hover to Distort</span>
+          </div>
+          <WarpText
+            text="Bend the moment"
+            color="#f8f5ff"
+            warpStrength={0.08}
+            warpScale={1.7}
+            speed={0.55}
+            pointerInfluence={0.42}
+            pointerStrength={0.38}
+            refraction={0.018}
+            ripple={true}
+            fontSize="clamp(2.2rem, 6vw, 4.5rem)"
+            fontWeight={800}
+            style={{ height: "180px" }}
+          />
         </div>
       </div>
 
