@@ -8,9 +8,12 @@ export const metadata = {
   title: "Weavly",
   description: "Curated designer clothing for men, women, unisex, and kids.",
   icons: {
-    icon: "/logo.png?v=3",
-    shortcut: "/logo.png?v=3",
-    apple: "/logo.png?v=3",
+    icon: [
+      { url: "/weavly-favicon.svg?v=4", type: "image/svg+xml" },
+      { url: "/favicon.png?v=4", sizes: "64x64", type: "image/png" },
+    ],
+    shortcut: "/weavly-favicon.svg?v=4",
+    apple: "/favicon.png?v=4",
   },
 };
 
