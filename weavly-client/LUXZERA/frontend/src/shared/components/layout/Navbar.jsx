@@ -48,6 +48,7 @@ export default function Navbar({
   const [recentSearches, setRecentSearches] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const desktopSearchInputRef = useRef(null);
   const mobileSearchInputRef = useRef(null);
@@ -88,11 +89,12 @@ export default function Navbar({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Click outside to dismiss suggestions
+  // Click outside to dismiss suggestions and close desktop search
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
         setShowSuggestions(false);
+        setDesktopSearchOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -360,133 +362,163 @@ export default function Navbar({
           </nav>
 
           {/* ── RIGHT: Minimal Search & Neatly Aligned Action Icons ── */}
-          <div className="flex items-center gap-5 shrink-0">
+          {/* ── RIGHT: Outlined Search Icon & Neatly Aligned Action Icons ── */}
+          <div className="flex items-center gap-3.5 shrink-0">
             
-            {/* Minimalist Search Field with Live Autocomplete Popover */}
-            <div ref={searchContainerRef} className="relative">
-              <form
-                onSubmit={handleSearchSubmit}
-                className="flex items-center h-8 rounded-full border border-[#ECECEC]/80 bg-[#FAFAF9] focus-within:bg-[#FFFFFF] focus-within:border-[#1D1D1F] w-[180px] lg:w-[220px] px-3.5 gap-2 transition-all duration-200"
+            {/* Search: Prominent Outlined Icon Button (Click to Open Search Bar) */}
+            {!desktopSearchOpen ? (
+              <button
+                onClick={() => {
+                  setDesktopSearchOpen(true);
+                  setTimeout(() => desktopSearchInputRef.current?.focus(), 80);
+                }}
+                className="w-9 h-9 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] flex items-center justify-center cursor-pointer transition-all shadow-xs"
+                aria-label="Open search"
+                title="Search products & collections"
               >
-                <input
-                  ref={desktopSearchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(event) => {
-                    setSearchQuery(event.target.value);
-                    if (event.target.value.trim().length >= 2) {
-                      setShowSuggestions(true);
-                    }
-                  }}
-                  onFocus={() => {
-                    setShowSuggestions(true);
-                  }}
-                  placeholder="Search products, brands..."
-                  className="min-w-0 flex-1 bg-transparent outline-none text-[12px] font-normal text-[#1D1D1F] placeholder:text-[#A1A1AA] placeholder:font-normal"
-                />
-                {isSearching ? (
-                  <div className="w-3 h-3 border border-[#F07020] border-t-transparent rounded-full animate-spin shrink-0" />
-                ) : (
-                  <Search size={13} strokeWidth={1.5} className="shrink-0 text-[#A1A1AA] cursor-pointer hover:text-[#1D1D1F] transition-colors" onClick={handleSearchSubmit} />
-                )}
-              </form>
+                <Search size={18} strokeWidth={2} />
+              </button>
+            ) : (
+              /* Expandable Architectural Search Bar */
+              <div ref={searchContainerRef} className="relative flex items-center gap-2 animate-in fade-in zoom-in-95 duration-200">
+                <form
+                  onSubmit={handleSearchSubmit}
+                  className="flex items-center h-9 border border-[#183B56] bg-[#F5EFEB] w-[260px] lg:w-[320px] px-3 gap-2 shadow-xs"
+                >
+                  <Search size={16} className="text-[#183B56] shrink-0" strokeWidth={2} />
+                  <input
+                    ref={desktopSearchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(event) => {
+                      setSearchQuery(event.target.value);
+                      if (event.target.value.trim().length >= 2) {
+                        setShowSuggestions(true);
+                      }
+                    }}
+                    onFocus={() => setShowSuggestions(true)}
+                    placeholder="Search products, styles..."
+                    className="min-w-0 flex-1 bg-transparent outline-none text-xs font-bold text-[#183B56] placeholder:text-[#5A7184]/70"
+                  />
+                  {isSearching ? (
+                    <div className="w-3.5 h-3.5 border-2 border-[#183B56] border-t-transparent rounded-full animate-spin shrink-0" />
+                  ) : null}
+                </form>
 
-              {/* Suggestions / Recent Searches Dropdown */}
-              {showSuggestions && (
-                <div className="absolute top-full right-0 mt-2 w-[340px] bg-[#FFFFFF] border border-[#ECECEC] rounded-2xl shadow-2xl p-2 z-[120] animate-in fade-in-50 zoom-in-95 duration-150">
-                  {/* If user is typing query and has suggestions */}
-                  {searchQuery.trim().length >= 2 && suggestions.length > 0 && (
-                    <>
-                      <div className="px-3 py-1.5 text-[10px] uppercase font-semibold text-[#8E8E93] tracking-wider border-b border-[#F2F2F7] flex items-center justify-between">
-                        <span>Instant Matches</span>
-                        <span>{suggestions.length} items</span>
-                      </div>
+                {/* Close Search Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDesktopSearchOpen(false);
+                    setShowSuggestions(false);
+                  }}
+                  className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] flex items-center justify-center cursor-pointer transition-colors"
+                  title="Close search"
+                >
+                  <X size={14} />
+                </button>
 
-                      <div className="flex flex-col py-1 max-h-[280px] overflow-y-auto">
-                        {suggestions.map((item) => (
-                          <div
-                            key={item.productId}
-                            onClick={() => {
-                              recordClickActivity(item, "NAVBAR_SUGGESTION");
-                              recordSearchActivity(item.name || searchQuery);
-                              setShowSuggestions(false);
-                              router.push(`/product/${item.productId}`);
-                            }}
-                            className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F8F8F8] cursor-pointer transition-colors group"
-                          >
-                            <div className="w-11 h-11 rounded-lg bg-[#F2F2F7] overflow-hidden shrink-0 border border-[#ECECEC]/60">
-                              {item.imageUrl ? (
-                                <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-[9px] text-[#A1A1AA]">No Pic</div>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[12px] font-medium text-[#1D1D1F] truncate group-hover:text-[#F07020] transition-colors">{item.name}</p>
-                              <div className="flex items-center gap-2 mt-0.5">
-                                {item.brand && (
-                                  <span className="text-[10px] text-[#8E8E93] uppercase tracking-wider truncate">{item.brand}</span>
+                {/* Suggestions / Recent Searches Popover */}
+                {showSuggestions && (
+                  <div className="absolute top-full right-0 mt-2 w-[340px] bg-[#F5EFEB] border border-[#183B56] shadow-xl p-2 z-[120] animate-in fade-in-50 zoom-in-95 duration-150">
+                    {/* If user is typing query and has suggestions */}
+                    {searchQuery.trim().length >= 2 && suggestions.length > 0 && (
+                      <>
+                        <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-[#5A7184] tracking-wider border-b border-[#183B56]/20 flex items-center justify-between">
+                          <span>Instant Matches</span>
+                          <span>{suggestions.length} items</span>
+                        </div>
+
+                        <div className="flex flex-col py-1 max-h-[280px] overflow-y-auto divide-y divide-[#183B56]/10">
+                          {suggestions.map((item) => (
+                            <div
+                              key={item.productId}
+                              onClick={() => {
+                                recordClickActivity(item, "NAVBAR_SUGGESTION");
+                                recordSearchActivity(item.name || searchQuery);
+                                setShowSuggestions(false);
+                                setDesktopSearchOpen(false);
+                                router.push(`/product/${item.productId}`);
+                              }}
+                              className="flex items-center gap-3 p-2 hover:bg-[#183B56]/[0.05] cursor-pointer transition-colors group"
+                            >
+                              <div className="w-11 h-11 bg-[#DFE7ED] border border-[#183B56] overflow-hidden shrink-0 flex items-center justify-center p-1">
+                                {item.imageUrl ? (
+                                  <img src={item.imageUrl} alt={item.name} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform" />
+                                ) : (
+                                  <div className="text-[9px] font-bold text-[#5A7184]">WEAVLY</div>
                                 )}
-                                <span className="text-[11px] font-semibold text-[#1D1D1F]">
-                                  ₹{Number(item.price || 0).toLocaleString("en-IN")}
-                                </span>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-bold text-[#183B56] truncate group-hover:underline">{item.name}</p>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                  {item.brand && (
+                                    <span className="text-[10px] text-[#5A7184] uppercase tracking-wider truncate font-semibold">{item.brand}</span>
+                                  )}
+                                  <span className="text-xs font-bold text-[#183B56]">
+                                    ₹{Number(item.price || 0).toLocaleString("en-IN")}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
 
-                      <button
-                        onClick={handleSearchSubmit}
-                        className="w-full mt-1 py-2 px-3 bg-[#FAFAF9] hover:bg-[#F2F2F7] text-[#1D1D1F] hover:text-[#F07020] text-[11px] font-medium rounded-xl flex items-center justify-center gap-1.5 transition-colors border border-[#ECECEC]/60 cursor-pointer"
-                      >
-                        <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
-                        <ArrowRight size={12} />
-                      </button>
-                    </>
-                  )}
-
-                  {/* If user is focused on empty/short query and has recent search history */}
-                  {searchQuery.trim().length < 2 && recentSearches.length > 0 && (
-                    <div>
-                      <div className="px-3 py-1.5 text-[10px] uppercase font-semibold text-[#8E8E93] tracking-wider border-b border-[#F2F2F7] flex items-center justify-between">
-                        <span className="flex items-center gap-1.5">
-                          <History size={11} />
-                          <span>Recent Searches</span>
-                        </span>
                         <button
-                          onClick={handleClearHistory}
-                          className="text-[10px] text-[#8E8E93] hover:text-[#FF3B30] flex items-center gap-1 cursor-pointer transition-colors"
+                          onClick={handleSearchSubmit}
+                          className="w-full mt-1 py-2 px-3 bg-[#183B56] hover:bg-[#102A43] text-white text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
                         >
-                          <Trash2 size={10} />
-                          <span>Clear</span>
+                          <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
+                          <ArrowRight size={12} />
                         </button>
-                      </div>
+                      </>
+                    )}
 
-                      <div className="flex flex-wrap gap-1.5 p-2.5">
-                        {recentSearches.map((q, idx) => (
+                    {/* If user is focused on empty/short query and has recent search history */}
+                    {searchQuery.trim().length < 2 && recentSearches.length > 0 && (
+                      <div>
+                        <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-[#5A7184] tracking-wider border-b border-[#183B56]/20 flex items-center justify-between">
+                          <span className="flex items-center gap-1.5">
+                            <History size={11} />
+                            <span>Recent Searches</span>
+                          </span>
                           <button
-                            key={idx}
-                            onClick={() => handleRecentClick(q)}
-                            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1D1D1F] text-[11px] font-medium transition-colors cursor-pointer"
+                            onClick={handleClearHistory}
+                            className="text-[10px] font-bold text-[#5A7184] hover:text-[#D9381E] flex items-center gap-1 cursor-pointer transition-colors border-none bg-transparent p-0"
                           >
-                            <Clock size={10} className="text-[#8E8E93]" />
-                            <span>{q}</span>
+                            <Trash2 size={10} />
+                            <span>Clear</span>
                           </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                        </div>
 
-                  {/* When no query and no recent searches */}
-                  {searchQuery.trim().length < 2 && recentSearches.length === 0 && (
-                    <div className="p-4 text-center text-xs text-[#8E8E93]">
-                      Type to search across brands, products, and categories
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+                        <div className="flex flex-wrap gap-1.5 p-2.5">
+                          {recentSearches.map((q, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => {
+                                handleRecentClick(q);
+                                setDesktopSearchOpen(false);
+                              }}
+                              className="flex items-center gap-1.5 px-3 py-1 border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] text-[11px] font-bold transition-colors cursor-pointer"
+                            >
+                              <Clock size={10} />
+                              <span>{q}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* When no query and no recent searches */}
+                    {searchQuery.trim().length < 2 && recentSearches.length === 0 && (
+                      <div className="p-4 text-center text-xs font-semibold text-[#5A7184]">
+                        Type to search across brands, products, and categories
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Action Icons: Zera Wardrobe Emblem, Cart Bag, Profile */}
             <div className="flex items-center gap-1 text-[#1D1D1F]">
@@ -739,23 +771,21 @@ export default function Navbar({
                   setTimeout(() => mobileSearchInputRef.current?.focus(), 150);
                 }
               }}
-              className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors border-none cursor-pointer p-0 ${
-                mobileSearchOpen ? "bg-[#F07020] text-white" : "bg-[#FAFAF9] text-[#1D1D1F] hover:bg-[#F2F2F7]"
-              }`}
+              className="w-9 h-9 flex items-center justify-center rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] transition-colors cursor-pointer p-0"
               aria-label="Search products"
             >
-              {mobileSearchOpen ? <X size={18} /> : <Search size={18} strokeWidth={1.75} />}
+              {mobileSearchOpen ? <X size={18} /> : <Search size={18} strokeWidth={2} />}
             </button>
 
             {/* Mobile Zyra Wardrobe Icon */}
             <button
               onClick={onWardrobeClick}
-              className="relative w-9 h-9 flex items-center justify-center rounded-full bg-[#FAFAF9] hover:bg-[#F2F2F7] transition-colors border-none cursor-pointer p-0 text-[#1D1D1F]"
+              className="relative w-9 h-9 flex items-center justify-center rounded-full border border-[#183B56]/30 bg-white hover:bg-[#183B56]/5 transition-colors cursor-pointer p-0 text-[#183B56]"
               aria-label="Zyra Wardrobe"
             >
               <img src="/zyra_SVG.svg" alt="Zyra" className="w-5 h-5 object-contain" />
               {mounted && wardrobeCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#F07020] text-[8px] font-bold text-white leading-none">
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#183B56] text-[8px] font-bold text-white leading-none">
                   {wardrobeCount}
                 </span>
               )}
@@ -764,12 +794,12 @@ export default function Navbar({
             {/* Mobile Shopping Bag Icon */}
             <button
               onClick={onCartClick}
-              className="relative w-9 h-9 flex items-center justify-center rounded-full bg-[#FAFAF9] hover:bg-[#F2F2F7] transition-colors border-none cursor-pointer p-0 text-[#1D1D1F]"
+              className="relative w-9 h-9 flex items-center justify-center rounded-full border border-[#183B56]/30 bg-white hover:bg-[#183B56]/5 transition-colors cursor-pointer p-0 text-[#183B56]"
               aria-label="Shopping bag"
             >
               <ShoppingBag size={18} strokeWidth={1.75} />
               {mounted && cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#1D1D1F] text-[8px] font-bold text-white leading-none">
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#183B56] text-[8px] font-bold text-white leading-none">
                   {cartCount}
                 </span>
               )}
@@ -815,14 +845,14 @@ export default function Navbar({
                 ]}
                 displaySocials={true}
                 displayItemNumbering={true}
-                menuButtonColor="#1D1D1F"
-                openMenuButtonColor="#1D1D1F"
-                colors={["#1D1D1F", "#F07020"]}
-                accentColor="#F07020"
+                menuButtonColor="#183B56"
+                openMenuButtonColor="#183B56"
+                colors={["#183B56", "#102A43"]}
+                accentColor="#183B56"
               />
             ) : (
               <div className="w-9 h-9 flex items-center justify-center">
-                <div className="w-5 h-5 rounded-md bg-[#F4F4F5]" />
+                <div className="w-5 h-5 rounded-md bg-[#DFE7ED]" />
               </div>
             )}
           </div>
@@ -830,7 +860,7 @@ export default function Navbar({
 
         {/* ── EXPANDABLE MOBILE SEARCH BAR ── */}
         {mobileSearchOpen && (
-          <div ref={mobileSearchContainerRef} className="px-4 py-3 bg-[#FFFFFF] border-t border-[#ECECEC] animate-in slide-in-from-top-2 duration-200">
+          <div ref={mobileSearchContainerRef} className="px-4 py-3 bg-[#F5EFEB] border-t border-b border-[#183B56] animate-in slide-in-from-top-2 duration-200">
             <form onSubmit={handleSearchSubmit} className="relative flex items-center">
               <input
                 ref={mobileSearchInputRef}
@@ -838,11 +868,11 @@ export default function Navbar({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products, brands, styles..."
-                className="w-full h-11 pl-4 pr-11 bg-[#FAFAF9] border border-[#ECECEC] rounded-xl text-[13px] font-normal text-[#1D1D1F] placeholder:text-[#A1A1AA] outline-none focus:bg-white focus:border-[#1D1D1F] transition-all"
+                className="w-full h-10 pl-3 pr-11 bg-[#F5EFEB] border border-[#183B56] text-xs font-bold text-[#183B56] placeholder:text-[#5A7184]/70 outline-none"
               />
               <button
                 type="submit"
-                className="absolute right-1.5 w-8 h-8 rounded-lg bg-[#1D1D1F] hover:bg-[#F07020] text-white flex items-center justify-center transition-colors border-none cursor-pointer"
+                className="absolute right-1 w-8 h-8 bg-[#183B56] hover:bg-[#102A43] text-white flex items-center justify-center transition-colors border-none cursor-pointer"
                 aria-label="Search"
               >
                 <Search size={14} />
@@ -851,13 +881,13 @@ export default function Navbar({
 
             {/* Mobile Recent Searches Chips */}
             {searchQuery.trim().length < 2 && recentSearches.length > 0 && (
-              <div className="mt-2.5 pt-2 border-t border-[#F2F2F7]">
-                <div className="flex items-center justify-between text-[10px] uppercase font-semibold text-[#8E8E93] tracking-wider mb-2">
+              <div className="mt-2.5 pt-2 border-t border-[#183B56]/20">
+                <div className="flex items-center justify-between text-[10px] uppercase font-bold text-[#5A7184] tracking-wider mb-2">
                   <span className="flex items-center gap-1">
                     <History size={10} />
-                    <span>Recent</span>
+                    <span>Recent Searches</span>
                   </span>
-                  <button onClick={handleClearHistory} className="text-[10px] text-[#8E8E93] hover:text-[#FF3B30] border-none bg-transparent cursor-pointer">
+                  <button onClick={handleClearHistory} className="text-[10px] font-bold text-[#5A7184] hover:text-[#D9381E] border-none bg-transparent cursor-pointer">
                     Clear
                   </button>
                 </div>
@@ -869,7 +899,7 @@ export default function Navbar({
                         setMobileSearchOpen(false);
                         handleRecentClick(q);
                       }}
-                      className="px-2.5 py-1 rounded-full bg-[#F2F2F7] text-[#1D1D1F] text-[11px] font-medium transition-colors border-none cursor-pointer active:bg-[#E5E5EA]"
+                      className="px-2.5 py-1 border border-[#183B56] bg-white text-[#183B56] text-[11px] font-bold transition-colors cursor-pointer"
                     >
                       {q}
                     </button>
@@ -880,7 +910,7 @@ export default function Navbar({
 
             {/* Mobile Instant Match Suggestions */}
             {searchQuery.trim().length >= 2 && suggestions.length > 0 && (
-              <div className="mt-2.5 max-h-[220px] overflow-y-auto flex flex-col gap-1 border-t border-[#F2F2F7] pt-2">
+              <div className="mt-2.5 max-h-[220px] overflow-y-auto flex flex-col gap-1 border-t border-[#183B56]/20 pt-2">
                 {suggestions.map((item) => (
                   <div
                     key={item.productId}
@@ -890,18 +920,18 @@ export default function Navbar({
                       recordSearchActivity(item.name || searchQuery);
                       router.push(`/product/${item.productId}`);
                     }}
-                    className="flex items-center gap-2.5 p-1.5 rounded-lg hover:bg-[#F8F8F8] active:bg-[#F2F2F7] cursor-pointer"
+                    className="flex items-center gap-2.5 p-1.5 hover:bg-[#183B56]/[0.05] cursor-pointer"
                   >
-                    <div className="w-9 h-9 rounded-md bg-[#F2F2F7] overflow-hidden shrink-0">
+                    <div className="w-9 h-9 bg-[#DFE7ED] border border-[#183B56] overflow-hidden shrink-0 flex items-center justify-center p-0.5">
                       {item.imageUrl ? (
-                        <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                        <img src={item.imageUrl} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[8px] text-[#A1A1AA]">Item</div>
+                        <div className="text-[8px] font-bold text-[#5A7184]">WEAVLY</div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[12px] font-medium text-[#1D1D1F] truncate">{item.name}</p>
-                      <p className="text-[11px] font-semibold text-[#1D1D1F]">
+                      <p className="text-xs font-bold text-[#183B56] truncate">{item.name}</p>
+                      <p className="text-xs font-bold text-[#183B56]">
                         ₹{Number(item.price || 0).toLocaleString("en-IN")}
                       </p>
                     </div>
