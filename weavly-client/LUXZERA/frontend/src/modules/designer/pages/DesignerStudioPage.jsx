@@ -20,7 +20,6 @@ import {
   Edit3,
   X,
   MapPin,
-  Instagram,
   Globe,
   DollarSign,
   Calendar,
