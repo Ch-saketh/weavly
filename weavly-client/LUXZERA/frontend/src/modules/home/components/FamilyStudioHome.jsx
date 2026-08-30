@@ -360,8 +360,8 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   return (
     <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
 
-      {/* MASTER CONTAINER WITH ELEGANT GAPS BETWEEN SECTIONS */}
-      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-12 sm:space-y-16 lg:space-y-20">
+      {/* MASTER CONTAINER WITH GENEROUS EDGE MARGINS */}
+      <main className="max-w-[1360px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 py-8 sm:py-12 space-y-12 sm:space-y-16 lg:space-y-20">
 
         {/* ════════════════════════════════════════════════════════════
             1. ULTRA-CLEAN 3-COLUMN HERO

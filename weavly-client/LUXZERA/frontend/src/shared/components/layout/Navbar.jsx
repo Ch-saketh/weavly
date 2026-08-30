@@ -159,7 +159,7 @@ export default function Navbar({
             : "bg-[#F5EFEB]"
         }`}
       >
-        <div className="h-[70px] w-full px-6 sm:px-8 lg:px-10 flex items-center justify-between gap-8">
+        <div className="max-w-[1360px] mx-auto h-[70px] px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 flex items-center justify-between gap-8">
 
           {/* ── LEFT: Brand Logo ── */}
           <div className="flex items-center shrink-0">
