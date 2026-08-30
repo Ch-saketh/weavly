@@ -23,10 +23,10 @@ export default function BetaBadge({ onClick, allWhite = false, className = "" })
           onClick?.();
         }
       }}
-      className={`inline-flex items-center justify-center text-[8px] font-bold uppercase tracking-[0.15em] leading-none px-1.5 py-1 rounded-[4px] font-mono cursor-pointer select-none transition-all shadow-xs ${
+      className={`inline-flex items-center justify-center text-[8px] font-bold uppercase tracking-[0.15em] leading-none px-1.5 py-0.5 border border-[#183B56] font-mono cursor-pointer select-none transition-all shadow-xs ${
         allWhite
-          ? "bg-white text-black hover:bg-neutral-200"
-          : "bg-[#1D1D1F] text-white hover:bg-black"
+          ? "bg-white text-[#183B56] hover:bg-[#F5EFEB]"
+          : "bg-[#183B56] text-white hover:bg-[#102A43]"
       } ${className}`}
       title="Click for Beta Info"
     >

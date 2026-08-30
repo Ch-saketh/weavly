@@ -172,7 +172,7 @@ export default function Navbar({
               aria-label={`${branding.name} home`} 
               className="hover:opacity-75 transition-opacity flex items-center shrink-0 border-none bg-transparent cursor-pointer p-0 select-none"
             >
-              <WeavlyLogo showBeta={false} />
+              <WeavlyLogo showBeta={true} onBetaClick={onBetaClick} />
             </div>
           </div>
 
@@ -704,7 +704,7 @@ export default function Navbar({
         <div className="w-full h-[64px] px-4 sm:px-6 flex items-center justify-between gap-3">
           {/* LEFT: Weavly Brand Logo (Mochiy Pop One) */}
           <div onClick={onLogoClick} aria-label="Weavly home" className="border-none bg-transparent cursor-pointer p-0 shrink-0">
-            <WeavlyLogo size="sm" showBeta={false} />
+            <WeavlyLogo size="sm" showBeta={true} onBetaClick={onBetaClick} />
           </div>
 
           {/* RIGHT: Mobile Action Buttons */}
