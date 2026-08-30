@@ -288,3 +288,31 @@ export const searchProducts = async (query = "", params = {}) => {
 
   return [];
 };
+
+/**
+ * Fetch live search autocomplete suggestions.
+ */
+export const getSearchSuggestions = async (query = "", limit = 6) => {
+  const q = (query || "").trim();
+  if (!q || q.length < 2) return [];
+
+  const baseUrl = `${config.productsApiUrl}/search/suggestions`;
+  const url = new URL(baseUrl);
+  url.searchParams.append("q", q);
+  url.searchParams.append("limit", limit.toString());
+
+  try {
+    const res = await fetch(url.toString(), {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return Array.isArray(data) ? data : [];
+    }
+  } catch (err) {
+    console.error(`Failed to fetch suggestions for "${q}":`, err);
+  }
+  return [];
+};
+

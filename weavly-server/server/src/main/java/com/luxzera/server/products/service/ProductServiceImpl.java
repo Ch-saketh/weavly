@@ -35,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
     private final BrandRepository brandRepository;
     private final ProductVariantRepository productVariantRepository;
     private final ImageStorageService imageStorageService;
+    private final com.luxzera.server.products.search.service.ProductSearchService productSearchService;
 
     @Override
     @Transactional
@@ -180,50 +181,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public Page<ProductResponse> getFilteredProducts(String gender, String category, String search, Pageable pageable) {
-        final Collection<Audience> audiences;
-        if (gender != null && !gender.isBlank() && !gender.equalsIgnoreCase("All")) {
-            String g = gender.trim().toUpperCase();
-            if (g.startsWith("MEN") || g.startsWith("MAN") || g.startsWith("MALE")) {
-                audiences = List.of(Audience.MEN, Audience.UNISEX);
-            } else if (g.startsWith("WOM") || g.startsWith("FEMALE")) {
-                audiences = List.of(Audience.WOMEN, Audience.UNISEX);
-            } else if (g.startsWith("KID")) {
-                audiences = List.of(Audience.KIDS);
-            } else if (g.startsWith("UNI")) {
-                audiences = List.of(Audience.UNISEX);
-            } else {
-                audiences = null;
-            }
-        } else {
-            audiences = null;
-        }
-
-        final String catFilter = (category != null && !category.isBlank() && !category.equalsIgnoreCase("All")) ? category.trim() : null;
-        final String searchFilter = (search != null && !search.isBlank()) ? search.trim() : null;
-
-        Specification<Product> spec = (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (audiences != null && !audiences.isEmpty()) {
-                predicates.add(root.get("audience").in(audiences));
-            }
-
-            if (catFilter != null) {
-                predicates.add(cb.like(cb.lower(root.get("categoryName")), "%" + catFilter.toLowerCase() + "%"));
-            }
-
-            if (searchFilter != null) {
-                String searchPattern = "%" + searchFilter.toLowerCase() + "%";
-                Predicate nameMatch = cb.like(cb.lower(root.get("name")), searchPattern);
-                Predicate brandMatch = cb.like(cb.lower(root.get("brandName")), searchPattern);
-                predicates.add(cb.or(nameMatch, brandMatch));
-            }
-
-            return predicates.isEmpty() ? cb.conjunction() : cb.and(predicates.toArray(new Predicate[0]));
-        };
-
-        Page<Product> page = productRepository.findAll(spec, pageable);
-        return page.map(product -> toResponse(product, null));
+        return productSearchService.search(search, gender, category, pageable);
     }
 
     @Override

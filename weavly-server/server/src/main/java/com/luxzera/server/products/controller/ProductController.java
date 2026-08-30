@@ -30,9 +30,50 @@ import java.util.*;
 public class ProductController {
 
     private final ProductService productService;
+    private final com.luxzera.server.products.search.service.ProductSearchService productSearchService;
     private final ProductCatalogImportService productCatalogImportService;
     private final ImageStorageService imageStorageService;
     private final ObjectMapper objectMapper;
+
+    /**
+     * Live Search Suggestions for Autocomplete
+     * GET /api/products/search/suggestions?q=...
+     */
+    @GetMapping("/search/suggestions")
+    public ResponseEntity<List<com.luxzera.server.products.search.dto.SearchSuggestionDto>> getSearchSuggestions(
+            @RequestParam(value = "q", required = false, defaultValue = "") String query,
+            @RequestParam(value = "limit", required = false, defaultValue = "6") int limit
+    ) {
+        List<com.luxzera.server.products.search.dto.SearchSuggestionDto> suggestions = productSearchService.getSuggestions(query, limit);
+        return ResponseEntity.ok(suggestions);
+    }
+
+    /**
+     * Dedicated Search Endpoint
+     * GET /api/products/search
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, Object>> searchProducts(
+            @RequestParam(value = "q", required = false, defaultValue = "") String query,
+            @RequestParam(value = "gender", required = false) String gender,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "limit", required = false, defaultValue = "24") int limit,
+            @RequestParam(value = "offset", required = false, defaultValue = "0") int offset
+    ) {
+        int pageIndex = offset > 0 && limit > 0 ? offset / limit : 0;
+        int pageSize = Math.min(100, Math.max(1, limit));
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Page<ProductResponse> productPage = productSearchService.search(query, gender, category, pageable);
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("products", productPage.getContent());
+        response.put("total", productPage.getTotalElements());
+        response.put("totalPages", productPage.getTotalPages());
+        response.put("page", productPage.getNumber());
+        response.put("size", productPage.getSize());
+        response.put("hasMore", productPage.hasNext());
+        return ResponseEntity.ok(response);
+    }
 
     /**
      * Trigger Catalog Import from CSV

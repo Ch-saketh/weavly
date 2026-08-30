@@ -1,26 +1,15 @@
 package com.luxzera.server.products.search.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import com.luxzera.server.products.dto.response.ProductResponse;
+import com.luxzera.server.products.search.dto.SearchSuggestionDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-@Service
-public class ProductSearchService {
+import java.util.List;
 
-    private final WebClient webClient;
+public interface ProductSearchService {
 
-    // Spring automatically injects the huggingFaceClient bean we defined in config
-    public ProductSearchService(WebClient huggingFaceClient) {
-        this.webClient = huggingFaceClient;
-    }
+    Page<ProductResponse> search(String query, String gender, String category, Pageable pageable);
 
-    public String searchProducts(String query) {
-        // We create a simple JSON body for the API request
-        String requestBody = "{\"inputs\": \"" + query + "\"}";
-
-        return webClient.post() // Use POST for inference
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block(); // .block() is fine for this test, but we'll use non-blocking later
-    }
+    List<SearchSuggestionDto> getSuggestions(String query, int limit);
 }

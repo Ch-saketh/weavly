@@ -233,19 +233,10 @@ export default function ShopPage({ initialDepartment = "All" }) {
     if (activeCat  !== "All") list = list.filter((p) => p.category === activeCat);
     if (activeBrand !== "All") list = list.filter((p) => p.brand   === activeBrand);
     if (activeSizes.length)   list = list.filter((p) => activeSizes.some((s) => p.sizes?.includes(s)));
-    if (normalizedQuery) {
-      list = list.filter((p) => [
-        p.name,
-        p.brand,
-        p.category,
-        p.department,
-        p.description,
-      ].filter(Boolean).some((value) => String(value).toLowerCase().includes(normalizedQuery)));
-    }
     if (sortBy === "price_asc")  list.sort((a, b) => a.price - b.price);
     if (sortBy === "price_desc") list.sort((a, b) => b.price - a.price);
     return list;
-  }, [products, query, userGender, initialDepartment, activeCat, activeBrand, activeSizes, priceMax, sortBy]);
+  }, [products, userGender, initialDepartment, activeCat, activeBrand, activeSizes, priceMax, sortBy]);
 
   const categorySections = useMemo(() => {
     let list = [...products];
@@ -262,14 +253,6 @@ export default function ShopPage({ initialDepartment = "All" }) {
       });
     }
     if (initialDepartment !== "All") list = list.filter((p) => p.department === initialDepartment);
-    if (query) {
-      const q = query.toLowerCase();
-      list = list.filter((p) =>
-        [p.name, p.brand, p.category, p.department, p.description]
-          .filter(Boolean)
-          .some((val) => String(val).toLowerCase().includes(q))
-      );
-    }
 
     const groups = [
       { id: "Outerwear", title: "Outerwear & Jackets", subtitle: "Tailored blazers, coats & jackets", items: [] },
@@ -370,6 +353,26 @@ export default function ShopPage({ initialDepartment = "All" }) {
 
         {/* ── STACKED CATEGORY SECTIONS ── */}
         <div className="space-y-16 pt-4">
+          {query && (
+            <div className="p-5 sm:p-6 bg-[#FAFAF9] border border-[#ECECEC] rounded-2xl flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8E8E93]">Search Results</span>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#1D1D1F] text-white font-medium">{products.length} found</span>
+                </div>
+                <h1 className="text-xl sm:text-2xl font-bold text-[#1D1D1F] mt-1 tracking-tight">
+                  &ldquo;{query}&rdquo;
+                </h1>
+              </div>
+              <button
+                onClick={() => router.push(pathname)}
+                className="px-4 py-2 text-xs font-semibold text-[#1D1D1F] bg-white border border-[#ECECEC] hover:border-[#1D1D1F] rounded-full transition-colors cursor-pointer"
+              >
+                Clear Search
+              </button>
+            </div>
+          )}
+
           {categorySections.map((group) => (
             <section key={group.id} className="space-y-6">
               <div className="flex items-center justify-between border-b border-[#ECECEC] pb-3">

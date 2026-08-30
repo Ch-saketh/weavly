@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { ShoppingBag, User, LogOut, X, Menu, Search, ChevronDown, Sparkles, Scissors, Palette } from "lucide-react";
+import { ShoppingBag, User, LogOut, X, Menu, Search, ChevronDown, Sparkles, Scissors, Palette, ArrowRight } from "lucide-react";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import StaggeredMenu from "@/shared/components/ui/StaggeredMenu";
 import branding from "@/config/branding";
+import { getSearchSuggestions } from "@/modules/products/services/productService";
 
 export default function Navbar({
   cartCount = 0,
@@ -41,8 +42,12 @@ export default function Navbar({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedNav, setExpandedNav] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [mounted, setMounted] = useState(false);
   const desktopSearchInputRef = useRef(null);
+  const searchContainerRef = useRef(null);
 
   const isShopActive = pathname.startsWith("/market") || pathname.startsWith("/shop") || pathname.startsWith("/product");
   const isCollectionsActive = pathname === "/collections" || pathname === "/men" || pathname === "/women" || pathname === "/kids" || pathname === "/unisex";
@@ -51,6 +56,42 @@ export default function Navbar({
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Debounced search suggestions fetch
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (q.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const results = await getSearchSuggestions(q, 5);
+        setSuggestions(results);
+        setShowSuggestions(results.length > 0);
+      } catch (err) {
+        console.error("Suggestions error:", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Click outside to dismiss suggestions
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const profileImage = currentUser?.profilePicture || currentUser?.avatarUrl || null;
@@ -325,21 +366,85 @@ export default function Navbar({
           {/* ── RIGHT: Minimal Search & Neatly Aligned Action Icons ── */}
           <div className="flex items-center gap-5 shrink-0">
             
-            {/* Minimalist Search Field */}
-            <form
-              onSubmit={handleSearchSubmit}
-              className="flex items-center h-8 rounded-full border border-[#ECECEC]/80 bg-[#FAFAF9] focus-within:bg-[#FFFFFF] focus-within:border-[#1D1D1F] w-[180px] lg:w-[210px] px-3.5 gap-2 transition-all duration-200"
-            >
-              <input
-                ref={desktopSearchInputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                placeholder="Search..."
-                className="min-w-0 flex-1 bg-transparent outline-none text-[12px] font-normal text-[#1D1D1F] placeholder:text-[#A1A1AA] placeholder:font-normal"
-              />
-              <Search size={13} strokeWidth={1.5} className="shrink-0 text-[#A1A1AA] cursor-pointer hover:text-[#1D1D1F] transition-colors" onClick={handleSearchSubmit} />
-            </form>
+            {/* Minimalist Search Field with Live Autocomplete Popover */}
+            <div ref={searchContainerRef} className="relative">
+              <form
+                onSubmit={handleSearchSubmit}
+                className="flex items-center h-8 rounded-full border border-[#ECECEC]/80 bg-[#FAFAF9] focus-within:bg-[#FFFFFF] focus-within:border-[#1D1D1F] w-[180px] lg:w-[220px] px-3.5 gap-2 transition-all duration-200"
+              >
+                <input
+                  ref={desktopSearchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(event) => {
+                    setSearchQuery(event.target.value);
+                    if (!showSuggestions && event.target.value.trim().length >= 2) {
+                      setShowSuggestions(true);
+                    }
+                  }}
+                  onFocus={() => {
+                    if (suggestions.length > 0) setShowSuggestions(true);
+                  }}
+                  placeholder="Search products, brands..."
+                  className="min-w-0 flex-1 bg-transparent outline-none text-[12px] font-normal text-[#1D1D1F] placeholder:text-[#A1A1AA] placeholder:font-normal"
+                />
+                {isSearching ? (
+                  <div className="w-3 h-3 border border-[#F07020] border-t-transparent rounded-full animate-spin shrink-0" />
+                ) : (
+                  <Search size={13} strokeWidth={1.5} className="shrink-0 text-[#A1A1AA] cursor-pointer hover:text-[#1D1D1F] transition-colors" onClick={handleSearchSubmit} />
+                )}
+              </form>
+
+              {/* Instant Suggestions Dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute top-full right-0 mt-2 w-[340px] bg-[#FFFFFF] border border-[#ECECEC] rounded-2xl shadow-2xl p-2 z-[120] animate-in fade-in-50 zoom-in-95 duration-150">
+                  <div className="px-3 py-1.5 text-[10px] uppercase font-semibold text-[#8E8E93] tracking-wider border-b border-[#F2F2F7] flex items-center justify-between">
+                    <span>Instant Matches</span>
+                    <span>{suggestions.length} items</span>
+                  </div>
+
+                  <div className="flex flex-col py-1 max-h-[300px] overflow-y-auto">
+                    {suggestions.map((item) => (
+                      <div
+                        key={item.productId}
+                        onClick={() => {
+                          setShowSuggestions(false);
+                          router.push(`/product/${item.productId}`);
+                        }}
+                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F8F8F8] cursor-pointer transition-colors group"
+                      >
+                        <div className="w-11 h-11 rounded-lg bg-[#F2F2F7] overflow-hidden shrink-0 border border-[#ECECEC]/60">
+                          {item.imageUrl ? (
+                            <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-[9px] text-[#A1A1AA]">No Pic</div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[12px] font-medium text-[#1D1D1F] truncate group-hover:text-[#F07020] transition-colors">{item.name}</p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            {item.brand && (
+                              <span className="text-[10px] text-[#8E8E93] uppercase tracking-wider truncate">{item.brand}</span>
+                            )}
+                            <span className="text-[11px] font-semibold text-[#1D1D1F]">
+                              ₹{Number(item.price || 0).toLocaleString("en-IN")}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={handleSearchSubmit}
+                    className="w-full mt-1 py-2 px-3 bg-[#FAFAF9] hover:bg-[#F2F2F7] text-[#1D1D1F] hover:text-[#F07020] text-[11px] font-medium rounded-xl flex items-center justify-center gap-1.5 transition-colors border border-[#ECECEC]/60 cursor-pointer"
+                  >
+                    <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
+                    <ArrowRight size={12} />
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Action Icons: Zera Wardrobe Emblem, Cart Bag, Profile */}
             <div className="flex items-center gap-1 text-[#1D1D1F]">
