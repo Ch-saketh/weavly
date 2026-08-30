@@ -22,27 +22,27 @@ public class EmailServiceImpl implements EmailService {
     @Value("${mail.provider:smtp}")
     private String provider;
 
-    @Value("${mail.from:LuxZera <chokkapusaketh@gmail.com>}")
+    @Value("${mail.from:Weavly <chokkapusaketh@gmail.com>}")
     private String fromAddress;
 
     @Override
     public void sendOtpEmail(String to, String otp) {
-        sendHtml(to, "Verify your LuxZera account", EmailHtmlTemplates.buildOtpTemplate(otp));
+        sendHtml(to, "Verify your Weavly account", EmailHtmlTemplates.buildOtpTemplate(otp));
     }
 
     @Override
     public void sendForgotPasswordEmail(String to, String resetLink) {
-        sendHtml(to, "Reset your LuxZera password", EmailHtmlTemplates.buildForgotPasswordTemplate(resetLink));
+        sendHtml(to, "Reset your Weavly password", EmailHtmlTemplates.buildForgotPasswordTemplate(resetLink));
     }
 
     @Override
     public void sendAdminAlertEmail(String superAdminEmail, String applicantName, String email, String phone, String reason) {
-        sendHtml(superAdminEmail, "New LuxZera admin access request", EmailHtmlTemplates.buildAdminAlertTemplate(applicantName, email, phone, reason));
+        sendHtml(superAdminEmail, "New Weavly admin access request", EmailHtmlTemplates.buildAdminAlertTemplate(applicantName, email, phone, reason));
     }
 
     @Override
     public void sendAdminApprovalEmail(String to) {
-        sendHtml(to, "Your LuxZera admin access is approved", EmailHtmlTemplates.buildApprovalTemplate(to));
+        sendHtml(to, "Your Weavly admin access is approved", EmailHtmlTemplates.buildApprovalTemplate(to));
     }
 
     private void sendHtml(String to, String subject, String html) {

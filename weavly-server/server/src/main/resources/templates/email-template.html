@@ -12,7 +12,7 @@
             <table width="100%" style="max-width: 560px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: left;">
                 <tr>
                     <td style="padding: 40px 40px 20px 40px; text-align: center;">
-                        <a th:href="${@emailBranding.homeUrl}" aria-label="LuxZera home">
+                        <a th:href="${@emailBranding.homeUrl}" aria-label="Weavly home">
                             <img th:src="${@emailBranding.logoUrl}" th:alt="${@emailBranding.brandName + ' logo'}" style="max-width: 180px; width: 100%; height: auto; display: block; margin: 0 auto;" />
                         </a>
                     </td>
@@ -40,14 +40,14 @@
                 <tr th:if="${actionUrl != null}">
                     <td style="padding: 4px 40px 34px 40px; text-align: center;">
                         <a th:href="${actionUrl}" th:text="${actionText}" style="display: inline-block; background-color: #1d1d1f; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 600; padding: 13px 22px; border-radius: 10px;">
-                            Open LuxZera
+                            Open Weavly
                         </a>
                     </td>
                 </tr>
                 <tr>
                     <td style="padding: 20px 40px 45px 40px; text-align: center;">
                         <p style="font-size: 13px; line-height: 1.4; color: #86868b; margin: 0; border-top: 1px solid #e8e8ed; padding-top: 24px;" th:text="${footerWarning}">Footer warning context metrics.</p>
-                        <p style="font-size: 11px; color: #b6b6bb; margin: 16px 0 0 0;">&copy; 2026 LuxZera Inc. All rights reserved.</p>
+                        <p style="font-size: 11px; color: #b6b6bb; margin: 16px 0 0 0;">&copy; 2026 Weavly Inc. All rights reserved.</p>
                     </td>
                 </tr>
             </table>

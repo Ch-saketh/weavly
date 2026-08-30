@@ -20,14 +20,14 @@ public final class EmailHtmlTemplates {
                 )
 
                         + EmailComponents.paragraph(
-                        "Use the verification code below to complete your LuxZera sign in."
+                        "Use the verification code below to complete your Weavly sign in."
                 )
 
                         + EmailComponents.otpBox(otp)
 
                         + EmailComponents.securityNote(
                         "Keep this code private",
-                        "LuxZera will never ask for this code outside the app. If you didn't request this email, you can safely ignore it."
+                        "Weavly will never ask for this code outside the app. If you didn't request this email, you can safely ignore it."
                 )
 
                         + EmailComponents.muted(
@@ -55,7 +55,7 @@ public final class EmailHtmlTemplates {
                 )
 
                         + EmailComponents.paragraph(
-                        "Use the latest verification code below to continue with your LuxZera account."
+                        "Use the latest verification code below to continue with your Weavly account."
                 )
 
                         + EmailComponents.otpBox(otp)
@@ -86,7 +86,7 @@ public final class EmailHtmlTemplates {
         String body =
 
                 EmailComponents.paragraph(
-                        "We received a request to reset your LuxZera password."
+                        "We received a request to reset your Weavly password."
                 )
 
                         + EmailComponents.button(
@@ -115,7 +115,7 @@ public final class EmailHtmlTemplates {
         String body =
 
                 EmailComponents.paragraph(
-                        "Your LuxZera password has been changed successfully."
+                        "Your Weavly password has been changed successfully."
                 )
 
                         + EmailComponents.muted(
@@ -143,11 +143,11 @@ public final class EmailHtmlTemplates {
                 )
 
                         + EmailComponents.paragraph(
-                        "Welcome to LuxZera. We're excited to have you join our community."
+                        "Welcome to Weavly. We're excited to have you join our community."
                 );
 
         return EmailLayout.build(
-                "Welcome to LuxZera",
+                "Welcome to Weavly",
                 body
         );
     }
