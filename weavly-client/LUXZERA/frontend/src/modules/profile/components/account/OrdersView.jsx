@@ -16,7 +16,7 @@ const OrdersView = ({ userId, onNavigateToTab }) => {
           id: "LZ-98374",
           date: "June 28, 2026",
           status: "Delivered",
-          statusStep: 4, // 0: Placed, 1: Processing, 2: Shipped, 3: Out for Delivery, 4: Delivered
+          statusStep: 4,
           total: 289.00,
           shippingAddress: "Saketh Chokkapu, 123 Luxury Avenue, Apt 4B, New York, NY 10001",
           paymentMethod: "Visa ending in 4242",
@@ -68,52 +68,45 @@ const OrdersView = ({ userId, onNavigateToTab }) => {
   }, [userId]);
 
   const toggleExpand = (orderId) => {
-    setExpandedOrderId(prev => (prev === orderId ? null : orderId));
+    setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
   };
 
   const getStatusStyle = (status) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case "delivered":
-        return "bg-emerald-50 text-emerald-700 border-emerald-200/60";
+        return "bg-white text-[#183B56] border-[#183B56]";
       case "shipped":
-        return "bg-blue-50 text-blue-700 border-blue-200/60";
+        return "bg-white text-[#183B56] border-[#183B56]";
       case "processing":
-        return "bg-amber-50 text-amber-700 border-amber-200/60";
+      case "placed":
+        return "bg-white text-[#183B56] border-[#183B56]";
+      case "cancelled":
+        return "bg-red-50 text-red-700 border-red-300";
       default:
-        return "bg-[#F5F4F2] text-[#6B6B6B] border-[#E8E5E0]";
+        return "bg-white text-[#183B56] border-[#183B56]";
     }
   };
 
-  // Premium step tracker
-  const renderTracker = (currentStep) => {
+  const renderStatusTracker = (currentStep = 0) => {
     const steps = ["Placed", "Processing", "Shipped", "Out for Delivery", "Delivered"];
     return (
-      <div className="py-5 px-5 bg-[#FAFAF9] rounded-xl border border-[#E8E5E0] mt-4">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#ABABAB] mb-4">Shipment Progress</p>
-        <div className="relative flex justify-between items-center w-full">
-          {/* Track line */}
-          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-[#E8E5E0] -z-10">
-            <div 
-              className="h-full bg-[#C8702A] transition-all duration-500" 
-              style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
-            />
-          </div>
-          
+      <div className="py-4 px-2">
+        <div className="flex items-center justify-between relative">
+          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[1px] bg-[#183B56]/20 z-0" />
           {steps.map((step, idx) => {
             const isCompleted = idx <= currentStep;
-            const isActive = idx === currentStep;
             return (
-              <div key={step} className="flex flex-col items-center">
+              <div key={step} className="flex flex-col items-center z-10">
                 <div 
-                  className={`w-5 h-5 rounded-full flex items-center justify-center border-2 transition-all ${
+                  className={`w-6 h-6 border flex items-center justify-center text-[10px] font-bold transition-all ${
                     isCompleted 
-                      ? "bg-[#C8702A] border-[#C8702A] text-white" 
-                      : "bg-white border-[#D0CCC6] text-[#BFBFBF]"
-                  } ${isActive ? "ring-4 ring-[#C8702A]/10 scale-110" : ""}`}
+                      ? "bg-[#183B56] border-[#183B56] text-white" 
+                      : "bg-[#F5EFEB] border-[#183B56]/40 text-[#5A7184]"
+                  }`}
                 >
-                  <span className="text-[8px] font-bold">{idx + 1}</span>
+                  {idx + 1}
                 </div>
-                <span className={`text-[8px] font-semibold mt-2 tracking-tight text-center ${isCompleted ? "text-[#1A1A1A]" : "text-[#BFBFBF]"}`}>
+                <span className={`text-[9px] font-bold mt-1.5 uppercase tracking-wider text-center ${isCompleted ? "text-[#183B56]" : "text-[#5A7184]"}`}>
                   {step}
                 </span>
               </div>
@@ -125,110 +118,95 @@ const OrdersView = ({ userId, onNavigateToTab }) => {
   };
 
   return (
-    <div className="font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="border border-[#183B56] bg-[#F5EFEB] p-6 sm:p-8 shadow-xs space-y-6">
       {/* Section Header */}
-      <div className="pb-6 mb-6 border-b border-[#EDEBE8] flex items-center justify-between">
+      <div className="pb-4 border-b border-[#183B56] flex items-center justify-between">
         <div>
-          <h2 className="text-[20px] font-bold text-[#1A1A1A] tracking-[-0.02em]">Order History</h2>
-          <p className="text-[13px] text-[#8C8C8C] mt-1">Track shipments and review past purchases.</p>
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">Order History</h2>
+          <p className="text-xs text-[#5A7184] mt-0.5">Track shipments and review past purchases.</p>
         </div>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F5F4F2] border border-[#E8E5E0] rounded-lg text-[10px] font-semibold text-[#8C8C8C] select-none">
-          <Package size={12} className="text-[#ABABAB]" />
+        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#183B56] text-[10px] font-bold uppercase tracking-wider text-[#183B56] shadow-xs">
+          <Package size={12} />
           <span>{orders.length} orders</span>
         </div>
       </div>
 
       {orders.length === 0 ? (
-        <div className="py-14 border border-dashed border-[#E8E5E0] rounded-2xl text-center">
-          <Package size={28} className="text-[#D0CCC6] mx-auto mb-3" />
-          <p className="text-[13px] font-semibold text-[#6B6B6B]">No orders placed yet</p>
-          <p className="text-[12px] text-[#ABABAB] mt-1.5 max-w-[220px] mx-auto leading-relaxed">Browse our collections to start adding luxury pieces to your wardrobe.</p>
+        <div className="py-14 border border-dashed border-[#183B56] p-8 text-center bg-[#DFE7ED]/20 shadow-xs">
+          <Package size={28} className="text-[#183B56] mx-auto mb-3" />
+          <p className="text-sm font-bold text-[#183B56]">No orders placed yet</p>
+          <p className="text-xs text-[#5A7184] mt-1.5 max-w-[220px] mx-auto leading-relaxed">Browse our collections to start adding atelier pieces to your wardrobe.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {orders.map((order) => {
             const isExpanded = expandedOrderId === order.id;
             return (
               <div 
                 key={order.id} 
-                className="border border-[#E8E5E0] rounded-2xl bg-white transition-all overflow-hidden hover:border-[#D0CCC6]"
+                className="border border-[#183B56] bg-[#F5EFEB] shadow-xs transition-all overflow-hidden"
               >
                 {/* Header Row */}
                 <div 
                   onClick={() => toggleExpand(order.id)}
-                  className="flex items-center justify-between p-5 cursor-pointer hover:bg-[#FAFAF9] transition-colors duration-150"
+                  className="flex items-center justify-between p-5 cursor-pointer hover:bg-[#183B56]/[0.02] transition-colors"
                 >
-                  <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                     <div>
-                      <span className="text-[13px] font-bold text-[#1A1A1A]">{order.id}</span>
-                      <p className="text-[11px] text-[#ABABAB] mt-0.5">{order.date}</p>
+                      <span className="text-sm font-bold text-[#183B56]">{order.id}</span>
+                      <p className="text-[11px] text-[#5A7184] mt-0.5">{order.date}</p>
                     </div>
-                    <div className="h-5 w-[1px] bg-[#E8E5E0] hidden sm:block" />
+                    <div className="h-6 w-[1px] bg-[#183B56]/20 hidden sm:block" />
                     <div>
-                      <span className="text-[9px] font-semibold text-[#ABABAB] uppercase tracking-[0.12em]">Total</span>
-                      <p className="text-[13px] font-bold text-[#1A1A1A] mt-0.5">${order.total.toFixed(2)}</p>
+                      <span className="text-[9px] font-bold text-[#5A7184] uppercase tracking-[0.12em]">Total</span>
+                      <p className="text-sm font-bold text-[#183B56] mt-0.5">₹{Math.round(order.total * 85).toLocaleString('en-IN')}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className={`px-2.5 py-1 border rounded-lg text-[9px] font-bold uppercase tracking-wider ${getStatusStyle(order.status)}`}>
+                    <span className={`px-2.5 py-1 border text-[9px] font-bold uppercase tracking-wider ${getStatusStyle(order.status)}`}>
                       {order.status}
                     </span>
-                    {isExpanded ? <ChevronUp size={15} className="text-[#ABABAB]" /> : <ChevronDown size={15} className="text-[#ABABAB]" />}
+                    {isExpanded ? <ChevronUp size={15} className="text-[#183B56]" /> : <ChevronDown size={15} className="text-[#183B56]" />}
                   </div>
                 </div>
 
-                {/* Expanded Panel */}
+                {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="px-5 pb-5 border-t border-[#EDEBE8] space-y-4 pt-4">
-                    {/* Items */}
-                    <div className="space-y-2.5">
-                      <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#ABABAB]">Items</p>
-                      {order.items.map((item) => (
-                        <div key={item.id} className="flex gap-4 items-center justify-between bg-[#FAFAF9] border border-[#E8E5E0] p-3.5 rounded-xl">
-                          <div className="flex gap-3.5 items-center">
-                            <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded-lg border border-[#E8E5E0]" />
-                            <div>
-                              <p className="text-[12.5px] font-semibold text-[#1A1A1A] leading-tight">{item.name}</p>
-                              <p className="text-[10.5px] text-[#8C8C8C] mt-1">
-                                Size: <span className="font-semibold text-[#6B6B6B] mr-2">{item.size}</span>
-                                Color: <span className="font-semibold text-[#6B6B6B]">{item.color}</span>
-                              </p>
-                            </div>
-                          </div>
-                          <div className="text-right flex-shrink-0">
-                            <p className="text-[13px] font-bold text-[#1A1A1A]">${item.price.toFixed(2)}</p>
-                            <p className="text-[10px] text-[#ABABAB] mt-0.5">Qty: {item.quantity}</p>
-                          </div>
-                        </div>
-                      ))}
+                  <div className="p-5 border-t border-[#183B56] bg-[#DFE7ED]/20 space-y-6">
+                    {/* Status Tracker */}
+                    <div className="bg-white border border-[#183B56] p-4 shadow-xs">
+                      {renderStatusTracker(order.statusStep ?? 4)}
                     </div>
 
-                    {/* Tracker */}
-                    {renderTracker(order.statusStep)}
-
-                    {/* Summary */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                      <div className="p-4 bg-[#FAFAF9] border border-[#E8E5E0] rounded-xl">
-                        <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#ABABAB]">Shipping Address</p>
-                        <p className="text-[12px] text-[#6B6B6B] mt-1.5 leading-relaxed">{order.shippingAddress}</p>
+                    {/* Items List */}
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-bold uppercase tracking-[0.16em] text-[#183B56]">Items in this order</h4>
+                      <div className="space-y-2">
+                        {order.items.map((item) => (
+                          <div key={item.id} className="flex items-center justify-between p-3 bg-white border border-[#183B56] shadow-xs">
+                            <div className="flex items-center gap-3">
+                              <img src={item.image} alt={item.name} className="w-12 h-14 object-cover border border-[#183B56]" />
+                              <div>
+                                <h5 className="text-xs font-bold text-[#183B56]">{item.name}</h5>
+                                <p className="text-[10px] text-[#5A7184] mt-0.5">Size: {item.size} • Color: {item.color} • Qty: {item.quantity}</p>
+                              </div>
+                            </div>
+                            <span className="text-xs font-bold text-[#183B56]">₹{Math.round(item.price * 85).toLocaleString('en-IN')}</span>
+                          </div>
+                        ))}
                       </div>
-                      <div className="p-4 bg-[#FAFAF9] border border-[#E8E5E0] rounded-xl">
-                        <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#ABABAB]">Payment</p>
-                        <p className="text-[12px] text-[#6B6B6B] mt-1.5 leading-relaxed">{order.paymentMethod}</p>
-                        <div className="flex gap-2 mt-3">
-                          <button className="flex items-center gap-1.5 px-3 py-1.5 border border-[#E8E5E0] hover:border-[#D0CCC6] rounded-lg text-[10px] font-semibold text-[#6B6B6B] hover:text-[#1A1A1A] transition-all duration-200">
-                            <Download size={11} />
-                            <span>Invoice</span>
-                          </button>
-                          <button 
-                            onClick={() => onNavigateToTab?.("support")}
-                            className="flex items-center gap-1.5 px-3 py-1.5 border border-[#E8E5E0] hover:border-[#D0CCC6] rounded-lg text-[10px] font-semibold text-[#6B6B6B] hover:text-[#1A1A1A] transition-all duration-200"
-                          >
-                            <HelpCircle size={11} />
-                            <span>Help</span>
-                          </button>
-                        </div>
+                    </div>
+
+                    {/* Shipping and Payment info */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#183B56]/20 text-xs">
+                      <div>
+                        <span className="font-bold uppercase tracking-wider text-[10px] text-[#5A7184] block mb-1">Delivery Address</span>
+                        <p className="text-[#183B56] leading-relaxed">{order.shippingAddress}</p>
+                      </div>
+                      <div>
+                        <span className="font-bold uppercase tracking-wider text-[10px] text-[#5A7184] block mb-1">Payment Method</span>
+                        <p className="text-[#183B56]">{order.paymentMethod}</p>
                       </div>
                     </div>
                   </div>

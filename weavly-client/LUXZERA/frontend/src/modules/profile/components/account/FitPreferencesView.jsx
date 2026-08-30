@@ -175,16 +175,16 @@ export default function FitPreferencesView({ userId, onSaveSuccess }) {
   }
 
   return (
-    <div className="relative font-['Plus_Jakarta_Sans',sans-serif] text-left">
+    <div className="border border-[#183B56] bg-[#F5EFEB] p-6 sm:p-8 shadow-xs text-[#183B56] relative text-left">
       {errorMsg && (
-        <div className="px-5 py-3 mb-6 bg-red-50 border border-red-100 rounded-xl text-[12.5px] text-red-600 font-medium flex items-center gap-2">
-          <AlertCircle size={15} className="flex-shrink-0" />
+        <div className="px-5 py-3 mb-6 bg-red-50 border border-red-300 text-xs font-bold text-red-800 flex items-center gap-2 shadow-xs">
+          <AlertCircle size={15} className="shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {success && (
-        <div className="px-5 py-3 mb-6 bg-emerald-50 border border-emerald-100 rounded-xl text-[12.5px] text-emerald-700 font-semibold flex items-center gap-2">
+        <div className="px-5 py-3 mb-6 bg-[#DFE7ED] border border-[#183B56] text-xs font-bold text-[#183B56] flex items-center gap-2 shadow-xs">
           <Check size={15} />
           <span>Preferences updated successfully!</span>
         </div>

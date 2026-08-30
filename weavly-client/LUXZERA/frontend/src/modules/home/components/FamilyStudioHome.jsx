@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowDown, ChevronLeft, ChevronRight, ShoppingBag, Bookmark, Loader2 } from "lucide-react";
+import { ArrowRight, ArrowDown, ChevronLeft, ChevronRight, ShoppingBag, Bookmark, Loader2, Sparkles, Camera } from "lucide-react";
 import { getProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useCart } from "@/modules/cart/store/CartContext";
 import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
+import BespokeFitModal from "./BespokeFitModal";
 
 const NEUTRAL_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23DFE7ED'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='16' font-weight='700' fill='%23183B56' text-anchor='middle' letter-spacing='2'%3EWEAVLY%3C/text%3E%3C/svg%3E";
 
@@ -213,6 +214,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [visibleRowsCount, setVisibleRowsCount] = useState(2);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [isFitModalOpen, setIsFitModalOpen] = useState(false);
   const sentinelRef = useRef(null);
   const catalogSectionRef = useRef(null);
 
@@ -417,32 +419,42 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
               </div>
             </div>
 
-            {/* RIGHT: Big Bold Headline & Direct Button (lg:col-span-4) */}
+            {/* RIGHT: Big Bold Headline & Bespoke Fit AI Action (lg:col-span-4) */}
             <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between space-y-6">
               <div className="space-y-3">
-                <div className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
-                  Weavly Studio
+                <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
+                  <Sparkles size={12} className="text-[#183B56]" />
+                  <span>Zyra Visual Intelligence</span>
                 </div>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#183B56] leading-[1.1]">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#183B56] leading-[1.08]">
                   Wear What <br />
-                  Endures.
+                  Truly Suits You.
                 </h1>
-                <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed pt-1">
-                  Sustainable natural fabrics. Clean tailored fits made for everyday wear.
+                <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed pt-1 font-normal">
+                  Upload your photo or set your proportions. Zyra analyzes your silhouette, skin undertones, and drape to curate clothes tailored specifically to flatter you.
                 </p>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
+                <button
+                  onClick={() => setIsFitModalOpen(true)}
+                  className="w-full py-3.5 px-4 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.18em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                >
+                  <Camera size={14} />
+                  <span>Personalize Fit & Photo</span>
+                  <ArrowRight size={13} />
+                </button>
+
                 <button
                   onClick={handleScrollToCatalog}
-                  className="w-full py-4 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.2em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                  className="w-full py-2.5 px-4 bg-transparent hover:bg-[#183B56]/5 text-[#183B56] text-xs font-bold uppercase tracking-[0.16em] border border-[#183B56] cursor-pointer transition-all flex items-center justify-center gap-1.5"
                 >
-                  <span>Shop Collection</span>
-                  <ArrowDown size={14} className="animate-bounce" />
+                  <span>Explore Atelier Catalog</span>
+                  <ArrowDown size={13} />
                 </button>
                 
-                <div className="text-center text-[10px] font-semibold text-[#5A7184]">
-                  ✓ Free Global Delivery • ✓ Easy 30-Day Returns
+                <div className="text-center text-[10px] font-bold text-[#5A7184] pt-1">
+                  ✓ Silhouette Proportions • ✓ Undertone Harmony • ✓ Zero Sizing Regrets
                 </div>
               </div>
             </div>
@@ -745,6 +757,17 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         </section>
 
       </main>
+
+      {/* ── BESPOKE FIT & STYLE STUDIO MODAL ── */}
+      <BespokeFitModal
+        isOpen={isFitModalOpen}
+        onClose={() => setIsFitModalOpen(false)}
+        onGenerated={() => {
+          setVisibleRowsCount(4);
+          const recElem = document.getElementById("atelier-catalog-feed");
+          if (recElem) recElem.scrollIntoView({ behavior: "smooth" });
+        }}
+      />
     </div>
   );
 }

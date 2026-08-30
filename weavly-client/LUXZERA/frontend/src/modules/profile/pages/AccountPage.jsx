@@ -296,24 +296,30 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
         }
       `}</style>
 
-      {/* Minimal Luxury Top Bar */}
-      <div className="border-b border-[#ECECEC] bg-white/90 backdrop-blur-md sticky top-0 z-20">
-        <div className="max-w-[1120px] mx-auto px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            <span className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-neutral-400">Settings</span>
-            <span className="text-neutral-300 text-xs">/</span>
-            <h1 className="text-[13.5px] sm:text-[14.5px] font-semibold text-neutral-900 tracking-tight shrink-0">{currentTab.title}</h1>
-            <span className="hidden md:inline-block text-neutral-300 text-xs">•</span>
-            <p className="hidden md:inline-block text-[12.5px] text-neutral-500 font-normal truncate">{currentTab.subtitle}</p>
+      {/* Architectural Header Module */}
+      <div className="max-w-[1360px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 pt-8 sm:pt-12">
+        <div className="border border-[#183B56] bg-[#F5EFEB] p-6 sm:p-8 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184]">
+                Account Settings • Atelier Studio
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56] uppercase">
+                {currentTab.title}
+              </h1>
+              <p className="text-xs text-[#5A7184] font-normal pt-0.5">
+                {currentTab.subtitle}
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Content Grid */}
-      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 md:px-8 py-4 sm:py-6 md:py-8">
-        <div className="grid grid-cols-12 gap-3 sm:gap-6 md:gap-8 lg:gap-10 items-start">
+      <div className="max-w-[1360px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 py-8">
+        <div className="grid grid-cols-12 gap-6 md:gap-8 items-start">
           
-          {/* Sticky Sidebar (Horizontal pills on mobile, vertical card on desktop) */}
+          {/* Sticky Sidebar */}
           <div className="col-span-12 md:col-span-3 md:sticky md:top-20 md:self-start z-10">
             <AccountSidebar activeTab={activeTab} onTabChange={(tab) => { setActiveTab(tab); }} />
           </div>
