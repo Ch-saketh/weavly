@@ -346,9 +346,9 @@ export default function ShopPage({ initialDepartment = "All" }) {
 
         {/* ── ZERA PERSONALIZED RECOMMENDATIONS SECTION ── */}
         <ZeraRecommendationsSection
-          title={`${department || "Curated"} Recommendations`}
-          subtitle={`Personalized For You • ${department || "All"}`}
-          genderFilter={department}
+          title={`${initialDepartment && initialDepartment !== "All" ? initialDepartment : "Curated"} Recommendations`}
+          subtitle={`Personalized For You • ${initialDepartment || "All"}`}
+          genderFilter={initialDepartment !== "All" ? initialDepartment : undefined}
         />
 
         {/* ── STACKED CATEGORY SECTIONS ── */}
