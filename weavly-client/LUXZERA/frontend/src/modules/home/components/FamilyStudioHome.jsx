@@ -175,13 +175,15 @@ function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddTo
                 </div>
               </div>
 
-              {/* Bottom Rate & Title Box */}
-              <div className="py-3.5 px-3 text-center flex flex-col items-center justify-center space-y-1 bg-[#F5EFEB]">
-                <div className="text-[12px] sm:text-[13px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1 truncate max-w-full">
-                  <span>{pName}</span>
-                  <span className="text-xs font-normal">→</span>
+              {/* Bottom Rate & Title Box (Clean 2-Line Wrapping, No Text Cutoff) */}
+              <div className="py-3.5 px-3 text-center flex flex-col items-center justify-between min-h-[82px] bg-[#F5EFEB]">
+                <div
+                  className="text-xs sm:text-[13px] font-bold text-[#183B56] group-hover:underline line-clamp-2 leading-snug w-full text-center px-1"
+                  title={pName}
+                >
+                  {pName}
                 </div>
-                <div className="text-[14px] sm:text-[15px] font-bold text-[#183B56] tracking-tight">
+                <div className="text-sm sm:text-base font-bold text-[#183B56] tracking-tight mt-1">
                   ₹{Math.round(pPrice).toLocaleString("en-IN")}
                 </div>
               </div>
@@ -526,13 +528,15 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                     </div>
                   </div>
 
-                  {/* Bottom Rate & Title Box */}
-                  <div className="py-4 sm:py-5 px-3 text-center flex flex-col items-center justify-center space-y-1.5 bg-[#F5EFEB]">
-                    <div className="text-[13px] sm:text-[14px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1.5 truncate max-w-full">
-                      <span>{pName}</span>
-                      <span className="text-sm font-normal">→</span>
+                  {/* Bottom Rate & Title Box (Clean 2-Line Wrapping, No Text Cutoff) */}
+                  <div className="py-3.5 px-3 text-center flex flex-col items-center justify-between min-h-[82px] bg-[#F5EFEB]">
+                    <div
+                      className="text-xs sm:text-[13px] font-bold text-[#183B56] group-hover:underline line-clamp-2 leading-snug w-full text-center px-1"
+                      title={pName}
+                    >
+                      {pName}
                     </div>
-                    <div className="text-[15px] sm:text-[16px] font-bold text-[#183B56] tracking-tight">
+                    <div className="text-sm sm:text-base font-bold text-[#183B56] tracking-tight mt-1">
                       ₹{Math.round(pPrice).toLocaleString("en-IN")}
                     </div>
                   </div>
@@ -754,13 +758,15 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                       </div>
                     </div>
 
-                    {/* Bottom Rate & Title Box */}
-                    <div className="py-4 sm:py-5 px-3 text-center flex flex-col items-center justify-center space-y-1.5 bg-[#F5EFEB]">
-                      <div className="text-[13px] sm:text-[14px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1.5 truncate max-w-full">
-                        <span>{pName}</span>
-                        <span className="text-sm font-normal">→</span>
+                    {/* Bottom Rate & Title Box (Clean 2-Line Wrapping, No Text Cutoff) */}
+                    <div className="py-3.5 px-3 text-center flex flex-col items-center justify-between min-h-[82px] bg-[#F5EFEB]">
+                      <div
+                        className="text-xs sm:text-[13px] font-bold text-[#183B56] group-hover:underline line-clamp-2 leading-snug w-full text-center px-1"
+                        title={pName}
+                      >
+                        {pName}
                       </div>
-                      <div className="text-[15px] sm:text-[16px] font-bold text-[#183B56] tracking-tight">
+                      <div className="text-sm sm:text-base font-bold text-[#183B56] tracking-tight mt-1">
                         ₹{Math.round(pPrice).toLocaleString("en-IN")}
                       </div>
                     </div>

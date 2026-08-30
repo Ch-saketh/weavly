@@ -215,17 +215,19 @@ export default function ZeraRecommendationsSection({
                 </div>
               </div>
 
-              {/* Bottom Rate & Title Box */}
-              <div className="py-4 sm:py-5 px-3 text-center flex flex-col items-center justify-center space-y-1.5 bg-[#F5EFEB]">
+              {/* Bottom Rate & Title Box (Clean 2-Line Wrapping, No Text Cutoff) */}
+              <div className="py-3.5 px-3 text-center flex flex-col items-center justify-between min-h-[96px] bg-[#F5EFEB] space-y-1">
                 <div className="flex items-center justify-between w-full text-[10px] font-bold text-[#5A7184] uppercase tracking-wider px-1">
-                  <span className="truncate max-w-[100px]">{item.brand || "WEAVLY"}</span>
+                  <span className="truncate max-w-[110px]">{item.brand || "WEAVLY"}</span>
                   <span>{item.gender || "UNISEX"}</span>
                 </div>
-                <div className="text-[12px] sm:text-[13px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1 truncate max-w-full">
-                  <span>{item.name}</span>
-                  <span className="text-sm font-normal">→</span>
+                <div
+                  className="text-xs sm:text-[13px] font-bold text-[#183B56] group-hover:underline line-clamp-2 leading-snug w-full text-center px-1"
+                  title={item.name}
+                >
+                  {item.name}
                 </div>
-                <div className="text-[14px] sm:text-[15px] font-bold text-[#183B56] tracking-tight">
+                <div className="text-sm sm:text-base font-bold text-[#183B56] tracking-tight">
                   ₹{Math.round(productPrice).toLocaleString("en-IN")}
                 </div>
               </div>
