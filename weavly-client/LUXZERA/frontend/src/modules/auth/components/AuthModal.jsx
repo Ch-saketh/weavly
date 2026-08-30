@@ -438,36 +438,31 @@ export default function AuthModal({ isOpen, onClose, initialView = "login" }) {
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-bottom: 16px;
-        }
-
-        .am-logo-badge {
-          height: 48px;
-          width: auto;
-          object-fit: contain;
+          margin-bottom: 22px;
+          margin-top: 4px;
         }
 
         .am-header {
           text-align: center;
-          margin-bottom: 20px;
+          margin-bottom: 24px;
         }
 
         .am-title {
           font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-          font-size: 28px;
+          font-size: 27px;
           font-weight: 700;
-          color: #18181B;
-          letter-spacing: -0.02em;
-          line-height: 1.25;
-          margin-bottom: 8px;
+          color: #111111;
+          letter-spacing: -0.025em;
+          line-height: 1.2;
+          margin-bottom: 6px;
         }
 
         .am-subtitle {
           font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: 14px;
+          font-size: 13.5px;
           font-weight: 400;
           color: #71717A;
-          line-height: 1.55;
+          line-height: 1.5;
           max-width: 320px;
           margin: 0 auto;
         }

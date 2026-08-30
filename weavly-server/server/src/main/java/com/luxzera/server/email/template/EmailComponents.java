@@ -9,6 +9,7 @@ public final class EmailComponents {
         return "<div class=\"center\">"
                 + "<a class=\"logo-link\" href=\"" + EmailBranding.HOME_URL + "\" aria-label=\"" + EmailBranding.BRAND_NAME + " home\">"
                 + "<span class=\"logo-text\">" + EmailBranding.BRAND_NAME + "</span>"
+                + "<span class=\"beta-badge\">BETA</span>"
                 + "</a>"
                 + "<div class=\"divider\"></div>"
                 + "</div>";

@@ -79,6 +79,21 @@ public final class EmailStyles {
             text-decoration:none;
         }
 
+        .beta-badge{
+            display:inline-block;
+            vertical-align:middle;
+            font-family:monospace, sans-serif;
+            font-size:9px;
+            font-weight:700;
+            letter-spacing:0.15em;
+            background:#111111;
+            color:#FFFFFF;
+            padding:3px 6px;
+            border-radius:4px;
+            margin-left:8px;
+            margin-bottom:18px;
+        }
+
         .logo{
             width:180px;
             max-width:70%;
