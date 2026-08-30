@@ -287,112 +287,122 @@ function ShopPageContent({ initialDepartment = "All" }) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-12 md:space-y-16">
         
         {/* ── BENTO HERO BANNER (Matches Homepage Style) ── */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-          {/* Main Hero Card Left */}
-          <div className={`lg:col-span-8 ${heroConfig.bgColor} rounded-[28px] md:rounded-[36px] p-6 sm:p-10 md:p-12 relative overflow-hidden flex flex-col justify-between min-h-[400px] md:min-h-[460px] shadow-xs`}>
-            <div className="flex items-start justify-between gap-4 z-10">
-              <div className="max-w-md">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#111111] leading-[1.05] tracking-tight">
-                  {heroConfig.title}
-                </h1>
-                <p className="mt-4 text-xs sm:text-sm text-[#37352F]/80 leading-relaxed max-w-xs font-medium">
-                  {heroConfig.desc}
-                </p>
+        {/* ── TOP HERO / SEARCH HEADER ── */}
+        {query ? (
+          <div className="p-6 sm:p-8 bg-[#FAFAF9] border border-[#ECECEC] rounded-3xl flex flex-wrap items-center justify-between gap-6 shadow-xs">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E93]">Catalog Search</span>
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#1D1D1F] text-white font-semibold">{displayed.length} items found</span>
               </div>
-
-              <div className="text-right shrink-0">
-                <span className="text-3xl sm:text-4xl md:text-5xl font-black text-[#111111] tracking-tight block">
-                  {heroConfig.discount}
-                </span>
-                <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#37352F] block -mt-1">
-                  {heroConfig.discountLabel}
-                </span>
-              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1D1D1F] mt-1.5 tracking-tight">
+                Results for &ldquo;{query}&rdquo;
+              </h1>
+              <p className="text-xs text-[#71717A] mt-1 font-medium">Ranked by relevance to your fashion inquiry</p>
             </div>
-
-            {/* Model Image */}
-            <img
-              src={heroConfig.heroImage}
-              alt={heroConfig.title}
-              className="absolute right-0 bottom-0 w-1/2 md:w-5/12 h-full object-cover object-top opacity-90 mix-blend-multiply pointer-events-none"
-            />
+            <button
+              onClick={() => router.push(pathname)}
+              className="px-5 py-2.5 text-xs font-semibold text-[#1D1D1F] bg-white border border-[#ECECEC] hover:border-[#1D1D1F] hover:bg-[#F2F2F7] rounded-full transition-all cursor-pointer shadow-xs"
+            >
+              Clear Search
+            </button>
           </div>
+        ) : (
+          <>
+            {/* Main Hero Bento */}
+            <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+              <div className={`lg:col-span-8 ${heroConfig.bgColor} rounded-[28px] md:rounded-[36px] p-6 sm:p-10 md:p-12 relative overflow-hidden flex flex-col justify-between min-h-[400px] md:min-h-[460px] shadow-xs`}>
+                <div className="flex items-start justify-between gap-4 z-10">
+                  <div className="max-w-md">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#111111] leading-[1.05] tracking-tight">
+                      {heroConfig.title}
+                    </h1>
+                    <p className="mt-4 text-xs sm:text-sm text-[#37352F]/80 leading-relaxed max-w-xs font-medium">
+                      {heroConfig.desc}
+                    </p>
+                  </div>
 
-          {/* Right Column: 2 Stacked Cards */}
-          <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
-            {/* Card 1 */}
-            <div className="bg-[#F2F0ED] rounded-[28px] p-5 relative overflow-hidden h-[200px] md:h-[220px] flex flex-col justify-between group shadow-xs">
-              <img
-                src={heroConfig.card1Image}
-                alt={heroConfig.card1Title}
-                className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="z-10 bg-white/90 backdrop-blur-sm self-start px-3 py-1 rounded-full text-xs font-bold text-[#111111]">
-                {heroConfig.card1Title}
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="bg-[#F2F0ED] rounded-[28px] p-5 relative overflow-hidden h-[200px] md:h-[220px] flex flex-col justify-between group shadow-xs">
-              <img
-                src={heroConfig.card2Image}
-                alt={heroConfig.card2Title}
-                className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="z-10 bg-white/90 backdrop-blur-sm self-start px-3 py-1 rounded-full text-xs font-bold text-[#111111]">
-                {heroConfig.card2Title}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── ZERA PERSONALIZED RECOMMENDATIONS SECTION ── */}
-        <ZeraRecommendationsSection
-          title={`${initialDepartment && initialDepartment !== "All" ? initialDepartment : "Curated"} Recommendations`}
-          subtitle={`Personalized For You • ${initialDepartment || "All"}`}
-          genderFilter={initialDepartment !== "All" ? initialDepartment : undefined}
-        />
-
-        {/* ── STACKED CATEGORY SECTIONS ── */}
-        <div className="space-y-16 pt-4">
-          {query && (
-            <div className="p-5 sm:p-6 bg-[#FAFAF9] border border-[#ECECEC] rounded-2xl flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8E8E93]">Search Results</span>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#1D1D1F] text-white font-medium">{products.length} found</span>
+                  <div className="text-right shrink-0">
+                    <span className="text-3xl sm:text-4xl md:text-5xl font-black text-[#111111] tracking-tight block">
+                      {heroConfig.discount}
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#37352F] block -mt-1">
+                      {heroConfig.discountLabel}
+                    </span>
+                  </div>
                 </div>
-                <h1 className="text-xl sm:text-2xl font-bold text-[#1D1D1F] mt-1 tracking-tight">
-                  &ldquo;{query}&rdquo;
-                </h1>
-              </div>
-              <button
-                onClick={() => router.push(pathname)}
-                className="px-4 py-2 text-xs font-semibold text-[#1D1D1F] bg-white border border-[#ECECEC] hover:border-[#1D1D1F] rounded-full transition-colors cursor-pointer"
-              >
-                Clear Search
-              </button>
-            </div>
-          )}
 
-          {categorySections.map((group) => (
-            <section key={group.id} className="space-y-6">
-              <div className="flex items-center justify-between border-b border-[#ECECEC] pb-3">
-                <div>
-                  <h2 className="text-2xl sm:text-3xl font-black text-[#111111] uppercase tracking-tight">
-                    {group.title}
-                  </h2>
-                  <p className="text-xs font-semibold text-[#9B9B9B] mt-0.5">{group.subtitle}</p>
+                <img
+                  src={heroConfig.heroImage}
+                  alt={heroConfig.title}
+                  className="absolute right-0 bottom-0 w-1/2 md:w-5/12 h-full object-cover object-top opacity-90 mix-blend-multiply pointer-events-none"
+                />
+              </div>
+
+              <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
+                <div className="bg-[#F2F0ED] rounded-[28px] p-5 relative overflow-hidden h-[200px] md:h-[220px] flex flex-col justify-between group shadow-xs">
+                  <img
+                    src={heroConfig.card1Image}
+                    alt={heroConfig.card1Title}
+                    className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="z-10 bg-white/90 backdrop-blur-sm self-start px-3 py-1 rounded-full text-xs font-bold text-[#111111]">
+                    {heroConfig.card1Title}
+                  </div>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {group.items.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
+                <div className="bg-[#F2F0ED] rounded-[28px] p-5 relative overflow-hidden h-[200px] md:h-[220px] flex flex-col justify-between group shadow-xs">
+                  <img
+                    src={heroConfig.card2Image}
+                    alt={heroConfig.card2Title}
+                    className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="z-10 bg-white/90 backdrop-blur-sm self-start px-3 py-1 rounded-full text-xs font-bold text-[#111111]">
+                    {heroConfig.card2Title}
+                  </div>
+                </div>
               </div>
             </section>
-          ))}
+
+            {/* ── ZERA PERSONALIZED RECOMMENDATIONS SECTION ── */}
+            <ZeraRecommendationsSection
+              title={`${initialDepartment && initialDepartment !== "All" ? initialDepartment : "Curated"} Recommendations`}
+              subtitle={`Personalized For You • ${initialDepartment || "All"}`}
+              genderFilter={initialDepartment !== "All" ? initialDepartment : undefined}
+            />
+          </>
+        )}
+
+        {/* ── PRODUCT GRID / SECTIONS ── */}
+        <div className="space-y-16 pt-4">
+          {query ? (
+            /* Search Results Direct Relevance Grid */
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {displayed.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          ) : (
+            /* Stacked Category Sections for Catalog Browsing */
+            categorySections.map((group) => (
+              <section key={group.id} className="space-y-6">
+                <div className="flex items-center justify-between border-b border-[#ECECEC] pb-3">
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-black text-[#111111] uppercase tracking-tight">
+                      {group.title}
+                    </h2>
+                    <p className="text-xs font-semibold text-[#9B9B9B] mt-0.5">{group.subtitle}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                  {group.items.map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </div>
+              </section>
+            ))
+          )}
 
           {/* ── INFINITE SCROLL TRIGGER & STATUS ── */}
           <div ref={loadMoreTriggerRef} className="py-8 flex flex-col items-center justify-center">
@@ -402,25 +412,28 @@ function ShopPageContent({ initialDepartment = "All" }) {
                 <span>Loading more luxury pieces...</span>
               </div>
             )}
-            {!hasMore && products.length > 0 && (
+            {!hasMore && displayed.length > 0 && (
               <div className="flex items-center gap-3 py-6 text-[#A1A1AA] text-xs font-semibold tracking-wider uppercase">
                 <div className="w-12 h-px bg-[#E4E4E7]" />
-                <span>You've explored the complete catalog</span>
+                <span>You've explored the complete results</span>
                 <div className="w-12 h-px bg-[#E4E4E7]" />
               </div>
             )}
           </div>
 
-          {categorySections.length === 0 && !loadingProducts && (
+          {displayed.length === 0 && !loadingProducts && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <h3 className="text-sm font-bold uppercase tracking-widest text-[#9B9B9B] mb-2">
                 No products found
               </h3>
               <p className="text-xs text-[#71717A] max-w-xs mb-6">
-                No items found for your active search.
+                No items matched your inquiry. Try checking for typos or searching by brand name.
               </p>
               <button
-                onClick={clearAll}
+                onClick={() => {
+                  clearAll();
+                  if (query) router.push(pathname);
+                }}
                 className="bg-[#111111] text-white text-xs font-bold uppercase px-6 py-2.5 rounded-full hover:bg-[#F07020] transition-colors border-none cursor-pointer"
               >
                 Reset Search
