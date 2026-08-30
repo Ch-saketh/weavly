@@ -47,15 +47,15 @@ export default function NotFoundPage({ isErrorFallback = false }) {
             404
           </div>
 
-          {/* Seamless Floating Zera Mascot */}
+          {/* Seamless Floating Zyra Mascot */}
           <div 
             className="relative flex flex-col items-center justify-center transition-transform duration-150 ease-out"
             style={{ transform: `translate(${mousePos.x * 24}px, ${mousePos.y * 24}px)` }}
           >
-            {/* Authentic Zera Symbol */}
+            {/* Authentic Zyra Symbol */}
             <img 
               src="/logo.png" 
-              alt="Zera Symbol" 
+              alt="Zyra Symbol" 
               className="w-28 h-28 object-contain relative z-10"
             />
 

@@ -807,7 +807,7 @@ export default function AuthModal({ isOpen, onClose, initialView = "login" }) {
         </button>
 
         <div className="am-logo-container am-anim-item">
-          <img src="/logo.png" alt="Zera Logo" className="am-logo-badge" />
+          <img src="/logo.png" alt="Zyra Logo" className="am-logo-badge" />
         </div>
 
         <div className="am-header am-anim-item">

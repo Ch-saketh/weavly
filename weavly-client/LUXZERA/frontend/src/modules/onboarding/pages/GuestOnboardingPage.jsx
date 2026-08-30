@@ -17,11 +17,11 @@ import CardSwap, { Card } from "@/shared/components/ui/CardSwap";
 
 const CARD_NAV_ITEMS = [
   {
-    label: "Explore Zera",
+    label: "Explore Zyra",
     bgColor: "#1D1D1F",
     textColor: "#FFFFFF",
     links: [
-      { label: "What is Zera", href: "#meet-zera", ariaLabel: "What is Zera" },
+      { label: "What is Zyra", href: "#meet-zera", ariaLabel: "What is Zyra" },
       { label: "Curated Styles", href: "#curated-styles", ariaLabel: "Curated Styles" },
       { label: "Buyer Protection", href: "#escrow-protection", ariaLabel: "Buyer Protection" }
     ]
@@ -31,7 +31,7 @@ const CARD_NAV_ITEMS = [
     bgColor: "#F07020",
     textColor: "#FFFFFF",
     links: [
-      { label: "Zera Edits", href: "#zera-collections", ariaLabel: "Zera Edits" },
+      { label: "Zyra Edits", href: "#zera-collections", ariaLabel: "Zyra Edits" },
       { label: "Summer Capsule", href: "#zera-collections", ariaLabel: "Summer Capsule" },
       { label: "Atelier Looks", href: "#zera-collections", ariaLabel: "Atelier Looks" }
     ]
@@ -475,7 +475,7 @@ function ZeraInteractiveEyesMascot() {
       {/* Mascot Base Emblem */}
       <img
         src="/zera_clean.svg?v=2"
-        alt="Zera"
+        alt="Zyra"
         style={{ width: 460, height: 460, objectFit: "contain", position: "relative", zIndex: 2, userSelect: "none" }}
         draggable={false}
       />
@@ -989,7 +989,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                     </svg>
                   ),
                   title: 'Style, Understood',
-                  desc: 'Zera studies your proportions, colors, and personal aesthetic.',
+                  desc: 'Zyra studies your proportions, colors, and personal aesthetic.',
                 },
                 {
                   num: '03',
@@ -1081,7 +1081,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         {/* Single canvas behind all sections below */}
         <AnimatedDottedMeshBackground />
 
-      {/* ─── Explore With Zera CTA Banner ─── */}
+      {/* ─── Explore With Zyra CTA Banner ─── */}
       <section className="relative py-36 px-6 md:px-16 overflow-hidden flex items-center justify-center text-center w-full min-h-[460px]">
 
 
@@ -1093,7 +1093,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             onClick={() => triggerAuth("login")}
             className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-9 py-4 rounded-full text-[15px] font-medium flex items-center gap-3 shadow-md hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-0.5"
           >
-            Explore With Zera <span>→</span>
+            Explore With Zyra <span>→</span>
           </button>
         </div>
       </section>
@@ -1243,14 +1243,14 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               <br />Set your own price.
             </h2>
             <p className="text-[#666666] text-[15px] leading-relaxed mb-8 max-w-md">
-              Weavly is built for independent designers who want to reach a discerning audience without middlemen. Upload your collection, set your pricing, and let Zera match your work to the customers who'll love it most.
+              Weavly is built for independent designers who want to reach a discerning audience without middlemen. Upload your collection, set your pricing, and let Zyra match your work to the customers who'll love it most.
             </p>
 
             <div className="flex flex-col gap-4 mb-10">
               {[
                 { icon: '✦', text: 'Upload your designs — photos, descriptions, sizing' },
                 { icon: '✦', text: 'Set your own price for every piece' },
-                { icon: '✦', text: 'Zera surfaces your work to matched customers' },
+                { icon: '✦', text: 'Zyra surfaces your work to matched customers' },
                 { icon: '✦', text: 'Build your brand directly on Weavly' },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">

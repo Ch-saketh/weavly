@@ -43,7 +43,7 @@ export default function CompleteGoogleSignupPage() {
 
         <div className="flex flex-col items-center">
           <button onClick={() => router.push("/")} className="cursor-pointer flex items-center justify-center border-none bg-transparent p-0 select-none" aria-label="Weavly home">
-            <img src="/logo.png" alt="Zera Symbol" className="h-10 w-auto object-contain" />
+            <img src="/logo.png" alt="Zyra Symbol" className="h-10 w-auto object-contain" />
           </button>
           <h2 className="text-[28px] font-bold text-[#18181B] mt-5 tracking-tight">Complete Signup</h2>
           <p className="text-[12.5px] text-[#515154] font-medium leading-relaxed mt-2 max-w-[280px]">

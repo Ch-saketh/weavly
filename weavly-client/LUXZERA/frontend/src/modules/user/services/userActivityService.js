@@ -1,9 +1,17 @@
 "use client";
 
-import config from "@/config";
+import { config } from "@/infrastructure/api/gateway/config";
 import { getToken, isLoggedIn } from "@/shared/utils/token";
 
 const LOCAL_SEARCH_KEY = "weavly_recent_searches_v1";
+
+const getBaseUrl = () => {
+  if (config.usersApiUrl) {
+    const raw = config.usersApiUrl.replace(/\/$/, "");
+    return raw.endsWith("/api") ? raw : `${raw}/api`;
+  }
+  return "http://localhost:8081/api";
+};
 
 /**
  * Record a search query into user history.
@@ -26,7 +34,7 @@ export async function recordSearchActivity(query, resultCount = 0, audience = nu
   if (isLoggedIn()) {
     try {
       const token = getToken();
-      await fetch(`${config.apiUrl}/api/users/me/history/search`, {
+      await fetch(`${getBaseUrl()}/users/me/history/search`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +59,7 @@ export async function recordClickActivity(product, source = "MARKET") {
   if (isLoggedIn()) {
     try {
       const token = getToken();
-      await fetch(`${config.apiUrl}/api/users/me/history/click`, {
+      await fetch(`${getBaseUrl()}/users/me/history/click`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +90,7 @@ export async function recordBagActivity(product, action = "ADD", size = "M") {
   if (isLoggedIn()) {
     try {
       const token = getToken();
-      await fetch(`${config.apiUrl}/api/users/me/history/bag`, {
+      await fetch(`${getBaseUrl()}/users/me/history/bag`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +120,7 @@ export async function getRecentSearches(limit = 6) {
   if (isLoggedIn()) {
     try {
       const token = getToken();
-      const res = await fetch(`${config.apiUrl}/api/users/me/history/search?limit=${limit}`, {
+      const res = await fetch(`${getBaseUrl()}/users/me/history/search?limit=${limit}`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
@@ -149,7 +157,7 @@ export async function clearSearchHistory() {
   if (isLoggedIn()) {
     try {
       const token = getToken();
-      await fetch(`${config.apiUrl}/api/users/me/history/search`, {
+      await fetch(`${getBaseUrl()}/users/me/history/search`, {
         method: "DELETE",
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),

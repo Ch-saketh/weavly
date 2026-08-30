@@ -138,9 +138,9 @@ function ShopPageContent({ initialDepartment = "All" }) {
       setLoadingProducts(true);
       setProductError("");
       try {
-        const effectiveDept = initialDepartment !== "All" ? initialDepartment : (userGender === "male" ? "men" : userGender === "female" ? "women" : undefined);
+        const effectiveDept = query ? undefined : (initialDepartment !== "All" ? initialDepartment : (userGender === "male" ? "men" : userGender === "female" ? "women" : undefined));
         const res = await getPaginatedProducts({
-          limit: 24,
+          limit: 36,
           offset: 0,
           gender: effectiveDept,
           search: query || undefined,
@@ -177,9 +177,9 @@ function ShopPageContent({ initialDepartment = "All" }) {
     if (loadingMore || !hasMore || loadingProducts) return;
     setLoadingMore(true);
     try {
-      const effectiveDept = initialDepartment !== "All" ? initialDepartment : (userGender === "male" ? "men" : userGender === "female" ? "women" : undefined);
+      const effectiveDept = query ? undefined : (initialDepartment !== "All" ? initialDepartment : (userGender === "male" ? "men" : userGender === "female" ? "women" : undefined));
       const res = await getPaginatedProducts({
-        limit: 24,
+        limit: 36,
         offset: products.length,
         gender: effectiveDept,
         search: query || undefined,
@@ -221,28 +221,29 @@ function ShopPageContent({ initialDepartment = "All" }) {
 
   // ── Filtered & sorted products ─────────────────────────────────────────────
   const displayed = useMemo(() => {
-    const normalizedQuery = query.toLowerCase();
     let list = [...products].filter((p) => p.price <= priceMax);
-    // Gender filter: male users see male/unisex, female users see female/unisex
-    if (userGender === "male") {
-      list = list.filter((p) => {
-        const pg = (p.gender || "").toLowerCase();
-        return !pg || ["male", "men", "man", "boy", "boys", "unisex"].includes(pg);
-      });
-    } else if (userGender === "female") {
-      list = list.filter((p) => {
-        const pg = (p.gender || "").toLowerCase();
-        return !pg || ["female", "women", "woman", "girl", "girls", "unisex"].includes(pg);
-      });
+    // When NOT searching, apply gender personalization default filter
+    if (!query) {
+      if (userGender === "male") {
+        list = list.filter((p) => {
+          const pg = (p.gender || "").toLowerCase();
+          return !pg || ["male", "men", "man", "boy", "boys", "unisex"].includes(pg);
+        });
+      } else if (userGender === "female") {
+        list = list.filter((p) => {
+          const pg = (p.gender || "").toLowerCase();
+          return !pg || ["female", "women", "woman", "girl", "girls", "unisex"].includes(pg);
+        });
+      }
+      if (initialDepartment !== "All") list = list.filter((p) => p.department === initialDepartment);
     }
-    if (initialDepartment !== "All") list = list.filter((p) => p.department === initialDepartment);
     if (activeCat  !== "All") list = list.filter((p) => p.category === activeCat);
     if (activeBrand !== "All") list = list.filter((p) => p.brand   === activeBrand);
     if (activeSizes.length)   list = list.filter((p) => activeSizes.some((s) => p.sizes?.includes(s)));
     if (sortBy === "price_asc")  list.sort((a, b) => a.price - b.price);
     if (sortBy === "price_desc") list.sort((a, b) => b.price - a.price);
     return list;
-  }, [products, userGender, initialDepartment, activeCat, activeBrand, activeSizes, priceMax, sortBy]);
+  }, [products, query, userGender, initialDepartment, activeCat, activeBrand, activeSizes, priceMax, sortBy]);
 
   const categorySections = useMemo(() => {
     let list = [...products];

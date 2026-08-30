@@ -18,7 +18,7 @@ const ensureHttps = (url) => {
 };
 
 export default function ZeraRecommendationsSection({
-  title = "Zera Recommendations",
+  title = "Zyra Recommendations",
   subtitle = "Curated For You",
   genderFilter = null,
   maxItems = 50,
