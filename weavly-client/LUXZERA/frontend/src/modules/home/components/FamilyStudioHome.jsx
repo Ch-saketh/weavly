@@ -203,96 +203,113 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            2. BEST SELLERS: 4-COLUMN ARCHITECTURAL WIREFRAME GRID
+            2. BEST SELLERS: EXACT ARCHITECTURAL WIREFRAME GRID
         ════════════════════════════════════════════════════════════ */}
-        <section className="border-t-2 border-b-2 border-[#183B56]">
+        <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
           
           {/* Header Bar */}
-          <div className="flex items-center justify-between py-4 px-2 border-b border-[#183B56]/30">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
+          <div className="flex items-center justify-between py-3.5 px-6 border-b border-[#183B56]">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
               Best Sellers
             </h2>
             <button
               onClick={() => router.push("/market?sort=popularity")}
-              className="text-xs sm:text-sm font-bold text-[#183B56] hover:underline flex items-center gap-1 bg-transparent border-none cursor-pointer p-0"
+              className="text-xs sm:text-sm font-semibold text-[#183B56] hover:underline flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0"
             >
-              <span>All Products</span>
-              <span>→</span>
+              <span>All Product</span>
+              <span className="text-base font-normal leading-none">→</span>
             </button>
           </div>
 
           {/* 4 Architectural Columns */}
-          {loadingProducts ? (
-            <ProductGridSkeleton count={4} />
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]/30">
-              {bestSellers.map((product) => {
-                const saved = isSaved?.(product.id);
-                return (
-                  <div
-                    key={product.id}
-                    onClick={() => router.push(`/product/${product.id}`)}
-                    className="group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
-                  >
-                    {/* Full-bleed Cool-Tinted Flat Image Box */}
-                    <div className="relative aspect-[3/3.8] bg-[#E2EAEF] border-b border-[#183B56]/30 overflow-hidden flex items-center justify-center p-6">
-                      <img
-                        src={product.imageUrl || product.image || "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80"}
-                        alt={product.name}
-                        className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80";
-                        }}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]">
+            {[
+              {
+                id: productsList[0]?.id || "bs-1",
+                name: "Crafted Comfort",
+                priceDisplay: "$80.00",
+                image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                id: productsList[1]?.id || "bs-2",
+                name: "Everyday Luxury",
+                priceDisplay: "$90.50",
+                image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                id: productsList[2]?.id || "bs-3",
+                name: "Oxford",
+                priceDisplay: "$75.50",
+                image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                id: productsList[3]?.id || "bs-4",
+                name: "Sustainability",
+                priceDisplay: "$60.50",
+                image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=80",
+              },
+            ].map((product) => {
+              const saved = isSaved?.(product.id);
+              return (
+                <div
+                  key={product.id}
+                  onClick={() => router.push(`/product/${product.id}`)}
+                  className="group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
+                >
+                  {/* Full-bleed Cool-Tinted Flat Image Box */}
+                  <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-6 sm:p-8">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+                    />
+
+                    {/* Subtle Wardrobe Bookmark Icon on Hover */}
+                    <button
+                      onClick={(e) => handleToggleLike(e, product)}
+                      className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center p-0 cursor-pointer transition-all ${
+                        saved
+                          ? "bg-white shadow-xs scale-105 border border-[#183B56]/40"
+                          : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white border border-[#183B56]/20"
+                      }`}
+                      title={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
+                    >
+                      <Bookmark
+                        size={14}
+                        className={saved ? "fill-[#183B56] text-[#183B56]" : "text-[#5A7184]"}
                       />
+                    </button>
+                  </div>
 
-                      {/* Wardrobe Bookmark Icon */}
-                      <button
-                        onClick={(e) => handleToggleLike(e, product)}
-                        className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center p-0 cursor-pointer transition-all ${
-                          saved
-                            ? "bg-white shadow-xs scale-105 border border-[#183B56]/40"
-                            : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white border border-[#183B56]/20"
-                        }`}
-                        title={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
-                      >
-                        <Bookmark
-                          size={14}
-                          className={saved ? "fill-[#183B56] text-[#183B56]" : "text-[#5A7184]"}
-                        />
-                      </button>
+                  {/* Bottom Rate & Title Box */}
+                  <div className="py-5 px-3 text-center flex flex-col items-center justify-center space-y-1.5 bg-[#F5EFEB]">
+                    <div className="text-[13px] sm:text-[14px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1.5 truncate max-w-full">
+                      <span>{product.name}</span>
+                      <span className="text-sm font-normal">→</span>
                     </div>
-
-                    {/* Bottom Rate & Title Box */}
-                    <div className="py-4 px-3 text-center flex flex-col items-center justify-center space-y-1 bg-[#F5EFEB]">
-                      <div className="text-[13px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1 truncate max-w-full">
-                        <span>{product.name}</span>
-                        <span>→</span>
-                      </div>
-                      <div className="text-[14px] font-bold text-[#183B56]">
-                        ₹{Math.round(product.price || 1999).toLocaleString("en-IN")}
-                      </div>
+                    <div className="text-[15px] sm:text-[16px] font-bold text-[#183B56] tracking-tight">
+                      {product.priceDisplay}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
+                </div>
+              );
+            })}
+          </div>
         </section>
 
         {/* ════════════════════════════════════════════════════════════
             3. OUR BRAND / ATELIER COLLAGE BENTO GRID
         ════════════════════════════════════════════════════════════ */}
-        <section className="border-t-2 border-b-2 border-[#183B56] py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <section className="border border-[#183B56] bg-[#F5EFEB] p-6 sm:p-10 lg:p-12 shadow-xs">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
             {/* Left: Brand Story & Atelier Labels (lg:col-span-5) */}
-            <div className="lg:col-span-5 space-y-8">
-              <div className="space-y-4">
-                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#183B56]">
+            <div className="lg:col-span-5 space-y-6">
+              <div className="space-y-3">
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
                   Our Brand
                 </h2>
-                <p className="text-sm text-[#5A7184] leading-relaxed font-normal">
+                <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed font-normal">
                   Elevated essentials for every moment. Crafted with care, designed to endure. Embrace simplicity, redefine style. Less clutter, more meaning. Craftsmanship at its finest, indulgent fabrics, timeless appeal. For those who appreciate the art of dressing. Where elegance meets excellence.
                 </p>
                 <button onClick={() => router.push("/about")} className="text-xs font-bold text-[#183B56] hover:underline bg-transparent border-none cursor-pointer p-0">
@@ -301,40 +318,40 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
               </div>
 
               {/* Brand Labels Table & Stamp Badge */}
-              <div className="flex items-center justify-between gap-6 pt-4 border-t border-[#183B56]/20">
-                <div className="space-y-2 text-xs font-semibold text-[#183B56]">
-                  <div className="py-1 border-b border-[#183B56]/15">GreenStitch</div>
-                  <div className="py-1 border-b border-[#183B56]/15">Urban Code</div>
-                  <div className="py-1 border-b border-[#183B56]/15">Threadline</div>
+              <div className="flex items-center justify-between gap-6 pt-4 border-t border-[#183B56]">
+                <div className="space-y-1 text-xs font-bold text-[#183B56] flex-1">
+                  <div className="py-1 border-b border-[#183B56]/30">GreenStitch</div>
+                  <div className="py-1 border-b border-[#183B56]/30">Urban Code</div>
+                  <div className="py-1 border-b border-[#183B56]/30">Threadline</div>
                   <div className="py-1">Sovereign</div>
                 </div>
 
                 {/* Circular Atelier Stamp Badge */}
-                <div className="w-24 h-24 rounded-full border-2 border-dashed border-[#183B56] flex flex-col items-center justify-center text-center p-2 rotate-12 hover:rotate-0 transition-transform">
-                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#183B56]">Atelier</span>
-                  <span className="text-xs font-extrabold text-[#183B56]">100%</span>
-                  <span className="text-[8px] uppercase tracking-widest text-[#5A7184]">Cotton</span>
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-dashed border-[#183B56] flex flex-col items-center justify-center text-center p-2 rotate-12 hover:rotate-0 transition-transform shrink-0">
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-widest font-bold text-[#183B56]">Size M</span>
+                  <span className="text-xs font-extrabold text-[#183B56]">→</span>
+                  <span className="text-[8px] uppercase tracking-widest text-[#5A7184]">Atelier</span>
                 </div>
               </div>
             </div>
 
             {/* Right: Multi-Texture Fashion Lookbook Collage (lg:col-span-7) */}
-            <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-4">
-              <div className="aspect-[3/4] rounded-2xl overflow-hidden border border-[#183B56]/20 shadow-sm">
+            <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80"
                   alt="Lookbook 1"
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              <div className="aspect-[3/4] rounded-2xl overflow-hidden border border-[#183B56]/20 shadow-sm">
+              <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80"
                   alt="Lookbook 2"
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              <div className="aspect-[3/4] rounded-2xl overflow-hidden border border-[#183B56]/20 shadow-sm">
+              <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80"
                   alt="Lookbook 3"
@@ -352,10 +369,10 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         {/* ════════════════════════════════════════════════════════════
             4. NEW COLLECTION: 4-COLUMN PRODUCT ARCHITECTURE
         ════════════════════════════════════════════════════════════ */}
-        <section className="border-t-2 border-b-2 border-[#183B56]">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 px-2 border-b border-[#183B56]/30">
+        <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-3.5 px-6 border-b border-[#183B56]">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
                 New Collection
               </h2>
               <p className="text-xs text-[#5A7184] pt-0.5">
@@ -364,14 +381,14 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
             </div>
             <button
               onClick={() => router.push("/market?sort=new")}
-              className="text-xs sm:text-sm font-bold text-[#183B56] hover:underline flex items-center gap-1 bg-transparent border-none cursor-pointer p-0"
+              className="text-xs sm:text-sm font-semibold text-[#183B56] hover:underline flex items-center gap-1 bg-transparent border-none cursor-pointer p-0"
             >
-              <span>All Products</span>
-              <span>→</span>
+              <span>All Product</span>
+              <span className="text-base font-normal leading-none">→</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]/30">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]">
             {newCollection.map((product) => {
               const isAdded = addedProductIds[product.id];
               return (
@@ -381,7 +398,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                   className="group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
                 >
                   {/* Full-bleed Cool-Tinted Flat Image Box */}
-                  <div className="relative aspect-[3/3.8] bg-[#E2EAEF] border-b border-[#183B56]/30 overflow-hidden flex items-center justify-center p-6">
+                  <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-6 sm:p-8">
                     <img
                       src={product.imageUrl || product.image || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80"}
                       alt={product.name}
@@ -403,14 +420,14 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                   </div>
 
                   {/* Bottom Rate & Title Box */}
-                  <div className="py-4 px-3 text-center flex flex-col items-center justify-center space-y-1 bg-[#F5EFEB]">
-                    <div className="text-[13px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1 truncate max-w-full">
+                  <div className="py-5 px-3 text-center flex flex-col items-center justify-center space-y-1.5 bg-[#F5EFEB]">
+                    <div className="text-[13px] sm:text-[14px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1.5 truncate max-w-full">
                       <span>{product.name}</span>
-                      <span>→</span>
+                      <span className="text-sm font-normal">→</span>
                     </div>
-                    <span className="text-[14px] font-bold text-[#183B56]">
+                    <div className="text-[15px] sm:text-[16px] font-bold text-[#183B56] tracking-tight">
                       ₹{Math.round(product.price || 1999).toLocaleString("en-IN")}
-                    </span>
+                    </div>
                   </div>
                 </div>
               );
@@ -421,9 +438,9 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         {/* ════════════════════════════════════════════════════════════
             5. CUSTOMER REVIEWS & TESTIMONIALS (4-COLUMN EDITORIAL)
         ════════════════════════════════════════════════════════════ */}
-        <section className="border-t-2 border-b-2 border-[#183B56] py-12">
-          <div className="text-center max-w-xl mx-auto space-y-2 mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
+        <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
+          <div className="text-center max-w-xl mx-auto space-y-2 py-6 border-b border-[#183B56]">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
               Customer Reviews
             </h2>
             <p className="text-xs text-[#5A7184]">
@@ -431,7 +448,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]">
             {[
               {
                 name: "Geneva Williamson",
@@ -458,19 +475,19 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                 quote: "Stunning craftsmanship and seamless fit recommendations from Zyra.",
               },
             ].map((review, i) => (
-              <div key={i} className="p-6 bg-white rounded-2xl border border-[#183B56]/20 space-y-4 shadow-xs">
-                <div className="w-16 h-16 rounded-full overflow-hidden border border-[#183B56]/30 mx-auto">
+              <div key={i} className="p-6 bg-[#F5EFEB] space-y-3 text-center flex flex-col justify-between">
+                <div className="w-16 h-16 rounded-full overflow-hidden border border-[#183B56] mx-auto">
                   <img src={review.img} alt={review.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex justify-center gap-1 text-[#183B56]">
                   {[...Array(review.rating)].map((_, s) => (
-                    <Star key={s} size={12} className="fill-[#183B56]" />
+                    <Star key={s} size={11} className="fill-[#183B56]" />
                   ))}
                 </div>
-                <p className="text-xs text-[#5A7184] text-center italic leading-relaxed">
+                <p className="text-xs text-[#5A7184] italic leading-relaxed">
                   "{review.quote}"
                 </p>
-                <div className="text-center text-xs font-bold text-[#183B56]">
+                <div className="text-xs font-bold text-[#183B56]">
                   {review.name}
                 </div>
               </div>
