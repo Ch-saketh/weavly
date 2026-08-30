@@ -135,12 +135,30 @@ export default function Navbar({
     setRecentSearches([]);
   };
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      setIsScrolled(scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       {/* ════════════════════════════════════════════
           PURE WHITE EDITORIAL NAVBAR (OFFICIAL ZERA EMBLEM ICON)
       ════════════════════════════════════════════ */}
-      <header className="hidden md:block w-full select-none sticky top-0 z-[100] bg-[#FFFFFF] border-b border-[#ECECEC] text-[#1D1D1F] font-sans m-0 p-0">
+      <header
+        className={`hidden md:block w-full select-none sticky top-0 z-[100] text-[#1D1D1F] font-sans m-0 p-0 transition-all duration-300 ${
+          isScrolled
+            ? "bg-[#FFFFFF]/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
+            : "bg-[#FFFFFF]"
+        }`}
+      >
         <div className="h-[70px] w-full px-6 sm:px-8 lg:px-10 flex items-center justify-between gap-8">
 
           {/* ── LEFT: Brand Logo ── */}
@@ -566,10 +584,13 @@ export default function Navbar({
         </div>
       </header>
 
-      {/* ════════════════════════════════════════════
-          MOBILE EDITORIAL NAVBAR WITH STAGGERED MENU (< 768px)
-      ════════════════════════════════════════════ */}
-      <header className="md:hidden sticky top-0 z-50 bg-[#FFFFFF] border-b border-[#ECECEC] w-full m-0 p-0">
+      <header
+        className={`md:hidden sticky top-0 z-50 w-full m-0 p-0 transition-all duration-300 ${
+          isScrolled
+            ? "bg-[#FFFFFF]/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
+            : "bg-[#FFFFFF]"
+        }`}
+      >
         <div className="w-full h-[64px] px-4 sm:px-6 flex items-center justify-between gap-3">
           {/* LEFT: Weavly Brand Logo (Mochiy Pop One) */}
           <div onClick={onLogoClick} aria-label="Weavly home" className="border-none bg-transparent cursor-pointer p-0 shrink-0">
