@@ -178,60 +178,6 @@ export default function Navbar({
 
           {/* ── CENTER: Navigation Links ── */}
           <nav className="flex items-center gap-10 lg:gap-14 text-[13px] font-medium tracking-normal text-[#1D1D1F]">
-            
-            {/* Dropdown: Shop */}
-            <div className="relative group">
-              <button
-                onClick={() => router.push("/market")}
-                className={`hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium ${
-                  isShopActive ? "text-[#F07020]" : "text-[#1D1D1F]"
-                }`}
-              >
-                <span>Shop</span>
-                <ChevronDown size={11} strokeWidth={1.5} className={`transition-colors ${isShopActive ? "text-[#F07020]" : "text-[#9B9B9B] group-hover:text-[#F07020]"}`} />
-              </button>
-
-              {/* CardNav-Style Dropdown Menu */}
-              <div className="absolute top-full -left-8 mt-3 w-[660px] bg-[#FFFFFF] border border-[#ECECEC] rounded-2xl shadow-2xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-[#1D1D1F] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#111113] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Apparel</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/market")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${pathname === "/market" && !currentCategory ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> All Clothing
-                      </button>
-                      <button onClick={() => router.push("/market?category=Outerwear")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${currentCategory === "Outerwear" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Outerwear & Jackets
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-[#2F293A] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#25202e] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Footwear</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/market?q=boots")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${currentQuery === "boots" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Handmade Boots
-                      </button>
-                      <button onClick={() => router.push("/market?q=loafers")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${currentQuery === "loafers" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Leather Loafers
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-[#252836] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#1c1e29] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Outlet</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/market?sort=trending")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${currentSort === "trending" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Best Sellers
-                      </button>
-                      <button onClick={() => router.push("/market?sort=discount")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${currentSort === "discount" ? "text-[#D9381E] font-semibold" : "text-white/90 hover:text-[#D9381E]"}`}>
-                        <span className="text-[14px]">↗</span> Seasonal Sale
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* Dropdown: Collections */}
             <div className="relative group">
@@ -820,7 +766,6 @@ export default function Navbar({
                     label: cartCount > 0 ? `Shopping Bag (${cartCount})` : "Shopping Bag",
                     onClick: () => onCartClick?.()
                   },
-                  { label: "Shop All", onClick: () => onShopClick?.() },
                   { label: "Men's Sartorial", onClick: () => onMenClick?.() },
                   { label: "Women's Atelier", onClick: () => onWomenClick?.() },
                   { label: "Discover Designers", onClick: () => router.push("/designers") },
