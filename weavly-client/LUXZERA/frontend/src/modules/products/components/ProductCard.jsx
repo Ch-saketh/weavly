@@ -60,10 +60,10 @@ export default function ProductCard({ product, onViewProduct, source = "MARKET" 
       </div>
       <div
         onClick={handleView}
-        className="hidden sm:flex group relative flex-col bg-[#F5EFEB] border border-[#183B56]/30 overflow-hidden cursor-pointer text-center font-sans select-none hover:border-[#183B56] transition-colors"
+        className="hidden sm:flex group relative flex-col bg-[#F5EFEB] border border-[#183B56] overflow-hidden cursor-pointer text-center font-sans select-none hover:bg-[#183B56]/[0.02] transition-colors"
       >
         {/* Full-bleed Cool-Tinted Flat Image Box */}
-        <div className="relative aspect-[3/3.8] bg-[#E2EAEF] border-b border-[#183B56]/30 overflow-hidden flex items-center justify-center p-4">
+        <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-6 sm:p-8">
           <img
             src={displayImage}
             alt={productName}
@@ -89,7 +89,7 @@ export default function ProductCard({ product, onViewProduct, source = "MARKET" 
 
           {/* Optional Badge */}
           {product.badge && (
-            <span className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-xs text-[#183B56] border border-[#183B56]/20 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 z-10 rounded-sm shadow-2xs">
+            <span className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-xs text-[#183B56] border border-[#183B56] text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 z-10 rounded-xs shadow-2xs">
               {product.badge}
             </span>
           )}
@@ -97,10 +97,10 @@ export default function ProductCard({ product, onViewProduct, source = "MARKET" 
           {/* Wardrobe Bookmark (top-right) */}
           <button
             onClick={handleBookmark}
-            className={`absolute top-2.5 right-2.5 z-30 w-7.5 h-7.5 rounded-full flex items-center justify-center transition-all ${
+            className={`absolute top-3 right-3 z-30 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
               saved
-                ? "bg-white shadow-xs scale-105 border border-[#183B56]/40"
-                : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-105 border border-[#183B56]/20"
+                ? "bg-white shadow-xs scale-105 border border-[#183B56]"
+                : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-105 border border-[#183B56]/30"
             }`}
             title={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
           >
@@ -112,12 +112,12 @@ export default function ProductCard({ product, onViewProduct, source = "MARKET" 
         </div>
 
         {/* Bottom Rate & Title Box */}
-        <div className="py-3 px-3 flex flex-col items-center justify-center bg-[#F5EFEB] space-y-1">
-          <h3 className="font-bold text-[13px] text-[#183B56] group-hover:underline transition-colors leading-tight truncate max-w-full flex items-center justify-center gap-1">
+        <div className="py-4 sm:py-5 px-3 flex flex-col items-center justify-center bg-[#F5EFEB] space-y-1.5">
+          <h3 className="font-bold text-[13px] sm:text-[14px] text-[#183B56] group-hover:underline transition-colors leading-tight truncate max-w-full flex items-center justify-center gap-1">
             <span>{productName}</span>
-            <span>→</span>
+            <span className="text-sm font-normal">→</span>
           </h3>
-          <span className="text-[14px] font-bold text-[#183B56] tracking-tight">
+          <span className="text-[15px] sm:text-[16px] font-bold text-[#183B56] tracking-tight">
             ₹{Math.round(productPrice).toLocaleString("en-IN")}
           </span>
         </div>
