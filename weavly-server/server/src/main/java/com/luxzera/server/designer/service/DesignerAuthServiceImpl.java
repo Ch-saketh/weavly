@@ -1,6 +1,10 @@
 package com.luxzera.server.designer.service;
 
+import com.luxzera.server.auth.entity.SecurityEventType;
 import com.luxzera.server.auth.jwt.JwtService;
+import com.luxzera.server.auth.ratelimit.RateLimitingService;
+import com.luxzera.server.auth.service.SecurityAuditService;
+import com.luxzera.server.auth.service.SessionService;
 import com.luxzera.server.common.exception.BadRequestException;
 import com.luxzera.server.common.exception.ResourceNotFoundException;
 import com.luxzera.server.designer.dto.DesignerAuthResponse;
@@ -29,11 +33,20 @@ public class DesignerAuthServiceImpl implements DesignerAuthService {
     private final DesignerProfileRepository designerProfileRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final SessionService sessionService;
+    private final SecurityAuditService securityAuditService;
+    private final RateLimitingService rateLimitingService;
+
+    @Override
+    public DesignerAuthResponse register(DesignerRegisterRequest request) {
+        return register(request, "127.0.0.1", "Designer Registration Client");
+    }
 
     @Override
     @Transactional
-    public synchronized DesignerAuthResponse register(DesignerRegisterRequest request) {
+    public synchronized DesignerAuthResponse register(DesignerRegisterRequest request, String ipAddress, String userAgent) {
         String cleanEmail = request.getEmail().trim().toLowerCase();
+        rateLimitingService.checkRateLimit("designer_reg:" + cleanEmail, 5, 300);
 
         if (designerRepository.existsByEmailIgnoreCase(cleanEmail)) {
             throw new BadRequestException("A designer with this email address already exists.");
@@ -69,6 +82,10 @@ public class DesignerAuthServiceImpl implements DesignerAuthService {
 
         String token = jwtService.generateToken(cleanEmail);
 
+        // Register session
+        sessionService.createSession(savedDesigner.getId().toString(), cleanEmail, "DESIGNER", token, ipAddress, userAgent);
+        securityAuditService.logEvent(savedDesigner.getId().toString(), cleanEmail, "DESIGNER", SecurityEventType.LOGIN_SUCCESS, ipAddress, userAgent, "New designer registered: " + nextDesignerId);
+
         return DesignerAuthResponse.builder()
                 .token(token)
                 .designerId(savedDesigner.getDesignerId())
@@ -83,14 +100,24 @@ public class DesignerAuthServiceImpl implements DesignerAuthService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public DesignerAuthResponse login(DesignerLoginRequest request) {
+        return login(request, "127.0.0.1", "Designer Web Client");
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DesignerAuthResponse login(DesignerLoginRequest request, String ipAddress, String userAgent) {
         String cleanEmail = request.getEmail().trim().toLowerCase();
+        rateLimitingService.checkRateLimit("designer_login:" + cleanEmail, 10, 300);
 
         Designer designer = designerRepository.findByEmailIgnoreCase(cleanEmail)
-                .orElseThrow(() -> new BadRequestException("Invalid designer credentials."));
+                .orElseThrow(() -> {
+                    securityAuditService.logEvent(cleanEmail, SecurityEventType.LOGIN_FAILURE, ipAddress, userAgent, "Designer login failure: invalid email");
+                    return new BadRequestException("Invalid designer credentials.");
+                });
 
         if (!passwordEncoder.matches(request.getPassword(), designer.getPasswordHash())) {
+            securityAuditService.logEvent(designer.getId().toString(), cleanEmail, "DESIGNER", SecurityEventType.LOGIN_FAILURE, ipAddress, userAgent, "Designer login failure: invalid password");
             throw new BadRequestException("Invalid designer credentials.");
         }
 
@@ -100,6 +127,10 @@ public class DesignerAuthServiceImpl implements DesignerAuthService {
 
         String token = jwtService.generateToken(cleanEmail);
         DesignerProfile profile = designer.getProfile();
+
+        // Register session
+        sessionService.createSession(designer.getId().toString(), cleanEmail, "DESIGNER", token, ipAddress, userAgent);
+        securityAuditService.logEvent(designer.getId().toString(), cleanEmail, "DESIGNER", SecurityEventType.LOGIN_SUCCESS, ipAddress, userAgent, "Designer logged in successfully");
 
         return DesignerAuthResponse.builder()
                 .token(token)
@@ -123,21 +154,19 @@ public class DesignerAuthServiceImpl implements DesignerAuthService {
         return DesignerProfileDto.builder()
                 .designerId(designer.getDesignerId())
                 .email(designer.getEmail())
-                .displayName(profile != null ? profile.getDisplayName() : "")
-                .brandName(profile != null ? profile.getBrandName() : "")
-                .bio(profile != null ? profile.getBio() : "")
+                .status(designer.getStatus().name())
+                .displayName(profile != null ? profile.getDisplayName() : null)
+                .brandName(profile != null ? profile.getBrandName() : null)
+                .bio(profile != null ? profile.getBio() : null)
+                .location(profile != null ? profile.getLocation() : null)
+                .specialization(profile != null ? profile.getSpecialization() : null)
                 .profileImageUrl(profile != null ? profile.getProfileImageUrl() : null)
                 .coverImageUrl(profile != null ? profile.getCoverImageUrl() : null)
-                .location(profile != null ? profile.getLocation() : "")
-                .specialization(profile != null ? profile.getSpecialization() : "")
-                .experienceYears(profile != null ? profile.getExperienceYears() : null)
-                .designPhilosophy(profile != null ? profile.getDesignPhilosophy() : "")
-                .servicesOffered(profile != null ? profile.getServicesOffered() : "")
+                .externalWebsiteUrl(profile != null ? profile.getExternalWebsiteUrl() : null)
+                .instagramHandle(profile != null ? profile.getInstagramHandle() : null)
+                .behanceUrl(profile != null ? profile.getBehanceUrl() : null)
+                .linkedinUrl(profile != null ? profile.getLinkedinUrl() : null)
                 .customizationAvailable(profile != null && Boolean.TRUE.equals(profile.getCustomizationAvailable()))
-                .externalWebsiteUrl(profile != null ? profile.getExternalWebsiteUrl() : "")
-                .instagramHandle(profile != null ? profile.getInstagramHandle() : "")
-                .pricingTier(profile != null ? profile.getPricingTier() : "")
-                .status(designer.getStatus().name())
                 .createdAt(designer.getCreatedAt())
                 .updatedAt(designer.getUpdatedAt())
                 .build();
@@ -146,20 +175,22 @@ public class DesignerAuthServiceImpl implements DesignerAuthService {
     @Override
     @Transactional(readOnly = true)
     public Designer getAuthenticatedDesigner(String designerEmail) {
-        return designerRepository.findByEmailIgnoreCase(designerEmail.trim().toLowerCase())
-                .orElseThrow(() -> new ResourceNotFoundException("Designer account not found for email: " + designerEmail));
+        String cleanEmail = designerEmail.trim().toLowerCase();
+        return designerRepository.findByEmailIgnoreCase(cleanEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Designer account not found for email: " + cleanEmail));
     }
 
     private String generateNextDesignerId() {
         String maxId = designerRepository.findMaxDesignerId();
-        if (maxId == null || !maxId.startsWith("DES-")) {
+        if (maxId == null || maxId.isBlank()) {
             return "DES-000001";
         }
         try {
-            int currentNum = Integer.parseInt(maxId.substring(4));
-            return String.format("DES-%06d", currentNum + 1);
-        } catch (NumberFormatException e) {
-            return "DES-000001";
-        }
+            if (maxId.startsWith("DES-")) {
+                int num = Integer.parseInt(maxId.substring(4));
+                return String.format("DES-%06d", num + 1);
+            }
+        } catch (NumberFormatException ignored) {}
+        return "DES-" + System.currentTimeMillis();
     }
 }

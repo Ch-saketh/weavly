@@ -10,7 +10,11 @@ public interface DesignerAuthService {
 
     DesignerAuthResponse register(DesignerRegisterRequest request);
 
+    DesignerAuthResponse register(DesignerRegisterRequest request, String ipAddress, String userAgent);
+
     DesignerAuthResponse login(DesignerLoginRequest request);
+
+    DesignerAuthResponse login(DesignerLoginRequest request, String ipAddress, String userAgent);
 
     DesignerProfileDto getAuthenticatedDesignerProfile(String designerEmail);
 

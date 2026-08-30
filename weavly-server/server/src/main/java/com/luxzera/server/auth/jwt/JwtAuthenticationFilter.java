@@ -1,5 +1,6 @@
 package com.luxzera.server.auth.jwt;
 
+import com.luxzera.server.auth.service.SessionService;
 import com.luxzera.server.designer.repository.DesignerRepository;
 import com.luxzera.server.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -7,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,9 +22,11 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final SessionService sessionService;
     private final UserRepository userRepository;
     private final DesignerRepository designerRepository;
 
@@ -45,9 +49,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authHeader.substring(7);
+        String token = authHeader.substring(7).trim();
 
-        if (jwtService.isTokenValid(token)) {
+        if (jwtService.isTokenValid(token) && sessionService.isSessionValid(token)) {
             String email = jwtService.extractEmail(token);
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -71,6 +75,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                // Update session activity asynchronously
+                sessionService.touchSession(token);
             }
         }
 

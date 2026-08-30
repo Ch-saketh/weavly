@@ -42,6 +42,10 @@ import {
   getMyDesignerRequests,
   updateDesignerRequestStatus,
   updateDesignerProfile,
+  changeDesignerPassword,
+  getDesignerActiveSessions,
+  revokeDesignerSession,
+  revokeDesignerOtherSessions,
 } from "../services/designerService";
 
 export default function DesignerStudioPage() {
@@ -237,6 +241,82 @@ export default function DesignerStudioPage() {
       await loadStudioData();
     } catch (err) {
       alert(err.message || "Failed to update request status");
+    }
+  };
+
+  // Security & Sessions State
+  const [pwdForm, setPwdForm] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
+  const [pwdSaving, setPwdSaving] = useState(false);
+  const [pwdSuccess, setPwdSuccess] = useState("");
+  const [pwdError, setPwdError] = useState("");
+  const [sessions, setSessions] = useState([]);
+  const [sessionsLoading, setSessionsLoading] = useState(false);
+  const [sessionMsg, setSessionMsg] = useState("");
+
+  const loadSessions = useCallback(async () => {
+    setSessionsLoading(true);
+    try {
+      const data = await getDesignerActiveSessions();
+      if (Array.isArray(data)) setSessions(data);
+    } catch (e) {
+      console.warn("Failed to load designer sessions:", e.message);
+    } finally {
+      setSessionsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "settings") {
+      loadSessions();
+    }
+  }, [activeTab, loadSessions]);
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setPwdError("");
+    setPwdSuccess("");
+    if (pwdForm.newPassword !== pwdForm.confirmPassword) {
+      setPwdError("New passwords do not match.");
+      return;
+    }
+    if (pwdForm.newPassword.length < 8) {
+      setPwdError("New password must be at least 8 characters.");
+      return;
+    }
+    setPwdSaving(true);
+    try {
+      const res = await changeDesignerPassword(pwdForm.currentPassword, pwdForm.newPassword);
+      setPwdSuccess(res?.message || "Password changed successfully! All other active sessions have been signed out.");
+      setPwdForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      loadSessions();
+      setTimeout(() => setPwdSuccess(""), 5000);
+    } catch (err) {
+      setPwdError(err.message || "Failed to update password.");
+    } finally {
+      setPwdSaving(false);
+    }
+  };
+
+  const handleRevokeSession = async (sessionId) => {
+    try {
+      await revokeDesignerSession(sessionId);
+      setSessionMsg("Session revoked.");
+      loadSessions();
+      setTimeout(() => setSessionMsg(""), 3000);
+    } catch (err) {
+      setPwdError(err.message || "Failed to revoke session.");
+    }
+  };
+
+  const handleRevokeOtherSessions = async () => {
+    if (!confirm("Are you sure you want to sign out of all other devices?")) return;
+    try {
+      await revokeDesignerOtherSessions();
+      setSessionMsg("Signed out of all other devices.");
+      loadSessions();
+      setTimeout(() => setSessionMsg(""), 3000);
+    } catch (err) {
+      setPwdError(err.message || "Failed to sign out other devices.");
     }
   };
 
@@ -840,9 +920,10 @@ export default function DesignerStudioPage() {
 
         {/* ── TAB 5: ATELIER SETTINGS ── */}
         {activeTab === "settings" && (
-          <div className="max-w-3xl mx-auto bg-white rounded-3xl border border-[#ECECEC] p-8 sm:p-10 shadow-sm space-y-6">
-            <div>
-              <h1 className="text-2xl font-bold font-serif text-[#1D1D1F]">Atelier Profile Settings</h1>
+          <div className="space-y-6">
+            <div className="max-w-3xl mx-auto bg-white rounded-3xl border border-[#ECECEC] p-8 sm:p-10 shadow-sm space-y-6">
+              <div>
+                <h1 className="text-2xl font-bold font-serif text-[#1D1D1F]">Atelier Profile Settings</h1>
               <p className="text-xs text-[#86868B] mt-1">Update your creator biography, qualifications, social links, and atelier portfolio information.</p>
             </div>
 
@@ -1022,6 +1103,145 @@ export default function DesignerStudioPage() {
                 </button>
               </div>
             </form>
+          </div>
+
+          {/* ── ATELIER SECURITY & SESSIONS CARD ── */}
+          <div className="max-w-3xl mx-auto bg-white rounded-3xl border border-[#ECECEC] p-8 sm:p-10 shadow-sm space-y-8 mt-6">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <ShieldCheck size={20} className="text-[#A66A2C]" />
+                <h2 className="text-xl font-bold font-serif text-[#1D1D1F]">Atelier Password & Security</h2>
+              </div>
+              <p className="text-xs text-[#86868B]">
+                Update your atelier password and manage active devices signed in to your designer studio.
+              </p>
+            </div>
+
+            {pwdSuccess && (
+              <div className="p-3.5 rounded-xl bg-emerald-50 text-emerald-700 text-xs border border-emerald-200 flex items-center gap-2">
+                <CheckCircle2 size={16} /> {pwdSuccess}
+              </div>
+            )}
+
+            {pwdError && (
+              <div className="p-3.5 rounded-xl bg-red-50 text-red-700 text-xs border border-red-200">
+                {pwdError}
+              </div>
+            )}
+
+            <form onSubmit={handleChangePassword} className="space-y-4 text-xs">
+              <div>
+                <label className="block font-medium text-[#1D1D1F] mb-1">Current Password *</label>
+                <input
+                  type="password"
+                  required
+                  value={pwdForm.currentPassword}
+                  onChange={(e) => setPwdForm({ ...pwdForm, currentPassword: e.target.value })}
+                  placeholder="••••••••••••"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none text-xs"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-medium text-[#1D1D1F] mb-1">New Password (Min 8 chars) *</label>
+                  <input
+                    type="password"
+                    required
+                    value={pwdForm.newPassword}
+                    onChange={(e) => setPwdForm({ ...pwdForm, newPassword: e.target.value })}
+                    placeholder="••••••••••••"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block font-medium text-[#1D1D1F] mb-1">Confirm New Password *</label>
+                  <input
+                    type="password"
+                    required
+                    value={pwdForm.confirmPassword}
+                    onChange={(e) => setPwdForm({ ...pwdForm, confirmPassword: e.target.value })}
+                    placeholder="••••••••••••"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none text-xs"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex justify-end">
+                <button
+                  type="submit"
+                  disabled={pwdSaving}
+                  className="px-6 py-2.5 rounded-full bg-[#1D1D1F] hover:bg-[#2C2C2E] text-white font-medium text-xs shadow-md disabled:opacity-60"
+                >
+                  {pwdSaving ? "Updating..." : "Update Password"}
+                </button>
+              </div>
+            </form>
+
+            {/* Active Sessions */}
+            <div className="pt-6 border-t border-[#ECECEC]">
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <div>
+                  <h3 className="text-sm font-bold text-[#1D1D1F]">Active Atelier Sessions</h3>
+                  <p className="text-[11px] text-[#86868B]">Devices currently authorized to access this Designer Studio.</p>
+                </div>
+                {sessions.filter(s => !s.current).length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleRevokeOtherSessions}
+                    className="px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 text-[11px] font-semibold transition-all"
+                  >
+                    Sign Out Other Devices
+                  </button>
+                )}
+              </div>
+
+              {sessionMsg && (
+                <div className="p-3 mb-4 rounded-xl bg-emerald-50 text-emerald-700 text-xs border border-emerald-200">
+                  {sessionMsg}
+                </div>
+              )}
+
+              {sessionsLoading && sessions.length === 0 ? (
+                <div className="py-4 text-center text-xs text-[#86868B]">Loading sessions...</div>
+              ) : sessions.length === 0 ? (
+                <div className="p-4 rounded-xl bg-[#FAFAF9] text-center text-xs text-[#86868B]">No active sessions found.</div>
+              ) : (
+                <div className="space-y-2.5">
+                  {sessions.map((sess) => (
+                    <div
+                      key={sess.id}
+                      className="p-3.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] flex items-center justify-between gap-3 text-xs"
+                    >
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-[#1D1D1F] truncate">{sess.deviceName || "Web Browser"}</span>
+                          {sess.current && (
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                              Current
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[11px] text-[#86868B] mt-0.5">
+                          IP: {sess.ipAddress}
+                        </div>
+                      </div>
+
+                      {!sess.current && (
+                        <button
+                          type="button"
+                          onClick={() => handleRevokeSession(sess.id)}
+                          className="px-3 py-1 rounded-lg border border-[#ECECEC] bg-white hover:bg-red-50 hover:border-red-200 hover:text-red-700 text-[#4B5563] text-[11px] font-medium"
+                        >
+                          Revoke
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
           </div>
         )}
       </main>

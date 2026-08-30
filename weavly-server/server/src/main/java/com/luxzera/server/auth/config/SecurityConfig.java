@@ -63,7 +63,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.HEAD, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/").permitAll()
 
-                        // ── Auth endpoints (all public) ──────────────────
+                        // ── Authenticated Auth Endpoints (Sessions & Password Change) ─────
+                        .requestMatchers("/api/auth/password/change", "/api/auth/password/set", "/api/auth/sessions", "/api/auth/sessions/**").authenticated()
+
+                        // ── Public Auth Endpoints ──────────────────
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/designer/auth/**").permitAll()
 

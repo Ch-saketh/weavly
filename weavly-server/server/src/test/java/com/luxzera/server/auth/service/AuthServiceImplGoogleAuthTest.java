@@ -5,8 +5,10 @@ import com.luxzera.server.auth.dto.response.AuthResponseDto;
 import com.luxzera.server.auth.google.GoogleTokenVerifier;
 import com.luxzera.server.auth.google.GoogleUserInfo;
 import com.luxzera.server.auth.jwt.JwtService;
+import com.luxzera.server.auth.ratelimit.RateLimitingService;
 import com.luxzera.server.auth.repository.OtpRepository;
 import com.luxzera.server.common.exception.BadRequestException;
+import com.luxzera.server.designer.repository.DesignerRepository;
 import com.luxzera.server.user.entity.User;
 import com.luxzera.server.user.enums.AuthProvider;
 import com.luxzera.server.user.enums.Role;
@@ -21,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -35,6 +38,8 @@ class AuthServiceImplGoogleAuthTest {
     @Mock
     private UserRepository userRepository;
     @Mock
+    private DesignerRepository designerRepository;
+    @Mock
     private BCryptPasswordEncoder passwordEncoder;
     @Mock
     private OtpService otpService;
@@ -42,6 +47,12 @@ class AuthServiceImplGoogleAuthTest {
     private EmailService emailService;
     @Mock
     private OtpRepository otpRepository;
+    @Mock
+    private SessionService sessionService;
+    @Mock
+    private SecurityAuditService securityAuditService;
+    @Mock
+    private RateLimitingService rateLimitingService;
 
     @InjectMocks
     private AuthServiceImpl authService;
@@ -82,7 +93,11 @@ class AuthServiceImplGoogleAuthTest {
     void authenticateWithGoogle_shouldCreateNewGoogleUserAndReturnToken() {
         when(googleTokenVerifier.verify("google-id-token")).thenReturn(verifiedGoogleUser);
         when(userRepository.findByEmail("user@email.com")).thenReturn(Optional.empty());
-        when(userRepository.saveAndFlush(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userRepository.saveAndFlush(any(User.class))).thenAnswer(invocation -> {
+            User u = invocation.getArgument(0);
+            u.setId(UUID.randomUUID());
+            return u;
+        });
         when(jwtService.generateToken("user@email.com")).thenReturn("jwt-token");
 
         AuthResponseDto response = authService.authenticateWithGoogle(request);
@@ -102,6 +117,7 @@ class AuthServiceImplGoogleAuthTest {
     @Test
     void authenticateWithGoogle_shouldLinkExistingLocalUserToGoogle() {
         User existing = User.builder()
+                .id(UUID.randomUUID())
                 .email("user@email.com")
                 .provider(AuthProvider.LOCAL)
                 .profilePicture(null)

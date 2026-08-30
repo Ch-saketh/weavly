@@ -260,3 +260,38 @@ export async function updateDesignerRequestStatus(requestId, status, designerNot
     body: JSON.stringify({ status, designerNotes }),
   });
 }
+
+// ── DESIGNER SECURITY & SESSION MANAGEMENT ────────────────────────────
+
+export async function changeDesignerPassword(currentPassword, newPassword) {
+  const token = getDesignerToken();
+  return apiRequest("/api/auth/password/change", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+}
+
+export async function getDesignerActiveSessions() {
+  const token = getDesignerToken();
+  return apiRequest("/api/auth/sessions", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export async function revokeDesignerSession(sessionId) {
+  const token = getDesignerToken();
+  return apiRequest(`/api/auth/sessions/${encodeURIComponent(sessionId)}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export async function revokeDesignerOtherSessions() {
+  const token = getDesignerToken();
+  return apiRequest("/api/auth/sessions", {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+

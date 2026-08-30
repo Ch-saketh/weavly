@@ -1,8 +1,8 @@
 package com.luxzera.server.auth.service;
 
 import com.luxzera.server.auth.dto.request.*;
+import com.luxzera.server.auth.dto.response.AuthMeResponseDto;
 import com.luxzera.server.auth.dto.response.AuthResponseDto;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface AuthService {
 
@@ -10,7 +10,11 @@ public interface AuthService {
 
     AuthResponseDto login(LoginRequestDto request);
 
+    AuthResponseDto login(LoginRequestDto request, String ipAddress, String userAgent);
+
     AuthResponseDto authenticateWithGoogle(GoogleAuthRequestDto request);
+
+    AuthResponseDto authenticateWithGoogle(GoogleAuthRequestDto request, String ipAddress, String userAgent);
 
     void verifyOtp(VerifyRequestDto request);
 
@@ -24,4 +28,5 @@ public interface AuthService {
 
     void completeGoogleRegistration(String email, CompleteRegisterRequestDto request);
 
+    AuthMeResponseDto getAuthMe(String email);
 }

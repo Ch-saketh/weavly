@@ -34,7 +34,7 @@ export const googleLogin = async (idToken) => {
   return response.data;
 };
 
-export const completeGoogleSignup = async (username, password, email) => {
+export const completeGoogleSignup = async (username, password) => {
   const response = await authClient.post("/auth/complete-google-signup", {
     username,
     password,
@@ -43,17 +43,32 @@ export const completeGoogleSignup = async (username, password, email) => {
 };
 
 export const forgotPassword = async (email) => {
-  const response = await authClient.post("/auth/forgot-password", {
+  const response = await authClient.post("/auth/password/forgot", {
     email,
   });
   return response.data;
 };
 
 export const resetPassword = async (email, otp, newPassword) => {
-  const response = await authClient.post("/auth/reset-password", {
+  const response = await authClient.post("/auth/password/reset", {
     email,
     otpCode: otp,
     newPassword,
+  });
+  return response.data;
+};
+
+export const changePassword = async (currentPassword, newPassword) => {
+  const response = await authClient.post("/auth/password/change", {
+    currentPassword,
+    newPassword,
+  });
+  return response.data;
+};
+
+export const setPassword = async (password) => {
+  const response = await authClient.post("/auth/password/set", {
+    password,
   });
   return response.data;
 };
@@ -75,5 +90,25 @@ export const logout = async () => {
 
 export const getCurrentUser = async () => {
   const response = await authClient.get("/users/me");
+  return response.data;
+};
+
+export const getAuthMe = async () => {
+  const response = await authClient.get("/auth/me");
+  return response.data;
+};
+
+export const getActiveSessions = async () => {
+  const response = await authClient.get("/auth/sessions");
+  return response.data;
+};
+
+export const revokeSession = async (sessionId) => {
+  const response = await authClient.delete(`/auth/sessions/${sessionId}`);
+  return response.data;
+};
+
+export const revokeOtherSessions = async () => {
+  const response = await authClient.delete("/auth/sessions");
   return response.data;
 };

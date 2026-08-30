@@ -44,6 +44,15 @@ class DesignerAuthTest {
     @Mock
     private JwtService jwtService;
 
+    @Mock
+    private com.luxzera.server.auth.service.SessionService sessionService;
+
+    @Mock
+    private com.luxzera.server.auth.service.SecurityAuditService securityAuditService;
+
+    @Mock
+    private com.luxzera.server.auth.ratelimit.RateLimitingService rateLimitingService;
+
     @InjectMocks
     private DesignerAuthServiceImpl designerAuthService;
 
