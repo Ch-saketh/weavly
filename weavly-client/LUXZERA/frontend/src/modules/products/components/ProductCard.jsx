@@ -1,14 +1,14 @@
 "use client";
 
-// src/components/ProductCard.jsx
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bookmark } from "lucide-react";
 import { useCart }     from "@/modules/cart/store/CartContext";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import MobileProductCard from "@/modules/products/components/MobileProductCard";
+import { recordClickActivity, recordBagActivity } from "@/modules/user/services/userActivityService";
 
-export default function ProductCard({ product, onViewProduct }) {
+export default function ProductCard({ product, onViewProduct, source = "MARKET" }) {
   const [added, setAdded] = useState(false);
   const router = useRouter();
   const { addToCart }          = useCart();
@@ -26,6 +26,7 @@ export default function ProductCard({ product, onViewProduct }) {
     e.preventDefault();
     e.stopPropagation();
     setAdded(true);
+    recordBagActivity(product, "ADD", defaultSize);
     addToCart({ ...product, id: productId, size: defaultSize, price: productPrice });
     setTimeout(() => setAdded(false), 1800);
   };
@@ -37,6 +38,7 @@ export default function ProductCard({ product, onViewProduct }) {
   };
 
   const handleView = () => {
+    recordClickActivity(product, source);
     if (onViewProduct) { onViewProduct(product); return; }
     router.push(`/product/${productId}`);
   };

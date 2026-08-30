@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { ShoppingBag, User, LogOut, X, Menu, Search, ChevronDown, Sparkles, Scissors, Palette, ArrowRight } from "lucide-react";
+import { ShoppingBag, User, LogOut, X, Menu, Search, ChevronDown, Sparkles, Scissors, Palette, ArrowRight, History, Trash2, Clock } from "lucide-react";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import StaggeredMenu from "@/shared/components/ui/StaggeredMenu";
 import branding from "@/config/branding";
 import { getSearchSuggestions } from "@/modules/products/services/productService";
+import { recordSearchActivity, recordClickActivity, getRecentSearches, clearSearchHistory } from "@/modules/user/services/userActivityService";
 
 export default function Navbar({
   cartCount = 0,
@@ -43,6 +44,7 @@ export default function Navbar({
   const [expandedNav, setExpandedNav] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [recentSearches, setRecentSearches] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -56,6 +58,7 @@ export default function Navbar({
 
   useEffect(() => {
     setMounted(true);
+    getRecentSearches(6).then((items) => setRecentSearches(items || []));
   }, []);
 
   // Debounced search suggestions fetch
@@ -63,7 +66,6 @@ export default function Navbar({
     const q = searchQuery.trim();
     if (q.length < 2) {
       setSuggestions([]);
-      setShowSuggestions(false);
       return;
     }
 
@@ -72,7 +74,7 @@ export default function Navbar({
       try {
         const results = await getSearchSuggestions(q, 5);
         setSuggestions(results);
-        setShowSuggestions(results.length > 0);
+        setShowSuggestions(true);
       } catch (err) {
         console.error("Suggestions error:", err);
       } finally {
@@ -107,12 +109,27 @@ export default function Navbar({
   };
 
   const handleSearchSubmit = (event) => {
-    event.preventDefault();
+    if (event) event.preventDefault();
     const query = searchQuery.trim();
     if (query) {
+      recordSearchActivity(query);
+      setShowSuggestions(false);
       onSearch?.(query);
       setMobileOpen(false);
     }
+  };
+
+  const handleRecentClick = (q) => {
+    setSearchQuery(q);
+    recordSearchActivity(q);
+    setShowSuggestions(false);
+    onSearch?.(q);
+  };
+
+  const handleClearHistory = async (e) => {
+    e.stopPropagation();
+    await clearSearchHistory();
+    setRecentSearches([]);
   };
 
   return (
@@ -378,12 +395,12 @@ export default function Navbar({
                   value={searchQuery}
                   onChange={(event) => {
                     setSearchQuery(event.target.value);
-                    if (!showSuggestions && event.target.value.trim().length >= 2) {
+                    if (event.target.value.trim().length >= 2) {
                       setShowSuggestions(true);
                     }
                   }}
                   onFocus={() => {
-                    if (suggestions.length > 0) setShowSuggestions(true);
+                    setShowSuggestions(true);
                   }}
                   placeholder="Search products, brands..."
                   className="min-w-0 flex-1 bg-transparent outline-none text-[12px] font-normal text-[#1D1D1F] placeholder:text-[#A1A1AA] placeholder:font-normal"
@@ -395,53 +412,99 @@ export default function Navbar({
                 )}
               </form>
 
-              {/* Instant Suggestions Dropdown */}
-              {showSuggestions && suggestions.length > 0 && (
+              {/* Suggestions / Recent Searches Dropdown */}
+              {showSuggestions && (
                 <div className="absolute top-full right-0 mt-2 w-[340px] bg-[#FFFFFF] border border-[#ECECEC] rounded-2xl shadow-2xl p-2 z-[120] animate-in fade-in-50 zoom-in-95 duration-150">
-                  <div className="px-3 py-1.5 text-[10px] uppercase font-semibold text-[#8E8E93] tracking-wider border-b border-[#F2F2F7] flex items-center justify-between">
-                    <span>Instant Matches</span>
-                    <span>{suggestions.length} items</span>
-                  </div>
-
-                  <div className="flex flex-col py-1 max-h-[300px] overflow-y-auto">
-                    {suggestions.map((item) => (
-                      <div
-                        key={item.productId}
-                        onClick={() => {
-                          setShowSuggestions(false);
-                          router.push(`/product/${item.productId}`);
-                        }}
-                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F8F8F8] cursor-pointer transition-colors group"
-                      >
-                        <div className="w-11 h-11 rounded-lg bg-[#F2F2F7] overflow-hidden shrink-0 border border-[#ECECEC]/60">
-                          {item.imageUrl ? (
-                            <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-[9px] text-[#A1A1AA]">No Pic</div>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[12px] font-medium text-[#1D1D1F] truncate group-hover:text-[#F07020] transition-colors">{item.name}</p>
-                          <div className="flex items-center gap-2 mt-0.5">
-                            {item.brand && (
-                              <span className="text-[10px] text-[#8E8E93] uppercase tracking-wider truncate">{item.brand}</span>
-                            )}
-                            <span className="text-[11px] font-semibold text-[#1D1D1F]">
-                              ₹{Number(item.price || 0).toLocaleString("en-IN")}
-                            </span>
-                          </div>
-                        </div>
+                  {/* If user is typing query and has suggestions */}
+                  {searchQuery.trim().length >= 2 && suggestions.length > 0 && (
+                    <>
+                      <div className="px-3 py-1.5 text-[10px] uppercase font-semibold text-[#8E8E93] tracking-wider border-b border-[#F2F2F7] flex items-center justify-between">
+                        <span>Instant Matches</span>
+                        <span>{suggestions.length} items</span>
                       </div>
-                    ))}
-                  </div>
 
-                  <button
-                    onClick={handleSearchSubmit}
-                    className="w-full mt-1 py-2 px-3 bg-[#FAFAF9] hover:bg-[#F2F2F7] text-[#1D1D1F] hover:text-[#F07020] text-[11px] font-medium rounded-xl flex items-center justify-center gap-1.5 transition-colors border border-[#ECECEC]/60 cursor-pointer"
-                  >
-                    <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
-                    <ArrowRight size={12} />
-                  </button>
+                      <div className="flex flex-col py-1 max-h-[280px] overflow-y-auto">
+                        {suggestions.map((item) => (
+                          <div
+                            key={item.productId}
+                            onClick={() => {
+                              recordClickActivity(item, "NAVBAR_SUGGESTION");
+                              recordSearchActivity(item.name || searchQuery);
+                              setShowSuggestions(false);
+                              router.push(`/product/${item.productId}`);
+                            }}
+                            className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F8F8F8] cursor-pointer transition-colors group"
+                          >
+                            <div className="w-11 h-11 rounded-lg bg-[#F2F2F7] overflow-hidden shrink-0 border border-[#ECECEC]/60">
+                              {item.imageUrl ? (
+                                <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-[9px] text-[#A1A1AA]">No Pic</div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[12px] font-medium text-[#1D1D1F] truncate group-hover:text-[#F07020] transition-colors">{item.name}</p>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                {item.brand && (
+                                  <span className="text-[10px] text-[#8E8E93] uppercase tracking-wider truncate">{item.brand}</span>
+                                )}
+                                <span className="text-[11px] font-semibold text-[#1D1D1F]">
+                                  ₹{Number(item.price || 0).toLocaleString("en-IN")}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={handleSearchSubmit}
+                        className="w-full mt-1 py-2 px-3 bg-[#FAFAF9] hover:bg-[#F2F2F7] text-[#1D1D1F] hover:text-[#F07020] text-[11px] font-medium rounded-xl flex items-center justify-center gap-1.5 transition-colors border border-[#ECECEC]/60 cursor-pointer"
+                      >
+                        <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
+                        <ArrowRight size={12} />
+                      </button>
+                    </>
+                  )}
+
+                  {/* If user is focused on empty/short query and has recent search history */}
+                  {searchQuery.trim().length < 2 && recentSearches.length > 0 && (
+                    <div>
+                      <div className="px-3 py-1.5 text-[10px] uppercase font-semibold text-[#8E8E93] tracking-wider border-b border-[#F2F2F7] flex items-center justify-between">
+                        <span className="flex items-center gap-1.5">
+                          <History size={11} />
+                          <span>Recent Searches</span>
+                        </span>
+                        <button
+                          onClick={handleClearHistory}
+                          className="text-[10px] text-[#8E8E93] hover:text-[#FF3B30] flex items-center gap-1 cursor-pointer transition-colors"
+                        >
+                          <Trash2 size={10} />
+                          <span>Clear</span>
+                        </button>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5 p-2.5">
+                        {recentSearches.map((q, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => handleRecentClick(q)}
+                            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1D1D1F] text-[11px] font-medium transition-colors cursor-pointer"
+                          >
+                            <Clock size={10} className="text-[#8E8E93]" />
+                            <span>{q}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* When no query and no recent searches */}
+                  {searchQuery.trim().length < 2 && recentSearches.length === 0 && (
+                    <div className="p-4 text-center text-xs text-[#8E8E93]">
+                      Type to search across brands, products, and categories
+                    </div>
+                  )}
                 </div>
               )}
             </div>

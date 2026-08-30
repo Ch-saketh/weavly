@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { recordBagActivity } from "@/modules/user/services/userActivityService";
 
 const CartContext = createContext(null);
 // src/CartContext.jsx lines 5 & 25
@@ -35,6 +36,7 @@ export function CartProvider({ children }) {
   }, [cartItems, isLoaded]);
 
   const addToCart = (product) => {
+    recordBagActivity(product, "ADD", product?.size || "M");
     setCartItems((prev) => {
       const existing = prev.find(
         (item) => item.id === product.id && item.size === product.size
@@ -53,6 +55,10 @@ export function CartProvider({ children }) {
   };
 
   const removeFromCart = (id, size) => {
+    const found = cartItems.find((item) => item.id === id && item.size === size);
+    if (found) {
+      recordBagActivity(found, "REMOVE", size);
+    }
     setCartItems((prev) =>
       prev.filter((item) => !(item.id === id && item.size === size))
     );

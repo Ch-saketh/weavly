@@ -16,6 +16,7 @@ import FiltersSidebar from "@/modules/products/components/FiltersSidebar";
 import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
 import { getPaginatedProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
+import { recordSearchActivity } from "@/modules/user/services/userActivityService";
 
 const CATEGORIES = ["All", "Tops", "Bottoms", "Outerwear"];
 const SIZES      = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -147,6 +148,9 @@ function ShopPageContent({ initialDepartment = "All" }) {
         if (!ignore) {
           setProducts(res.products || []);
           setHasMore(res.hasMore);
+          if (query) {
+            recordSearchActivity(query, res.products?.length || 0);
+          }
         }
       } catch (error) {
         console.error("Product API error:", error);
@@ -289,22 +293,20 @@ function ShopPageContent({ initialDepartment = "All" }) {
         {/* ── BENTO HERO BANNER (Matches Homepage Style) ── */}
         {/* ── TOP HERO / SEARCH HEADER ── */}
         {query ? (
-          <div className="p-6 sm:p-8 bg-[#FAFAF9] border border-[#ECECEC] rounded-3xl flex flex-wrap items-center justify-between gap-6 shadow-xs">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E93]">Catalog Search</span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#1D1D1F] text-white font-semibold">{displayed.length} items found</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1D1D1F] mt-1.5 tracking-tight">
-                Results for &ldquo;{query}&rdquo;
+          <div className="flex items-center justify-between border-b border-[#ECECEC] pb-4">
+            <div className="flex items-center gap-3">
+              <h1 className="text-xl sm:text-2xl font-bold text-[#1D1D1F] tracking-tight">
+                Results for &ldquo;<span className="text-[#111111]">{query}</span>&rdquo;
               </h1>
-              <p className="text-xs text-[#71717A] mt-1 font-medium">Ranked by relevance to your fashion inquiry</p>
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#F2F2F7] text-[#71717A] font-semibold border border-[#E5E5EA]">
+                {displayed.length} items
+              </span>
             </div>
             <button
               onClick={() => router.push(pathname)}
-              className="px-5 py-2.5 text-xs font-semibold text-[#1D1D1F] bg-white border border-[#ECECEC] hover:border-[#1D1D1F] hover:bg-[#F2F2F7] rounded-full transition-all cursor-pointer shadow-xs"
+              className="text-xs font-semibold text-[#8E8E93] hover:text-[#1D1D1F] transition-colors cursor-pointer py-1 px-2.5 rounded-md hover:bg-[#F2F2F7]"
             >
-              Clear Search
+              Clear search ✕
             </button>
           </div>
         ) : (

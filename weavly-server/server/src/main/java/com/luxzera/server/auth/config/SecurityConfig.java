@@ -81,6 +81,9 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/products/import-catalog").permitAll()
 
+                        // ── User Activity & History Tracking Endpoints ─────
+                        .requestMatchers("/api/users/me/history", "/api/users/me/history/**").permitAll()
+
                         // ── Designer & Designs Public Discovery ─────────────
                         .requestMatchers(HttpMethod.GET,
                                 "/api/designers",
