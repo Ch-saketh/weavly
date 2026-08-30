@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ShoppingBag, Bookmark, Loader2 } from "lucide-react";
+import { ArrowRight, ArrowDown, ShoppingBag, Bookmark, Loader2, Sparkles, CheckCircle2, Flame, Sliders } from "lucide-react";
 import { getProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
@@ -25,6 +25,50 @@ const chunkArray = (array, size) => {
   return chunked;
 };
 
+// Psychological Style Personas
+const STYLE_PERSONAS = [
+  {
+    id: "luxury",
+    title: "Quiet Luxury",
+    tagline: "Effortless drape & pure linen blends",
+    query: "Luxury",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
+    hotspots: ["100% Silk-Linen", "Zero Synthetic Dyes", "Relaxed Shoulders"],
+    matchRate: "98.4%",
+    popularity: "482 shoppers browsing",
+  },
+  {
+    id: "tailored",
+    title: "Executive Tailored",
+    tagline: "Structured blazers & crisp oxford collars",
+    query: "Oxford",
+    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80",
+    hotspots: ["Italian Wool Cut", "Wrinkle-Resistant", "Hand-Finished Lapels"],
+    matchRate: "96.8%",
+    popularity: "614 shoppers browsing",
+  },
+  {
+    id: "resort",
+    title: "Weekend Resort",
+    tagline: "Camp collars & breathable relaxed knits",
+    query: "Comfort",
+    image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80",
+    hotspots: ["Open Cuban Collar", "Breathable Mesh Weave", "Ultralight Feel"],
+    matchRate: "99.1%",
+    popularity: "890 shoppers browsing",
+  },
+  {
+    id: "sustainable",
+    title: "Organic Sustainable",
+    tagline: "Earth pigments & artisanal zero-waste weaves",
+    query: "Sustainable",
+    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=80",
+    hotspots: ["Fair-Trade Organic", "Plant-Based Inks", "Lifetime Guarantee"],
+    matchRate: "97.5%",
+    popularity: "340 shoppers browsing",
+  },
+];
+
 export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const router = useRouter();
   const { user } = useAuth();
@@ -34,22 +78,18 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [addedProductIds, setAddedProductIds] = useState({});
   const [productsList, setProductsList] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
-  const [activeHeroCategory, setActiveHeroCategory] = useState("Crafted Comfort");
-  const [activeHeroImage, setActiveHeroImage] = useState(0);
+
+  // Interactive Persona State
+  const [selectedPersona, setSelectedPersona] = useState(STYLE_PERSONAS[0]);
+  const [selectedGender, setSelectedGender] = useState("Men");
+  const [selectedFit, setSelectedFit] = useState("Tailored");
 
   // Infinite Scroll State (Row-by-Row)
-  const [visibleRowsCount, setVisibleRowsCount] = useState(2); // 2 rows initial (8 products)
+  const [visibleRowsCount, setVisibleRowsCount] = useState(2);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const sentinelRef = useRef(null);
-
-  const heroCategoryLinks = [
-    { label: "Crafted Comfort", query: "Comfort" },
-    { label: "Everyday Luxury", query: "Luxury" },
-    { label: "Sustainability in Style", query: "Sustainable" },
-    { label: "Oxford", query: "Oxford" },
-    { label: "Flannel", query: "Flannel" },
-  ];
+  const catalogSectionRef = useRef(null);
 
   // Initial products fetch
   useEffect(() => {
@@ -74,18 +114,16 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const loadNextRow = useCallback(async () => {
     if (isLoadingMore || !hasMore) return;
 
-    const catalogPool = productsList.slice(4); // Exclude top 4 best sellers
+    const catalogPool = productsList.slice(4);
     const currentlyVisible = visibleRowsCount * 4;
 
     if (currentlyVisible < catalogPool.length) {
-      // Reveal next row smoothly
       setIsLoadingMore(true);
       setTimeout(() => {
         setVisibleRowsCount((prev) => prev + 1);
         setIsLoadingMore(false);
       }, 250);
     } else {
-      // Fetch next batch from backend
       setIsLoadingMore(true);
       try {
         const moreItems = await getProducts({ limit: 20, offset: productsList.length });
@@ -121,6 +159,14 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     observer.observe(sentinel);
     return () => observer.disconnect();
   }, [loadNextRow]);
+
+  const handleScrollToCatalog = () => {
+    if (catalogSectionRef.current) {
+      catalogSectionRef.current.scrollIntoView({ behavior: "smooth" });
+    } else {
+      router.push(`/market?q=${encodeURIComponent(selectedPersona.query)}`);
+    }
+  };
 
   const handleAddToCart = (e, product) => {
     e.stopPropagation();
@@ -163,12 +209,6 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const visibleCatalogProducts = catalogPool.slice(0, visibleRowsCount * 4);
   const catalogRows = chunkArray(visibleCatalogProducts, 4);
 
-  const heroThumbnails = [
-    productsList[0]?.imageUrl || productsList[0]?.image || "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
-    productsList[1]?.imageUrl || productsList[1]?.image || "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80",
-    productsList[2]?.imageUrl || productsList[2]?.image || "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80",
-  ];
-
   return (
     <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
 
@@ -176,93 +216,176 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
       <main className="max-w-[1440px] mx-auto border-x border-[#183B56]">
 
         {/* ════════════════════════════════════════════════════════════
-            1. HERO SECTION: 3-COLUMN CONTINUOUS BLUEPRINT GRID
+            1. PSYCHOLOGICAL HERO: INTERACTIVE PERSONA & FIT ARCHITECTURE
         ════════════════════════════════════════════════════════════ */}
         <section className="grid grid-cols-1 lg:grid-cols-12 border-b border-[#183B56] divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
           
-          {/* LEFT: Category Index Box (lg:col-span-3) */}
-          <div className="lg:col-span-3 p-6 sm:p-8 flex flex-col justify-center space-y-4">
-            <nav className="space-y-2.5">
-              {heroCategoryLinks.map((item) => (
-                <button
-                  key={item.label}
-                  onClick={() => {
-                    setActiveHeroCategory(item.label);
-                    router.push(`/market?q=${encodeURIComponent(item.query)}`);
-                  }}
-                  className={`w-full text-left py-2.5 px-3 border border-[#183B56] flex items-center justify-between text-xs sm:text-sm font-bold tracking-tight transition-all cursor-pointer ${
-                    activeHeroCategory === item.label
-                      ? "bg-[#183B56] text-white shadow-xs"
-                      : "bg-transparent text-[#183B56] hover:bg-[#183B56]/5"
-                  }`}
-                >
-                  <span>{item.label}</span>
-                  <span className="text-base font-normal leading-none">→</span>
-                </button>
-              ))}
-            </nav>
+          {/* LEFT: Step 1 - Choose Your Wardrobe Persona (lg:col-span-4) */}
+          <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
+                <Sparkles size={11} className="text-[#183B56]" />
+                <span>01 • Choose Your Aesthetic</span>
+              </div>
+
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
+                What Defines Your Style?
+              </h2>
+
+              <p className="text-xs text-[#5A7184] leading-relaxed">
+                Select your silhouette profile to align Zyra AI with your proportions and daily occasions.
+              </p>
+
+              {/* Segmented Persona Options */}
+              <div className="space-y-2.5 pt-2">
+                {STYLE_PERSONAS.map((persona) => {
+                  const active = selectedPersona.id === persona.id;
+                  return (
+                    <button
+                      key={persona.id}
+                      onClick={() => setSelectedPersona(persona)}
+                      className={`w-full text-left p-3 border transition-all cursor-pointer flex flex-col gap-1 ${
+                        active
+                          ? "bg-[#183B56] text-white border-[#183B56] shadow-xs"
+                          : "bg-transparent text-[#183B56] border-[#183B56] hover:bg-[#183B56]/5"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between font-bold text-xs sm:text-sm">
+                        <span>{persona.title}</span>
+                        <span className="text-xs font-normal opacity-80">{persona.matchRate} Match</span>
+                      </div>
+                      <div className={`text-[11px] leading-tight ${active ? "text-white/80" : "text-[#5A7184]"}`}>
+                        {persona.tagline}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Social Proof Footer in Left Box */}
+            <div className="pt-4 border-t border-[#183B56] flex items-center justify-between text-[11px] font-bold text-[#5A7184]">
+              <div className="flex items-center gap-1 text-[#183B56]">
+                <Flame size={12} className="text-[#183B56]" />
+                <span>{selectedPersona.popularity}</span>
+              </div>
+              <span className="text-[10px] tracking-wider uppercase">Active Live Feed</span>
+            </div>
           </div>
 
-          {/* CENTER: Framed Hero Model & Arched Thumbnails (lg:col-span-5) */}
-          <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col items-center justify-between gap-6">
-            <div className="w-full aspect-[4/5] rounded-[32px] overflow-hidden bg-[#DFE7ED] border border-[#183B56] relative shadow-xs flex items-center justify-center p-4">
+          {/* CENTER: Step 2 - Dynamic Look Anatomy & Hotspot Inspection (lg:col-span-4) */}
+          <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col items-center justify-between gap-5 bg-[#F5EFEB]">
+            {/* Top Indicator */}
+            <div className="w-full flex items-center justify-between text-[10px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
+              <span>02 • Silhouette Preview</span>
+              <span className="text-[#183B56] font-bold">{selectedPersona.title}</span>
+            </div>
+
+            {/* Main Interactive Garment Box */}
+            <div className="w-full aspect-[3/3.8] bg-[#DFE7ED] border border-[#183B56] relative overflow-hidden flex items-center justify-center p-6 shadow-xs">
               <img
-                src={ensureHttps(heroThumbnails[activeHeroImage])}
-                alt="Craftsmanship that lasts"
+                src={selectedPersona.image}
+                alt={selectedPersona.title}
                 className="w-full h-full object-contain mix-blend-multiply transition-all duration-700 hover:scale-105"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
                 }}
               />
+
+              {/* Hotspot Anatomy Badges */}
+              <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5 justify-center">
+                {selectedPersona.hotspots.map((tag, idx) => (
+                  <span
+                    key={idx}
+                    className="text-[9px] font-bold bg-white/90 backdrop-blur-xs text-[#183B56] border border-[#183B56] px-2 py-0.5 rounded-xs"
+                  >
+                    ✓ {tag}
+                  </span>
+                ))}
+              </div>
             </div>
 
-            {/* 3 Arched Mini Preview Thumbnails */}
-            <div className="flex items-center justify-center gap-4">
-              {heroThumbnails.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveHeroImage(idx)}
-                  className={`w-18 h-22 rounded-t-full overflow-hidden border transition-all p-1 bg-[#DFE7ED] cursor-pointer flex items-center justify-center ${
-                    activeHeroImage === idx
-                      ? "border-[#183B56] scale-105 shadow-xs"
-                      : "border-[#183B56]/40 hover:border-[#183B56] opacity-75"
-                  }`}
-                >
-                  <img
-                    src={ensureHttps(img)}
-                    alt={`Preview ${idx + 1}`}
-                    className="w-full h-full object-contain mix-blend-multiply"
-                    onError={(e) => {
-                      e.currentTarget.onerror = null;
-                      e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
-                    }}
-                  />
-                </button>
-              ))}
+            <div className="text-center text-xs text-[#5A7184] italic">
+              "Crafted with zero compromises on drape, weight, or longevity."
             </div>
           </div>
 
-          {/* RIGHT: Headline, Manifesto & Button (lg:col-span-4) */}
+          {/* RIGHT: Step 3 - Sizing & High-Converting Action Trigger (lg:col-span-4) */}
           <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between space-y-6">
-            <div className="space-y-4">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#183B56] leading-[1.1]">
-                Craftsmanship <br />
-                That Lasts
-              </h1>
-              <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed font-normal">
-                Elevate your everyday with timeless, quality-crafted essentials. From sustainable organic materials to enduring designs, each piece is made to last.
-              </p>
+            <div className="space-y-5">
+              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
+                <Sliders size={11} className="text-[#183B56]" />
+                <span>03 • Personal Fit Matrix</span>
+              </div>
+
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56] leading-tight">
+                  Build Your Signature Silhouette
+                </h1>
+                <p className="text-xs text-[#5A7184] leading-relaxed pt-1.5">
+                  Pieces are curated strictly from certified organic fabrics and tailored to your preference.
+                </p>
+              </div>
+
+              {/* Department / Gender Selector */}
+              <div className="space-y-1.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184]">
+                  Department
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {["Men", "Women", "Unisex"].map((g) => (
+                    <button
+                      key={g}
+                      onClick={() => setSelectedGender(g)}
+                      className={`py-2 text-xs font-bold border transition-all cursor-pointer ${
+                        selectedGender === g
+                          ? "bg-[#183B56] text-white border-[#183B56]"
+                          : "bg-transparent text-[#183B56] border-[#183B56] hover:bg-[#183B56]/5"
+                      }`}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Fit Preference Selector */}
+              <div className="space-y-1.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184]">
+                  Cut & Fit Preference
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {["Slim", "Tailored", "Relaxed"].map((fit) => (
+                    <button
+                      key={fit}
+                      onClick={() => setSelectedFit(fit)}
+                      className={`py-2 text-xs font-bold border transition-all cursor-pointer ${
+                        selectedFit === fit
+                          ? "bg-[#183B56] text-white border-[#183B56]"
+                          : "bg-transparent text-[#183B56] border-[#183B56] hover:bg-[#183B56]/5"
+                      }`}
+                    >
+                      {fit}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div className="pt-4">
+            {/* High-Converting CTA & Friction-Free Assurances */}
+            <div className="space-y-3 pt-2">
               <button
-                onClick={() => router.push("/market")}
-                className="px-8 py-3.5 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.18em] rounded-sm transition-all cursor-pointer border-none shadow-xs inline-flex items-center gap-2.5"
+                onClick={handleScrollToCatalog}
+                className="w-full py-4 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.2em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
               >
-                <span>Explore Now</span>
-                <ArrowRight size={13} />
+                <span>Curate My Wardrobe</span>
+                <ArrowDown size={14} className="animate-bounce" />
               </button>
+
+              <div className="space-y-1 text-[10px] font-semibold text-[#5A7184] text-center">
+                <div>✓ Complimentary Global Courier • ✓ Tailored Fit Guarantee</div>
+              </div>
             </div>
           </div>
 
@@ -432,7 +555,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         {/* ════════════════════════════════════════════════════════════
             4. ATELIER CATALOG: ROW-BY-ROW INFINITE SCROLL PRODUCT GRID
         ════════════════════════════════════════════════════════════ */}
-        <section className="border-b border-[#183B56]">
+        <section ref={catalogSectionRef} className="border-b border-[#183B56]">
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 px-6 border-b border-[#183B56]">
             <div>
@@ -440,11 +563,11 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                 Atelier Catalog
               </h2>
               <p className="text-xs text-[#5A7184] pt-0.5">
-                Full collection feed • {catalogPool.length} products loaded
+                Full collection feed • Matched for {selectedGender} ({selectedFit} Fit)
               </p>
             </div>
             <button
-              onClick={() => router.push("/market")}
+              onClick={() => router.push(`/market?gender=${selectedGender}`)}
               className="text-xs sm:text-sm font-semibold text-[#183B56] hover:underline flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0"
             >
               <span>View Full Market</span>
