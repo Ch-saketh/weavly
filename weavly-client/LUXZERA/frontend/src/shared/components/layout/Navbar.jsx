@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { ShoppingBag, User, LogOut, X, Menu, Search, ChevronDown, Sparkles, Scissors, Palette, ArrowRight, History, Trash2, Clock } from "lucide-react";
+import { ShoppingBag, User, LogOut, X, Menu, Search, ChevronDown, Sparkles, Scissors, Palette, ArrowRight, History, Trash2, Clock, Package, ChevronRight, HelpCircle, Heart, ShieldCheck, Settings } from "lucide-react";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import StaggeredMenu from "@/shared/components/ui/StaggeredMenu";
 import branding from "@/config/branding";
@@ -543,24 +543,156 @@ export default function Navbar({
                     )}
                   </button>
 
-                  {/* Profile Dropdown */}
+                  {/* Apple-Level Premium Profile Dropdown */}
                   {profileOpen && (
                     <>
-                      <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
-                      <div className="absolute right-0 mt-3 w-56 z-50 bg-[#FFFFFF] border border-[#ECECEC] shadow-xs rounded-xl p-1.5 animate-in fade-in duration-200">
-                        <div className="px-3 py-2.5 border-b border-[#ECECEC]">
-                          <p className="text-xs font-semibold text-[#1D1D1F] truncate">{profileFullName}</p>
-                          <p className="text-[11px] text-[#71717A] truncate">{profileEmail}</p>
+                      {/* Transparent backdrop for dismiss */}
+                      <div
+                        className="fixed inset-0 z-40 bg-black/[0.02] transition-opacity"
+                        onClick={() => setProfileOpen(false)}
+                      />
+
+                      <div
+                        className="absolute right-0 mt-3 w-80 z-50 bg-white/95 backdrop-blur-2xl border border-black/[0.08] shadow-[0_24px_50px_rgba(0,0,0,0.14),0_6px_16px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.03)] rounded-2xl p-2 animate-in fade-in zoom-in-95 duration-200 ease-out origin-top-right select-none"
+                      >
+                        {/* ── User Identity Header Card ── */}
+                        <div className="p-3 mb-1 bg-[#F5F5F7]/80 rounded-xl flex items-center gap-3 border border-black/[0.04]">
+                          {profileImage ? (
+                            <div className="w-11 h-11 rounded-full overflow-hidden bg-white ring-2 ring-black/5 shrink-0 shadow-2xs">
+                              <img src={profileImage} alt="" className="w-full h-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#1D1D1F] to-[#434346] text-white flex items-center justify-center font-semibold text-sm ring-2 ring-black/5 shrink-0 shadow-2xs">
+                              {profileFullName.charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <p className="text-[13px] font-semibold text-[#1D1D1F] truncate leading-tight">
+                                {profileFullName}
+                              </p>
+                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[9px] font-semibold tracking-wide border border-emerald-200/50">
+                                <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                                Member
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-[#86868B] truncate mt-0.5 font-normal">
+                              {profileEmail}
+                            </p>
+                          </div>
                         </div>
-                        <div className="py-1">
-                          <button onClick={() => { onAccountClick?.(); setProfileOpen(false); }} className="w-full text-left px-3 py-2 text-xs font-medium text-[#1D1D1F] hover:text-[#F07020] hover:bg-[#FAFAF9] rounded-lg border-none bg-transparent cursor-pointer">
-                            My Account
+
+                        {/* ── Group 1: Personal Space & Wardrobe ── */}
+                        <div className="py-1 space-y-0.5">
+                          <button
+                            onClick={() => {
+                              onAccountClick?.();
+                              setProfileOpen(false);
+                            }}
+                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-7 h-7 rounded-lg bg-[#F5F5F7] group-hover:bg-white flex items-center justify-center text-[#1D1D1F] group-hover:shadow-2xs transition-all">
+                                <User size={15} strokeWidth={1.75} />
+                              </div>
+                              <span>My Account & Measurements</span>
+                            </div>
+                            <ChevronRight size={13} className="text-[#AEAEB2] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                           </button>
-                          <button onClick={() => { onOrdersClick?.(); setProfileOpen(false); }} className="w-full text-left px-3 py-2 text-xs font-medium text-[#1D1D1F] hover:text-[#F07020] hover:bg-[#FAFAF9] rounded-lg border-none bg-transparent cursor-pointer">
-                            My Orders
+
+                          <button
+                            onClick={() => {
+                              onOrdersClick?.();
+                              setProfileOpen(false);
+                            }}
+                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-7 h-7 rounded-lg bg-[#F5F5F7] group-hover:bg-white flex items-center justify-center text-[#1D1D1F] group-hover:shadow-2xs transition-all">
+                                <Package size={15} strokeWidth={1.75} />
+                              </div>
+                              <span>My Orders & Deliveries</span>
+                            </div>
+                            <ChevronRight size={13} className="text-[#AEAEB2] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                           </button>
-                          <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-xs font-medium text-[#D9381E] hover:bg-red-50 rounded-lg border-none bg-transparent cursor-pointer">
-                            Sign Out
+
+                          <button
+                            onClick={() => {
+                              onWardrobeClick?.();
+                              setProfileOpen(false);
+                            }}
+                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-7 h-7 rounded-lg bg-[#F5F5F7] group-hover:bg-white flex items-center justify-center text-[#1D1D1F] group-hover:shadow-2xs transition-all">
+                                <img src="/zyra.png" alt="Zyra" className="w-3.5 h-3.5 object-contain" />
+                              </div>
+                              <span>Zyra AI Wardrobe</span>
+                            </div>
+                            <span className="text-[10px] font-semibold text-[#F07020] bg-[#FFF5EE] px-2 py-0.5 rounded-full border border-[#F07020]/20">
+                              {wardrobeCount > 0 ? `${wardrobeCount} saved` : "AI Studio"}
+                            </span>
+                          </button>
+                        </div>
+
+                        {/* ── Apple Divider ── */}
+                        <div className="my-1 border-t border-black/[0.06]" />
+
+                        {/* ── Group 2: Creator & Atelier Space ── */}
+                        <div className="py-0.5 space-y-0.5">
+                          <button
+                            onClick={() => {
+                              onDesignerClick?.();
+                              setProfileOpen(false);
+                            }}
+                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-7 h-7 rounded-lg bg-[#F5F5F7] group-hover:bg-white flex items-center justify-center text-[#1D1D1F] group-hover:shadow-2xs transition-all">
+                                <Palette size={15} strokeWidth={1.75} />
+                              </div>
+                              <span>Designer Studio</span>
+                            </div>
+                            <span className="text-[10px] font-medium text-[#86868B] group-hover:text-[#1D1D1F] transition-colors">
+                              Creator
+                            </span>
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              onFaqClick?.();
+                              setProfileOpen(false);
+                            }}
+                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-7 h-7 rounded-lg bg-[#F5F5F7] group-hover:bg-white flex items-center justify-center text-[#1D1D1F] group-hover:shadow-2xs transition-all">
+                                <HelpCircle size={15} strokeWidth={1.75} />
+                              </div>
+                              <span>Help & FAQs</span>
+                            </div>
+                            <ChevronRight size={13} className="text-[#AEAEB2] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                          </button>
+                        </div>
+
+                        {/* ── Apple Divider ── */}
+                        <div className="my-1 border-t border-black/[0.06]" />
+
+                        {/* ── Group 3: Sign Out ── */}
+                        <div className="pt-0.5">
+                          <button
+                            onClick={handleLogout}
+                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#E03131] hover:bg-red-50/80 rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-7 h-7 rounded-lg bg-red-50 group-hover:bg-white flex items-center justify-center text-[#E03131] group-hover:shadow-2xs transition-all">
+                                <LogOut size={14} strokeWidth={1.75} />
+                              </div>
+                              <span>Sign Out</span>
+                            </div>
+                            <span className="text-[11px] text-red-400 group-hover:text-red-600 transition-colors">
+                              Exit
+                            </span>
                           </button>
                         </div>
                       </div>
