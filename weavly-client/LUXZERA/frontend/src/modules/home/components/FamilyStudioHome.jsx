@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowDown, ShoppingBag, Bookmark, Loader2 } from "lucide-react";
+import { ArrowRight, ArrowDown, ChevronLeft, ChevronRight, ShoppingBag, Bookmark, Loader2 } from "lucide-react";
 import { getProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
@@ -56,6 +56,143 @@ const HERO_CATEGORIES = [
   },
 ];
 
+// Department Carousel Component (15-20 products with side scroll)
+function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddToCart, onToggleLike, isSaved, addedProductIds }) {
+  const router = useRouter();
+  const scrollRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const offset = direction === "left" ? -580 : 580;
+      scrollRef.current.scrollBy({ left: offset, behavior: "smooth" });
+    }
+  };
+
+  const displayList = products.slice(0, 20);
+
+  if (displayList.length === 0) return null;
+
+  return (
+    <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
+      {/* Header Bar with Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3.5 px-6 border-b border-[#183B56]">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
+            {title}
+          </h2>
+          <p className="text-xs text-[#5A7184] pt-0.5">
+            {subtitle} • {displayList.length} Curated Selections
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 self-end sm:self-auto">
+          <button
+            onClick={() => router.push(`/market?gender=${deptQuery}`)}
+            className="text-xs font-semibold text-[#183B56] hover:underline flex items-center gap-1 bg-transparent border-none cursor-pointer p-0"
+          >
+            <span>Explore All</span>
+            <span className="text-sm font-normal leading-none">→</span>
+          </button>
+
+          <div className="flex items-center gap-1.5 pl-2 border-l border-[#183B56]">
+            <button
+              onClick={() => scroll("left")}
+              aria-label="Scroll left"
+              className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <button
+              onClick={() => scroll("right")}
+              aria-label="Scroll right"
+              className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+            >
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Horizontal Side-Scroll Strip (15-20 products) */}
+      <div
+        ref={scrollRef}
+        className="flex overflow-x-auto scroll-smooth scrollbar-none divide-x divide-[#183B56]"
+      >
+        {displayList.map((product, idx) => {
+          const pid = product.id || product.productId || `dept-${idx}`;
+          const pName = product.name || product.title || "Essential Piece";
+          const rawImg = product.imageUrl || product.image || product.images?.[0];
+          const pImg = rawImg ? ensureHttps(rawImg) : NEUTRAL_FALLBACK_IMAGE;
+          const pPrice = typeof product.price === "number" ? product.price : Number(product.price) || 1999;
+          const saved = isSaved?.(pid);
+          const isAdded = !!addedProductIds[pid];
+
+          return (
+            <div
+              key={pid}
+              onClick={() => product.id && router.push(`/product/${product.id}`)}
+              className="w-[240px] sm:w-[270px] shrink-0 group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
+            >
+              {/* Product Image Box */}
+              <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-4 sm:p-5">
+                <img
+                  src={pImg}
+                  alt={pName}
+                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
+                  }}
+                />
+
+                {/* Wardrobe Bookmark Icon on Hover */}
+                <button
+                  onClick={(e) => onToggleLike(e, product)}
+                  className={`absolute top-2.5 right-2.5 w-7 h-7 rounded-full flex items-center justify-center p-0 cursor-pointer transition-all ${
+                    saved
+                      ? "bg-white shadow-xs scale-105 border border-[#183B56]"
+                      : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-105 border border-[#183B56]/30"
+                  }`}
+                  title={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
+                >
+                  <Bookmark
+                    size={12}
+                    className={saved ? "fill-[#183B56] text-[#183B56]" : "text-[#5A7184]"}
+                  />
+                </button>
+
+                {/* Quick Add To Bag Slide-up Bar */}
+                <div className="absolute bottom-0 left-0 right-0 bg-[#183B56] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20">
+                  <button
+                    onClick={(e) => onAddToCart(e, product)}
+                    className={`w-full py-2 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border-none cursor-pointer ${
+                      isAdded ? "bg-[#2E7D32] text-white" : "bg-[#183B56] text-white hover:bg-[#102A43]"
+                    }`}
+                  >
+                    <ShoppingBag size={11} />
+                    <span>{isAdded ? "Added ✓" : "Add to Bag"}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Bottom Rate & Title Box */}
+              <div className="py-3.5 px-3 text-center flex flex-col items-center justify-center space-y-1 bg-[#F5EFEB]">
+                <div className="text-[12px] sm:text-[13px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1 truncate max-w-full">
+                  <span>{pName}</span>
+                  <span className="text-xs font-normal">→</span>
+                </div>
+                <div className="text-[14px] sm:text-[15px] font-bold text-[#183B56] tracking-tight">
+                  ₹{Math.round(pPrice).toLocaleString("en-IN")}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const router = useRouter();
   const { user } = useAuth();
@@ -68,6 +205,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
 
   // Active Category Selection
   const [selectedCategory, setSelectedCategory] = useState(HERO_CATEGORIES[0]);
+  const [activeCatalogTab, setActiveCatalogTab] = useState("All");
 
   // Infinite Scroll State (Row-by-Row)
   const [visibleRowsCount, setVisibleRowsCount] = useState(2);
@@ -80,7 +218,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   useEffect(() => {
     let isMounted = true;
     setLoadingProducts(true);
-    getProducts({ limit: 60 }).then((items) => {
+    getProducts({ limit: 100 }).then((items) => {
       if (isMounted) {
         const list = Array.isArray(items) ? items : [];
         setProductsList(list);
@@ -95,14 +233,44 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     };
   }, []);
 
+  // Segregate products into Men, Women, Kids
+  const menProducts = productsList.filter((p) => {
+    const g = (p.gender || p.department || "").toLowerCase();
+    const c = (p.category || "").toLowerCase();
+    return g.includes("men") || g.includes("male") || (!g.includes("women") && !g.includes("female") && !g.includes("kid") && !g.includes("girl") && c.includes("shirt"));
+  });
+
+  const womenProducts = productsList.filter((p) => {
+    const g = (p.gender || p.department || "").toLowerCase();
+    const c = (p.category || "").toLowerCase();
+    return g.includes("women") || g.includes("female") || g.includes("girl") || c.includes("dress") || c.includes("top");
+  });
+
+  const kidsProducts = productsList.filter((p) => {
+    const g = (p.gender || p.department || "").toLowerCase();
+    const c = (p.category || "").toLowerCase();
+    return g.includes("kid") || g.includes("child") || g.includes("boy") || g.includes("girl") || c.includes("kid");
+  });
+
+  // Filtered pool based on active tab
+  const getActiveTabPool = () => {
+    if (activeCatalogTab === "Men") return menProducts;
+    if (activeCatalogTab === "Women") return womenProducts;
+    if (activeCatalogTab === "Kids") return kidsProducts.length > 0 ? kidsProducts : productsList.slice(0, 16);
+    return productsList;
+  };
+
+  const filteredPool = getActiveTabPool();
+  const visibleCatalogProducts = filteredPool.slice(0, visibleRowsCount * 4);
+  const catalogRows = chunkArray(visibleCatalogProducts, 4);
+
   // Infinite scroll row-by-row loader with fast-scroll pacing
   const loadNextRow = useCallback(async () => {
     if (isLoadingMore || !hasMore) return;
 
-    const catalogPool = productsList.slice(4);
     const currentlyVisible = visibleRowsCount * 4;
 
-    if (currentlyVisible < catalogPool.length) {
+    if (currentlyVisible < filteredPool.length) {
       setIsLoadingMore(true);
       setTimeout(() => {
         setVisibleRowsCount((prev) => prev + 1);
@@ -125,7 +293,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         setIsLoadingMore(false);
       }
     }
-  }, [isLoadingMore, hasMore, productsList, visibleRowsCount]);
+  }, [isLoadingMore, hasMore, filteredPool.length, productsList.length, visibleRowsCount]);
 
   // IntersectionObserver on sentinel with 800px pre-fetch buffer
   useEffect(() => {
@@ -189,11 +357,6 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   // Section 2: Best Sellers (Top 4 products)
   const bestSellers = productsList.slice(0, 4);
 
-  // Section 4: Continuous Infinite Scroll Catalog (Starts from product index 4)
-  const catalogPool = productsList.slice(4);
-  const visibleCatalogProducts = catalogPool.slice(0, visibleRowsCount * 4);
-  const catalogRows = chunkArray(visibleCatalogProducts, 4);
-
   return (
     <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
 
@@ -201,7 +364,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
       <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-12 sm:space-y-16 lg:space-y-20">
 
         {/* ════════════════════════════════════════════════════════════
-            1. ULTRA-CLEAN 3-COLUMN HERO (LOW COGNITIVE LOAD)
+            1. ULTRA-CLEAN 3-COLUMN HERO
         ════════════════════════════════════════════════════════════ */}
         <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
           <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
@@ -252,7 +415,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
               </div>
             </div>
 
-            {/* RIGHT: Big Bold Headline & 1 Direct Button (lg:col-span-4) */}
+            {/* RIGHT: Big Bold Headline & Direct Button (lg:col-span-4) */}
             <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between space-y-6">
               <div className="space-y-3">
                 <div className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
@@ -286,7 +449,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            2. BEST SELLERS: CONTINUOUS 4-COLUMN REAL DATA WIREFRAME BOX GRID
+            2. BEST SELLERS: CONTINUOUS 4-COLUMN WIREFRAME BOX GRID
         ════════════════════════════════════════════════════════════ */}
         <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
           
@@ -380,7 +543,49 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            3. OUR BRAND / ATELIER COLLAGE BENTO GRID
+            3. MEN'S COLLECTION SIDE-SCROLL SHOWCASE (15-20 PRODUCTS)
+        ════════════════════════════════════════════════════════════ */}
+        <DepartmentCarousel
+          title="Men's Collection"
+          subtitle="Tailored blazers, premium shirts & trousers"
+          deptQuery="Men"
+          products={menProducts}
+          onAddToCart={handleAddToCart}
+          onToggleLike={handleToggleLike}
+          isSaved={isSaved}
+          addedProductIds={addedProductIds}
+        />
+
+        {/* ════════════════════════════════════════════════════════════
+            4. WOMEN'S COLLECTION SIDE-SCROLL SHOWCASE (15-20 PRODUCTS)
+        ════════════════════════════════════════════════════════════ */}
+        <DepartmentCarousel
+          title="Women's Collection"
+          subtitle="Contemporary silhouettes, dresses & knitwear"
+          deptQuery="Women"
+          products={womenProducts}
+          onAddToCart={handleAddToCart}
+          onToggleLike={handleToggleLike}
+          isSaved={isSaved}
+          addedProductIds={addedProductIds}
+        />
+
+        {/* ════════════════════════════════════════════════════════════
+            5. KIDS' ATELIER SIDE-SCROLL SHOWCASE (15-20 PRODUCTS)
+        ════════════════════════════════════════════════════════════ */}
+        <DepartmentCarousel
+          title="Kids' Atelier"
+          subtitle="Playful organic cottons & durable essentials"
+          deptQuery="Kids"
+          products={kidsProducts.length > 0 ? kidsProducts : productsList.slice(0, 16)}
+          onAddToCart={handleAddToCart}
+          onToggleLike={handleToggleLike}
+          isSaved={isSaved}
+          addedProductIds={addedProductIds}
+        />
+
+        {/* ════════════════════════════════════════════════════════════
+            6. OUR BRAND / ATELIER COLLAGE BENTO GRID
         ════════════════════════════════════════════════════════════ */}
         <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
           <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
@@ -451,26 +656,39 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         </div>
 
         {/* ════════════════════════════════════════════════════════════
-            4. ATELIER CATALOG: ROW-BY-ROW INFINITE SCROLL PRODUCT GRID
+            7. ATELIER CATALOG: CATEGORIZED ROW-BY-ROW INFINITE SCROLL FEED
         ════════════════════════════════════════════════════════════ */}
         <section ref={catalogSectionRef} className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
-          {/* Header Bar */}
+          {/* Header Bar with Department Tabs */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 px-6 border-b border-[#183B56]">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
                 Atelier Catalog
               </h2>
               <p className="text-xs text-[#5A7184] pt-0.5">
-                Full collection feed • {catalogPool.length} products loaded
+                Full collection feed • {filteredPool.length} products
               </p>
             </div>
-            <button
-              onClick={() => router.push(`/market?category=${selectedCategory.query}`)}
-              className="text-xs sm:text-sm font-semibold text-[#183B56] hover:underline flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0"
-            >
-              <span>View Full Market</span>
-              <span className="text-base font-normal leading-none">→</span>
-            </button>
+
+            {/* Department Filter Tabs */}
+            <div className="flex items-center gap-2">
+              {["All", "Men", "Women", "Kids"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => {
+                    setActiveCatalogTab(tab);
+                    setVisibleRowsCount(2);
+                  }}
+                  className={`px-3 py-1.5 text-xs font-bold border transition-all cursor-pointer ${
+                    activeCatalogTab === tab
+                      ? "bg-[#183B56] text-white border-[#183B56]"
+                      : "bg-transparent text-[#183B56] border-[#183B56] hover:bg-[#183B56]/5"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Render Continuous Rows of 4 Products */}
