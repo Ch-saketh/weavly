@@ -171,14 +171,14 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#FFFFFF] flex flex-col items-center justify-center gap-6 px-4 text-center">
-        <h2 className="text-2xl font-bold text-[#1D1D1F]">Product Not Found</h2>
-        <p className="text-xs text-[#71717A] max-w-sm">
+      <div className="min-h-screen bg-[#F5EFEB] flex flex-col items-center justify-center gap-6 px-4 text-center">
+        <h2 className="text-2xl font-bold text-[#183B56]">Product Not Found</h2>
+        <p className="text-xs text-[#5A7184] max-w-sm">
           The item you are looking for might have been moved or is currently unavailable.
         </p>
         <button
           onClick={() => router.push("/market")}
-          className="bg-[#111111] text-white text-xs font-bold uppercase px-8 py-3 rounded-full hover:bg-[#F07020] transition-colors border-none cursor-pointer"
+          className="bg-[#183B56] text-white text-xs font-bold uppercase px-8 py-3 rounded-full hover:bg-[#102A43] transition-colors border-none cursor-pointer"
         >
           Explore Catalog
         </button>
@@ -191,7 +191,7 @@ export default function ProductDetailPage() {
   const formattedPrice = Math.round(product.price || 999).toLocaleString("en-IN");
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] text-[#1D1D1F] font-sans selection:bg-[#F07020] selection:text-white pb-28 relative">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-28 relative">
       {/* ── BREADCRUMB & BACK HEADER ── */}
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 pt-8 pb-4 flex items-center justify-between">
         <button

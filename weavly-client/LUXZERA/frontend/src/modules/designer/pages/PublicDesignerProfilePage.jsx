@@ -143,7 +143,7 @@ export default function PublicDesignerProfilePage() {
   const { profile, publishedDesigns } = data;
 
   return (
-    <div className="min-h-screen bg-[#FBFBFB] text-[#1D1D1F] pb-28">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] pb-28">
       {/* Cover Banner */}
       <div className="h-56 sm:h-72 w-full bg-gradient-to-r from-[#1D1D1F] via-[#2F2F32] to-[#1D1D1F] relative overflow-hidden">
         {profile.coverImageUrl && (

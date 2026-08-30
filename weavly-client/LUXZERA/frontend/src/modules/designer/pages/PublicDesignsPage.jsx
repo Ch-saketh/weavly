@@ -32,7 +32,7 @@ export default function PublicDesignsPage() {
   }, [category, style, audience, page]);
 
   return (
-    <div className="min-h-screen bg-[#FBFBFB] text-[#1D1D1F] pb-28">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#1D1D1F] pb-28">
       {/* Header */}
       <section className="bg-gradient-to-b from-[#1D1D1F] via-[#242426] to-[#1D1D1F] text-white pt-28 pb-16 px-6 sm:px-12 text-center relative overflow-hidden">
         <div className="max-w-4xl mx-auto relative z-10">

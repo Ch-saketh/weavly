@@ -81,7 +81,7 @@ const VALUES = [
 
 export default function AboutPage({ onShopNow }) {
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans">
 
       {/* Subtle, Professional Animations */}
       <style>{`

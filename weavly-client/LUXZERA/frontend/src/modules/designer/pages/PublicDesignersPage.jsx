@@ -25,7 +25,7 @@ export default function PublicDesignersPage() {
     : designers.filter((d) => d.specialization?.toLowerCase() === filterSpec.toLowerCase());
 
   return (
-    <div className="min-h-screen bg-[#FBFBFB] text-[#1D1D1F] pb-24">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#1D1D1F] pb-24">
       {/* Editorial Header */}
       <section className="bg-gradient-to-b from-[#1D1D1F] via-[#242426] to-[#1D1D1F] text-white pt-28 pb-20 px-6 sm:px-12 text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#F07020_1px,transparent_1px)] [background-size:16px_16px]" />

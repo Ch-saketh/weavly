@@ -252,7 +252,7 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
 
   if (!isMounted || authLoading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#F5EFEB] flex items-center justify-center">
         <CreativeLoader />
       </div>
     );
@@ -260,18 +260,18 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-6 font-sans">
-        <div className="max-w-md rounded-2xl border border-[#ECECEC] bg-white p-10 text-center shadow-[0_2px_16px_rgba(0,0,0,0.03)]">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-neutral-400">Account unavailable</p>
-          <h1 className="mt-4 text-[22px] font-semibold text-neutral-900 tracking-[-0.02em] leading-tight">Sign in to view your profile</h1>
-          <p className="mt-2.5 text-[13px] text-neutral-500 leading-relaxed">Access your style preferences, order history, and account settings.</p>
+      <div className="min-h-screen bg-[#F5EFEB] flex items-center justify-center px-6 font-sans">
+        <div className="max-w-md rounded-2xl border border-[#183B56]/20 bg-[#F5EFEB] p-10 text-center shadow-xs">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#5A7184]">Account unavailable</p>
+          <h1 className="mt-4 text-[22px] font-bold text-[#183B56] tracking-[-0.02em] leading-tight">Sign in to view your profile</h1>
+          <p className="mt-2.5 text-[13px] text-[#5A7184] leading-relaxed">Access your style preferences, order history, and account settings.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white antialiased font-sans animate-acct-fade-in">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] antialiased font-sans animate-acct-fade-in">
       <style>{`
         .animate-acct-fade-in {
           animation: acct-fade-in 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;

@@ -141,7 +141,7 @@ export default function AppShell({ children }) {
   const showOnboardingModal = mounted && !!currentUser && currentUser.profileCompleted === false;
 
   return (
-    <div className="flex flex-col min-h-screen bg-white relative">
+    <div className="flex flex-col min-h-screen bg-[#F5EFEB] text-[#183B56] relative">
       {showNavbar && (
         <Navbar
           cartCount={cartCount}

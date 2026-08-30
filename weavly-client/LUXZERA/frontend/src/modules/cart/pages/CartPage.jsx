@@ -43,17 +43,17 @@ export default function CartPage({ onCheckout }) {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-6 px-6 font-sans">
-        <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#E7E3DD] flex items-center justify-center">
-          <ShoppingBag size={26} className="text-[#2B2B2B]/20" />
+      <div className="min-h-screen bg-[#F5EFEB] flex flex-col items-center justify-center gap-6 px-6 font-sans">
+        <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#183B56]/30 flex items-center justify-center">
+          <ShoppingBag size={26} className="text-[#183B56]/30" />
         </div>
         <div className="text-center">
-          <p className="text-3xl font-black uppercase tracking-tight text-[#2B2B2B]">Your bag<br />is empty.</p>
-          <p className="text-[13px] text-[#2B2B2B]/40 mt-2 font-medium">You haven't added anything yet.</p>
+          <p className="text-3xl font-black uppercase tracking-tight text-[#183B56]">Your bag<br />is empty.</p>
+          <p className="text-[13px] text-[#5A7184] mt-2 font-medium">You haven't added anything yet.</p>
         </div>
         <button
           onClick={() => router.push("/market")}
-          className="flex items-center gap-2 bg-[#5B6EF5] hover:bg-[#4a5de0] text-[#FAF9F7] font-extrabold uppercase text-[10px] tracking-[0.28em] px-8 py-4 rounded-full transition-colors"
+          className="flex items-center gap-2 bg-[#183B56] hover:bg-[#102A43] text-white font-extrabold uppercase text-[10px] tracking-[0.28em] px-8 py-4 rounded-full transition-colors"
         >
           <ShoppingBag size={13} />
           Start Shopping
@@ -63,10 +63,10 @@ export default function CartPage({ onCheckout }) {
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-[#F5EFEB] font-sans text-[#183B56]">
 
       {/* ── Header ── */}
-      <div className="relative overflow-hidden bg-white border-b border-[#E7E3DD] px-6 py-10">
+      <div className="relative overflow-hidden bg-[#F5EFEB] border-b border-[#183B56]/15 px-6 py-10">
         <div className="absolute inset-0 bg-premium-grid opacity-[0.025] pointer-events-none" />
         <div className="mx-auto max-w-7xl relative z-10">
           <button

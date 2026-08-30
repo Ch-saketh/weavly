@@ -3,7 +3,7 @@ import { ArrowRight, Clock, ShieldCheck, HelpCircle } from "lucide-react";
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-white font-sans pb-20 select-none">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans pb-20 select-none">
       
       {/* Subtle, Professional Animations */}
       <style>{`

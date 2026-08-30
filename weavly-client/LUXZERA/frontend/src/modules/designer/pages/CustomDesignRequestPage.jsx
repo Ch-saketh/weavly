@@ -107,7 +107,7 @@ export default function CustomDesignRequestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBFBFB] text-[#1D1D1F] pt-28 pb-28">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] pt-28 pb-28">
       <div className="max-w-4xl mx-auto px-4 sm:px-8">
         <button
           onClick={() => router.back()}

@@ -76,7 +76,7 @@ export default function FaqPage({ onShopNow }) {
   const current = FAQ_CATEGORIES.find((c) => c.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans">
 
       {/* ── Header ── */}
       <div className="relative bg-white border-b border-[#E7E3DD] py-16 px-6 overflow-hidden">

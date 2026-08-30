@@ -32,7 +32,7 @@ export default function NotFoundPage({ isErrorFallback = false }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center relative overflow-hidden font-['Plus_Jakarta_Sans',sans-serif] selection:bg-[#F07020] selection:text-white px-6">
+    <div className="min-h-screen bg-[#F5EFEB] flex flex-col items-center justify-center relative overflow-hidden font-['Plus_Jakarta_Sans',sans-serif] selection:bg-[#F07020] selection:text-white px-6">
       
       {/* Main Content Container - 100% Seamless Pure White Blending */}
       <div className="z-10 flex flex-col items-center text-center max-w-md mx-auto py-12">
