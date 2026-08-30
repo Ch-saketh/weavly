@@ -588,71 +588,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
           addedProductIds={addedProductIds}
         />
 
-        {/* ════════════════════════════════════════════════════════════
-            6. OUR BRAND / ATELIER COLLAGE BENTO GRID
-        ════════════════════════════════════════════════════════════ */}
-        <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
-          <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
-            
-            {/* Left: Brand Story & Atelier Labels (lg:col-span-5) */}
-            <div className="lg:col-span-5 p-6 sm:p-10 flex flex-col justify-between space-y-6">
-              <div className="space-y-3">
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
-                  Our Brand
-                </h2>
-                <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed font-normal">
-                  Elevated essentials for every moment. Crafted with care, designed to endure. Embrace simplicity, redefine style. Less clutter, more meaning. Craftsmanship at its finest, indulgent fabrics, timeless appeal.
-                </p>
-                <button onClick={() => router.push("/about")} className="text-xs font-bold text-[#183B56] hover:underline bg-transparent border-none cursor-pointer p-0">
-                  Read More...
-                </button>
-              </div>
 
-              {/* Brand Labels Table & Stamp Badge */}
-              <div className="flex items-center justify-between gap-6 pt-4 border-t border-[#183B56]">
-                <div className="space-y-1 text-xs font-bold text-[#183B56] flex-1">
-                  <div className="py-1 border-b border-[#183B56]/30">GreenStitch</div>
-                  <div className="py-1 border-b border-[#183B56]/30">Urban Code</div>
-                  <div className="py-1 border-b border-[#183B56]/30">Threadline</div>
-                  <div className="py-1">Sovereign</div>
-                </div>
-
-                {/* Circular Atelier Stamp Badge */}
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-dashed border-[#183B56] flex flex-col items-center justify-center text-center p-2 rotate-12 hover:rotate-0 transition-transform shrink-0">
-                  <span className="text-[8px] sm:text-[9px] uppercase tracking-widest font-bold text-[#183B56]">Size M</span>
-                  <span className="text-xs font-extrabold text-[#183B56]">→</span>
-                  <span className="text-[8px] uppercase tracking-widest text-[#5A7184]">Atelier</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Multi-Texture Fashion Lookbook Collage (lg:col-span-7) */}
-            <div className="lg:col-span-7 p-6 sm:p-10 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-              <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80"
-                  alt="Lookbook 1"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80"
-                  alt="Lookbook 2"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className="aspect-[3/4] border border-[#183B56] overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80"
-                  alt="Lookbook 3"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            </div>
-
-          </div>
-        </section>
 
         {/* ── ZERA PERSONALIZED RECOMMENDATIONS SECTION ── */}
         <div className="border border-[#183B56] shadow-xs">
