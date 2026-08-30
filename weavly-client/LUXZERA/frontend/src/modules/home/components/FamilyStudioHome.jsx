@@ -232,10 +232,10 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                   <div
                     key={product.id}
                     onClick={() => router.push(`/product/${product.id}`)}
-                    className="p-6 group cursor-pointer flex flex-col justify-between gap-6 hover:bg-[#183B56]/[0.02] transition-colors"
+                    className="group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
                   >
-                    {/* Cool-Tinted Garment Backdrop */}
-                    <div className="aspect-[3/4] bg-[#E5EEF3] rounded-2xl overflow-hidden p-6 relative flex items-center justify-center border border-[#183B56]/15">
+                    {/* Full-bleed Cool-Tinted Flat Image Box */}
+                    <div className="relative aspect-[3/3.8] bg-[#E2EAEF] border-b border-[#183B56]/30 overflow-hidden flex items-center justify-center p-6">
                       <img
                         src={product.imageUrl || product.image || "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80"}
                         alt={product.name}
@@ -249,7 +249,12 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                       {/* Wardrobe Bookmark Icon */}
                       <button
                         onClick={(e) => handleToggleLike(e, product)}
-                        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 border border-[#183B56]/20 flex items-center justify-center p-0 cursor-pointer shadow-xs hover:scale-110 transition-transform"
+                        className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center p-0 cursor-pointer transition-all ${
+                          saved
+                            ? "bg-white shadow-xs scale-105 border border-[#183B56]/40"
+                            : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white border border-[#183B56]/20"
+                        }`}
+                        title={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
                       >
                         <Bookmark
                           size={14}
@@ -258,13 +263,13 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                       </button>
                     </div>
 
-                    {/* Product Meta */}
-                    <div className="text-center space-y-1">
-                      <div className="text-sm font-bold text-[#183B56] group-hover:text-[#102A43] flex items-center justify-center gap-1 truncate">
+                    {/* Bottom Rate & Title Box */}
+                    <div className="py-4 px-3 text-center flex flex-col items-center justify-center space-y-1 bg-[#F5EFEB]">
+                      <div className="text-[13px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1 truncate max-w-full">
                         <span>{product.name}</span>
                         <span>→</span>
                       </div>
-                      <div className="text-sm font-bold text-[#183B56]">
+                      <div className="text-[14px] font-bold text-[#183B56]">
                         ₹{Math.round(product.price || 1999).toLocaleString("en-IN")}
                       </div>
                     </div>
@@ -373,34 +378,37 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                 <div
                   key={product.id}
                   onClick={() => router.push(`/product/${product.id}`)}
-                  className="p-6 group cursor-pointer flex flex-col justify-between gap-4 hover:bg-[#183B56]/[0.02] transition-colors"
+                  className="group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
                 >
-                  <div className="aspect-[3/4] bg-white rounded-2xl overflow-hidden p-4 relative flex items-center justify-center border border-[#183B56]/15">
+                  {/* Full-bleed Cool-Tinted Flat Image Box */}
+                  <div className="relative aspect-[3/3.8] bg-[#E2EAEF] border-b border-[#183B56]/30 overflow-hidden flex items-center justify-center p-6">
                     <img
                       src={product.imageUrl || product.image || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80"}
                       alt={product.name}
-                      className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
                     />
 
                     {/* Quick Add Button */}
-                    <button
-                      onClick={(e) => handleAddToCart(e, product)}
-                      className={`absolute bottom-3 left-3 right-3 py-2.5 rounded-sm text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border-none cursor-pointer ${
-                        isAdded
-                          ? "bg-[#2E7D32] text-white"
-                          : "bg-[#183B56] text-white opacity-0 group-hover:opacity-100 shadow-md"
-                      }`}
-                    >
-                      <ShoppingBag size={12} />
-                      <span>{isAdded ? "Added ✓" : "Add to Bag"}</span>
-                    </button>
+                    <div className="absolute bottom-0 left-0 right-0 bg-[#183B56] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20">
+                      <button
+                        onClick={(e) => handleAddToCart(e, product)}
+                        className={`w-full py-2.5 text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border-none cursor-pointer ${
+                          isAdded ? "bg-[#2E7D32] text-white" : "bg-[#183B56] text-white hover:bg-[#102A43]"
+                        }`}
+                      >
+                        <ShoppingBag size={12} />
+                        <span>{isAdded ? "Added ✓" : "Add to Bag"}</span>
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="flex justify-between items-baseline pt-1">
-                    <h3 className="text-sm font-bold text-[#183B56] truncate max-w-[180px]">
-                      {product.name}
-                    </h3>
-                    <span className="text-sm font-bold text-[#183B56]">
+                  {/* Bottom Rate & Title Box */}
+                  <div className="py-4 px-3 text-center flex flex-col items-center justify-center space-y-1 bg-[#F5EFEB]">
+                    <div className="text-[13px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1 truncate max-w-full">
+                      <span>{product.name}</span>
+                      <span>→</span>
+                    </div>
+                    <span className="text-[14px] font-bold text-[#183B56]">
                       ₹{Math.round(product.price || 1999).toLocaleString("en-IN")}
                     </span>
                   </div>

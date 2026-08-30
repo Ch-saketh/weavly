@@ -7,7 +7,7 @@ import { useCart } from "@/modules/cart/store/CartContext";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { recordClickActivity, recordBagActivity } from "@/modules/user/services/userActivityService";
 
-const NEUTRAL_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23F4F1EC'/%3E%3Cpath d='M260 360C260 337.909 277.909 320 300 320C322.091 320 340 337.909 340 360V420C340 442.091 322.091 460 300 460C277.909 460 260 442.091 260 420V360Z' stroke='%23C5BCAD' stroke-width='8'/%3E%3Cpath d='M230 460C230 440 250 420 300 420C350 420 370 440 370 460V500H230V460Z' stroke='%23C5BCAD' stroke-width='8'/%3E%3Ctext x='50%25' y='560' font-family='sans-serif' font-size='16' font-weight='500' fill='%239E9484' text-anchor='middle' letter-spacing='2'%3ELUXZERA%3C/text%3E%3C/svg%3E";
+const NEUTRAL_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23E2EAEF'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='16' font-weight='600' fill='%23183B56' text-anchor='middle' letter-spacing='2'%3EWEAVLY%3C/text%3E%3C/svg%3E";
 
 const ensureHttps = (url) => {
   if (!url || typeof url !== "string") return "";
@@ -27,6 +27,7 @@ export default function MobileProductCard({ product, onViewProduct, source = "MA
 
   const saved = isSaved(productId);
   const defaultSize = product.sizes?.[0] ?? "M";
+  const productPrice = typeof product.price === "number" ? product.price : Number(product.price) || 999.0;
 
   const openProduct = () => {
     recordClickActivity(product, source);
@@ -41,22 +42,26 @@ export default function MobileProductCard({ product, onViewProduct, source = "MA
     event.stopPropagation();
     setAdded(true);
     recordBagActivity(product, "ADD", defaultSize);
-    addToCart({ ...product, id: productId, size: defaultSize });
+    addToCart({ ...product, id: productId, size: defaultSize, price: productPrice });
     setTimeout(() => setAdded(false), 1500);
   };
 
   const handleSave = (event) => {
     event.stopPropagation();
-    toggleWardrobe({ ...product, id: productId });
+    toggleWardrobe({ ...product, id: productId, price: productPrice });
   };
 
   return (
-    <article onClick={openProduct} className="rounded-2xl bg-white border border-[#ECECEC] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.01)]">
-      <div className="relative aspect-[4/5] bg-white">
+    <article
+      onClick={openProduct}
+      className="bg-[#F5EFEB] border border-[#183B56]/30 overflow-hidden text-center cursor-pointer select-none"
+    >
+      {/* Full-bleed Cool Image Container */}
+      <div className="relative aspect-[3/3.8] bg-[#E2EAEF] border-b border-[#183B56]/30 flex items-center justify-center p-3">
         <img
           src={productImage}
           alt={productName}
-          className="h-full w-full object-cover object-top"
+          className="h-full w-full object-contain mix-blend-multiply"
           loading="lazy"
           referrerPolicy="no-referrer"
           onError={(e) => {
@@ -65,55 +70,37 @@ export default function MobileProductCard({ product, onViewProduct, source = "MA
           }}
         />
         {product.badge && (
-          <span className="absolute left-3 top-3 rounded-lg bg-[#FFFFFF] border border-[#ECECEC] px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.15em] text-[#1D1D1F] shadow-xs">
+          <span className="absolute left-2 top-2 rounded-xs bg-white/90 border border-[#183B56]/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#183B56]">
             {product.badge}
           </span>
         )}
         <button
           onClick={handleSave}
-          className={`absolute right-3 top-3 h-8 w-8 rounded-full flex items-center justify-center shadow-xs transition-transform duration-200 ease-out transform-gpu active:scale-95 ${
+          className={`absolute right-2 top-2 h-7 w-7 rounded-full flex items-center justify-center transition-all ${
             saved
-              ? "bg-[#FFFFFF] scale-105 border border-[#ECECEC]"
-              : "bg-[#FFFFFF] text-[#111111] border border-[#ECECEC]"
+              ? "bg-white border border-[#183B56]/40 shadow-xs"
+              : "bg-white/80 text-[#183B56] border border-[#183B56]/20"
           }`}
           aria-label={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
         >
           <Bookmark
-            size={14}
+            size={12}
             className={`transition-colors ${
-              saved ? "fill-[#F07020] text-[#F07020]" : "text-[#111111]"
+              saved ? "fill-[#183B56] text-[#183B56]" : "text-[#5A7184]"
             }`}
           />
         </button>
       </div>
 
-      <div className="p-4">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-[#86868B]">
-          {product.brand || "Weavly"}
-        </p>
-        <div className="mt-1 flex items-start justify-between gap-3">
-          <h3 className="text-[14px] font-semibold uppercase leading-tight tracking-wider text-[#1D1D1F] truncate flex-1">
-            {product.name}
-          </h3>
-          <span className="shrink-0 text-[14px] font-bold text-[#1D1D1F] tracking-wide">
-            ₹{Math.round(product.price || 999).toLocaleString("en-IN")}
-          </span>
-        </div>
-        <div className="mt-4 flex items-center gap-2">
-          <button
-            onClick={handleAdd}
-            className="h-10 flex-1 rounded-xl bg-[#1D1D1F] text-[#FAFAF9] text-[12px] font-semibold uppercase tracking-[0.15em] flex items-center justify-center gap-2 active:scale-95 transform-gpu transition-transform duration-150 border-none cursor-pointer"
-          >
-            <ShoppingBag size={14} />
-            {added ? "Added" : "Add"}
-          </button>
-          <button
-            onClick={openProduct}
-            className="h-10 px-4 rounded-xl border border-[#ECECEC] text-[12px] font-semibold uppercase tracking-[0.15em] text-[#1D1D1F] active:scale-95 transform-gpu transition-transform duration-150 bg-white border-none cursor-pointer"
-          >
-            View
-          </button>
-        </div>
+      {/* Bottom Title & Rate Box */}
+      <div className="py-2.5 px-2 flex flex-col items-center justify-center space-y-0.5">
+        <h3 className="text-[12px] font-bold text-[#183B56] truncate max-w-full flex items-center justify-center gap-1">
+          <span>{productName}</span>
+          <span>→</span>
+        </h3>
+        <span className="text-[13px] font-bold text-[#183B56]">
+          ₹{Math.round(productPrice).toLocaleString("en-IN")}
+        </span>
       </div>
     </article>
   );
