@@ -81,21 +81,6 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   return (
     <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
 
-      {/* ── TOP EDITORIAL SUB-BAR ── */}
-      <div className="w-full border-b border-[#183B56]/20 py-2.5 px-6 sm:px-12 flex items-center justify-between text-xs tracking-wider uppercase font-semibold text-[#183B56]">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#183B56] animate-pulse" />
-          <span>Atelier Spring/Summer Edition 2026</span>
-        </div>
-        <div className="hidden sm:flex items-center gap-6 text-[11px] font-medium text-[#5A7184]">
-          <span>Sustainable Organic Fibres</span>
-          <span>•</span>
-          <span>Complimentary Global Delivery</span>
-          <span>•</span>
-          <span>Bespoke Tailoring Guarantee</span>
-        </div>
-      </div>
-
       <main className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 py-8 space-y-16 lg:space-y-24">
 
         {/* ════════════════════════════════════════════════════════════
