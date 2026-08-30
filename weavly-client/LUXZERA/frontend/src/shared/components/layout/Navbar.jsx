@@ -89,9 +89,9 @@ export default function Navbar({
             {/* Dropdown: Shop */}
             <div className="relative group">
               <button
-                onClick={onShopClick}
+                onClick={() => router.push("/market")}
                 className={`hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium ${
-                  currentPage === "shop" ? "text-[#F07020]" : "text-[#1D1D1F]"
+                  currentPage === "shop" || currentPage === "market" ? "text-[#F07020]" : "text-[#1D1D1F]"
                 }`}
               >
                 <span>Shop</span>
@@ -104,10 +104,10 @@ export default function Navbar({
                   <div className="bg-[#1D1D1F] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#111113] transition-colors">
                     <div className="text-[22px] font-semibold tracking-tight">Apparel</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => onShopClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/market")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> All Clothing
                       </button>
-                      <button onClick={() => onMenClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/market?category=Outerwear")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Outerwear & Jackets
                       </button>
                     </div>
@@ -116,10 +116,10 @@ export default function Navbar({
                   <div className="bg-[#2F293A] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#25202e] transition-colors">
                     <div className="text-[22px] font-semibold tracking-tight">Footwear</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => onShopClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/market?q=boots")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Handmade Boots
                       </button>
-                      <button onClick={() => onShopClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/market?q=loafers")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Leather Loafers
                       </button>
                     </div>
@@ -128,10 +128,10 @@ export default function Navbar({
                   <div className="bg-[#252836] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#1c1e29] transition-colors">
                     <div className="text-[22px] font-semibold tracking-tight">Outlet</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => onShopClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/market?sort=trending")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Best Sellers
                       </button>
-                      <button onClick={() => onShopClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#D9381E] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/market?sort=discount")} className="text-left text-[14px] text-white/90 hover:text-[#D9381E] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Seasonal Sale
                       </button>
                     </div>
@@ -143,8 +143,10 @@ export default function Navbar({
             {/* Dropdown: Collections */}
             <div className="relative group">
               <button
-                onClick={onShopClick}
-                className="hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium text-[#1D1D1F]"
+                onClick={() => router.push("/collections")}
+                className={`hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium ${
+                  currentPage === "collections" ? "text-[#F07020]" : "text-[#1D1D1F]"
+                }`}
               >
                 <span>Collections</span>
                 <ChevronDown size={11} strokeWidth={1.5} className="text-[#9B9B9B] group-hover:text-[#F07020] transition-colors" />
@@ -157,10 +159,10 @@ export default function Navbar({
                   <div className="bg-[#1D1D1F] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#111113] transition-colors">
                     <div className="text-[22px] font-semibold tracking-tight">Men</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => onMenClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/men")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Suits & Shirts
                       </button>
-                      <button onClick={() => onMenClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/men")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Jackets & Pants
                       </button>
                     </div>
@@ -170,10 +172,10 @@ export default function Navbar({
                   <div className="bg-[#2F293A] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#25202e] transition-colors">
                     <div className="text-[22px] font-semibold tracking-tight">Women</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => onWomenClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/women")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Dresses & Tops
                       </button>
-                      <button onClick={() => onWomenClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/women")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Skirts & Handbags
                       </button>
                     </div>
@@ -183,10 +185,10 @@ export default function Navbar({
                   <div className="bg-[#252836] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#1c1e29] transition-colors">
                     <div className="text-[22px] font-semibold tracking-tight">Capsules</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => onUnisexClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/unisex")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Street Couture
                       </button>
-                      <button onClick={() => onUnisexClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/designs")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Designer Drops
                       </button>
                     </div>
@@ -198,8 +200,10 @@ export default function Navbar({
             {/* Dropdown: New Arrivals */}
             <div className="relative group">
               <button
-                onClick={() => onSearch?.("new arrivals")}
-                className="hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium text-[#1D1D1F]"
+                onClick={() => router.push("/new-arrivals")}
+                className={`hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium ${
+                  currentPage === "new-arrivals" ? "text-[#F07020]" : "text-[#1D1D1F]"
+                }`}
               >
                 <span>New Arrivals</span>
                 <ChevronDown size={11} strokeWidth={1.5} className="text-[#9B9B9B] group-hover:text-[#F07020] transition-colors" />
@@ -211,10 +215,10 @@ export default function Navbar({
                   <div className="bg-[#1D1D1F] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#111113] transition-colors">
                     <div className="text-[22px] font-semibold tracking-tight">Fresh Drops</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => onSearch?.("summer 2026")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/new-arrivals")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Summer '26 Capsule
                       </button>
-                      <button onClick={() => onSearch?.("runway")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/market?sort=newest")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Runway Pre-Orders
                       </button>
                     </div>
@@ -223,10 +227,10 @@ export default function Navbar({
                   <div className="bg-[#2F293A] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#25202e] transition-colors">
                     <div className="text-[22px] font-semibold tracking-tight">Trending</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => onSearch?.("jackets")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/market?category=Outerwear")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Tailored Outerwear
                       </button>
-                      <button onClick={() => onSearch?.("dresses")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/market?category=Dresses")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Statement Dresses
                       </button>
                     </div>
@@ -235,10 +239,10 @@ export default function Navbar({
                   <div className="bg-[#252836] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#1c1e29] transition-colors">
                     <div className="text-[22px] font-semibold tracking-tight">Spotlight</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => onDesignerClick?.()} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/designers")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Designer Spotlight
                       </button>
-                      <button onClick={() => onSearch?.("shoes")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                      <button onClick={() => router.push("/market?category=Footwear")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-[14px]">↗</span> Limited Footwear
                       </button>
                     </div>
@@ -250,8 +254,10 @@ export default function Navbar({
             {/* Dropdown: Designer Studio */}
             <div className="relative group">
               <button
-                onClick={onDesignerClick}
-                className="hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium text-[#1D1D1F]"
+                onClick={() => router.push("/designer-studio")}
+                className={`hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium ${
+                  currentPage.startsWith("designer") ? "text-[#F07020]" : "text-[#1D1D1F]"
+                }`}
               >
                 <span>Designer Studio</span>
                 <ChevronDown size={11} strokeWidth={1.5} className="text-[#9B9B9B] group-hover:text-[#F07020] transition-colors" />
