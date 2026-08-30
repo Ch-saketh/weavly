@@ -451,66 +451,6 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
           </div>
         </section>
 
-        {/* ════════════════════════════════════════════════════════════
-            5. CUSTOMER REVIEWS: CONTINUOUS 4-COLUMN WIREFRAME BOX GRID
-        ════════════════════════════════════════════════════════════ */}
-        <section className="border-b border-[#183B56]">
-          <div className="text-center py-6 border-b border-[#183B56]">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
-              Customer Reviews
-            </h2>
-            <p className="text-xs text-[#5A7184] mt-0.5">
-              What Our Customers Are Saying: Comfort and Quality You Can Trust.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]">
-            {[
-              {
-                name: "Geneva Williamson",
-                rating: 5,
-                img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80",
-                quote: "Incredible quality and drape. Feels bespoke and lasts through every wash.",
-              },
-              {
-                name: "Leslie Alexander",
-                rating: 5,
-                img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
-                quote: "The texture and tailoring are unmatched. A permanent staple in my wardrobe.",
-              },
-              {
-                name: "Robert Fox",
-                rating: 5,
-                img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80",
-                quote: "Soft organic fabrics, pristine cuts. Exactly what modern luxury should be.",
-              },
-              {
-                name: "Darlene Robertson",
-                rating: 5,
-                img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80",
-                quote: "Stunning craftsmanship and seamless fit recommendations from Zyra.",
-              },
-            ].map((review, i) => (
-              <div key={i} className="p-6 bg-[#F5EFEB] space-y-3 text-center flex flex-col justify-between">
-                <div className="w-16 h-16 rounded-full overflow-hidden border border-[#183B56] mx-auto">
-                  <img src={review.img} alt={review.name} className="w-full h-full object-cover" />
-                </div>
-                <div className="flex justify-center gap-1 text-[#183B56]">
-                  {[...Array(review.rating)].map((_, s) => (
-                    <Star key={s} size={11} className="fill-[#183B56]" />
-                  ))}
-                </div>
-                <p className="text-xs text-[#5A7184] italic leading-relaxed">
-                  "{review.quote}"
-                </p>
-                <div className="text-xs font-bold text-[#183B56]">
-                  {review.name}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
       </main>
     </div>
   );
