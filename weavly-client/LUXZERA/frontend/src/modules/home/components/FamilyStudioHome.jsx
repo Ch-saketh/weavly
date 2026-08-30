@@ -70,7 +70,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     };
   }, []);
 
-  // Infinite scroll row-by-row loader
+  // Infinite scroll row-by-row loader with fast-scroll pacing
   const loadNextRow = useCallback(async () => {
     if (isLoadingMore || !hasMore) return;
 
@@ -78,12 +78,12 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     const currentlyVisible = visibleRowsCount * 4;
 
     if (currentlyVisible < catalogPool.length) {
-      // More items already in memory -> Reveal next row
+      // Reveal next row smoothly
       setIsLoadingMore(true);
       setTimeout(() => {
         setVisibleRowsCount((prev) => prev + 1);
         setIsLoadingMore(false);
-      }, 350);
+      }, 250);
     } else {
       // Fetch next batch from backend
       setIsLoadingMore(true);
@@ -104,7 +104,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     }
   }, [isLoadingMore, hasMore, productsList, visibleRowsCount]);
 
-  // IntersectionObserver on sentinel
+  // IntersectionObserver on sentinel with 800px pre-fetch buffer
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
@@ -115,7 +115,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
           loadNextRow();
         }
       },
-      { rootMargin: "300px" }
+      { rootMargin: "800px" }
     );
 
     observer.observe(sentinel);
