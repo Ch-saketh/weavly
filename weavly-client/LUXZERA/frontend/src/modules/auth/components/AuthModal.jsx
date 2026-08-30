@@ -803,16 +803,18 @@ export default function AuthModal({ isOpen, onClose, initialView = "login" }) {
         </button>
 
         <div className="am-logo-container am-anim-item flex items-center justify-center">
-          <WeavlyLogo size="lg" showBeta={true} />
+          <WeavlyLogo size="lg" showBeta={false} />
         </div>
 
         <div className="am-header am-anim-item">
           <h2 className="am-title">
             {view === "register" ? "You belong here." : "Look who's back."}
           </h2>
-          <p className="am-subtitle">
-            {view === "register" ? "Create your account to start curating." : "Your saved items missed you."}
-          </p>
+          {view === "register" && (
+            <p className="am-subtitle">
+              Create your account to start curating.
+            </p>
+          )}
         </div>
 
         {errorMsg && (

@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
 
           <div className="flex flex-col items-center">
             <button onClick={handleGoToLogin} className="cursor-pointer flex items-center justify-center border-none bg-transparent p-0 select-none touch-manipulation" aria-label="Weavly home">
-              <WeavlyLogo showBeta={true} size="lg" />
+              <WeavlyLogo showBeta={false} size="lg" />
             </button>
             <h2 className="text-[24px] sm:text-[28px] font-bold text-[#18181B] mt-5 tracking-tight">Reset Password</h2>
             <p className="text-[13px] sm:text-[14px] text-[#71717A] font-normal leading-relaxed mt-2 max-w-[320px] mx-auto">
