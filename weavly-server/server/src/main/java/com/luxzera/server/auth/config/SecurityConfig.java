@@ -59,7 +59,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // Health checks & root endpoints — always allow
-                        .requestMatchers("/", "/error", "/health").permitAll()
+                        .requestMatchers("/", "/error", "/health", "/api/health", "/api/health/**").permitAll()
                         .requestMatchers(HttpMethod.HEAD, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/").permitAll()
 

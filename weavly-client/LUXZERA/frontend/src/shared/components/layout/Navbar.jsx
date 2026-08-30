@@ -266,38 +266,41 @@ export default function Navbar({
               {/* CardNav-Style Dropdown Menu */}
               <div className="absolute top-full -left-48 mt-3 w-[660px] bg-[#FFFFFF] border border-[#ECECEC] rounded-2xl shadow-2xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
                 <div className="grid grid-cols-3 gap-3">
+                  {/* Card 1: Creators */}
                   <div className="bg-[#1D1D1F] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#111113] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight font-serif">Discovery</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/designers")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Discover Designers
-                      </button>
-                      <button onClick={() => router.push("/designs")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Creator Lookbooks
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-[#2F293A] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#25202e] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight font-serif">Custom Made</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/custom-design")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Commission Garment
-                      </button>
-                      <button onClick={() => router.push("/designs")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Customize a Piece
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-[#252836] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#1c1e29] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight font-serif">Atelier Portal</div>
+                    <div className="text-[22px] font-semibold tracking-tight">Creators</div>
                     <div className="flex flex-col gap-2 mt-auto">
                       <button onClick={() => router.push("/designer-studio")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Designer Studio
+                        <span className="text-[14px]">↗</span> Publish Designs
                       </button>
+                      <button onClick={() => router.push("/designer-studio")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-[14px]">↗</span> Set Your Prices
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Card 2: Studio Pass */}
+                  <div className="bg-[#2F293A] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#25202e] transition-colors">
+                    <div className="text-[22px] font-semibold tracking-tight">Studio Pass</div>
+                    <div className="flex flex-col gap-2 mt-auto">
                       <button onClick={() => router.push("/become-designer")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Become a Designer
+                        <span className="text-[14px]">↗</span> Creator Verification
+                      </button>
+                      <button onClick={() => router.push("/designer-studio")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-[14px]">↗</span> Analytics Dashboard
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Card 3: Apply */}
+                  <div className="bg-[#252836] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#1c1e29] transition-colors">
+                    <div className="text-[22px] font-semibold tracking-tight">Apply</div>
+                    <div className="flex flex-col gap-2 mt-auto">
+                      <button onClick={() => router.push("/become-designer")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-[14px]">↗</span> Independent Pass
+                      </button>
+                      <button onClick={() => router.push("/designer/register")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-[14px]">↗</span> Join Network
                       </button>
                     </div>
                   </div>
