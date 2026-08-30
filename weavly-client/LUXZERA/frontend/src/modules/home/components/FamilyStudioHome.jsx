@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowDown, ChevronLeft, ChevronRight, ShoppingBag, Bookmark, Loader2, Sparkles, Camera } from "lucide-react";
+import { ArrowRight, ArrowDown, ChevronLeft, ChevronRight, ShoppingBag, Bookmark, Sparkles, Camera } from "lucide-react";
 import { getProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
@@ -15,15 +15,6 @@ const NEUTRAL_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 const ensureHttps = (url) => {
   if (!url || typeof url !== "string") return "";
   return url.replace(/^http:\/\//i, "https://");
-};
-
-// Helper to chunk an array into rows of N
-const chunkArray = (array, size) => {
-  const chunked = [];
-  for (let i = 0; i < array.length; i += size) {
-    chunked.push(array.slice(i, i + size));
-  }
-  return chunked;
 };
 
 const HERO_CATEGORIES = [
@@ -57,7 +48,7 @@ const HERO_CATEGORIES = [
   },
 ];
 
-// Department Carousel Component (15-20 products with side scroll)
+// Department Carousel Component (Infinite Side-Scroll Shelf)
 function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddToCart, onToggleLike, isSaved, addedProductIds }) {
   const router = useRouter();
   const scrollRef = useRef(null);
@@ -69,7 +60,7 @@ function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddTo
     }
   };
 
-  const displayList = products.slice(0, 20);
+  const displayList = products.length > 0 ? products : [];
 
   if (displayList.length === 0) return null;
 
@@ -82,7 +73,7 @@ function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddTo
             {title}
           </h2>
           <p className="text-xs text-[#5A7184] pt-0.5">
-            {subtitle} • {displayList.length} Curated Selections
+            {subtitle} • {displayList.length} Curated Items (Scroll Horizontally →)
           </p>
         </div>
 
@@ -99,14 +90,14 @@ function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddTo
             <button
               onClick={() => scroll("left")}
               aria-label="Scroll left"
-              className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+              className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] flex items-center justify-center cursor-pointer transition-colors"
             >
               <ChevronLeft size={14} />
             </button>
             <button
               onClick={() => scroll("right")}
               aria-label="Scroll right"
-              className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+              className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] flex items-center justify-center cursor-pointer transition-colors"
             >
               <ChevronRight size={14} />
             </button>
@@ -114,7 +105,7 @@ function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddTo
         </div>
       </div>
 
-      {/* Horizontal Side-Scroll Strip (15-20 products) */}
+      {/* Horizontal Infinite Side-Scroll Track */}
       <div
         ref={scrollRef}
         className="flex overflow-x-auto scroll-smooth scrollbar-none divide-x divide-[#183B56]"
@@ -208,15 +199,8 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
 
   // Active Category Selection
   const [selectedCategory, setSelectedCategory] = useState(HERO_CATEGORIES[0]);
-  const [activeCatalogTab, setActiveCatalogTab] = useState("All");
-
-  // Infinite Scroll State (Smooth Fast-Scroll Batching)
-  const [visibleRowsCount, setVisibleRowsCount] = useState(8);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
   const [isFitModalOpen, setIsFitModalOpen] = useState(false);
-  const sentinelRef = useRef(null);
-  const catalogSectionRef = useRef(null);
+  const firstShelfRef = useRef(null);
 
   // Initial products fetch
   useEffect(() => {
@@ -227,9 +211,6 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         const list = Array.isArray(items) ? items : [];
         setProductsList(list);
         setLoadingProducts(false);
-        if (list.length <= 16) {
-          setHasMore(false);
-        }
       }
     });
     return () => {
@@ -250,73 +231,11 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     return g.includes("women") || g.includes("female") || g.includes("girl") || c.includes("dress") || c.includes("top");
   });
 
-  const kidsProducts = productsList.filter((p) => {
-    const g = (p.gender || p.department || "").toLowerCase();
-    const c = (p.category || "").toLowerCase();
-    return g.includes("kid") || g.includes("child") || g.includes("boy") || g.includes("girl") || c.includes("kid");
-  });
+  const bestSellers = productsList.slice(0, 30);
 
-  // Filtered pool based on active tab
-  const getActiveTabPool = () => {
-    if (activeCatalogTab === "Men") return menProducts;
-    if (activeCatalogTab === "Women") return womenProducts;
-    if (activeCatalogTab === "Kids") return kidsProducts.length > 0 ? kidsProducts : productsList.slice(0, 16);
-    return productsList;
-  };
-
-  const filteredPool = getActiveTabPool();
-  const visibleCatalogProducts = filteredPool.slice(0, visibleRowsCount * 4);
-  const catalogRows = chunkArray(visibleCatalogProducts, 4);
-
-  // High-performance infinite scroll: expands in large 4-row (16 items) batches instantly without lag
-  const loadNextRow = useCallback(async () => {
-    if (isLoadingMore || !hasMore) return;
-
-    const currentlyVisible = visibleRowsCount * 4;
-
-    if (currentlyVisible < filteredPool.length) {
-      // Instant expansion without artificial timers
-      setVisibleRowsCount((prev) => prev + 4);
-    } else {
-      setIsLoadingMore(true);
-      try {
-        const moreItems = await getProducts({ limit: 40, offset: productsList.length });
-        if (Array.isArray(moreItems) && moreItems.length > 0) {
-          setProductsList((prev) => [...prev, ...moreItems]);
-          setVisibleRowsCount((prev) => prev + 4);
-        } else {
-          setHasMore(false);
-        }
-      } catch (err) {
-        console.error("Error loading more products:", err);
-        setHasMore(false);
-      } finally {
-        setIsLoadingMore(false);
-      }
-    }
-  }, [isLoadingMore, hasMore, filteredPool.length, productsList.length, visibleRowsCount]);
-
-  // IntersectionObserver on sentinel with generous 1600px lookahead buffer
-  useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          loadNextRow();
-        }
-      },
-      { rootMargin: "1600px" }
-    );
-
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [loadNextRow]);
-
-  const handleScrollToCatalog = () => {
-    if (catalogSectionRef.current) {
-      catalogSectionRef.current.scrollIntoView({ behavior: "smooth" });
+  const handleScrollToShelf = () => {
+    if (firstShelfRef.current) {
+      firstShelfRef.current.scrollIntoView({ behavior: "smooth" });
     } else {
       router.push(`/market?q=${encodeURIComponent(selectedCategory.query)}`);
     }
@@ -355,11 +274,8 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
     });
   };
 
-  // Section 2: Best Sellers (Top 4 products)
-  const bestSellers = productsList.slice(0, 4);
-
   return (
-    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-20">
 
       {/* MASTER CONTAINER WITH GENEROUS EDGE MARGINS */}
       <main className="max-w-[1360px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 py-8 sm:py-12 space-y-12 sm:space-y-16 lg:space-y-20">
@@ -443,7 +359,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                 </button>
 
                 <button
-                  onClick={handleScrollToCatalog}
+                  onClick={handleScrollToShelf}
                   className="w-full py-2.5 px-4 bg-transparent hover:bg-[#183B56]/5 text-[#183B56] text-xs font-bold uppercase tracking-[0.16em] border border-[#183B56] cursor-pointer transition-all flex items-center justify-center gap-1.5"
                 >
                   <span>Explore Atelier Catalog</span>
@@ -460,103 +376,23 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            2. BEST SELLERS: CONTINUOUS 4-COLUMN WIREFRAME BOX GRID
+            ROW 1: BEST SELLERS & TRENDING (INFINITE SIDE-SCROLL SHELF)
         ════════════════════════════════════════════════════════════ */}
-        <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
-          
-          {/* Header Bar */}
-          <div className="flex items-center justify-between py-3.5 px-6 border-b border-[#183B56]">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
-              Best Sellers
-            </h2>
-            <button
-              onClick={() => router.push("/market?sort=popularity")}
-              className="text-xs sm:text-sm font-semibold text-[#183B56] hover:underline flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0"
-            >
-              <span>All Product</span>
-              <span className="text-base font-normal leading-none">→</span>
-            </button>
-          </div>
-
-          {/* 4 Continuous Architectural Grid Boxes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]">
-            {(bestSellers.length > 0 ? bestSellers : Array(4).fill({})).map((product, idx) => {
-              const pid = product.id || product.productId || `bs-${idx}`;
-              const pName = product.name || product.title || "Essential Product";
-              const rawImg = product.imageUrl || product.image || product.images?.[0];
-              const pImg = rawImg ? ensureHttps(rawImg) : NEUTRAL_FALLBACK_IMAGE;
-              const pPrice = typeof product.price === "number" ? product.price : Number(product.price) || 1999;
-              const saved = isSaved?.(pid);
-              const isAdded = !!addedProductIds[pid];
-
-              return (
-                <div
-                  key={pid}
-                  onClick={() => product.id && router.push(`/product/${product.id}`)}
-                  className="group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
-                >
-                  {/* Full-bleed Cool-Tinted Flat Image Box */}
-                  <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-4 sm:p-6">
-                    <img
-                      src={pImg}
-                      alt={pName}
-                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
-                      onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
-                      }}
-                    />
-
-                    {/* Wardrobe Bookmark Icon on Hover */}
-                    <button
-                      onClick={(e) => handleToggleLike(e, product)}
-                      className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center p-0 cursor-pointer transition-all ${
-                        saved
-                          ? "bg-white shadow-xs scale-105 border border-[#183B56]"
-                          : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-105 border border-[#183B56]/30"
-                      }`}
-                      title={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
-                    >
-                      <Bookmark
-                        size={13}
-                        className={saved ? "fill-[#183B56] text-[#183B56]" : "text-[#5A7184]"}
-                      />
-                    </button>
-
-                    {/* Quick Add To Cart Slide-up Bar */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-[#183B56] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20">
-                      <button
-                        onClick={(e) => handleAddToCart(e, product)}
-                        className={`w-full py-2.5 text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border-none cursor-pointer ${
-                          isAdded ? "bg-[#2E7D32] text-white" : "bg-[#183B56] text-white hover:bg-[#102A43]"
-                        }`}
-                      >
-                        <ShoppingBag size={12} />
-                        <span>{isAdded ? "Added ✓" : "Add to Bag"}</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Bottom Rate & Title Box (Clean 2-Line Wrapping, No Text Cutoff) */}
-                  <div className="py-3.5 px-3 text-center flex flex-col items-center justify-between min-h-[82px] bg-[#F5EFEB]">
-                    <div
-                      className="text-xs sm:text-[13px] font-bold text-[#183B56] group-hover:underline line-clamp-2 leading-snug w-full text-center px-1"
-                      title={pName}
-                    >
-                      {pName}
-                    </div>
-                    <div className="text-sm sm:text-base font-bold text-[#183B56] tracking-tight mt-1">
-                      ₹{Math.round(pPrice).toLocaleString("en-IN")}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+        <div ref={firstShelfRef}>
+          <DepartmentCarousel
+            title="Best Sellers & Trending"
+            subtitle="Most desired seasonal atelier pieces"
+            deptQuery="All"
+            products={bestSellers}
+            onAddToCart={handleAddToCart}
+            onToggleLike={handleToggleLike}
+            isSaved={isSaved}
+            addedProductIds={addedProductIds}
+          />
+        </div>
 
         {/* ════════════════════════════════════════════════════════════
-            3. MEN'S COLLECTION SIDE-SCROLL SHOWCASE (15-20 PRODUCTS)
+            ROW 2: MEN'S COLLECTION (INFINITE SIDE-SCROLL SHELF)
         ════════════════════════════════════════════════════════════ */}
         <DepartmentCarousel
           title="Men's Collection"
@@ -570,7 +406,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         />
 
         {/* ════════════════════════════════════════════════════════════
-            4. WOMEN'S COLLECTION SIDE-SCROLL SHOWCASE (15-20 PRODUCTS)
+            ROW 3: WOMEN'S COLLECTION (INFINITE SIDE-SCROLL SHELF)
         ════════════════════════════════════════════════════════════ */}
         <DepartmentCarousel
           title="Women's Collection"
@@ -584,174 +420,11 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         />
 
         {/* ════════════════════════════════════════════════════════════
-            5. KIDS' ATELIER SIDE-SCROLL SHOWCASE (15-20 PRODUCTS)
+            ZYRA PERSONALIZED RECOMMENDATIONS SECTION
         ════════════════════════════════════════════════════════════ */}
-        <DepartmentCarousel
-          title="Kids' Atelier"
-          subtitle="Playful organic cottons & durable essentials"
-          deptQuery="Kids"
-          products={kidsProducts.length > 0 ? kidsProducts : productsList.slice(0, 16)}
-          onAddToCart={handleAddToCart}
-          onToggleLike={handleToggleLike}
-          isSaved={isSaved}
-          addedProductIds={addedProductIds}
-        />
-
-
-
-        {/* ── ZERA PERSONALIZED RECOMMENDATIONS SECTION ── */}
         <div className="border border-[#183B56] shadow-xs">
           <ZeraRecommendationsSection />
         </div>
-
-        {/* ════════════════════════════════════════════════════════════
-            7. ATELIER CATALOG: CATEGORIZED ROW-BY-ROW INFINITE SCROLL FEED
-        ════════════════════════════════════════════════════════════ */}
-        <section ref={catalogSectionRef} className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
-          {/* Header Bar with Department Tabs */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 px-6 border-b border-[#183B56]">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
-                Atelier Catalog
-              </h2>
-              <p className="text-xs text-[#5A7184] pt-0.5">
-                Full collection feed • {filteredPool.length} products
-              </p>
-            </div>
-
-            {/* Department Filter Tabs */}
-            <div className="flex items-center gap-2">
-              {["All", "Men", "Women", "Kids"].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => {
-                    setActiveCatalogTab(tab);
-                    setVisibleRowsCount(2);
-                  }}
-                  className={`px-3 py-1.5 text-xs font-bold border transition-all cursor-pointer ${
-                    activeCatalogTab === tab
-                      ? "bg-[#183B56] text-white border-[#183B56]"
-                      : "bg-transparent text-[#183B56] border-[#183B56] hover:bg-[#183B56]/5"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Render Continuous Rows of 4 Products */}
-          {catalogRows.map((rowProducts, rowIndex) => (
-            <div
-              key={`row-${rowIndex}`}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56] border-b border-[#183B56] transition-opacity duration-500 animate-fadeIn"
-            >
-              {rowProducts.map((product, colIndex) => {
-                const pid = product.id || product.productId || `cat-${rowIndex}-${colIndex}`;
-                const pName = product.name || product.title || "Modern Essential";
-                const rawImg = product.imageUrl || product.image || product.images?.[0];
-                const pImg = rawImg ? ensureHttps(rawImg) : NEUTRAL_FALLBACK_IMAGE;
-                const pPrice = typeof product.price === "number" ? product.price : Number(product.price) || 1999;
-                const saved = isSaved?.(pid);
-                const isAdded = !!addedProductIds[pid];
-
-                return (
-                  <div
-                    key={pid}
-                    onClick={() => product.id && router.push(`/product/${product.id}`)}
-                    className="group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
-                  >
-                    {/* Full-bleed Cool-Tinted Flat Image Box */}
-                    <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-4 sm:p-6">
-                      <img
-                        src={pImg}
-                        alt={pName}
-                        className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
-                        }}
-                      />
-
-                      {/* Wardrobe Bookmark Icon on Hover */}
-                      <button
-                        onClick={(e) => handleToggleLike(e, product)}
-                        className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center p-0 cursor-pointer transition-all ${
-                          saved
-                            ? "bg-white shadow-xs scale-105 border border-[#183B56]"
-                            : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-105 border border-[#183B56]/30"
-                        }`}
-                        title={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
-                      >
-                        <Bookmark
-                          size={13}
-                          className={saved ? "fill-[#183B56] text-[#183B56]" : "text-[#5A7184]"}
-                        />
-                      </button>
-
-                      {/* Quick Add Button */}
-                      <div className="absolute bottom-0 left-0 right-0 bg-[#183B56] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20">
-                        <button
-                          onClick={(e) => handleAddToCart(e, product)}
-                          className={`w-full py-2.5 text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border-none cursor-pointer ${
-                            isAdded ? "bg-[#2E7D32] text-white" : "bg-[#183B56] text-white hover:bg-[#102A43]"
-                          }`}
-                        >
-                          <ShoppingBag size={12} />
-                          <span>{isAdded ? "Added ✓" : "Add to Bag"}</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Bottom Rate & Title Box (Clean 2-Line Wrapping, No Text Cutoff) */}
-                    <div className="py-3.5 px-3 text-center flex flex-col items-center justify-between min-h-[82px] bg-[#F5EFEB]">
-                      <div
-                        className="text-xs sm:text-[13px] font-bold text-[#183B56] group-hover:underline line-clamp-2 leading-snug w-full text-center px-1"
-                        title={pName}
-                      >
-                        {pName}
-                      </div>
-                      <div className="text-sm sm:text-base font-bold text-[#183B56] tracking-tight mt-1">
-                        ₹{Math.round(pPrice).toLocaleString("en-IN")}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-
-          {/* Wireframe Skeletal Loading Row when Loading More */}
-          {isLoadingMore && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56] border-b border-[#183B56] animate-pulse">
-              {[1, 2, 3, 4].map((n) => (
-                <div key={n} className="flex flex-col justify-between">
-                  <div className="aspect-[3/3.7] bg-[#DFE7ED]/60 border-b border-[#183B56] flex items-center justify-center p-6">
-                    <div className="w-24 h-32 bg-[#183B56]/10 rounded-xs" />
-                  </div>
-                  <div className="py-5 px-3 space-y-2 bg-[#F5EFEB]">
-                    <div className="h-3.5 bg-[#183B56]/15 w-3/4 mx-auto rounded-xs" />
-                    <div className="h-4 bg-[#183B56]/20 w-1/3 mx-auto rounded-xs" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Infinite Scroll Sentinel Trigger */}
-          <div ref={sentinelRef} className="py-8 flex items-center justify-center">
-            {hasMore ? (
-              <div className="flex items-center gap-2 text-xs font-bold text-[#183B56] uppercase tracking-[0.2em]">
-                <Loader2 size={14} className="animate-spin text-[#183B56]" />
-                <span>Loading Next Row...</span>
-              </div>
-            ) : (
-              <div className="text-xs font-bold text-[#5A7184] uppercase tracking-[0.2em] py-2">
-                — End of Collection • Weavly Atelier —
-              </div>
-            )}
-          </div>
-        </section>
 
       </main>
 
@@ -760,9 +433,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         isOpen={isFitModalOpen}
         onClose={() => setIsFitModalOpen(false)}
         onGenerated={() => {
-          setVisibleRowsCount(4);
-          const recElem = document.getElementById("atelier-catalog-feed");
-          if (recElem) recElem.scrollIntoView({ behavior: "smooth" });
+          if (firstShelfRef.current) firstShelfRef.current.scrollIntoView({ behavior: "smooth" });
         }}
       />
     </div>
