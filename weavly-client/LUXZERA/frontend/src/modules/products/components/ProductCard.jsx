@@ -113,15 +113,17 @@ export default function ProductCard({ product, onViewProduct }) {
         {/* Details */}
         <div className="pt-4 pb-2 flex flex-col font-sans">
           <div className="flex items-center justify-between text-[12px] font-semibold tracking-[0.15em] text-[#86868B] uppercase mb-1">
-            <span>{product.brand || "Weavly DIRECTORY"} · {origin}</span>
-            <span className="text-[#86868B]/60 font-mono text-[12px]">{season}</span>
+            <span className="truncate">{product.brand || "Weavly DIRECTORY"}</span>
+            {product.category && (
+              <span className="text-[#86868B]/70 text-[11px] uppercase tracking-wider shrink-0">{product.category}</span>
+            )}
           </div>
-          <div className="flex items-baseline justify-between gap-4">
-            <h3 className="font-semibold text-[14px] text-[#1D1D1F] uppercase tracking-wider group-hover:text-[#5B6EF5] transition-colors leading-tight truncate flex-1">
-              {product.name}
+          <div className="flex items-baseline justify-between gap-3">
+            <h3 className="font-semibold text-[14px] text-[#1D1D1F] uppercase tracking-wider group-hover:text-[#F07020] transition-colors leading-tight truncate flex-1">
+              {product.name || product.title}
             </h3>
             <span className="text-[14px] font-bold text-[#1D1D1F] tracking-wide shrink-0">
-              ${product.price.toFixed(2)}
+              ₹{Math.round(productPrice).toLocaleString("en-IN")}
             </span>
           </div>
         </div>
