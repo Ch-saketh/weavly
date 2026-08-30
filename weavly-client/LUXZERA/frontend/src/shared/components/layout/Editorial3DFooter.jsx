@@ -531,11 +531,6 @@ export default function Editorial3DFooter({ onShopNow, onBetaClick, requireAuth,
         {/* Left Editorial Headline & Subtitle Outside the Card */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pt-4">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#18181D]/90 border border-[#27272A] text-[#E4E4E7] text-[11px] font-semibold uppercase tracking-[0.25em]">
-              <Sparkles size={11} className="text-white" />
-              <span>Weavly Atelier • 2026 Collection</span>
-            </div>
-            
             <h2 
               style={{
                 fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
