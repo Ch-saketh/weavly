@@ -2,12 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ShoppingBag, Bookmark, Star } from "lucide-react";
+import { ArrowRight, ShoppingBag, Bookmark } from "lucide-react";
 import { getProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useCart } from "@/modules/cart/store/CartContext";
 import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
+
+const NEUTRAL_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23DFE7ED'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='16' font-weight='700' fill='%23183B56' text-anchor='middle' letter-spacing='2'%3EWEAVLY%3C/text%3E%3C/svg%3E";
+
+const ensureHttps = (url) => {
+  if (!url || typeof url !== "string") return "";
+  return url.replace(/^http:\/\//i, "https://");
+};
 
 export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const router = useRouter();
@@ -20,12 +27,6 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [activeHeroCategory, setActiveHeroCategory] = useState("Crafted Comfort");
   const [activeHeroImage, setActiveHeroImage] = useState(0);
-
-  const heroThumbnails = [
-    "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80",
-  ];
 
   const heroCategoryLinks = [
     { label: "Crafted Comfort", query: "Comfort" },
@@ -51,78 +52,45 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
 
   const handleAddToCart = (e, product) => {
     e.stopPropagation();
+    const pid = product.id || product.productId;
+    const pPrice = typeof product.price === "number" ? product.price : Number(product.price) || 1999;
     addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image || product.imageUrl,
+      id: pid,
+      name: product.name || product.title,
+      price: pPrice,
+      image: product.imageUrl || product.image || product.images?.[0] || NEUTRAL_FALLBACK_IMAGE,
       color: product.color || "Default",
       size: "M",
       qty: 1,
     });
-    setAddedProductIds((prev) => ({ ...prev, [product.id]: true }));
+    setAddedProductIds((prev) => ({ ...prev, [pid]: true }));
     setTimeout(() => {
-      setAddedProductIds((prev) => ({ ...prev, [product.id]: false }));
+      setAddedProductIds((prev) => ({ ...prev, [pid]: false }));
     }, 1500);
   };
 
   const handleToggleLike = (e, product) => {
     e.stopPropagation();
-    toggleWardrobe(product);
+    const pid = product.id || product.productId;
+    const pPrice = typeof product.price === "number" ? product.price : Number(product.price) || 1999;
+    toggleWardrobe({
+      id: pid,
+      name: product.name || product.title,
+      price: pPrice,
+      image: product.imageUrl || product.image || product.images?.[0] || NEUTRAL_FALLBACK_IMAGE,
+      brand: product.brand,
+      category: product.category,
+    });
   };
 
-  const featuredBestSellers = [
-    {
-      id: productsList[0]?.id || "bs-1",
-      name: "Crafted Comfort",
-      priceDisplay: "$80.00",
-      image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: productsList[1]?.id || "bs-2",
-      name: "Everyday Luxury",
-      priceDisplay: "$90.50",
-      image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: productsList[2]?.id || "bs-3",
-      name: "Oxford",
-      priceDisplay: "$75.50",
-      image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: productsList[3]?.id || "bs-4",
-      name: "Sustainability",
-      priceDisplay: "$60.50",
-      image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=80",
-    },
-  ];
+  // Real Database Products
+  const bestSellers = productsList.slice(0, 4);
+  const newCollection = productsList.slice(4, 8);
 
-  const featuredNewCollection = [
-    {
-      id: productsList[4]?.id || "nc-1",
-      name: "Classic Overcoat",
-      priceDisplay: "$140.00",
-      image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: productsList[5]?.id || "nc-2",
-      name: "Tailored Linen Blazer",
-      priceDisplay: "$120.00",
-      image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: productsList[6]?.id || "nc-3",
-      name: "Merino Wool Knit",
-      priceDisplay: "$95.00",
-      image: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: productsList[7]?.id || "nc-4",
-      name: "Pleated Relaxed Trousers",
-      priceDisplay: "$85.00",
-      image: "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?auto=format&fit=crop&w=800&q=80",
-    },
+  const heroThumbnails = [
+    productsList[0]?.imageUrl || productsList[0]?.image || "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
+    productsList[1]?.imageUrl || productsList[1]?.image || "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80",
+    productsList[2]?.imageUrl || productsList[2]?.image || "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80",
   ];
 
   return (
@@ -161,11 +129,15 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
 
           {/* CENTER: Framed Hero Model & Arched Thumbnails (lg:col-span-5) */}
           <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col items-center justify-between gap-6">
-            <div className="w-full aspect-[4/5] rounded-[32px] overflow-hidden bg-[#E2ECF1] border border-[#183B56] relative shadow-xs">
+            <div className="w-full aspect-[4/5] rounded-[32px] overflow-hidden bg-[#DFE7ED] border border-[#183B56] relative shadow-xs flex items-center justify-center p-4">
               <img
-                src={heroThumbnails[activeHeroImage]}
+                src={ensureHttps(heroThumbnails[activeHeroImage])}
                 alt="Craftsmanship that lasts"
-                className="w-full h-full object-cover object-top transition-all duration-700 hover:scale-105"
+                className="w-full h-full object-contain mix-blend-multiply transition-all duration-700 hover:scale-105"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
+                }}
               />
             </div>
 
@@ -175,13 +147,21 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                 <button
                   key={idx}
                   onClick={() => setActiveHeroImage(idx)}
-                  className={`w-18 h-22 rounded-t-full overflow-hidden border transition-all p-0 bg-[#DFE7ED] cursor-pointer ${
+                  className={`w-18 h-22 rounded-t-full overflow-hidden border transition-all p-1 bg-[#DFE7ED] cursor-pointer flex items-center justify-center ${
                     activeHeroImage === idx
                       ? "border-[#183B56] scale-105 shadow-xs"
                       : "border-[#183B56]/40 hover:border-[#183B56] opacity-75"
                   }`}
                 >
-                  <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
+                  <img
+                    src={ensureHttps(img)}
+                    alt={`Preview ${idx + 1}`}
+                    className="w-full h-full object-contain mix-blend-multiply"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
+                    }}
+                  />
                 </button>
               ))}
             </div>
@@ -213,7 +193,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            2. BEST SELLERS: CONTINUOUS 4-COLUMN WIREFRAME BOX GRID
+            2. BEST SELLERS: CONTINUOUS 4-COLUMN REAL DATA WIREFRAME BOX GRID
         ════════════════════════════════════════════════════════════ */}
         <section className="border-b border-[#183B56]">
           
@@ -233,20 +213,31 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
 
           {/* 4 Continuous Architectural Grid Boxes */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]">
-            {featuredBestSellers.map((product) => {
-              const saved = isSaved?.(product.id);
+            {(bestSellers.length > 0 ? bestSellers : Array(4).fill({})).map((product, idx) => {
+              const pid = product.id || product.productId || `bs-${idx}`;
+              const pName = product.name || product.title || "Essential Product";
+              const rawImg = product.imageUrl || product.image || product.images?.[0];
+              const pImg = rawImg ? ensureHttps(rawImg) : NEUTRAL_FALLBACK_IMAGE;
+              const pPrice = typeof product.price === "number" ? product.price : Number(product.price) || 1999;
+              const saved = isSaved?.(pid);
+              const isAdded = !!addedProductIds[pid];
+
               return (
                 <div
-                  key={product.id}
-                  onClick={() => router.push(`/product/${product.id}`)}
+                  key={pid}
+                  onClick={() => product.id && router.push(`/product/${product.id}`)}
                   className="group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
                 >
                   {/* Full-bleed Cool-Tinted Flat Image Box */}
-                  <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-6 sm:p-8">
+                  <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-4 sm:p-6">
                     <img
-                      src={product.image}
-                      alt={product.name}
+                      src={pImg}
+                      alt={pName}
                       className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
+                      }}
                     />
 
                     {/* Wardrobe Bookmark Icon on Hover */}
@@ -255,7 +246,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                       className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center p-0 cursor-pointer transition-all ${
                         saved
                           ? "bg-white shadow-xs scale-105 border border-[#183B56]"
-                          : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white border border-[#183B56]/30"
+                          : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-105 border border-[#183B56]/30"
                       }`}
                       title={saved ? "Remove from Wardrobe" : "Save to Wardrobe"}
                     >
@@ -264,16 +255,29 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                         className={saved ? "fill-[#183B56] text-[#183B56]" : "text-[#5A7184]"}
                       />
                     </button>
+
+                    {/* Quick Add To Cart Slide-up Bar */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-[#183B56] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20">
+                      <button
+                        onClick={(e) => handleAddToCart(e, product)}
+                        className={`w-full py-2.5 text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border-none cursor-pointer ${
+                          isAdded ? "bg-[#2E7D32] text-white" : "bg-[#183B56] text-white hover:bg-[#102A43]"
+                        }`}
+                      >
+                        <ShoppingBag size={12} />
+                        <span>{isAdded ? "Added ✓" : "Add to Bag"}</span>
+                      </button>
+                    </div>
                   </div>
 
                   {/* Bottom Rate & Title Box */}
-                  <div className="py-5 px-3 text-center flex flex-col items-center justify-center space-y-1.5 bg-[#F5EFEB]">
+                  <div className="py-4 sm:py-5 px-3 text-center flex flex-col items-center justify-center space-y-1.5 bg-[#F5EFEB]">
                     <div className="text-[13px] sm:text-[14px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1.5 truncate max-w-full">
-                      <span>{product.name}</span>
+                      <span>{pName}</span>
                       <span className="text-sm font-normal">→</span>
                     </div>
                     <div className="text-[15px] sm:text-[16px] font-bold text-[#183B56] tracking-tight">
-                      {product.priceDisplay}
+                      ₹{Math.round(pPrice).toLocaleString("en-IN")}
                     </div>
                   </div>
                 </div>
@@ -347,12 +351,10 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         </section>
 
         {/* ── ZERA PERSONALIZED RECOMMENDATIONS SECTION ── */}
-        <div className="border-b border-[#183B56]">
-          <ZeraRecommendationsSection />
-        </div>
+        <ZeraRecommendationsSection />
 
         {/* ════════════════════════════════════════════════════════════
-            4. NEW COLLECTION: CONTINUOUS 4-COLUMN WIREFRAME BOX GRID
+            4. NEW COLLECTION: CONTINUOUS 4-COLUMN REAL DATA WIREFRAME BOX GRID
         ════════════════════════════════════════════════════════════ */}
         <section className="border-b border-[#183B56]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-3.5 px-6 border-b border-[#183B56]">
@@ -374,20 +376,30 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#183B56]">
-            {featuredNewCollection.map((product) => {
-              const isAdded = addedProductIds[product.id];
+            {(newCollection.length > 0 ? newCollection : Array(4).fill({})).map((product, idx) => {
+              const pid = product.id || product.productId || `nc-${idx}`;
+              const pName = product.name || product.title || "Modern Essential";
+              const rawImg = product.imageUrl || product.image || product.images?.[0];
+              const pImg = rawImg ? ensureHttps(rawImg) : NEUTRAL_FALLBACK_IMAGE;
+              const pPrice = typeof product.price === "number" ? product.price : Number(product.price) || 1999;
+              const isAdded = !!addedProductIds[pid];
+
               return (
                 <div
-                  key={product.id}
-                  onClick={() => router.push(`/product/${product.id}`)}
+                  key={pid}
+                  onClick={() => product.id && router.push(`/product/${product.id}`)}
                   className="group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
                 >
                   {/* Full-bleed Cool-Tinted Flat Image Box */}
-                  <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-6 sm:p-8">
+                  <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-4 sm:p-6">
                     <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover object-top mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+                      src={pImg}
+                      alt={pName}
+                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
+                      }}
                     />
 
                     {/* Quick Add Button */}
@@ -405,13 +417,13 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
                   </div>
 
                   {/* Bottom Rate & Title Box */}
-                  <div className="py-5 px-3 text-center flex flex-col items-center justify-center space-y-1.5 bg-[#F5EFEB]">
+                  <div className="py-4 sm:py-5 px-3 text-center flex flex-col items-center justify-center space-y-1.5 bg-[#F5EFEB]">
                     <div className="text-[13px] sm:text-[14px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1.5 truncate max-w-full">
-                      <span>{product.name}</span>
+                      <span>{pName}</span>
                       <span className="text-sm font-normal">→</span>
                     </div>
                     <div className="text-[15px] sm:text-[16px] font-bold text-[#183B56] tracking-tight">
-                      {product.priceDisplay}
+                      ₹{Math.round(pPrice).toLocaleString("en-IN")}
                     </div>
                   </div>
                 </div>

@@ -2,14 +2,13 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Sparkles, ChevronLeft, ChevronRight, ShoppingBag, Bookmark, Check } from "lucide-react";
+import { Sparkles, ChevronLeft, ChevronRight, ShoppingBag, Bookmark } from "lucide-react";
 import { useZeraRecommendations } from "@/modules/recommendations/hooks/useZeraRecommendations";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useCart } from "@/modules/cart/store/CartContext";
-
 import { RecommendationCarouselSkeleton } from "@/shared/components/ui/Skeleton";
 
-const NEUTRAL_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23F4F1EC'/%3E%3Cpath d='M260 360C260 337.909 277.909 320 300 320C322.091 320 340 337.909 340 360V420C340 442.091 322.091 460 300 460C277.909 460 260 442.091 260 420V360Z' stroke='%23C5BCAD' stroke-width='8'/%3E%3Cpath d='M230 460C230 440 250 420 300 420C350 420 370 440 370 460V500H230V460Z' stroke='%23C5BCAD' stroke-width='8'/%3E%3Ctext x='50%25' y='560' font-family='sans-serif' font-size='16' font-weight='500' fill='%239E9484' text-anchor='middle' letter-spacing='2'%3ELUXZERA%3C/text%3E%3C/svg%3E";
+const NEUTRAL_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23DFE7ED'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='16' font-weight='700' fill='%23183B56' text-anchor='middle' letter-spacing='2'%3EWEAVLY%3C/text%3E%3C/svg%3E";
 const DEFAULT_FALLBACK_IMAGE = NEUTRAL_FALLBACK_IMAGE;
 
 const ensureHttps = (url) => {
@@ -110,47 +109,47 @@ export default function ZeraRecommendationsSection({
   };
 
   return (
-    <section className={`w-full py-8 md:py-12 ${className}`}>
-      {/* Header */}
-      <div className="flex items-end justify-between mb-6 px-1">
+    <section className={`w-full bg-[#F5EFEB] ${className}`}>
+      {/* Architectural Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 px-6 border-b border-[#183B56]">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-500/10 to-orange-500/10 text-[#F07020] border border-orange-200/50">
-              <Sparkles size={11} className="text-[#F07020]" />
+          <div className="flex items-center gap-1.5 mb-1">
+            <Sparkles size={12} className="text-[#183B56]" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184]">
               Zyra Intelligence
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#111111] tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
             {title}
           </h2>
-          <p className="text-xs sm:text-sm font-medium text-[#71717A] mt-1">
+          <p className="text-xs text-[#5A7184] pt-0.5">
             {subtitle} • {displayList.length} Personalized Selections
           </p>
         </div>
 
-        {/* Carousel Arrow Controls */}
+        {/* Wireframe Carousel Arrow Controls */}
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => scroll("left")}
             aria-label="Previous recommendations"
-            className="w-9 h-9 rounded-full bg-white border border-[#E7E3DD] flex items-center justify-center text-[#111111] hover:bg-[#FAF8F5] transition-all shadow-2xs cursor-pointer active:scale-95"
+            className="w-8 h-8 rounded-full border border-[#183B56] flex items-center justify-center text-[#183B56] hover:bg-[#183B56] hover:text-white transition-colors cursor-pointer active:scale-95 bg-transparent"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={16} />
           </button>
           <button
             onClick={() => scroll("right")}
             aria-label="Next recommendations"
-            className="w-9 h-9 rounded-full bg-white border border-[#E7E3DD] flex items-center justify-center text-[#111111] hover:bg-[#FAF8F5] transition-all shadow-2xs cursor-pointer active:scale-95"
+            className="w-8 h-8 rounded-full border border-[#183B56] flex items-center justify-center text-[#183B56] hover:bg-[#183B56] hover:text-white transition-colors cursor-pointer active:scale-95 bg-transparent"
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={16} />
           </button>
         </div>
       </div>
 
-      {/* Horizontal Carousel */}
+      {/* Horizontal Continuous Wireframe Box Carousel */}
       <div
         ref={scrollContainerRef}
-        className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scrollbar-none scroll-smooth"
+        className="flex overflow-x-auto divide-x divide-[#183B56] border-b border-[#183B56] snap-x snap-mandatory scrollbar-none scroll-smooth"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {displayList.map((item, index) => {
@@ -159,15 +158,16 @@ export default function ZeraRecommendationsSection({
           const saved = isSaved(pid);
           const rawImg = item.imageUrl || item.image;
           const displayImg = rawImg ? ensureHttps(rawImg) : NEUTRAL_FALLBACK_IMAGE;
+          const productPrice = typeof item.price === "number" ? item.price : Number(item.price) || 1999;
 
           return (
             <div
               key={item.id || `rec-${index}`}
               onClick={() => handleProductClick(item)}
-              className="flex-none w-[200px] sm:w-[240px] md:w-[260px] snap-start group cursor-pointer"
+              className="flex-none w-[200px] sm:w-[240px] md:w-[260px] snap-start group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
             >
-              {/* Product Image Container */}
-              <div className="relative aspect-[3/4] w-full bg-[#F2F0ED] rounded-[20px] overflow-hidden mb-3 border border-[#EBE8E3] shadow-xs transition-all duration-300 group-hover:shadow-md group-hover:border-[#E0DCD5]">
+              {/* Full-bleed Cool Image Container Box */}
+              <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-4 sm:p-6">
                 <img
                   src={displayImg}
                   alt={item.name}
@@ -177,11 +177,11 @@ export default function ZeraRecommendationsSection({
                     e.currentTarget.onerror = null;
                     e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
                   }}
-                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
                 />
 
                 {/* Rank Badge */}
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-black text-[#111111] shadow-2xs">
+                <div className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-xs border border-[#183B56] px-2 py-0.5 rounded-xs text-[10px] font-bold text-[#183B56] shadow-2xs">
                   #{item.rank || index + 1}
                 </div>
 
@@ -189,37 +189,44 @@ export default function ZeraRecommendationsSection({
                 <button
                   onClick={(e) => handleToggleLike(e, item)}
                   aria-label="Save to wardrobe"
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-[#111111] hover:text-[#F07020] transition-colors shadow-2xs active:scale-90"
+                  className={`absolute top-2.5 right-2.5 w-7.5 h-7.5 rounded-full flex items-center justify-center transition-all ${
+                    saved
+                      ? "bg-white shadow-xs scale-105 border border-[#183B56]"
+                      : "bg-white/80 backdrop-blur-xs text-[#183B56] opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-105 border border-[#183B56]/30"
+                  }`}
                 >
                   <Bookmark
-                    size={14}
-                    className={saved ? "fill-[#F07020] text-[#F07020]" : "text-[#111111]"}
+                    size={12}
+                    className={saved ? "fill-[#183B56] text-[#183B56]" : "text-[#5A7184]"}
                   />
                 </button>
 
-                {/* Quick Add To Cart Button */}
-                <button
-                  onClick={(e) => handleAddToCart(e, item)}
-                  aria-label="Add to cart"
-                  className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-[#111111] text-white flex items-center justify-center shadow-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 hover:bg-[#F07020] active:scale-90"
-                >
-                  {isAdded ? <Check size={16} /> : <ShoppingBag size={16} />}
-                </button>
+                {/* Quick Add To Cart Slide-up Bar */}
+                <div className="absolute bottom-0 left-0 right-0 bg-[#183B56] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20">
+                  <button
+                    onClick={(e) => handleAddToCart(e, item)}
+                    className={`w-full py-2.5 text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border-none cursor-pointer ${
+                      isAdded ? "bg-[#2E7D32] text-white" : "bg-[#183B56] text-white hover:bg-[#102A43]"
+                    }`}
+                  >
+                    <ShoppingBag size={12} />
+                    <span>{isAdded ? "Added ✓" : "Add to Bag"}</span>
+                  </button>
+                </div>
               </div>
 
-              {/* Product Info */}
-              <div className="space-y-1 px-1">
-                <div className="flex items-center justify-between text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider">
-                  <span>{item.brand || "Luxzera"}</span>
-                  <span>{item.gender || "Unisex"}</span>
+              {/* Bottom Rate & Title Box */}
+              <div className="py-4 sm:py-5 px-3 text-center flex flex-col items-center justify-center space-y-1.5 bg-[#F5EFEB]">
+                <div className="flex items-center justify-between w-full text-[10px] font-bold text-[#5A7184] uppercase tracking-wider px-1">
+                  <span className="truncate max-w-[100px]">{item.brand || "WEAVLY"}</span>
+                  <span>{item.gender || "UNISEX"}</span>
                 </div>
-                <h3 className="text-xs sm:text-sm font-bold text-[#111111] line-clamp-1 leading-snug group-hover:text-[#F07020] transition-colors">
-                  {item.name}
-                </h3>
-                <div className="flex items-baseline gap-2 pt-0.5">
-                  <span className="text-xs sm:text-sm font-black text-[#111111]">
-                    ₹{item.price?.toLocaleString?.() || item.price}
-                  </span>
+                <div className="text-[12px] sm:text-[13px] font-bold text-[#183B56] group-hover:underline flex items-center justify-center gap-1 truncate max-w-full">
+                  <span>{item.name}</span>
+                  <span className="text-sm font-normal">→</span>
+                </div>
+                <div className="text-[14px] sm:text-[15px] font-bold text-[#183B56] tracking-tight">
+                  ₹{Math.round(productPrice).toLocaleString("en-IN")}
                 </div>
               </div>
             </div>
