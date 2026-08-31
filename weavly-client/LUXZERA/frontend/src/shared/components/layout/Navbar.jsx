@@ -507,54 +507,57 @@ export default function Navbar({
                 <div className="relative">
                   <button
                     onClick={() => setProfileOpen(!profileOpen)}
-                    className="w-10 h-10 flex items-center justify-center focus:outline-none cursor-pointer border-none bg-transparent p-0 text-[#1D1D1F] hover:text-[#F07020]"
+                    className="w-10 h-10 flex items-center justify-center focus:outline-none cursor-pointer border-none bg-transparent p-0 text-[#183B56] hover:opacity-80 transition-opacity"
                     aria-label="User profile menu"
                   >
                     {profileImage ? (
-                      <div className={`w-8 h-8 rounded-full overflow-hidden bg-[#F4F4F5] border border-[#ECECEC] flex items-center justify-center transition-all ${
-                        profileOpen ? "border-[#1D1D1F]" : "hover:border-[#1D1D1F]"
+                      <div className={`w-8 h-8 overflow-hidden bg-[#DFE7ED] border flex items-center justify-center transition-all ${
+                        profileOpen ? "border-[#183B56] ring-1 ring-[#183B56]" : "border-[#183B56]/40 hover:border-[#183B56]"
                       }`}>
                         <img src={profileImage} alt="" className="w-full h-full object-cover" />
                       </div>
                     ) : (
-                      <User size={28} strokeWidth={1.4} />
+                      <div className={`w-8 h-8 flex items-center justify-center bg-[#DFE7ED] border transition-all text-[#183B56] font-bold text-xs ${
+                        profileOpen ? "border-[#183B56] ring-1 ring-[#183B56]" : "border-[#183B56]/40 hover:border-[#183B56]"
+                      }`}>
+                        {profileFullName ? profileFullName.charAt(0).toUpperCase() : <User size={16} strokeWidth={2} />}
+                      </div>
                     )}
                   </button>
 
-                  {/* Apple-Level Premium Profile Dropdown */}
+                  {/* Weavly Architectural Blueprint Profile Dropdown */}
                   {profileOpen && (
                     <>
                       {/* Transparent backdrop for dismiss */}
                       <div
-                        className="fixed inset-0 z-40 bg-black/[0.02] transition-opacity"
+                        className="fixed inset-0 z-40 bg-black/[0.04] transition-opacity"
                         onClick={() => setProfileOpen(false)}
                       />
 
                       <div
-                        className="absolute right-0 mt-3 w-80 z-50 bg-white/95 backdrop-blur-2xl border border-black/[0.08] shadow-[0_24px_50px_rgba(0,0,0,0.14),0_6px_16px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.03)] rounded-2xl p-2 animate-in fade-in zoom-in-95 duration-200 ease-out origin-top-right select-none"
+                        className="absolute right-0 mt-3 w-80 z-50 bg-[#F5EFEB] border border-[#183B56] shadow-[0_16px_40px_rgba(24,59,86,0.18)] p-2 animate-in fade-in zoom-in-95 duration-150 ease-out origin-top-right select-none font-sans text-left"
                       >
                         {/* ── User Identity Header Card ── */}
-                        <div className="p-3 mb-1 bg-[#F5F5F7]/80 rounded-xl flex items-center gap-3 border border-black/[0.04]">
+                        <div className="p-3 mb-1.5 bg-white border border-[#183B56] flex items-center gap-3">
                           {profileImage ? (
-                            <div className="w-11 h-11 rounded-full overflow-hidden bg-white ring-2 ring-black/5 shrink-0 shadow-2xs">
+                            <div className="w-10 h-10 overflow-hidden bg-[#DFE7ED] border border-[#183B56] shrink-0">
                               <img src={profileImage} alt="" className="w-full h-full object-cover" />
                             </div>
                           ) : (
-                            <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#1D1D1F] to-[#434346] text-white flex items-center justify-center font-semibold text-sm ring-2 ring-black/5 shrink-0 shadow-2xs">
+                            <div className="w-10 h-10 bg-[#183B56] text-white flex items-center justify-center font-bold text-sm shrink-0 border border-[#183B56]">
                               {profileFullName.charAt(0).toUpperCase()}
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
-                              <p className="text-[13px] font-semibold text-[#1D1D1F] truncate leading-tight">
+                              <p className="text-xs font-bold text-[#183B56] uppercase tracking-wide truncate leading-tight">
                                 {profileFullName}
                               </p>
-                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[9px] font-semibold tracking-wide border border-emerald-200/50">
-                                <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                              <span className="inline-flex items-center px-1.5 py-0.5 bg-[#183B56] text-white text-[9px] font-mono font-bold tracking-wider uppercase border border-[#183B56]">
                                 Member
                               </span>
                             </div>
-                            <p className="text-[11px] text-[#86868B] truncate mt-0.5 font-normal">
+                            <p className="text-[11px] text-[#5A7184] truncate mt-0.5 font-medium">
                               {profileEmail}
                             </p>
                           </div>
@@ -567,15 +570,15 @@ export default function Navbar({
                               onAccountClick?.();
                               setProfileOpen(false);
                             }}
-                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                            className="w-full group flex items-center justify-between px-3 py-2 text-xs font-bold text-[#183B56] hover:bg-white border border-transparent hover:border-[#183B56] transition-all bg-transparent cursor-pointer"
                           >
                             <div className="flex items-center gap-2.5">
-                              <div className="w-7 h-7 rounded-lg bg-[#F5F5F7] group-hover:bg-white flex items-center justify-center text-[#1D1D1F] group-hover:shadow-2xs transition-all">
-                                <User size={15} strokeWidth={1.75} />
+                              <div className="w-7 h-7 bg-white border border-[#183B56]/30 group-hover:border-[#183B56] flex items-center justify-center text-[#183B56] transition-all">
+                                <User size={14} strokeWidth={2} />
                               </div>
-                              <span>My Account & Measurements</span>
+                              <span className="uppercase tracking-wider text-[11px]">My Account & Profile</span>
                             </div>
-                            <ChevronRight size={13} className="text-[#AEAEB2] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                            <ChevronRight size={13} className="text-[#183B56] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                           </button>
 
                           <button
@@ -583,15 +586,15 @@ export default function Navbar({
                               onOrdersClick?.();
                               setProfileOpen(false);
                             }}
-                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                            className="w-full group flex items-center justify-between px-3 py-2 text-xs font-bold text-[#183B56] hover:bg-white border border-transparent hover:border-[#183B56] transition-all bg-transparent cursor-pointer"
                           >
                             <div className="flex items-center gap-2.5">
-                              <div className="w-7 h-7 rounded-lg bg-[#F5F5F7] group-hover:bg-white flex items-center justify-center text-[#1D1D1F] group-hover:shadow-2xs transition-all">
-                                <Package size={15} strokeWidth={1.75} />
+                              <div className="w-7 h-7 bg-white border border-[#183B56]/30 group-hover:border-[#183B56] flex items-center justify-center text-[#183B56] transition-all">
+                                <Package size={14} strokeWidth={2} />
                               </div>
-                              <span>My Orders & Deliveries</span>
+                              <span className="uppercase tracking-wider text-[11px]">Orders & Deliveries</span>
                             </div>
-                            <ChevronRight size={13} className="text-[#AEAEB2] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                            <ChevronRight size={13} className="text-[#183B56] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                           </button>
 
                           <button
@@ -599,22 +602,22 @@ export default function Navbar({
                               onWardrobeClick?.();
                               setProfileOpen(false);
                             }}
-                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                            className="w-full group flex items-center justify-between px-3 py-2 text-xs font-bold text-[#183B56] hover:bg-white border border-transparent hover:border-[#183B56] transition-all bg-transparent cursor-pointer"
                           >
                             <div className="flex items-center gap-2.5">
-                              <div className="w-7 h-7 rounded-lg bg-[#F5F5F7] group-hover:bg-white flex items-center justify-center text-[#1D1D1F] group-hover:shadow-2xs transition-all">
-                                <img src="/zyra.png" alt="Zyra" className="w-3.5 h-3.5 object-contain" />
+                              <div className="w-7 h-7 bg-white border border-[#183B56]/30 group-hover:border-[#183B56] flex items-center justify-center text-[#183B56] transition-all">
+                                <img src="/zyra_SVG.svg" alt="Wardrobe" className="w-4 h-4 object-contain" />
                               </div>
-                              <span>Zyra AI Wardrobe</span>
+                              <span className="uppercase tracking-wider text-[11px]">Curated Wardrobe</span>
                             </div>
-                            <span className="text-[10px] font-semibold text-[#F07020] bg-[#FFF5EE] px-2 py-0.5 rounded-full border border-[#F07020]/20">
-                              {wardrobeCount > 0 ? `${wardrobeCount} saved` : "AI Studio"}
+                            <span className="text-[9px] font-bold text-[#183B56] bg-white px-1.5 py-0.5 border border-[#183B56] uppercase tracking-wider">
+                              {wardrobeCount > 0 ? `${wardrobeCount} saved` : "Studio"}
                             </span>
                           </button>
                         </div>
 
-                        {/* ── Apple Divider ── */}
-                        <div className="my-1 border-t border-black/[0.06]" />
+                        {/* ── Blueprint Divider ── */}
+                        <div className="my-1 border-t border-[#183B56]/20" />
 
                         {/* ── Group 2: Creator & Atelier Space ── */}
                         <div className="py-0.5 space-y-0.5">
@@ -623,15 +626,15 @@ export default function Navbar({
                               onDesignerClick?.();
                               setProfileOpen(false);
                             }}
-                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                            className="w-full group flex items-center justify-between px-3 py-2 text-xs font-bold text-[#183B56] hover:bg-white border border-transparent hover:border-[#183B56] transition-all bg-transparent cursor-pointer"
                           >
                             <div className="flex items-center gap-2.5">
-                              <div className="w-7 h-7 rounded-lg bg-[#F5F5F7] group-hover:bg-white flex items-center justify-center text-[#1D1D1F] group-hover:shadow-2xs transition-all">
-                                <Palette size={15} strokeWidth={1.75} />
+                              <div className="w-7 h-7 bg-white border border-[#183B56]/30 group-hover:border-[#183B56] flex items-center justify-center text-[#183B56] transition-all">
+                                <Palette size={14} strokeWidth={2} />
                               </div>
-                              <span>Designer Studio</span>
+                              <span className="uppercase tracking-wider text-[11px]">Designer Studio</span>
                             </div>
-                            <span className="text-[10px] font-medium text-[#86868B] group-hover:text-[#1D1D1F] transition-colors">
+                            <span className="text-[9px] font-mono font-bold text-[#5A7184] group-hover:text-[#183B56] transition-colors uppercase">
                               Creator
                             </span>
                           </button>
@@ -641,34 +644,34 @@ export default function Navbar({
                               onFaqClick?.();
                               setProfileOpen(false);
                             }}
-                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                            className="w-full group flex items-center justify-between px-3 py-2 text-xs font-bold text-[#183B56] hover:bg-white border border-transparent hover:border-[#183B56] transition-all bg-transparent cursor-pointer"
                           >
                             <div className="flex items-center gap-2.5">
-                              <div className="w-7 h-7 rounded-lg bg-[#F5F5F7] group-hover:bg-white flex items-center justify-center text-[#1D1D1F] group-hover:shadow-2xs transition-all">
-                                <HelpCircle size={15} strokeWidth={1.75} />
+                              <div className="w-7 h-7 bg-white border border-[#183B56]/30 group-hover:border-[#183B56] flex items-center justify-center text-[#183B56] transition-all">
+                                <HelpCircle size={14} strokeWidth={2} />
                               </div>
-                              <span>Help & FAQs</span>
+                              <span className="uppercase tracking-wider text-[11px]">Help & FAQs</span>
                             </div>
-                            <ChevronRight size={13} className="text-[#AEAEB2] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                            <ChevronRight size={13} className="text-[#183B56] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                           </button>
                         </div>
 
-                        {/* ── Apple Divider ── */}
-                        <div className="my-1 border-t border-black/[0.06]" />
+                        {/* ── Blueprint Divider ── */}
+                        <div className="my-1 border-t border-[#183B56]/20" />
 
                         {/* ── Group 3: Sign Out ── */}
                         <div className="pt-0.5">
                           <button
                             onClick={handleLogout}
-                            className="w-full group flex items-center justify-between px-3 py-2 text-[13px] font-medium text-[#E03131] hover:bg-red-50/80 rounded-xl transition-all border-none bg-transparent cursor-pointer"
+                            className="w-full group flex items-center justify-between px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-50 border border-transparent hover:border-red-600 transition-all bg-transparent cursor-pointer"
                           >
                             <div className="flex items-center gap-2.5">
-                              <div className="w-7 h-7 rounded-lg bg-red-50 group-hover:bg-white flex items-center justify-center text-[#E03131] group-hover:shadow-2xs transition-all">
-                                <LogOut size={14} strokeWidth={1.75} />
+                              <div className="w-7 h-7 bg-white border border-red-200 group-hover:border-red-600 flex items-center justify-center text-red-700 transition-all">
+                                <LogOut size={13} strokeWidth={2} />
                               </div>
-                              <span>Sign Out</span>
+                              <span className="uppercase tracking-wider text-[11px]">Sign Out</span>
                             </div>
-                            <span className="text-[11px] text-red-400 group-hover:text-red-600 transition-colors">
+                            <span className="text-[10px] font-mono text-red-500 group-hover:text-red-700 transition-colors uppercase">
                               Exit
                             </span>
                           </button>
@@ -680,10 +683,10 @@ export default function Navbar({
               ) : (
                 <button
                   onClick={onAuthClick}
-                  className="w-10 h-10 flex items-center justify-center transition-colors border-none bg-transparent cursor-pointer text-[#1D1D1F] hover:text-[#F07020] p-0"
+                  className="w-10 h-10 flex items-center justify-center transition-opacity border-none bg-transparent cursor-pointer text-[#183B56] hover:opacity-80 p-0"
                   aria-label="Sign in"
                 >
-                  <User size={28} strokeWidth={1.4} />
+                  <User size={26} strokeWidth={1.75} />
                 </button>
               )}
 
