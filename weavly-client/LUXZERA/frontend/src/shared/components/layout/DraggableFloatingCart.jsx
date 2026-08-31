@@ -101,10 +101,10 @@ export default function DraggableFloatingCart({ cartCount, isNearBottom }) {
     >
       <button
         type="button"
-        className="h-11 px-5 bg-[#1D1D1F] hover:bg-[#F07020] text-white text-[12px] font-semibold tracking-wider flex items-center justify-center gap-2 transition-transform duration-200 rounded-full shadow-md active:scale-95 cursor-grab active:cursor-grabbing border-none transform-gpu"
+        className="h-11 px-5 bg-[#183B56] hover:bg-[#102A43] text-white text-[12px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all duration-200 border border-[#183B56] shadow-[0_8px_24px_rgba(24,59,86,0.25)] active:scale-95 cursor-grab active:cursor-grabbing transform-gpu"
       >
         <span>View Bag ({cartCount})</span>
-        <ArrowRight size={14} strokeWidth={1.8} />
+        <ArrowRight size={14} strokeWidth={2} />
       </button>
     </div>
   );

@@ -204,58 +204,58 @@ export default function Navbar({
           </div>
 
           {/* ── CENTER: Navigation Links ── */}
-          <nav className="flex items-center gap-10 lg:gap-14 text-[13px] font-medium tracking-normal text-[#1D1D1F]">
+          <nav className="flex items-center gap-10 lg:gap-14 text-[13px] font-medium tracking-normal text-[#183B56]">
 
             {/* Dropdown: Collections */}
             <div className="relative group">
               <button
                 onClick={() => router.push("/collections")}
-                className={`hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium ${
-                  isCollectionsActive ? "text-[#F07020]" : "text-[#1D1D1F]"
+                className={`hover:opacity-75 transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-bold ${
+                  isCollectionsActive ? "text-[#183B56] underline" : "text-[#183B56]"
                 }`}
               >
                 <span>Collections</span>
-                <ChevronDown size={11} strokeWidth={1.5} className={`transition-colors ${isCollectionsActive ? "text-[#F07020]" : "text-[#9B9B9B] group-hover:text-[#F07020]"}`} />
+                <ChevronDown size={11} strokeWidth={1.5} className={`transition-colors ${isCollectionsActive ? "text-[#183B56]" : "text-[#5A7184] group-hover:text-[#183B56]"}`} />
               </button>
 
               {/* CardNav-Style Dropdown Menu */}
-              <div className="absolute top-full -left-20 mt-3 w-[660px] bg-[#FFFFFF] border border-[#ECECEC] rounded-2xl shadow-2xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
+              <div className="absolute top-full -left-20 mt-3 w-[660px] bg-[#FFFFFF] border border-[#183B56] shadow-xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
                 <div className="grid grid-cols-3 gap-3">
                   {/* Card 1: Men */}
-                  <div className="bg-[#1D1D1F] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#111113] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Men</div>
+                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[200px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
+                    <div className="text-[20px] font-bold uppercase tracking-tight">Men</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/men")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${pathname === "/men" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Suits & Shirts
+                      <button onClick={() => router.push("/men")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Suits & Shirts
                       </button>
-                      <button onClick={() => router.push("/men")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${pathname === "/men" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Jackets & Pants
+                      <button onClick={() => router.push("/men")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Jackets & Pants
                       </button>
                     </div>
                   </div>
 
                   {/* Card 2: Women */}
-                  <div className="bg-[#2F293A] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#25202e] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Women</div>
+                  <div className="bg-[#102A43] text-white p-5 flex flex-col justify-between h-[200px] select-none hover:bg-[#0B1D30] transition-colors border border-[#183B56]">
+                    <div className="text-[20px] font-bold uppercase tracking-tight">Women</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/women")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${pathname === "/women" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Dresses & Tops
+                      <button onClick={() => router.push("/women")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Dresses & Tops
                       </button>
-                      <button onClick={() => router.push("/women")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${pathname === "/women" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Skirts & Handbags
+                      <button onClick={() => router.push("/women")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Skirts & Handbags
                       </button>
                     </div>
                   </div>
 
                   {/* Card 3: Capsules */}
-                  <div className="bg-[#252836] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#1c1e29] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Capsules</div>
+                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[200px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
+                    <div className="text-[20px] font-bold uppercase tracking-tight">Capsules</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/unisex")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${pathname === "/unisex" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Street Couture
+                      <button onClick={() => router.push("/unisex")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Street Couture
                       </button>
-                      <button onClick={() => router.push("/designs")} className={`text-left text-[14px] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5 ${pathname === "/designs" ? "text-[#F07020] font-semibold" : "text-white/90 hover:text-[#F07020]"}`}>
-                        <span className="text-[14px]">↗</span> Designer Drops
+                      <button onClick={() => router.push("/designs")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Designer Drops
                       </button>
                     </div>
                   </div>
@@ -267,8 +267,8 @@ export default function Navbar({
             <div className="relative group">
               <button
                 onClick={() => router.push("/new-arrivals")}
-                className={`hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium ${
-                  isNewArrivalsActive ? "text-[#F07020]" : "text-[#1D1D1F]"
+                className={`hover:opacity-75 transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-bold ${
+                  isNewArrivalsActive ? "text-[#183B56] underline" : "text-[#183B56]"
                 }`}
               >
                 <span>New Arrivals</span>
@@ -279,52 +279,52 @@ export default function Navbar({
             <div className="relative group">
               <button
                 onClick={() => router.push("/designer-studio")}
-                className={`hover:text-[#F07020] transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-medium ${
-                  isDesignerActive ? "text-[#F07020]" : "text-[#1D1D1F]"
+                className={`hover:opacity-75 transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-bold ${
+                  isDesignerActive ? "text-[#183B56] underline" : "text-[#183B56]"
                 }`}
               >
                 <span>Designer Studio</span>
-                <ChevronDown size={11} strokeWidth={1.5} className={`transition-colors ${isDesignerActive ? "text-[#F07020]" : "text-[#9B9B9B] group-hover:text-[#F07020]"}`} />
+                <ChevronDown size={11} strokeWidth={1.5} className={`transition-colors ${isDesignerActive ? "text-[#183B56]" : "text-[#5A7184] group-hover:text-[#183B56]"}`} />
               </button>
 
               {/* CardNav-Style Dropdown Menu */}
-              <div className="absolute top-full -left-48 mt-3 w-[660px] bg-[#FFFFFF] border border-[#ECECEC] rounded-2xl shadow-2xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
+              <div className="absolute top-full -left-48 mt-3 w-[660px] bg-[#FFFFFF] border border-[#183B56] shadow-xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
                 <div className="grid grid-cols-3 gap-3">
                   {/* Card 1: Creators */}
-                  <div className="bg-[#1D1D1F] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#111113] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Creators</div>
+                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[200px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
+                    <div className="text-[20px] font-bold uppercase tracking-tight">Creators</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/designer-studio")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Publish Designs
+                      <button onClick={() => router.push("/designer-studio")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Publish Designs
                       </button>
-                      <button onClick={() => router.push("/designer-studio")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Set Your Prices
+                      <button onClick={() => router.push("/designer-studio")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Set Your Prices
                       </button>
                     </div>
                   </div>
 
                   {/* Card 2: Studio Pass */}
-                  <div className="bg-[#2F293A] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#25202e] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Studio Pass</div>
+                  <div className="bg-[#102A43] text-white p-5 flex flex-col justify-between h-[200px] select-none hover:bg-[#0B1D30] transition-colors border border-[#183B56]">
+                    <div className="text-[20px] font-bold uppercase tracking-tight">Studio Pass</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/become-designer")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Creator Verification
+                      <button onClick={() => router.push("/become-designer")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Creator Verification
                       </button>
-                      <button onClick={() => router.push("/designer-studio")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Analytics Dashboard
+                      <button onClick={() => router.push("/designer-studio")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Analytics Dashboard
                       </button>
                     </div>
                   </div>
 
                   {/* Card 3: Apply */}
-                  <div className="bg-[#252836] text-white p-5 rounded-xl flex flex-col justify-between h-[200px] select-none hover:bg-[#1c1e29] transition-colors">
-                    <div className="text-[22px] font-semibold tracking-tight">Apply</div>
+                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[200px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
+                    <div className="text-[20px] font-bold uppercase tracking-tight">Apply</div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/become-designer")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Independent Pass
+                      <button onClick={() => router.push("/become-designer")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Independent Pass
                       </button>
-                      <button onClick={() => router.push("/designer/register")} className="text-left text-[14px] text-white/90 hover:text-[#F07020] transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-[14px]">↗</span> Join Network
+                      <button onClick={() => router.push("/designer/register")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Join Network
                       </button>
                     </div>
                   </div>
@@ -514,12 +514,12 @@ export default function Navbar({
               {/* Shopping Bag Icon */}
               <button
                 onClick={onCartClick}
-                className="relative w-10 h-10 flex items-center justify-center transition-colors border-none bg-transparent cursor-pointer text-[#1D1D1F] hover:text-[#F07020] p-0"
+                className="relative w-10 h-10 flex items-center justify-center transition-opacity border-none bg-transparent cursor-pointer text-[#183B56] hover:opacity-75 p-0 select-none"
                 aria-label="Shopping bag"
               >
                 <ShoppingBag size={24} strokeWidth={1.5} />
                 {mounted && cartCount > 0 && (
-                  <span className="absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#1D1D1F] text-[8px] font-bold text-white leading-none">
+                  <span className="absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#183B56] text-[8px] font-bold text-white leading-none">
                     {cartCount}
                   </span>
                 )}

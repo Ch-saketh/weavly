@@ -77,11 +77,11 @@ export default function CartPage({ onCheckout }) {
             Continue Shopping
           </button>
           <div className="flex items-end gap-4">
-            <h1 className="font-black uppercase leading-[0.9] tracking-tight text-[#2B2B2B] text-4xl md:text-6xl">
+            <h1 className="font-black uppercase leading-[0.9] tracking-tight text-[#183B56] text-4xl md:text-6xl">
               Your<br />
-              <span style={{ color: "#5B6EF5" }}>Bag.</span>
+              <span className="text-[#183B56]">Bag.</span>
             </h1>
-            <span className="mb-1 text-[13px] font-extrabold text-[#2B2B2B]/35 uppercase tracking-wider">
+            <span className="mb-1 text-[13px] font-bold text-[#5A7184] uppercase tracking-wider">
               {cartItems.reduce((a, i) => a + i.qty, 0)} item{cartItems.reduce((a, i) => a + i.qty, 0) !== 1 ? "s" : ""}
             </span>
           </div>
@@ -90,14 +90,14 @@ export default function CartPage({ onCheckout }) {
 
       {/* ── Free shipping progress ── */}
       {toFreeShip > 0 && (
-        <div className="border-b border-[#E7E3DD] bg-[#F2EFEA] px-6 py-3">
+        <div className="border-b border-[#183B56]/20 bg-[#F5EFEB] px-6 py-3">
           <div className="mx-auto flex max-w-7xl items-center gap-4">
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#2B2B2B]/70">
-              Add <span style={{ color: "#F07020" }}>₹{Math.round(toFreeShip).toLocaleString('en-IN')}</span> more for free shipping
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#183B56]">
+              Add <span className="text-[#183B56] font-extrabold">₹{Math.round(toFreeShip).toLocaleString('en-IN')}</span> more for free shipping
             </p>
-            <div className="h-1.5 flex-1 rounded-full bg-[#E7E3DD] overflow-hidden">
+            <div className="h-1.5 flex-1 bg-[#183B56]/10 overflow-hidden border border-[#183B56]/20">
               <div
-                className="h-full rounded-full bg-[#5B6EF5] transition-all duration-500"
+                className="h-full bg-[#183B56] transition-all duration-500"
                 style={{ width: `${Math.min(100, ((subtotal - discount) / FREE_SHIPPING_THRESHOLD) * 100)}%` }}
               />
             </div>
@@ -277,7 +277,7 @@ export default function CartPage({ onCheckout }) {
                   setCheckoutNoticeOpen(true);
                   if (onCheckout) onCheckout({ items: cartItems, total });
                 }}
-                className="w-full flex items-center justify-center gap-3 py-4 bg-[#F07020] hover:bg-[#D85C10] text-white text-[11px] font-extrabold uppercase tracking-[0.2em] transition-colors group rounded-xl shadow-md border-none cursor-pointer"
+                className="w-full flex items-center justify-center gap-3 py-4 bg-[#183B56] hover:bg-[#102A43] text-white text-[11px] font-bold uppercase tracking-[0.2em] transition-colors group border border-[#183B56] shadow-md cursor-pointer"
               >
                 <Lock size={13} strokeWidth={2.5} />
                 Proceed to Checkout
