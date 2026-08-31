@@ -148,7 +148,7 @@ export const getProducts = async (params = {}) => {
 /**
  * Fetch paginated products with hasMore flag for infinite scrolling.
  */
-export const getPaginatedProducts = async (params = {}) => {
+export const getPaginatedProducts = async (params = {}, options = {}) => {
   const { category, gender, limit = 24, offset = 0, search } = params;
   const baseUrl = config.productsApiUrl;
   const url = new URL(baseUrl);
@@ -162,7 +162,8 @@ export const getPaginatedProducts = async (params = {}) => {
   const cacheKey = "paginated:" + url.toString();
   const now = Date.now();
 
-  if (requestCache.has(cacheKey)) {
+  // If request has no AbortSignal and is in TTL cache, return cached result
+  if (!options?.signal && requestCache.has(cacheKey)) {
     const cached = requestCache.get(cacheKey);
     if (now - cached.timestamp < CACHE_TTL_MS) {
       return cached.data;
@@ -170,7 +171,7 @@ export const getPaginatedProducts = async (params = {}) => {
     requestCache.delete(cacheKey);
   }
 
-  if (inFlightRequests.has(cacheKey)) {
+  if (!options?.signal && inFlightRequests.has(cacheKey)) {
     return inFlightRequests.get(cacheKey);
   }
 
@@ -179,6 +180,7 @@ export const getPaginatedProducts = async (params = {}) => {
       const res = await fetch(url.toString(), {
         headers: { Accept: "application/json" },
         cache: "no-store",
+        signal: options?.signal,
       });
       if (res.ok) {
         const data = await res.json();
@@ -195,7 +197,9 @@ export const getPaginatedProducts = async (params = {}) => {
       }
       console.warn(`Paginated product API returned status ${res.status} for ${url.toString()}`);
     } catch (err) {
-      console.error("Failed to fetch paginated products from backend API:", err);
+      if (err.name !== "AbortError") {
+        console.error("Failed to fetch paginated products from backend API:", err);
+      }
     } finally {
       inFlightRequests.delete(cacheKey);
     }
@@ -206,20 +210,22 @@ export const getPaginatedProducts = async (params = {}) => {
     };
   })();
 
-  inFlightRequests.set(cacheKey, fetchPromise);
+  if (!options?.signal) {
+    inFlightRequests.set(cacheKey, fetchPromise);
+  }
   return fetchPromise;
 };
 
 /**
  * Fetch product by ID or Product ID from Spring Boot backend.
  */
-export const getProductById = async (productId) => {
+export const getProductById = async (productId, options = {}) => {
   if (!productId) return null;
   const url = `${config.productsApiUrl}/${encodeURIComponent(productId)}`;
   const cacheKey = "product:" + productId;
   const now = Date.now();
 
-  if (requestCache.has(cacheKey)) {
+  if (!options?.signal && requestCache.has(cacheKey)) {
     const cached = requestCache.get(cacheKey);
     if (now - cached.timestamp < CACHE_TTL_MS) {
       return cached.data;
@@ -227,46 +233,38 @@ export const getProductById = async (productId) => {
     requestCache.delete(cacheKey);
   }
 
-  if (inFlightRequests.has(cacheKey)) {
-    return inFlightRequests.get(cacheKey);
-  }
-
-  const fetchPromise = (async () => {
-    try {
-      const res = await fetch(url, {
-        headers: { Accept: "application/json" },
-        cache: "no-store",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const normalized = normalizeProduct(data);
-        if (normalized) {
-          requestCache.set(cacheKey, { data: normalized, timestamp: Date.now() });
-        }
-        return normalized;
+  try {
+    const res = await fetch(url, {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      signal: options?.signal,
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const normalized = normalizeProduct(data);
+      if (normalized) {
+        requestCache.set(cacheKey, { data: normalized, timestamp: Date.now() });
       }
-      console.warn(`Product detail API returned ${res.status} for ID ${productId}`);
-    } catch (err) {
-      console.error(`Failed to fetch product ${productId}:`, err);
-    } finally {
-      inFlightRequests.delete(cacheKey);
+      return normalized;
     }
-    return null;
-  })();
-
-  inFlightRequests.set(cacheKey, fetchPromise);
-  return fetchPromise;
+  } catch (err) {
+    if (err.name !== "AbortError") {
+      console.error(`Failed to fetch product by ID "${productId}":`, err);
+    }
+  }
+  return null;
 };
 
 /**
- * Search products by query term.
+ * Search products by keyword query across name, brand, category, tags.
  */
-export const searchProducts = async (query = "", params = {}) => {
+export const searchProducts = async (query = "", params = {}, options = {}) => {
   const q = (query || "").trim();
   if (!q) return [];
 
-  const baseUrl = config.productsApiUrl;
+  const baseUrl = `${config.productsApiUrl}/search`;
   const url = new URL(baseUrl);
+  url.searchParams.append("q", q);
   url.searchParams.append("search", q);
   if (params.category && params.category !== "All") url.searchParams.append("category", params.category);
   if (params.gender && params.gender !== "All") url.searchParams.append("gender", params.gender);
@@ -276,6 +274,7 @@ export const searchProducts = async (query = "", params = {}) => {
     const res = await fetch(url.toString(), {
       headers: { Accept: "application/json" },
       cache: "no-store",
+      signal: options?.signal,
     });
     if (res.ok) {
       const data = await res.json();
@@ -283,16 +282,18 @@ export const searchProducts = async (query = "", params = {}) => {
       return rawProducts.map(normalizeProduct).filter(Boolean);
     }
   } catch (err) {
-    console.error(`Failed to search products for "${q}":`, err);
+    if (err.name !== "AbortError") {
+      console.error(`Failed to search products for "${q}":`, err);
+    }
   }
 
   return [];
 };
 
 /**
- * Fetch live search autocomplete suggestions.
+ * Fetch live search autocomplete suggestions with AbortSignal support.
  */
-export const getSearchSuggestions = async (query = "", limit = 6) => {
+export const getSearchSuggestions = async (query = "", limit = 6, options = {}) => {
   const q = (query || "").trim();
   if (!q || q.length < 2) return [];
 
@@ -305,14 +306,16 @@ export const getSearchSuggestions = async (query = "", limit = 6) => {
     const res = await fetch(url.toString(), {
       headers: { Accept: "application/json" },
       cache: "no-store",
+      signal: options?.signal,
     });
     if (res.ok) {
       const data = await res.json();
       return Array.isArray(data) ? data : [];
     }
   } catch (err) {
-    console.error(`Failed to fetch suggestions for "${q}":`, err);
+    if (err.name !== "AbortError") {
+      console.error(`Failed to fetch suggestions for "${q}":`, err);
+    }
   }
   return [];
 };
-

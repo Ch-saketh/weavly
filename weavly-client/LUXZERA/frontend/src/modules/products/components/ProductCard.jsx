@@ -62,12 +62,15 @@ export default function ProductCard({ product, onViewProduct, source = "MARKET" 
         onClick={handleView}
         className="hidden sm:flex group relative flex-col bg-[#F5EFEB] border border-[#183B56] overflow-hidden cursor-pointer text-center font-sans select-none hover:bg-[#183B56]/[0.02] transition-colors"
       >
-        {/* Full-bleed Cool-Tinted Flat Image Box */}
+        {/* Full-bleed Cool-Tinted Flat Image Box with reserved layout dimensions */}
         <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-6 sm:p-8">
           <img
             src={displayImage}
             alt={productName}
-            className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+            width="300"
+            height="370"
+            decoding="async"
+            className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
             referrerPolicy="no-referrer"
             onError={(e) => {

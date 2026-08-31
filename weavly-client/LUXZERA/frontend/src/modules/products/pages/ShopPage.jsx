@@ -130,9 +130,15 @@ function ShopPageContent({ initialDepartment = "All" }) {
     setActiveCat("All"); setActiveSizes([]); setActiveBrand("All"); setPriceMax(5000);
   }, []);
 
-  // Initial products load
+  // Initial products load with AbortController and request cancellation
+  const initialLoadAbortRef = useRef(null);
+
   useEffect(() => {
-    let ignore = false;
+    if (initialLoadAbortRef.current) {
+      initialLoadAbortRef.current.abort();
+    }
+    const controller = new AbortController();
+    initialLoadAbortRef.current = controller;
 
     const loadInitialProducts = async () => {
       setLoadingProducts(true);
@@ -144,8 +150,9 @@ function ShopPageContent({ initialDepartment = "All" }) {
           offset: 0,
           gender: effectiveDept,
           search: query || undefined,
-        });
-        if (!ignore) {
+        }, { signal: controller.signal });
+
+        if (!controller.signal.aborted) {
           setProducts(res.products || []);
           setHasMore(res.hasMore);
           if (query) {
@@ -153,14 +160,14 @@ function ShopPageContent({ initialDepartment = "All" }) {
           }
         }
       } catch (error) {
-        console.error("Product API error:", error);
-        if (!ignore) {
+        if (error.name !== "AbortError") {
+          console.error("Product API error:", error);
           setProducts([]);
           setHasMore(false);
           setProductError("Unable to load products. Please check server connection.");
         }
       } finally {
-        if (!ignore) {
+        if (!controller.signal.aborted) {
           setLoadingProducts(false);
         }
       }
@@ -168,7 +175,7 @@ function ShopPageContent({ initialDepartment = "All" }) {
 
     loadInitialProducts();
     return () => {
-      ignore = true;
+      controller.abort();
     };
   }, [userGender, initialDepartment, query]);
 
@@ -410,26 +417,26 @@ function ShopPageContent({ initialDepartment = "All" }) {
           {/* ── INFINITE SCROLL TRIGGER & STATUS ── */}
           <div ref={loadMoreTriggerRef} className="py-8 flex flex-col items-center justify-center">
             {loadingMore && (
-              <div className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#FAF8F5] border border-[#E7E3DD] text-[#71717A] text-xs font-semibold shadow-2xs">
-                <Loader2 size={16} className="animate-spin text-[#F07020]" />
+              <div className="flex items-center gap-2.5 px-5 py-2.5 bg-white border border-[#183B56] text-[#183B56] text-xs font-bold shadow-2xs uppercase tracking-wider">
+                <Loader2 size={16} className="animate-spin text-[#183B56]" />
                 <span>Loading more luxury pieces...</span>
               </div>
             )}
             {!hasMore && displayed.length > 0 && (
-              <div className="flex items-center gap-3 py-6 text-[#A1A1AA] text-xs font-semibold tracking-wider uppercase">
-                <div className="w-12 h-px bg-[#E4E4E7]" />
-                <span>You've explored the complete results</span>
-                <div className="w-12 h-px bg-[#E4E4E7]" />
+              <div className="flex items-center gap-3 py-6 text-[#5A7184] text-xs font-bold tracking-widest uppercase">
+                <div className="w-12 h-px bg-[#183B56]/20" />
+                <span>End of Curated Selection</span>
+                <div className="w-12 h-px bg-[#183B56]/20" />
               </div>
             )}
           </div>
 
           {displayed.length === 0 && !loadingProducts && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-[#9B9B9B] mb-2">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-[#183B56] mb-2">
                 No products found
               </h3>
-              <p className="text-xs text-[#71717A] max-w-xs mb-6">
+              <p className="text-xs text-[#5A7184] max-w-xs mb-6">
                 No items matched your inquiry. Try checking for typos or searching by brand name.
               </p>
               <button
@@ -437,7 +444,7 @@ function ShopPageContent({ initialDepartment = "All" }) {
                   clearAll();
                   if (query) router.push(pathname);
                 }}
-                className="bg-[#111111] text-white text-xs font-bold uppercase px-6 py-2.5 rounded-full hover:bg-[#F07020] transition-colors border-none cursor-pointer"
+                className="bg-[#183B56] text-white text-xs font-bold uppercase tracking-wider px-6 py-2.5 hover:bg-[#102A43] transition-colors border border-[#183B56] cursor-pointer"
               >
                 Reset Search
               </button>
@@ -453,7 +460,7 @@ export default function ShopPage(props) {
   return (
     <Suspense fallback={
       <div className="min-h-[60vh] flex items-center justify-center">
-        <Loader2 size={24} className="animate-spin text-[#F07020]" />
+        <Loader2 size={24} className="animate-spin text-[#183B56]" />
       </div>
     }>
       <ShopPageContent {...props} />

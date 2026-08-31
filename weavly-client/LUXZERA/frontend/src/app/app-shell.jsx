@@ -1,17 +1,19 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/shared/components/layout/Navbar";
 import Footer from "@/shared/components/layout/Footer";
 import DraggableFloatingCart from "@/shared/components/layout/DraggableFloatingCart";
-import AuthModal from "@/modules/auth/components/AuthModal";
-import OnboardingModal from "@/modules/onboarding/components/OnboardingModal";
-import BetaNoticeModal from "@/shared/components/common/BetaNoticeModal";
 import { useCart } from "@/modules/cart/store/CartContext";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useAuth } from "@/modules/auth/store/useAuth";
+
+const AuthModal = dynamic(() => import("@/modules/auth/components/AuthModal"), { ssr: false });
+const OnboardingModal = dynamic(() => import("@/modules/onboarding/components/OnboardingModal"), { ssr: false });
+const BetaNoticeModal = dynamic(() => import("@/shared/components/common/BetaNoticeModal"), { ssr: false });
 
 export default function AppShell({ children }) {
   const router = useRouter();
@@ -182,30 +184,36 @@ export default function AppShell({ children }) {
       )}
 
       {/* Login & Registration Modal */}
-      <AuthModal
-        isOpen={authOpen}
-        onClose={() => {
-          setAuthOpen(false);
-          if (searchParams.get("openLogin")) {
-            router.replace(pathname);
-          }
-        }}
-        initialView={authInitialView}
-        onAppleSignIn={handleAppleSignInAction}
-      />
+      {authOpen && (
+        <AuthModal
+          isOpen={authOpen}
+          onClose={() => {
+            setAuthOpen(false);
+            if (searchParams.get("openLogin")) {
+              router.replace(pathname);
+            }
+          }}
+          initialView={authInitialView}
+          onAppleSignIn={handleAppleSignInAction}
+        />
+      )}
 
       {/* Onboarding Questionnaire & Profile Setup Modal for Incomplete Profiles */}
-      <OnboardingModal
-        isOpen={showOnboardingModal}
-        onClose={() => {
-          // Handled upon successful saveFitData / refreshUser
-        }}
-      />
+      {showOnboardingModal && (
+        <OnboardingModal
+          isOpen={showOnboardingModal}
+          onClose={() => {
+            // Handled upon successful saveFitData / refreshUser
+          }}
+        />
+      )}
 
-      <BetaNoticeModal
-        isOpen={betaNoticeOpen}
-        onClose={() => setBetaNoticeOpen(false)}
-      />
+      {betaNoticeOpen && (
+        <BetaNoticeModal
+          isOpen={betaNoticeOpen}
+          onClose={() => setBetaNoticeOpen(false)}
+        />
+      )}
     </div>
   );
 }

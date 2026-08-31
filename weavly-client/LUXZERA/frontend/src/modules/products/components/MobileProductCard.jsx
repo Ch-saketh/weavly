@@ -56,11 +56,14 @@ export default function MobileProductCard({ product, onViewProduct, source = "MA
       onClick={openProduct}
       className="bg-[#F5EFEB] border border-[#183B56]/30 overflow-hidden text-center cursor-pointer select-none"
     >
-      {/* Full-bleed Cool Image Container */}
+      {/* Full-bleed Cool Image Container with reserved aspect bounds */}
       <div className="relative aspect-[3/3.8] bg-[#E2EAEF] border-b border-[#183B56]/30 flex items-center justify-center p-3">
         <img
           src={productImage}
           alt={productName}
+          width="240"
+          height="304"
+          decoding="async"
           className="h-full w-full object-contain mix-blend-multiply"
           loading="lazy"
           referrerPolicy="no-referrer"

@@ -45,7 +45,9 @@ public class ProductController {
             @RequestParam(value = "limit", required = false, defaultValue = "6") int limit
     ) {
         List<com.luxzera.server.products.search.dto.SearchSuggestionDto> suggestions = productSearchService.getSuggestions(query, limit);
-        return ResponseEntity.ok(suggestions);
+        return ResponseEntity.ok()
+                .cacheControl(org.springframework.http.CacheControl.maxAge(java.time.Duration.ofSeconds(60)).cachePublic())
+                .body(suggestions);
     }
 
     /**
@@ -136,7 +138,9 @@ public class ProductController {
     @GetMapping("/count")
     public ResponseEntity<Map<String, Object>> getProductCount() {
         long count = productService.getProductCount();
-        return ResponseEntity.ok(Map.of("count", count));
+        return ResponseEntity.ok()
+                .cacheControl(org.springframework.http.CacheControl.maxAge(java.time.Duration.ofSeconds(120)).cachePublic())
+                .body(Map.of("count", count));
     }
 
     /**

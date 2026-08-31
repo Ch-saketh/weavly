@@ -2,9 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   devIndicators: false,
-  typescript: {
-    // Dangerously allow production builds to successfully complete even if your project has type errors
-    ignoreBuildErrors: true,
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
   },
 
   images: {

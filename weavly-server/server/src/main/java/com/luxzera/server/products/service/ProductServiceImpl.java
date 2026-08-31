@@ -244,10 +244,7 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductResponse toResponse(Product product, String categoryName) {
         String effectiveCategory = product.getCategoryName() != null ? product.getCategoryName() : categoryName;
-        String effectiveBrand = product.getBrandName();
-        if (effectiveBrand == null && product.getBrands() != null && !product.getBrands().isEmpty()) {
-            effectiveBrand = product.getBrands().iterator().next().getName();
-        }
+        String effectiveBrand = product.getBrandName() != null ? product.getBrandName() : "Weavly Atelier";
 
         String primaryImage = product.getImageUrl();
         if (primaryImage == null && product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {

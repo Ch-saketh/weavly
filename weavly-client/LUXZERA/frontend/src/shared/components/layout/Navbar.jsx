@@ -54,6 +54,8 @@ export default function Navbar({
   const mobileSearchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
   const mobileSearchContainerRef = useRef(null);
+  const searchAbortControllerRef = useRef(null);
+  const activeSearchQueryRef = useRef("");
 
   const isShopActive = pathname.startsWith("/market") || pathname.startsWith("/shop") || pathname.startsWith("/product");
   const isCollectionsActive = pathname === "/collections" || pathname === "/men" || pathname === "/women" || pathname === "/kids" || pathname === "/unisex";
@@ -65,28 +67,53 @@ export default function Navbar({
     getRecentSearches(6).then((items) => setRecentSearches(items || []));
   }, []);
 
-  // Debounced search suggestions fetch
+  // Debounced search suggestions fetch with AbortController and race-condition prevention
   useEffect(() => {
     const q = searchQuery.trim();
+    activeSearchQueryRef.current = q;
+
     if (q.length < 2) {
+      if (searchAbortControllerRef.current) {
+        searchAbortControllerRef.current.abort();
+      }
       setSuggestions([]);
+      setShowSuggestions(false);
+      setIsSearching(false);
       return;
     }
 
     const timer = setTimeout(async () => {
+      if (searchAbortControllerRef.current) {
+        searchAbortControllerRef.current.abort();
+      }
+      const controller = new AbortController();
+      searchAbortControllerRef.current = controller;
+
       setIsSearching(true);
       try {
-        const results = await getSearchSuggestions(q, 5);
-        setSuggestions(results);
-        setShowSuggestions(true);
+        const results = await getSearchSuggestions(q, 5, { signal: controller.signal });
+        // Guarantee only the latest query updates state
+        if (activeSearchQueryRef.current === q) {
+          setSuggestions(results || []);
+          setShowSuggestions(true);
+        }
       } catch (err) {
-        console.error("Suggestions error:", err);
+        if (err.name !== "AbortError") {
+          console.error("Suggestions error:", err);
+        }
       } finally {
-        setIsSearching(false);
+        if (activeSearchQueryRef.current === q) {
+          setIsSearching(false);
+        }
       }
-    }, 250);
+    }, 200);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (searchAbortControllerRef.current) {
+        searchAbortControllerRef.current.abort();
+      }
+    };
   }, [searchQuery]);
 
   // Click outside to dismiss suggestions and close desktop search
