@@ -27,7 +27,7 @@ export default function WardrobePage() {
                 Zyra Collection
               </h1>
               <p className="text-xs sm:text-sm text-[#5A7184] max-w-2xl leading-relaxed font-normal pt-1">
-                AI-powered bespoke fashion intelligence. Curated outfit combinations and garment selections tailored exclusively for your style identity, body proportions, and chosen occasion.
+                Personal stylist bespoke fashion intelligence. Curated outfit combinations and garment selections tailored exclusively for your style identity, body proportions, and chosen occasion.
               </p>
             </div>
 
