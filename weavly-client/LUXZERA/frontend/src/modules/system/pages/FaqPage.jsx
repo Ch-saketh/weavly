@@ -1,6 +1,6 @@
 "use client";
 
-// src/pages/FaqPage.jsx
+// src/modules/system/pages/FaqPage.jsx
 import { useState } from "react";
 import { ChevronDown, ArrowRight, MessageCircle, Mail, Phone } from "lucide-react";
 
@@ -46,25 +46,25 @@ const FAQ_CATEGORIES = [
 function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-[#E7E3DD] last:border-0">
+    <div className="border-b border-[#183B56]/15 last:border-0">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-start justify-between gap-4 py-5 text-left group"
+        className="w-full flex items-start justify-between gap-4 py-5 text-left group cursor-pointer bg-transparent border-none"
       >
         <span className={`text-[13px] font-bold leading-snug transition-colors duration-200
-          ${open ? "text-[#5B6EF5]" : "text-[#2B2B2B] group-hover:text-[#5B6EF5]"}`}>
+          ${open ? "text-[#183B56]" : "text-[#183B56] group-hover:opacity-75"}`}>
           {q}
         </span>
         <ChevronDown
           size={15}
-          strokeWidth={2.5}
-          className={`flex-shrink-0 mt-0.5 text-[#2B2B2B]/30 transition-transform duration-200
-            ${open ? "rotate-180 text-[#5B6EF5]" : ""}`}
+          strokeWidth={2}
+          className={`flex-shrink-0 mt-0.5 text-[#5A7184] transition-transform duration-200
+            ${open ? "rotate-180 text-[#183B56]" : ""}`}
         />
       </button>
       {open && (
         <div className="pb-5 pr-8">
-          <p className="text-[13px] text-[#2B2B2B]/55 leading-[1.75] font-medium">{a}</p>
+          <p className="text-[13px] text-[#5A7184] leading-[1.75] font-medium">{a}</p>
         </div>
       )}
     </div>
@@ -76,42 +76,41 @@ export default function FaqPage({ onShopNow }) {
   const current = FAQ_CATEGORIES.find((c) => c.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans pb-0 select-none">
 
       {/* ── Header ── */}
-      <div className="relative bg-white border-b border-[#E7E3DD] py-16 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-premium-grid opacity-[0.025] pointer-events-none" />
+      <div className="relative border-b border-[#183B56]/20 py-20 px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-2 mb-5">
-            <span className="h-px w-5 bg-[#C6A15B]" />
-            <p className="text-[8.5px] font-extrabold uppercase tracking-[0.38em] text-[#C6A15B]">Help Center</p>
+            <span className="h-px w-5 bg-[#183B56]" />
+            <p className="text-[9px] font-bold uppercase tracking-[0.38em] text-[#183B56]">Help Center</p>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black uppercase leading-[0.88] tracking-[-0.025em] text-[#2B2B2B]">
+          <h1 className="text-5xl md:text-7xl font-bold uppercase leading-[0.88] tracking-tight text-[#183B56]">
             Got<br />
-            <span style={{ color: "#5B6EF5" }}>Questions?</span>
+            <span className="text-[#183B56]">Questions?</span>
           </h1>
-          <p className="mt-6 text-[13px] text-[#2B2B2B]/50 max-w-md font-medium leading-[1.7]">
+          <p className="mt-8 text-[13px] text-[#5A7184] max-w-md font-medium leading-[1.7]">
             Everything you need to know about orders, shipping, returns, and more.
-            Can't find it? Reach out — we're real people.
+            Can't find it? Reach out — we're here to help.
           </p>
         </div>
       </div>
 
       {/* ── Main content ── */}
-      <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10">
+      <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10">
 
         {/* Sidebar */}
         <aside className="lg:sticky lg:top-24 self-start">
-          <p className="text-[8.5px] font-extrabold uppercase tracking-[0.35em] text-[#C6A15B] mb-4">Categories</p>
+          <p className="text-[9px] font-bold uppercase tracking-[0.35em] text-[#183B56] mb-4">Categories</p>
           <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
             {FAQ_CATEGORIES.map(({ category }) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`flex-shrink-0 text-left text-[10px] font-extrabold uppercase tracking-[0.2em] px-4 py-3 rounded-xl border transition-all duration-200
+                className={`flex-shrink-0 text-left text-[11px] font-bold uppercase tracking-[0.2em] px-4 py-3 border transition-all duration-200 cursor-pointer
                   ${activeCategory === category
-                    ? "bg-[#5B6EF5] text-[#FAF9F7] border-[#5B6EF5]"
-                    : "border-[#E7E3DD] text-[#2B2B2B]/55 hover:border-[#5B6EF5]/40 hover:text-[#2B2B2B]"}`}
+                    ? "bg-[#183B56] text-white border-[#183B56] shadow-xs"
+                    : "bg-white border-[#183B56]/20 text-[#5A7184] hover:border-[#183B56] hover:text-[#183B56]"}`}
               >
                 {category}
               </button>
@@ -122,12 +121,12 @@ export default function FaqPage({ onShopNow }) {
         {/* FAQ accordion */}
         <div>
           <div className="flex items-center gap-3 mb-8">
-            <span className="w-1 h-7 rounded-full bg-[#5B6EF5]" />
-            <h2 className="text-xl font-extrabold uppercase tracking-[0.2em] text-[#2B2B2B]">
+            <span className="w-1.5 h-6 bg-[#183B56]" />
+            <h2 className="text-xl font-bold uppercase tracking-[0.15em] text-[#183B56]">
               {activeCategory}
             </h2>
           </div>
-          <div className="border border-[#E7E3DD] rounded-2xl px-6 bg-white">
+          <div className="border border-[#183B56]/30 px-6 bg-white shadow-xs">
             {current?.items.map(({ q, a }) => (
               <FaqItem key={q} q={q} a={a} />
             ))}
@@ -136,33 +135,33 @@ export default function FaqPage({ onShopNow }) {
       </div>
 
       {/* ── Contact band ── */}
-      <section className="bg-[#F2EFEA] py-16 px-6 border-t border-[#E7E3DD]">
+      <section className="bg-[#E2EAEF]/60 py-16 px-6 border-t border-[#183B56]/20">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-2 mb-4">
-            <span className="h-px w-5 bg-[#C97A5A]" />
-            <p className="text-[8.5px] font-extrabold uppercase tracking-[0.38em] text-[#C97A5A]">Still stuck?</p>
+            <span className="h-px w-5 bg-[#183B56]" />
+            <p className="text-[9px] font-bold uppercase tracking-[0.38em] text-[#183B56]">Still stuck?</p>
           </div>
-          <h2 className="text-4xl font-black uppercase leading-[0.9] tracking-tight text-[#2B2B2B] mb-10">
+          <h2 className="text-4xl font-bold uppercase leading-[0.9] tracking-tight text-[#183B56] mb-10">
             Talk to a<br />
-            <span style={{ color: "#F07020" }}>Human.</span>
+            <span className="text-[#183B56]">Human.</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
               { icon: <MessageCircle size={18} strokeWidth={2} />, title: "Live Chat", detail: "Mon–Fri, 9am–6pm",      action: "Start Chat" },
-              { icon: <Mail size={18} strokeWidth={2} />,          title: "Email Us",  detail: "support@Weavly.co",    action: "Send Email" },
+              { icon: <Mail size={18} strokeWidth={2} />,          title: "Email Us",  detail: "support@weavly.com",    action: "Send Email" },
               { icon: <Phone size={18} strokeWidth={2} />,         title: "Call Us",   detail: "+1 (800) 000-0000",     action: "Call Now" },
             ].map(({ icon, title, detail, action }) => (
               <div key={title}
-                className="bg-white border border-[#E7E3DD] rounded-2xl p-7 hover:border-[#5B6EF5]/40 transition-all duration-300 group flex flex-col gap-4"
+                className="bg-white border border-[#183B56]/30 p-7 transition-all duration-300 group flex flex-col gap-4 shadow-xs"
               >
-                <div className="w-10 h-10 bg-[#5B6EF5] group-hover:bg-[#F07020] rounded-xl flex items-center justify-center text-[#FAF9F7] transition-colors duration-300">
+                <div className="w-10 h-10 bg-[#183B56] rounded-xs flex items-center justify-center text-white transition-colors duration-300">
                   {icon}
                 </div>
                 <div>
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#2B2B2B]">{title}</p>
-                  <p className="text-[11px] text-[#2B2B2B]/45 mt-1 font-medium">{detail}</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#183B56]">{title}</p>
+                  <p className="text-[12px] text-[#5A7184] mt-1 font-medium">{detail}</p>
                 </div>
-                <button className="self-start flex items-center gap-1.5 text-[9.5px] font-extrabold uppercase tracking-[0.25em] text-[#5B6EF5] hover:text-[#F07020] transition-colors group/btn">
+                <button className="self-start flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56] hover:opacity-75 transition-opacity group/btn bg-transparent border-none cursor-pointer p-0">
                   {action}
                   <ArrowRight size={10} className="group-hover/btn:translate-x-0.5 transition-transform" />
                 </button>
@@ -173,14 +172,14 @@ export default function FaqPage({ onShopNow }) {
       </section>
 
       {/* ── Bottom CTA ── */}
-      <div className="bg-[#5B6EF5] py-14 px-6">
+      <div className="bg-[#183B56] py-16 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <h2 className="text-3xl md:text-5xl font-black uppercase leading-[0.9] tracking-tight text-[#FAF9F7]">
+          <h2 className="text-3xl md:text-5xl font-bold uppercase leading-[0.9] tracking-tight text-white">
             Questions answered?<br />Let's shop.
           </h2>
           <button
             onClick={onShopNow}
-            className="shrink-0 flex items-center gap-3 bg-white text-[#5B6EF5] hover:bg-[#F07020] hover:text-[#FAF9F7] text-[11px] font-extrabold uppercase tracking-[0.28em] px-8 py-4 rounded-full transition-all duration-300 group"
+            className="shrink-0 flex items-center gap-3 bg-white text-[#183B56] hover:bg-[#F5EFEB] text-[11px] font-bold uppercase tracking-[0.25em] px-8 py-4 transition-all duration-300 group border border-white cursor-pointer"
           >
             Browse the Drop
             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
