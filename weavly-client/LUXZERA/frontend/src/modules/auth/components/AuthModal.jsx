@@ -889,8 +889,11 @@ export default function AuthModal({ isOpen, onClose, initialView = "login" }) {
 
           <button type="submit" className="am-submit am-anim-item" disabled={isSubmitting}>
             {isSubmitting ? (
-              <div className="am-btn-loading-wrap">
-                <img src="/favicon.png" alt="Loading" className="am-btn-spinner" />
+              <div className="am-btn-loading-wrap flex items-center justify-center gap-2.5">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span className="am-btn-loading-text text-white text-xs font-bold uppercase tracking-wider">
+                  {view === "register" ? "Creating Account..." : "Signing in..."}
+                </span>
               </div>
             ) : (
               view === "register" ? "Create account" : "Log in"
