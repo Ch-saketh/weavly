@@ -212,7 +212,7 @@ const MeasurementsView = ({ userId, onSaveSuccess }) => {
         <div>
           <h2 className="text-xl font-bold text-[#2D3436] tracking-tight">Fashion Fit & Style Preferences</h2>
           <p className="text-xs text-slate-400 mt-1">
-            Configure your sizing, aesthetic styles, colors, and wardrobe goals for Zyra intelligence.
+            Configure your sizing, aesthetic styles, colors, and wardrobe goals.
           </p>
         </div>
         <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-[#F07020] rounded-full text-xs font-semibold">

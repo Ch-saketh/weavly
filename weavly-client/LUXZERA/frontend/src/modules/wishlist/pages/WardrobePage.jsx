@@ -21,7 +21,7 @@ export default function WardrobePage() {
             <div className="md:col-span-8 p-6 sm:p-10 space-y-3">
               <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] font-bold text-[#5A7184]">
                 <Sparkles size={11} className="text-[#183B56]" />
-                <span>Zyra Intelligence • Wardrobe Curation</span>
+                <span>Wardrobe Curation</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#183B56] uppercase leading-tight">
                 Zyra Collection

@@ -113,12 +113,6 @@ export default function ZeraRecommendationsSection({
       {/* Architectural Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 px-6 border-b border-[#183B56]">
         <div>
-          <div className="flex items-center gap-1.5 mb-1">
-            <Sparkles size={12} className="text-[#183B56]" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184]">
-              Zyra Intelligence
-            </span>
-          </div>
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
             {title}
           </h2>
