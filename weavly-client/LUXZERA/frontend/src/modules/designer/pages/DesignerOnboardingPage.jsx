@@ -1,11 +1,13 @@
 "use client";
 
-// src/pages/DesignerOnboardingPage.jsx
+// src/modules/designer/pages/DesignerOnboardingPage.jsx
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  ArrowLeft, ArrowRight, Check, UploadCloud, Eye, EyeOff, X, Lock, Send
+  ArrowLeft, ArrowRight, Check, UploadCloud, Eye, EyeOff, X, Lock, Send, ShieldCheck
 } from "lucide-react";
+import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
+import Loader from "@/shared/components/ui/Loader";
 
 export default function DesignerOnboardingPage() {
   const router = useRouter();
@@ -99,18 +101,17 @@ export default function DesignerOnboardingPage() {
     setUploadProgress(prev => ({ ...prev, [fieldName]: 10 }));
     let progress = 10;
     const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 20) + 15;
+      progress += 30;
       if (progress >= 100) {
-        progress = 100;
         clearInterval(interval);
-
-        const filesData = files.map(f => ({ name: f.name, size: (f.size / (1024 * 1024)).toFixed(2) + " MB" }));
+        setUploadProgress(prev => ({ ...prev, [fieldName]: 100 }));
         if (isMultiple) {
-          patch(fieldName, [...(form[fieldName] || []), ...filesData]);
+          const current = form[fieldName] || [];
+          const updated = [...current, ...files.map(f => ({ name: f.name, size: f.size }))];
+          patch(fieldName, updated);
         } else {
-          patch(fieldName, filesData[0]);
+          patch(fieldName, { name: files[0].name, size: files[0].size });
         }
-
         setTimeout(() => {
           setUploadProgress(prev => {
             const next = { ...prev };
@@ -118,15 +119,15 @@ export default function DesignerOnboardingPage() {
             return next;
           });
         }, 600);
+      } else {
+        setUploadProgress(prev => ({ ...prev, [fieldName]: progress }));
       }
-      setUploadProgress(prev => ({ ...prev, [fieldName]: progress }));
     }, 150);
   };
 
-  const removeUploadedFile = (fieldName, index = -1) => {
-    if (index > -1) {
-      const list = [...form[fieldName]];
-      list.splice(index, 1);
+  const removeFile = (fieldName, index = null) => {
+    if (index !== null) {
+      const list = (form[fieldName] || []).filter((_, i) => i !== index);
       patch(fieldName, list);
     } else {
       patch(fieldName, null);
@@ -202,35 +203,38 @@ export default function DesignerOnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#1D1D1F] py-12 px-4 flex flex-col items-center justify-between" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] py-12 px-4 flex flex-col items-center justify-between font-['Plus_Jakarta_Sans',sans-serif]">
       
       {/* HEADER SECTION */}
-      <div className="w-full max-w-[560px] flex flex-col items-center text-center">
+      <div className="w-full max-w-[580px] flex flex-col items-center text-center">
         <button onClick={() => router.push("/")} className="cursor-pointer mb-6 flex items-center justify-center border-none bg-transparent p-0 select-none" aria-label="Weavly home">
-          <div className="text-2xl font-black tracking-tighter uppercase text-[#1D1D1F]"> <span className="tracking-tighter"><span className="text-[#F07020]">LUX</span><span className="text-[#1D1D1F]">ZERA</span></span> </div>
+          <WeavlyLogo showBeta={false} size="lg" />
         </button>
 
         {/* Title & Subtitle */}
         {step <= 7 && (
           <>
-            <h1 className="text-[28px] sm:text-[32px] font-black text-[#0D1B2A] tracking-tight font-serif">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184] mb-1">
+              <span>Atelier Accreditation Phase {step} of 7</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#183B56] uppercase tracking-tight">
               Become a Weavly Designer
             </h1>
-            <p className="text-[13px] text-[#86868B] font-semibold mt-1.5 mb-10 max-w-md leading-relaxed">
-              Create your designer profile and start your journey with us.
+            <p className="text-xs text-[#5A7184] font-medium mt-1 mb-8 max-w-md leading-relaxed">
+              Complete your atelier dossier to publish curated garments and launch collections on Weavly.
             </p>
           </>
         )}
 
-        {/* Horizontal Progress Stepper */}
+        {/* Blueprint Stepper */}
         {step <= 7 && (
-          <div className="w-full max-w-[360px] mx-auto flex items-center justify-between relative mb-14 px-2">
+          <div className="w-full max-w-[420px] mx-auto flex items-center justify-between relative mb-10 px-2">
             {/* Background Stepper Line */}
-            <div className="absolute top-[15px] left-4 right-4 h-[2px] bg-[#E7E3DD] z-0" />
+            <div className="absolute top-[14px] left-4 right-4 h-[1px] bg-[#183B56]/20 z-0" />
             
             {/* Stepper Active Highlight Line */}
             <div 
-              className="absolute top-[15px] left-4 h-[2px] bg-[#FF6A00] z-0 transition-all duration-500" 
+              className="absolute top-[14px] left-4 h-[1px] bg-[#183B56] z-0 transition-all duration-500" 
               style={{ width: `${((step - 1) / 6) * 90}%` }}
             />
 
@@ -242,18 +246,18 @@ export default function DesignerOnboardingPage() {
                   key={num}
                   onClick={() => completed && setStep(num)}
                   disabled={!completed && step !== num}
-                  className="relative z-10 flex flex-col items-center group cursor-pointer disabled:cursor-not-allowed border-none bg-transparent"
+                  className="relative z-10 flex flex-col items-center group cursor-pointer disabled:cursor-not-allowed border-none bg-transparent p-0"
                 >
                   <div 
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-black transition-all duration-300 ${
+                    className={`w-7 h-7 flex items-center justify-center text-[11px] font-mono font-bold transition-all duration-300 ${
                       completed 
-                        ? "bg-[#FF6A00] text-white border border-[#FF6A00]" 
+                        ? "bg-[#183B56] text-white border border-[#183B56]" 
                         : active 
-                          ? "bg-white text-[#FF6A00] border-2 border-[#FF6A00] shadow-[0_0_12px_rgba(255,106,0,0.2)]" 
-                          : "bg-white text-[#86868B] border border-[#E7E3DD]"
+                          ? "bg-white text-[#183B56] border-2 border-[#183B56] shadow-xs" 
+                          : "bg-[#F5EFEB] text-[#5A7184] border border-[#183B56]/30"
                     }`}
                   >
-                    {completed ? <Check size={13} strokeWidth={3} /> : num}
+                    {completed ? <Check size={12} strokeWidth={3} /> : num}
                   </div>
                 </button>
               );
@@ -263,681 +267,584 @@ export default function DesignerOnboardingPage() {
       </div>
 
       {/* CORE FORM CONTAINER */}
-      <div className="auth-surface w-full max-w-[560px] rounded-[24px] p-6 sm:p-10 relative transition-all duration-300 flex flex-col">
-        <div className="auth-content">
+      <div className="w-full max-w-[580px] bg-white border border-[#183B56] p-6 sm:p-10 shadow-xs relative transition-all duration-300 flex flex-col text-left">
         
         {/* STEP 1: Personal Information */}
         {step === 1 && (
           <div className="animate-fade-in flex flex-col">
-            <h2 className="text-[13px] font-black text-[#FF6A00] uppercase tracking-wider mb-6 text-center">Personal Information</h2>
+            <h2 className="text-[11px] font-bold text-[#183B56] uppercase tracking-[0.2em] mb-6 text-center">
+              1. Personal Dossier
+            </h2>
 
-            <form onSubmit={handleNext} className="flex flex-col gap-5">
+            <form onSubmit={handleNext} className="flex flex-col gap-4">
               <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Full Name <span className="text-[#FF6A00]">*</span></label>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Full Legal Name <span className="text-[#183B56]">*</span>
+                </label>
                 <input 
                   required 
                   type="text" 
                   value={form.fullName}
                   onChange={(e) => patch("fullName", e.target.value)}
-                  placeholder="Enter your full name"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
+                  placeholder="Enter full legal name"
+                  className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56] focus:bg-white transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Email Address <span className="text-[#FF6A00]">*</span></label>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Email Address <span className="text-[#183B56]">*</span>
+                </label>
                 <input 
                   required 
                   type="email" 
                   value={form.email}
                   onChange={(e) => patch("email", e.target.value)}
-                  placeholder="Enter your email address"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
+                  placeholder="Enter email address"
+                  className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56] focus:bg-white transition-all"
                 />
               </div>
 
-              {/* Mobile Code & Phone input wrapped together */}
               <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Mobile Number <span className="text-[#FF6A00]">*</span></label>
-                <div className="flex bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl overflow-hidden focus-within:border-[#FF6A00] focus-within:bg-white transition-all">
-                  <div className="relative flex items-center pl-3 border-r border-[#E2DFD8] pr-1.5 shrink-0 bg-[#FAF8F5]/30">
-                    <select
-                      value={form.mobileCode}
-                      onChange={(e) => patch("mobileCode", e.target.value)}
-                      className="bg-transparent border-none outline-none text-[13px] font-black text-[#0D1B2A] cursor-pointer appearance-none pr-3"
-                    >
-                      <option value="+91">+91</option>
-                      <option value="+1">+1</option>
-                      <option value="+44">+44</option>
-                      <option value="+39">+39</option>
-                    </select>
-                    <span className="absolute right-1 text-[9px] pointer-events-none text-[#86868B]">▼</span>
-                  </div>
-                  <input 
-                    required 
-                    type="tel" 
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Contact Mobile <span className="text-[#183B56]">*</span>
+                </label>
+                <div className="flex gap-2">
+                  <select
+                    value={form.mobileCode}
+                    onChange={(e) => patch("mobileCode", e.target.value)}
+                    className="w-24 bg-[#F5EFEB]/40 border border-[#183B56]/30 px-2 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56]"
+                  >
+                    <option value="+91">+91 (IN)</option>
+                    <option value="+1">+1 (US)</option>
+                    <option value="+44">+44 (UK)</option>
+                    <option value="+971">+971 (AE)</option>
+                  </select>
+                  <input
+                    required
+                    type="tel"
                     value={form.mobileNumber}
                     onChange={(e) => patch("mobileNumber", e.target.value)}
-                    placeholder="Enter your mobile number"
-                    className="w-full bg-transparent px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none"
+                    placeholder="9876543210"
+                    className="flex-1 bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56] focus:bg-white transition-all"
                   />
                 </div>
               </div>
 
-              {/* Password inputs */}
-              <div className="relative">
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Password <span className="text-[#FF6A00]">*</span></label>
-                <input 
-                  required 
-                  type={showPassword ? "text" : "password"} 
-                  value={form.password}
-                  onChange={(e) => patch("password", e.target.value)}
-                  placeholder="Create a strong password"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl pl-4 pr-10 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-                <button 
-                  type="button" 
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-[39px] text-[#86868B] hover:text-[#0D1B2A] border-none bg-transparent cursor-pointer"
-                >
-                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                </button>
+              <div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Password <span className="text-[#183B56]">*</span>
+                </label>
+                <div className="relative">
+                  <input 
+                    required 
+                    type={showPassword ? "text" : "password"} 
+                    value={form.password}
+                    onChange={(e) => patch("password", e.target.value)}
+                    placeholder="Minimum 6 characters"
+                    className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56] focus:bg-white transition-all pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5A7184] hover:text-[#183B56] border-none bg-transparent"
+                  >
+                    {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
               </div>
 
-              <div className="relative">
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Confirm Password <span className="text-[#FF6A00]">*</span></label>
-                <input 
-                  required 
-                  type={showConfirmPassword ? "text" : "password"} 
-                  value={form.confirmPassword}
-                  onChange={(e) => patch("confirmPassword", e.target.value)}
-                  placeholder="Confirm your password"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl pl-4 pr-10 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-                <button 
-                  type="button" 
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3.5 top-[39px] text-[#86868B] hover:text-[#0D1B2A] border-none bg-transparent cursor-pointer"
-                >
-                  {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                </button>
+              <div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Confirm Password <span className="text-[#183B56]">*</span>
+                </label>
+                <div className="relative">
+                  <input 
+                    required 
+                    type={showConfirmPassword ? "text" : "password"} 
+                    value={form.confirmPassword}
+                    onChange={(e) => patch("confirmPassword", e.target.value)}
+                    placeholder="Re-enter password"
+                    className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56] focus:bg-white transition-all pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5A7184] hover:text-[#183B56] border-none bg-transparent"
+                  >
+                    {showConfirmPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
               </div>
-
-              {form.password && form.confirmPassword && form.password !== form.confirmPassword && (
-                <p className="text-[11px] font-bold text-[#FF3B30] mt-1 text-center">Passwords do not match.</p>
-              )}
 
               <button 
                 type="submit" 
                 disabled={!canContinue()}
-                className="w-full py-4 mt-6 rounded-full bg-[#FF6A00] hover:bg-[#0D1B2A] text-white text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all duration-300 disabled:opacity-50 disabled:hover:bg-[#FF6A00] flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(255,106,0,0.18)] border-none cursor-pointer"
+                className="mt-4 w-full h-11 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider border border-[#183B56] flex items-center justify-center gap-2 shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
               >
-                Continue <ArrowRight size={13} />
+                <span>Proceed to Brand Information</span>
+                <ArrowRight size={14} />
               </button>
-
-              <div className="text-center mt-3">
-                <span className="text-[12px] text-[#86868B] font-semibold">
-                  Already have an account? <span onClick={() => router.push("/account")} className="text-[#FF6A00] hover:underline font-bold cursor-pointer">Sign in</span>
-                </span>
-              </div>
             </form>
           </div>
         )}
 
-        {/* STEP 2: About Your Brand */}
+        {/* STEP 2: About Brand */}
         {step === 2 && (
           <div className="animate-fade-in flex flex-col">
-            <h2 className="text-[13px] font-black text-[#FF6A00] uppercase tracking-wider mb-6 text-center">About Your Brand</h2>
+            <h2 className="text-[11px] font-bold text-[#183B56] uppercase tracking-[0.2em] mb-6 text-center">
+              2. Atelier & Brand Identity
+            </h2>
 
             <form onSubmit={handleNext} className="flex flex-col gap-4">
               <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Designer / Brand Name <span className="text-[#FF6A00]">*</span></label>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Brand / Studio Name <span className="text-[#183B56]">*</span>
+                </label>
                 <input 
                   required 
                   type="text" 
                   value={form.brandName}
                   onChange={(e) => patch("brandName", e.target.value)}
-                  placeholder="Enter your brand name"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
+                  placeholder="e.g. Atelier Veloce"
+                  className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56] focus:bg-white transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Brand Description <span className="text-[#FF6A00]">*</span></label>
-                <input 
-                  required 
-                  type="text" 
-                  value={form.brandDescription}
-                  onChange={(e) => patch("brandDescription", e.target.value)}
-                  placeholder="Describe your brand in a few words"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Your Story <span className="text-[#FF6A00]">*</span></label>
-                <textarea 
-                  required 
-                  rows={3} 
-                  value={form.brandStory}
-                  onChange={(e) => patch("brandStory", e.target.value)}
-                  placeholder="Tell us your story, your inspiration and what makes your brand unique"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all resize-none leading-relaxed"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Years of Experience <span className="text-[#FF6A00]">*</span></label>
-                <select 
-                  required
-                  value={form.experienceYears}
-                  onChange={(e) => patch("experienceYears", e.target.value)}
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all appearance-none cursor-pointer"
-                >
-                  <option value="" disabled>Select experience</option>
-                  <option value="0-1">Less than 1 year</option>
-                  <option value="1-3">1 - 3 years</option>
-                  <option value="3-5">3 - 5 years</option>
-                  <option value="5-10">5 - 10 years</option>
-                  <option value="10+">10+ years</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Fashion Category <span className="text-[#FF6A00]">*</span></label>
-                <select 
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Category <span className="text-[#183B56]">*</span>
+                </label>
+                <select
                   required
                   value={form.fashionCategory}
                   onChange={(e) => patch("fashionCategory", e.target.value)}
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all appearance-none cursor-pointer"
+                  className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56]"
                 >
-                  <option value="" disabled>Select categories</option>
-                  {["Men", "Women", "Streetwear", "Luxury", "Casual", "Accessories", "Kids", "Ethnic"].map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
+                  <option value="">Select Primary Focus</option>
+                  <option value="Haute Couture">Haute Couture</option>
+                  <option value="Menswear Tailoring">Menswear Tailoring</option>
+                  <option value="Womenswear Luxury">Womenswear Luxury</option>
+                  <option value="Unisex Streetwear">Unisex Streetwear</option>
+                  <option value="Avant-Garde Capsule">Avant-Garde Capsule</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Location <span className="text-[#FF6A00]">*</span></label>
-                <select 
-                  required
-                  value={form.location}
-                  onChange={(e) => patch("location", e.target.value)}
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all appearance-none cursor-pointer"
-                >
-                  <option value="" disabled>Select your location</option>
-                  <option value="Mumbai">Mumbai, India</option>
-                  <option value="Delhi">Delhi, India</option>
-                  <option value="Bengaluru">Bengaluru, India</option>
-                  <option value="Milan">Milan, Italy</option>
-                  <option value="Paris">Paris, France</option>
-                  <option value="New York">New York, USA</option>
-                  <option value="London">London, UK</option>
-                </select>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Experience & Studio Location <span className="text-[#183B56]">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    required
+                    type="text"
+                    value={form.experienceYears}
+                    onChange={(e) => patch("experienceYears", e.target.value)}
+                    placeholder="e.g. 5+ Years"
+                    className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56]"
+                  />
+                  <input
+                    required
+                    type="text"
+                    value={form.location}
+                    onChange={(e) => patch("location", e.target.value)}
+                    placeholder="e.g. Milan / Mumbai"
+                    className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56]"
+                  />
+                </div>
               </div>
 
-              {/* ACTION BUTTONS */}
-              <div className="flex gap-4 mt-6">
+              <div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Brand Philosophy & Story <span className="text-[#183B56]">*</span>
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={form.brandDescription}
+                  onChange={(e) => {
+                    patch("brandDescription", e.target.value);
+                    patch("brandStory", e.target.value);
+                  }}
+                  placeholder="Describe your design ethos, fabric sourcing, and craftsmanship principles..."
+                  className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 p-3 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56] focus:bg-white resize-none"
+                />
+              </div>
+
+              <div className="flex gap-3 mt-4">
                 <button 
                   type="button" 
                   onClick={handleBack}
-                  className="px-6 py-4 rounded-full border border-[#E2DFD8] hover:border-[#0D1B2A] text-[#0D1B2A] text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all flex items-center justify-center gap-2 bg-transparent cursor-pointer"
+                  className="h-11 px-5 border border-[#183B56] text-[#183B56] text-xs font-bold uppercase tracking-wider bg-white hover:bg-[#183B56] hover:text-white transition-colors"
                 >
-                  <ArrowLeft size={13} /> Back
+                  Back
                 </button>
-                
                 <button 
                   type="submit" 
                   disabled={!canContinue()}
-                  className="flex-1 py-4 rounded-full bg-[#FF6A00] hover:bg-[#0D1B2A] text-white text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all duration-300 disabled:opacity-50 disabled:hover:bg-[#FF6A00] flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(255,106,0,0.18)] border-none cursor-pointer"
+                  className="flex-1 h-11 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider border border-[#183B56] flex items-center justify-center gap-2 shadow-xs transition-colors disabled:opacity-50"
                 >
-                  Continue <ArrowRight size={13} />
+                  <span>Continue to Portfolio</span>
+                  <ArrowRight size={14} />
                 </button>
               </div>
             </form>
           </div>
         )}
 
-        {/* STEP 3: Portfolio & Media */}
+        {/* STEP 3: Portfolio */}
         {step === 3 && (
           <div className="animate-fade-in flex flex-col">
-            <h2 className="text-[13px] font-black text-[#FF6A00] uppercase tracking-wider mb-1.5 text-center">Portfolio & Media</h2>
-            <p className="text-[11.5px] text-[#86868B] font-semibold mb-6 text-center">Upload your portfolio and brand assets</p>
+            <h2 className="text-[11px] font-bold text-[#183B56] uppercase tracking-[0.2em] mb-6 text-center">
+              3. Portfolio & Lookbook Media
+            </h2>
 
-            <div className="flex flex-col gap-5">
-              {/* Profile Photo */}
+            <form onSubmit={handleNext} className="flex flex-col gap-4">
+              {/* Profile / Avatar */}
               <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Profile Photo <span className="text-[#FF6A00]">*</span></label>
-                <div className="border border-dashed border-[#E2DFD8] rounded-2xl p-4 bg-[#FAF8F5] text-center flex flex-col items-center justify-center relative hover:bg-white hover:border-[#FF6A00] transition-all group">
-                  {form.profilePhoto ? (
-                    <div className="w-full flex items-center justify-between">
-                      <span className="text-[11.5px] text-[#0D1B2A] font-semibold truncate pr-4">{form.profilePhoto.name}</span>
-                      <button onClick={() => removeUploadedFile("profilePhoto")} className="text-[#86868B] hover:text-[#FF3B30] border-none bg-transparent cursor-pointer"><X size={15} /></button>
-                    </div>
-                  ) : uploadProgress.profilePhoto ? (
-                    <div className="w-full py-2">
-                      <p className="text-[11px] font-bold text-[#FF6A00] mb-2">Uploading ({uploadProgress.profilePhoto}%)</p>
-                      <div className="w-full h-1 bg-[#E7E3DD] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#FF6A00]" style={{ width: `${uploadProgress.profilePhoto}%` }} />
-                      </div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Designer Headshot / Portrait <span className="text-[#183B56]">*</span>
+                </label>
+                <div 
+                  onClick={() => document.getElementById("profilePhotoInput")?.click()}
+                  className="border border-dashed border-[#183B56]/50 bg-[#F5EFEB]/30 hover:bg-[#F5EFEB] p-4 text-center cursor-pointer transition-all"
+                >
+                  <input
+                    id="profilePhotoInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => simulateUpload("profilePhoto", e.target.files)}
+                    className="hidden"
+                  />
+                  {uploadProgress.profilePhoto ? (
+                    <Loader size="xs" text="UPLOADING PORTRAIT" />
+                  ) : form.profilePhoto ? (
+                    <div className="flex items-center justify-between text-xs font-bold text-[#183B56]">
+                      <span>{form.profilePhoto.name}</span>
+                      <button type="button" onClick={(e) => { e.stopPropagation(); removeFile("profilePhoto"); }} className="text-red-700">
+                        <X size={14} />
+                      </button>
                     </div>
                   ) : (
-                    <label className="w-full h-full cursor-pointer flex flex-col items-center justify-center py-2">
-                      <UploadCloud size={22} className="text-[#86868B] group-hover:text-[#FF6A00] mb-1.5 transition-colors" />
-                      <span className="text-[11px] font-bold text-[#0D1B2A]">Upload your photo</span>
-                      <span className="text-[9.5px] text-[#86868B] mt-0.5">JPG, PNG (Max 5MB)</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={(e) => simulateUpload("profilePhoto", e.target.files)} />
-                    </label>
+                    <span className="text-xs font-bold text-[#183B56] uppercase tracking-wider">
+                      Select Portrait File
+                    </span>
                   )}
                 </div>
               </div>
 
               {/* Brand Logo */}
               <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Brand Logo <span className="text-[#FF6A00]">*</span></label>
-                <div className="border border-dashed border-[#E2DFD8] rounded-2xl p-4 bg-[#FAF8F5] text-center flex flex-col items-center justify-center relative hover:bg-white hover:border-[#FF6A00] transition-all group">
-                  {form.brandLogo ? (
-                    <div className="w-full flex items-center justify-between">
-                      <span className="text-[11.5px] text-[#0D1B2A] font-semibold truncate pr-4">{form.brandLogo.name}</span>
-                      <button onClick={() => removeUploadedFile("brandLogo")} className="text-[#86868B] hover:text-[#FF3B30] border-none bg-transparent cursor-pointer"><X size={15} /></button>
-                    </div>
-                  ) : uploadProgress.brandLogo ? (
-                    <div className="w-full py-2">
-                      <p className="text-[11px] font-bold text-[#FF6A00] mb-2">Uploading ({uploadProgress.brandLogo}%)</p>
-                      <div className="w-full h-1 bg-[#E7E3DD] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#FF6A00]" style={{ width: `${uploadProgress.brandLogo}%` }} />
-                      </div>
-                    </div>
-                  ) : (
-                    <label className="w-full h-full cursor-pointer flex flex-col items-center justify-center py-2">
-                      <UploadCloud size={22} className="text-[#86868B] group-hover:text-[#FF6A00] mb-1.5 transition-colors" />
-                      <span className="text-[11px] font-bold text-[#0D1B2A]">Upload your logo</span>
-                      <span className="text-[9.5px] text-[#86868B] mt-0.5">JPG, PNG (Max 5MB)</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={(e) => simulateUpload("brandLogo", e.target.files)} />
-                    </label>
-                  )}
-                </div>
-              </div>
-
-              {/* Cover Banner */}
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Cover Banner</label>
-                <div className="border border-dashed border-[#E2DFD8] rounded-2xl p-4 bg-[#FAF8F5] text-center flex flex-col items-center justify-center relative hover:bg-white hover:border-[#FF6A00] transition-all group">
-                  {form.coverBanner ? (
-                    <div className="w-full flex items-center justify-between">
-                      <span className="text-[11.5px] text-[#0D1B2A] font-semibold truncate pr-4">{form.coverBanner.name}</span>
-                      <button onClick={() => removeUploadedFile("coverBanner")} className="text-[#86868B] hover:text-[#FF3B30] border-none bg-transparent cursor-pointer"><X size={15} /></button>
-                    </div>
-                  ) : uploadProgress.coverBanner ? (
-                    <div className="w-full py-2">
-                      <p className="text-[11px] font-bold text-[#FF6A00] mb-2">Uploading ({uploadProgress.coverBanner}%)</p>
-                      <div className="w-full h-1 bg-[#E7E3DD] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#FF6A00]" style={{ width: `${uploadProgress.coverBanner}%` }} />
-                      </div>
-                    </div>
-                  ) : (
-                    <label className="w-full h-full cursor-pointer flex flex-col items-center justify-center py-2">
-                      <UploadCloud size={22} className="text-[#86868B] group-hover:text-[#FF6A00] mb-1.5 transition-colors" />
-                      <span className="text-[11px] font-bold text-[#0D1B2A]">Upload cover banner</span>
-                      <span className="text-[9.5px] text-[#86868B] mt-0.5">JPG, PNG (Max 5MB)</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={(e) => simulateUpload("coverBanner", e.target.files)} />
-                    </label>
-                  )}
-                </div>
-              </div>
-
-              {/* Portfolio Images */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider">Portfolio Images <span className="text-[#FF6A00]">*</span></label>
-                  <span className="text-[11px] font-black text-[#86868B]">{form.portfolioImages?.length || 0}/10</span>
-                </div>
-                
-                <div className="border border-dashed border-[#E2DFD8] rounded-2xl p-5 bg-[#FAF8F5] text-center flex flex-col items-center justify-center hover:bg-white hover:border-[#FF6A00] transition-all group relative">
-                  {uploadProgress.portfolioImages ? (
-                    <div className="w-full py-2">
-                      <p className="text-[11px] font-bold text-[#FF6A00] mb-2">Uploading ({uploadProgress.portfolioImages}%)</p>
-                      <div className="w-full h-1 bg-[#E7E3DD] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#FF6A00]" style={{ width: `${uploadProgress.portfolioImages}%` }} />
-                      </div>
-                    </div>
-                  ) : (
-                    <label className="w-full h-full cursor-pointer flex flex-col items-center justify-center">
-                      <UploadCloud size={24} className="text-[#86868B] group-hover:text-[#FF6A00] mb-2 transition-colors" />
-                      <span className="text-[11.5px] font-bold text-[#0D1B2A]">Upload 5 - 10 images</span>
-                      <span className="text-[10px] text-[#86868B] mt-0.5">JPG, PNG (Max 10MB each)</span>
-                      <input type="file" multiple className="hidden" onChange={(e) => simulateUpload("portfolioImages", e.target.files, true)} />
-                    </label>
-                  )}
-                </div>
-
-                {/* List of uploaded items */}
-                {form.portfolioImages?.length > 0 && (
-                  <div className="flex flex-col gap-2 mt-3">
-                    {form.portfolioImages.map((file, i) => (
-                      <div key={i} className="flex items-center justify-between p-2.5 bg-[#FAF8F5] rounded-xl border border-[#E7E3DD]/65 text-[11.5px]">
-                        <span className="text-[#0D1B2A] font-semibold truncate pr-4">{file.name} ({file.size})</span>
-                        <button onClick={() => removeUploadedFile("portfolioImages", i)} className="text-[#86868B] hover:text-[#FF3B30] border-none bg-transparent cursor-pointer"><X size={14} /></button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* ACTION BUTTONS */}
-              <div className="flex gap-4 mt-6">
-                <button 
-                  type="button" 
-                  onClick={handleBack}
-                  className="px-6 py-4 rounded-full border border-[#E2DFD8] hover:border-[#0D1B2A] text-[#0D1B2A] text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all flex items-center justify-center gap-2 bg-transparent cursor-pointer"
-                >
-                  <ArrowLeft size={13} /> Back
-                </button>
-                
-                <button 
-                  onClick={handleNext}
-                  disabled={!canContinue()}
-                  className="flex-1 py-4 rounded-full bg-[#FF6A00] hover:bg-[#0D1B2A] text-white text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all duration-300 disabled:opacity-50 disabled:hover:bg-[#FF6A00] flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(255,106,0,0.18)] border-none cursor-pointer"
-                >
-                  Continue <ArrowRight size={13} />
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* STEP 4: Verification Details */}
-        {step === 4 && (
-          <div className="animate-fade-in flex flex-col">
-            <h2 className="text-[13px] font-black text-[#FF6A00] uppercase tracking-wider mb-1.5 text-center">Verification Details</h2>
-            <p className="text-[11.5px] text-[#86868B] font-semibold mb-6 text-center">Help us verify your identity</p>
-
-            <div className="flex flex-col gap-5">
-              {/* Government ID */}
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Government ID <span className="text-[#FF6A00]">*</span></label>
-                <div className="border border-dashed border-[#E2DFD8] rounded-2xl p-5 bg-[#FAF8F5] text-center flex flex-col items-center justify-center hover:bg-white hover:border-[#FF6A00] transition-all group relative">
-                  {form.governmentId ? (
-                    <div className="w-full flex items-center justify-between">
-                      <span className="text-[11.5px] text-[#0D1B2A] font-semibold truncate pr-4">{form.governmentId.name}</span>
-                      <button onClick={() => removeUploadedFile("governmentId")} className="text-[#86868B] hover:text-[#FF3B30] border-none bg-transparent cursor-pointer"><X size={15} /></button>
-                    </div>
-                  ) : uploadProgress.governmentId ? (
-                    <div className="w-full py-2">
-                      <p className="text-[11px] font-bold text-[#FF6A00] mb-2">Uploading ({uploadProgress.governmentId}%)</p>
-                      <div className="w-full h-1 bg-[#E7E3DD] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#FF6A00]" style={{ width: `${uploadProgress.governmentId}%` }} />
-                      </div>
-                    </div>
-                  ) : (
-                    <label className="w-full h-full cursor-pointer flex flex-col items-center justify-center">
-                      <UploadCloud size={24} className="text-[#86868B] group-hover:text-[#FF6A00] mb-2 transition-colors" />
-                      <span className="text-[11.5px] font-bold text-[#0D1B2A]">Upload Government ID</span>
-                      <span className="text-[10px] text-[#86868B] mt-0.5">JPG, PNG, PDF (Max 5MB)</span>
-                      <input type="file" accept="image/*,application/pdf" className="hidden" onChange={(e) => simulateUpload("governmentId", e.target.files)} />
-                    </label>
-                  )}
-                </div>
-              </div>
-
-              {/* PAN Card */}
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">PAN Card (Optional)</label>
-                <div className="border border-dashed border-[#E2DFD8] rounded-2xl p-5 bg-[#FAF8F5] text-center flex flex-col items-center justify-center hover:bg-white hover:border-[#FF6A00] transition-all group relative">
-                  {form.panCard ? (
-                    <div className="w-full flex items-center justify-between">
-                      <span className="text-[11.5px] text-[#0D1B2A] font-semibold truncate pr-4">{form.panCard.name}</span>
-                      <button onClick={() => removeUploadedFile("panCard")} className="text-[#86868B] hover:text-[#FF3B30] border-none bg-transparent cursor-pointer"><X size={15} /></button>
-                    </div>
-                  ) : uploadProgress.panCard ? (
-                    <div className="w-full py-2">
-                      <p className="text-[11px] font-bold text-[#FF6A00] mb-2">Uploading ({uploadProgress.panCard}%)</p>
-                      <div className="w-full h-1 bg-[#E7E3DD] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#FF6A00]" style={{ width: `${uploadProgress.panCard}%` }} />
-                      </div>
-                    </div>
-                  ) : (
-                    <label className="w-full h-full cursor-pointer flex flex-col items-center justify-center">
-                      <UploadCloud size={24} className="text-[#86868B] group-hover:text-[#FF6A00] mb-2 transition-colors" />
-                      <span className="text-[11.5px] font-bold text-[#0D1B2A]">Upload PAN Card</span>
-                      <span className="text-[10px] text-[#86868B] mt-0.5">JPG, PNG, PDF (Max 5MB)</span>
-                      <input type="file" accept="image/*,application/pdf" className="hidden" onChange={(e) => simulateUpload("panCard", e.target.files)} />
-                    </label>
-                  )}
-                </div>
-              </div>
-
-              {/* Address Proof */}
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Address Proof <span className="text-[#FF6A00]">*</span></label>
-                <div className="border border-dashed border-[#E2DFD8] rounded-2xl p-5 bg-[#FAF8F5] text-center flex flex-col items-center justify-center hover:bg-white hover:border-[#FF6A00] transition-all group relative">
-                  {form.addressProof ? (
-                    <div className="w-full flex items-center justify-between">
-                      <span className="text-[11.5px] text-[#0D1B2A] font-semibold truncate pr-4">{form.addressProof.name}</span>
-                      <button onClick={() => removeUploadedFile("addressProof")} className="text-[#86868B] hover:text-[#FF3B30] border-none bg-transparent cursor-pointer"><X size={15} /></button>
-                    </div>
-                  ) : uploadProgress.addressProof ? (
-                    <div className="w-full py-2">
-                      <p className="text-[11px] font-bold text-[#FF6A00] mb-2">Uploading ({uploadProgress.addressProof}%)</p>
-                      <div className="w-full h-1 bg-[#E7E3DD] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#FF6A00]" style={{ width: `${uploadProgress.addressProof}%` }} />
-                      </div>
-                    </div>
-                  ) : (
-                    <label className="w-full h-full cursor-pointer flex flex-col items-center justify-center">
-                      <UploadCloud size={24} className="text-[#86868B] group-hover:text-[#FF6A00] mb-2 transition-colors" />
-                      <span className="text-[11.5px] font-bold text-[#0D1B2A]">Upload Address Proof</span>
-                      <span className="text-[10px] text-[#86868B] mt-0.5">JPG, PNG, PDF (Max 5MB)</span>
-                      <input type="file" accept="image/*,application/pdf" className="hidden" onChange={(e) => simulateUpload("addressProof", e.target.files)} />
-                    </label>
-                  )}
-                </div>
-              </div>
-
-              {/* Ownership Checkbox */}
-              <div className="flex items-start gap-3 mt-3">
-                <input 
-                  type="checkbox" 
-                  id="confirmAccurate"
-                  checked={form.confirmAccurate}
-                  onChange={(e) => patch("confirmAccurate", e.target.checked)}
-                  className="mt-1 accent-[#FF6A00] rounded focus:ring-[#FF6A00] w-4 h-4 cursor-pointer"
-                />
-                <label htmlFor="confirmAccurate" className="text-[12.5px] font-semibold text-[#515154] cursor-pointer select-none leading-relaxed">
-                  I confirm that all the information provided is accurate and all my designs are original.
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Brand Emblem / Vector Logo <span className="text-[#183B56]">*</span>
                 </label>
+                <div 
+                  onClick={() => document.getElementById("brandLogoInput")?.click()}
+                  className="border border-dashed border-[#183B56]/50 bg-[#F5EFEB]/30 hover:bg-[#F5EFEB] p-4 text-center cursor-pointer transition-all"
+                >
+                  <input
+                    id="brandLogoInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => simulateUpload("brandLogo", e.target.files)}
+                    className="hidden"
+                  />
+                  {uploadProgress.brandLogo ? (
+                    <Loader size="xs" text="UPLOADING LOGO" />
+                  ) : form.brandLogo ? (
+                    <div className="flex items-center justify-between text-xs font-bold text-[#183B56]">
+                      <span>{form.brandLogo.name}</span>
+                      <button type="button" onClick={(e) => { e.stopPropagation(); removeFile("brandLogo"); }} className="text-red-700">
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="text-xs font-bold text-[#183B56] uppercase tracking-wider">
+                      Select Logo Asset
+                    </span>
+                  )}
+                </div>
               </div>
 
-              {/* ACTION BUTTONS */}
-              <div className="flex gap-4 mt-6">
+              {/* Lookbook Portfolio */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Lookbook Garments ({form.portfolioImages.length} uploaded) <span className="text-[#183B56]">*</span>
+                </label>
+                <div 
+                  onClick={() => document.getElementById("portfolioInput")?.click()}
+                  className="border border-dashed border-[#183B56]/50 bg-[#F5EFEB]/30 hover:bg-[#F5EFEB] p-4 text-center cursor-pointer transition-all"
+                >
+                  <input
+                    id="portfolioInput"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => simulateUpload("portfolioImages", e.target.files, true)}
+                    className="hidden"
+                  />
+                  {uploadProgress.portfolioImages ? (
+                    <Loader size="xs" text="UPLOADING LOOKBOOK" />
+                  ) : (
+                    <span className="text-xs font-bold text-[#183B56] uppercase tracking-wider">
+                      Upload Lookbook Files
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-4">
                 <button 
                   type="button" 
                   onClick={handleBack}
-                  className="px-6 py-4 rounded-full border border-[#E2DFD8] hover:border-[#0D1B2A] text-[#0D1B2A] text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all flex items-center justify-center gap-2 bg-transparent cursor-pointer"
+                  className="h-11 px-5 border border-[#183B56] text-[#183B56] text-xs font-bold uppercase tracking-wider bg-white hover:bg-[#183B56] hover:text-white transition-colors"
                 >
-                  <ArrowLeft size={13} /> Back
+                  Back
                 </button>
-                
-                <button 
-                  onClick={handleNext}
-                  disabled={!canContinue()}
-                  className="flex-1 py-4 rounded-full bg-[#FF6A00] hover:bg-[#0D1B2A] text-white text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all duration-300 disabled:opacity-50 disabled:hover:bg-[#FF6A00] flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(255,106,0,0.18)] border-none cursor-pointer"
-                >
-                  Continue <ArrowRight size={13} />
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* STEP 5: Banking Details */}
-        {step === 5 && (
-          <div className="animate-fade-in flex flex-col">
-            <h2 className="text-[13px] font-black text-[#FF6A00] uppercase tracking-wider mb-1.5 text-center font-sans">Banking Details</h2>
-            <p className="text-[11.5px] text-[#86868B] font-semibold mb-6 text-center">Add your bank details to receive payments</p>
-
-            <form onSubmit={handleNext} className="flex flex-col gap-5">
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Account Holder Name <span className="text-[#FF6A00]">*</span></label>
-                <input 
-                  required 
-                  type="text" 
-                  value={form.accountHolderName}
-                  onChange={(e) => patch("accountHolderName", e.target.value)}
-                  placeholder="Enter account holder name"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Bank Name <span className="text-[#FF6A00]">*</span></label>
-                <input 
-                  required 
-                  type="text" 
-                  value={form.bankName}
-                  onChange={(e) => patch("bankName", e.target.value)}
-                  placeholder="Enter bank name"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Account Number <span className="text-[#FF6A00]">*</span></label>
-                <input 
-                  required 
-                  type="password" 
-                  value={form.accountNumber}
-                  onChange={(e) => patch("accountNumber", e.target.value)}
-                  placeholder="Enter account number"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">IFSC Code <span className="text-[#FF6A00]">*</span></label>
-                <input 
-                  required 
-                  type="text" 
-                  value={form.ifsc}
-                  onChange={(e) => patch("ifsc", e.target.value)}
-                  placeholder="Enter IFSC code"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">UPI ID (Optional)</label>
-                <input 
-                  type="text" 
-                  value={form.upiId}
-                  onChange={(e) => patch("upiId", e.target.value)}
-                  placeholder="Enter UPI ID"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-              </div>
-
-              {/* ACTION BUTTONS */}
-              <div className="flex gap-4 mt-6">
-                <button 
-                  type="button" 
-                  onClick={handleBack}
-                  className="px-6 py-4 rounded-full border border-[#E2DFD8] hover:border-[#0D1B2A] text-[#0D1B2A] text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all flex items-center justify-center gap-2 bg-transparent cursor-pointer"
-                >
-                  <ArrowLeft size={13} /> Back
-                </button>
-                
                 <button 
                   type="submit" 
                   disabled={!canContinue()}
-                  className="flex-1 py-4 rounded-full bg-[#FF6A00] hover:bg-[#0D1B2A] text-white text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all duration-300 disabled:opacity-50 disabled:hover:bg-[#FF6A00] flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(255,106,0,0.18)] border-none cursor-pointer"
+                  className="flex-1 h-11 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider border border-[#183B56] flex items-center justify-center gap-2 shadow-xs transition-colors disabled:opacity-50"
                 >
-                  Continue <ArrowRight size={13} />
+                  <span>Continue to Verification</span>
+                  <ArrowRight size={14} />
                 </button>
               </div>
             </form>
           </div>
         )}
 
-        {/* STEP 6: Social Links & Website */}
+        {/* STEP 4: Verification */}
+        {step === 4 && (
+          <div className="animate-fade-in flex flex-col">
+            <h2 className="text-[11px] font-bold text-[#183B56] uppercase tracking-[0.2em] mb-6 text-center">
+              4. Identity & Legal Verification
+            </h2>
+
+            <form onSubmit={handleNext} className="flex flex-col gap-4">
+              <div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Government Issued ID <span className="text-[#183B56]">*</span>
+                </label>
+                <div 
+                  onClick={() => document.getElementById("govIdInput")?.click()}
+                  className="border border-dashed border-[#183B56]/50 bg-[#F5EFEB]/30 hover:bg-[#F5EFEB] p-4 text-center cursor-pointer"
+                >
+                  <input
+                    id="govIdInput"
+                    type="file"
+                    onChange={(e) => simulateUpload("governmentId", e.target.files)}
+                    className="hidden"
+                  />
+                  {form.governmentId ? (
+                    <div className="flex items-center justify-between text-xs font-bold text-[#183B56]">
+                      <span>{form.governmentId.name}</span>
+                      <button type="button" onClick={(e) => { e.stopPropagation(); removeFile("governmentId"); }} className="text-red-700">
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="text-xs font-bold text-[#183B56] uppercase tracking-wider">
+                      Upload Passport / ID Card
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Address / Studio Proof <span className="text-[#183B56]">*</span>
+                </label>
+                <div 
+                  onClick={() => document.getElementById("addressProofInput")?.click()}
+                  className="border border-dashed border-[#183B56]/50 bg-[#F5EFEB]/30 hover:bg-[#F5EFEB] p-4 text-center cursor-pointer"
+                >
+                  <input
+                    id="addressProofInput"
+                    type="file"
+                    onChange={(e) => simulateUpload("addressProof", e.target.files)}
+                    className="hidden"
+                  />
+                  {form.addressProof ? (
+                    <div className="flex items-center justify-between text-xs font-bold text-[#183B56]">
+                      <span>{form.addressProof.name}</span>
+                      <button type="button" onClick={(e) => { e.stopPropagation(); removeFile("addressProof"); }} className="text-red-700">
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="text-xs font-bold text-[#183B56] uppercase tracking-wider">
+                      Upload Studio Utility Bill / Lease
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  id="confirmAccurate"
+                  type="checkbox"
+                  checked={form.confirmAccurate}
+                  onChange={(e) => patch("confirmAccurate", e.target.checked)}
+                  className="w-4 h-4 accent-[#183B56]"
+                />
+                <label htmlFor="confirmAccurate" className="text-xs text-[#183B56] font-medium cursor-pointer">
+                  I certify all legal business documents provided are authentic.
+                </label>
+              </div>
+
+              <div className="flex gap-3 mt-4">
+                <button 
+                  type="button" 
+                  onClick={handleBack}
+                  className="h-11 px-5 border border-[#183B56] text-[#183B56] text-xs font-bold uppercase tracking-wider bg-white hover:bg-[#183B56] hover:text-white transition-colors"
+                >
+                  Back
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={!canContinue()}
+                  className="flex-1 h-11 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider border border-[#183B56] flex items-center justify-center gap-2 shadow-xs transition-colors disabled:opacity-50"
+                >
+                  <span>Continue to Payouts</span>
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* STEP 5: Banking Details */}
+        {step === 5 && (
+          <div className="animate-fade-in flex flex-col">
+            <h2 className="text-[11px] font-bold text-[#183B56] uppercase tracking-[0.2em] mb-6 text-center">
+              5. Payout Settlement Account
+            </h2>
+
+            <form onSubmit={handleNext} className="flex flex-col gap-4">
+              <div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Account Beneficiary Name <span className="text-[#183B56]">*</span>
+                </label>
+                <input 
+                  required 
+                  type="text" 
+                  value={form.accountHolderName}
+                  onChange={(e) => patch("accountHolderName", e.target.value)}
+                  placeholder="Legal Name as in Bank"
+                  className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Bank Name <span className="text-[#183B56]">*</span>
+                </label>
+                <input 
+                  required 
+                  type="text" 
+                  value={form.bankName}
+                  onChange={(e) => patch("bankName", e.target.value)}
+                  placeholder="e.g. HDFC Bank / Chase"
+                  className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Account Number & IFSC / Routing Code <span className="text-[#183B56]">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    required
+                    type="text"
+                    value={form.accountNumber}
+                    onChange={(e) => patch("accountNumber", e.target.value)}
+                    placeholder="Account Number"
+                    className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56]"
+                  />
+                  <input
+                    required
+                    type="text"
+                    value={form.ifsc}
+                    onChange={(e) => patch("ifsc", e.target.value)}
+                    placeholder="IFSC / Routing"
+                    className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56]"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-4">
+                <button 
+                  type="button" 
+                  onClick={handleBack}
+                  className="h-11 px-5 border border-[#183B56] text-[#183B56] text-xs font-bold uppercase tracking-wider bg-white hover:bg-[#183B56] hover:text-white transition-colors"
+                >
+                  Back
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={!canContinue()}
+                  className="flex-1 h-11 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider border border-[#183B56] flex items-center justify-center gap-2 shadow-xs transition-colors disabled:opacity-50"
+                >
+                  <span>Continue to Socials</span>
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* STEP 6: Social Links */}
         {step === 6 && (
           <div className="animate-fade-in flex flex-col">
-            <h2 className="text-[13px] font-black text-[#FF6A00] uppercase tracking-wider mb-1.5 text-center">Social Links & Website</h2>
-            <p className="text-[11.5px] text-[#86868B] font-semibold mb-6 text-center">Help customers discover and connect with you</p>
+            <h2 className="text-[11px] font-bold text-[#183B56] uppercase tracking-[0.2em] mb-6 text-center">
+              6. Digital Presence
+            </h2>
 
-            <form onSubmit={handleNext} className="flex flex-col gap-5">
+            <form onSubmit={handleNext} className="flex flex-col gap-4">
               <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Website (Optional)</label>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Instagram Handle <span className="text-[#183B56]">*</span>
+                </label>
+                <input 
+                  required 
+                  type="text" 
+                  value={form.instagram}
+                  onChange={(e) => patch("instagram", e.target.value)}
+                  placeholder="@yourbrand"
+                  className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#183B56] uppercase tracking-wider mb-1.5">
+                  Official Atelier Website (Optional)
+                </label>
                 <input 
                   type="url" 
                   value={form.website}
                   onChange={(e) => patch("website", e.target.value)}
-                  placeholder="https://yourwebsite.com"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
+                  placeholder="https://atelier.com"
+                  className="w-full bg-[#F5EFEB]/40 border border-[#183B56]/30 px-3.5 py-2.5 text-xs font-medium text-[#183B56] outline-none focus:border-[#183B56]"
                 />
               </div>
 
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Instagram <span className="text-[#FF6A00]">*</span></label>
-                <input 
-                  required
-                  type="text" 
-                  value={form.instagram}
-                  onChange={(e) => patch("instagram", e.target.value)}
-                  placeholder="https://instagram.com/yourhandle"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">Facebook (Optional)</label>
-                <input 
-                  type="text" 
-                  value={form.facebook}
-                  onChange={(e) => patch("facebook", e.target.value)}
-                  placeholder="https://facebook.com/yourpage"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">YouTube (Optional)</label>
-                <input 
-                  type="text" 
-                  value={form.youtube}
-                  onChange={(e) => patch("youtube", e.target.value)}
-                  placeholder="https://youtube.com/yourchannel"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-extrabold text-[#0D1B2A] uppercase tracking-wider mb-2">LinkedIn (Optional)</label>
-                <input 
-                  type="url" 
-                  value={form.linkedin}
-                  onChange={(e) => patch("linkedin", e.target.value)}
-                  placeholder="https://linkedin.com/in/yourprofile"
-                  className="w-full bg-[#FAF8F5] border border-[#E2DFD8] rounded-xl px-4 py-3 text-[13px] font-semibold text-[#0D1B2A] outline-none focus:border-[#FF6A00] focus:bg-white transition-all"
-                />
-              </div>
-
-              {/* ACTION BUTTONS */}
-              <div className="flex gap-4 mt-6">
+              <div className="flex gap-3 mt-4">
                 <button 
                   type="button" 
                   onClick={handleBack}
-                  className="px-6 py-4 rounded-full border border-[#E2DFD8] hover:border-[#0D1B2A] text-[#0D1B2A] text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all flex items-center justify-center gap-2 bg-transparent cursor-pointer"
+                  className="h-11 px-5 border border-[#183B56] text-[#183B56] text-xs font-bold uppercase tracking-wider bg-white hover:bg-[#183B56] hover:text-white transition-colors"
                 >
-                  <ArrowLeft size={13} /> Back
+                  Back
                 </button>
-                
                 <button 
                   type="submit" 
                   disabled={!canContinue()}
-                  className="flex-1 py-4 rounded-full bg-[#FF6A00] hover:bg-[#0D1B2A] text-white text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all duration-300 disabled:opacity-50 disabled:hover:bg-[#FF6A00] flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(255,106,0,0.18)] border-none cursor-pointer"
+                  className="flex-1 h-11 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider border border-[#183B56] flex items-center justify-center gap-2 shadow-xs transition-colors disabled:opacity-50"
                 >
-                  Continue <ArrowRight size={13} />
+                  <span>Review Dossier</span>
+                  <ArrowRight size={14} />
                 </button>
               </div>
             </form>
@@ -947,54 +854,47 @@ export default function DesignerOnboardingPage() {
         {/* STEP 7: Review & Submit */}
         {step === 7 && (
           <div className="animate-fade-in flex flex-col">
-            <h2 className="text-[13px] font-black text-[#FF6A00] uppercase tracking-wider mb-1.5 text-center font-sans">Review & Submit</h2>
-            <p className="text-[11.5px] text-[#86868B] font-semibold mb-6 text-center">Review your details before submitting</p>
+            <h2 className="text-[11px] font-bold text-[#183B56] uppercase tracking-[0.2em] mb-1.5 text-center">
+              7. Review & Submit Dossier
+            </h2>
+            <p className="text-xs text-[#5A7184] mb-6 text-center">
+              Review your details prior to final validation.
+            </p>
 
-            <div className="flex flex-col gap-4">
-              {/* Summary cards */}
+            <div className="flex flex-col gap-3">
               {[
-                { title: "Personal Information", stepNum: 1, details: `${form.fullName}\n${form.email} • ${form.mobileCode} ${form.mobileNumber}` },
-                { title: "Brand Information", stepNum: 2, details: `${form.brandName} (${form.fashionCategory})\n"${form.brandDescription}"\nExperience: ${form.experienceYears} | Location: ${form.location}` },
-                { title: "Portfolio & Media", stepNum: 3, details: `Profile Photo: ${form.profilePhoto?.name || "Uploaded"}\nBrand Logo: ${form.brandLogo?.name || "Uploaded"}\nCover Banner: ${form.coverBanner?.name || "None"}\nPortfolio Images: ${form.portfolioImages?.length || 0} files` },
-                { title: "Verification Details", stepNum: 4, details: `Government ID: ${form.governmentId?.name || "Uploaded"}\nAddress Proof: ${form.addressProof?.name || "Uploaded"}\nPAN: ${form.panCard?.name || "None"}` },
-                { title: "Banking Details", stepNum: 5, details: `Holder: ${form.accountHolderName}\nBank: ${form.bankName}\nIFSC: ${form.ifsc}` },
-                { title: "Social Links", stepNum: 6, details: `Instagram: ${form.instagram}\nWebsite: ${form.website || "None"}` }
+                { title: "Personal Info", stepNum: 1, details: `${form.fullName}\n${form.email} • ${form.mobileCode} ${form.mobileNumber}` },
+                { title: "Brand Info", stepNum: 2, details: `${form.brandName} (${form.fashionCategory})\nLocation: ${form.location} | Experience: ${form.experienceYears}` },
+                { title: "Lookbook", stepNum: 3, details: `Portrait: ${form.profilePhoto?.name || "Uploaded"}\nEmblem: ${form.brandLogo?.name || "Uploaded"}\nLookbook: ${form.portfolioImages?.length || 0} files` },
+                { title: "Payout Settlement", stepNum: 5, details: `Beneficiary: ${form.accountHolderName}\nBank: ${form.bankName} (${form.ifsc})` },
+                { title: "Digital Presence", stepNum: 6, details: `Instagram: ${form.instagram}\nWebsite: ${form.website || "None"}` }
               ].map((sec) => (
-                <div key={sec.title} className="bg-[#FAF8F5] border border-[#E7E3DD]/70 rounded-2xl p-4.5 relative text-left">
+                <div key={sec.title} className="bg-[#F5EFEB]/50 border border-[#183B56]/30 p-3.5 relative text-left">
                   <button 
                     onClick={() => setStep(sec.stepNum)} 
-                    className="absolute right-4 top-4.5 text-[11px] font-bold text-[#FF6A00] hover:underline border-none bg-transparent cursor-pointer"
+                    className="absolute right-3.5 top-3.5 text-[11px] font-bold text-[#183B56] hover:underline border-none bg-transparent cursor-pointer uppercase"
                   >
                     Edit
                   </button>
-                  <p className="text-[10px] font-extrabold text-[#86868B] uppercase tracking-widest mb-1.5">{sec.title}</p>
-                  <pre className="text-[12.5px] font-semibold text-[#0D1B2A] whitespace-pre-line leading-relaxed font-sans">{sec.details}</pre>
+                  <p className="text-[10px] font-bold text-[#5A7184] uppercase tracking-wider mb-1">{sec.title}</p>
+                  <pre className="text-xs font-semibold text-[#183B56] whitespace-pre-line leading-relaxed font-sans">{sec.details}</pre>
                 </div>
               ))}
 
-              {/* T&C check */}
-              <div className="flex items-start gap-3 mt-4 px-1">
-                <input required type="checkbox" id="acceptTerms" className="mt-1 accent-[#FF6A00] w-4.5 h-4.5 cursor-pointer" />
-                <label htmlFor="acceptTerms" className="text-[12.5px] font-semibold text-[#515154] cursor-pointer leading-relaxed">
-                  I agree to Weavly's <span className="text-[#FF6A00] font-bold hover:underline">Terms & Conditions</span> and <span className="text-[#FF6A00] font-bold hover:underline">Privacy Policy</span>.
-                </label>
-              </div>
-
-              {/* ACTION BUTTONS */}
-              <div className="flex gap-4 mt-6">
+              <div className="flex gap-3 mt-6">
                 <button 
                   type="button" 
                   onClick={handleBack}
-                  className="px-6 py-4 rounded-full border border-[#E2DFD8] hover:border-[#0D1B2A] text-[#0D1B2A] text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all flex items-center justify-center gap-2 bg-transparent cursor-pointer"
+                  className="h-11 px-5 border border-[#183B56] text-[#183B56] text-xs font-bold uppercase tracking-wider bg-white hover:bg-[#183B56] hover:text-white transition-colors"
                 >
-                  <ArrowLeft size={13} /> Back
+                  Back
                 </button>
-                
                 <button 
                   onClick={handleSubmit}
-                  className="flex-1 py-4 rounded-full bg-[#FF6A00] hover:bg-[#0D1B2A] text-white text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all duration-300 flex items-center justify-center gap-2.5 shadow-[0_8px_24px_rgba(255,106,0,0.22)] border-none cursor-pointer"
+                  className="flex-1 h-11 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider border border-[#183B56] flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer"
                 >
-                  Submit Application <Send size={13} />
+                  <span>Submit Application</span>
+                  <Send size={13} />
                 </button>
               </div>
             </div>
@@ -1004,42 +904,34 @@ export default function DesignerOnboardingPage() {
         {/* STEP 8: Success State */}
         {step === 8 && (
           <div className="animate-fade-in py-10 flex flex-col items-center text-center">
-            {/* Success checkmark */}
-            <div className="w-20 h-20 rounded-full bg-[#10B981]/15 text-[#10B981] flex items-center justify-center mb-6 relative animate-bounce">
-              <span className="absolute inset-0 rounded-full bg-[#10B981]/10 filter blur-md animate-pulse" />
-              <Check size={42} strokeWidth={3} className="relative z-10" />
+            <div className="w-16 h-16 border-2 border-[#183B56] bg-white text-[#183B56] flex items-center justify-center mb-6 shadow-xs">
+              <Check size={32} strokeWidth={2.5} />
             </div>
 
-            <h2 className="text-[26px] sm:text-[32px] font-black tracking-tight text-[#0D1B2A] leading-tight font-serif mb-3">
-              Welcome to Weavly
+            <h2 className="text-2xl font-bold uppercase tracking-tight text-[#183B56] mb-2">
+              Dossier Submitted
             </h2>
             
-            <p className="text-[14.5px] text-[#515154] leading-relaxed max-w-[420px] font-medium mb-1">
-              Your application has been submitted successfully.
-            </p>
-            <p className="text-[13px] text-[#86868B] leading-relaxed max-w-[420px] font-semibold mb-8">
-              Our team will review your application within <strong>24–48 hours</strong>. Once approved you'll receive access to your Designer Studio.
+            <p className="text-xs text-[#5A7184] leading-relaxed max-w-sm mb-6">
+              Our accreditation board will review your collection within 24–48 hours. Once approved you will receive direct access to your Designer Studio.
             </p>
 
             <button 
               onClick={() => router.push("/designer-studio")}
-              className="px-10 py-4 rounded-full bg-[#0D1B2A] hover:bg-[#FF6A00] text-white text-[12px] font-extrabold uppercase tracking-[0.18em] transition-all duration-300 shadow-[0_6px_20px_rgba(13,27,42,0.15)] border-none cursor-pointer"
+              className="px-8 h-11 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-colors shadow-xs cursor-pointer"
             >
               Go to Designer Studio
             </button>
           </div>
         )}
 
-        </div>
       </div>
 
       {/* FOOTER */}
       {step <= 7 && (
-        <div className="max-w-[560px] w-full mx-auto text-center mt-8 flex flex-col items-center gap-1.5 text-[11px] text-[#86868B] font-extrabold uppercase tracking-widest">
-          <div className="flex items-center gap-1.5 justify-center">
-            <Lock size={12} className="text-[#FF6A00]" />
-            <span>Your information is secure and encrypted</span>
-          </div>
+        <div className="max-w-[580px] w-full mx-auto text-center mt-6 flex items-center justify-center gap-1.5 text-[10px] text-[#5A7184] font-bold uppercase tracking-widest">
+          <Lock size={12} className="text-[#183B56]" />
+          <span>Encrypted Atelier Application Protocol</span>
         </div>
       )}
     </div>
