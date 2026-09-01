@@ -24,6 +24,7 @@ import com.luxzera.server.user.repository.UserMetadataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -38,10 +39,10 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
 
     private final ZyraClient zyraClient;
     private final UserRecommendationGenerationRepository generationRepository;
-    private final ProductRepository productRepository;
     private final UserProfileRepository userProfileRepository;
     private final UserMetadataRepository userMetadataRepository;
     private final UserFitDataRepository userFitDataRepository;
+    private final ProductRepository productRepository;
 
     private void enrichRecommendationItemImages(List<ZyraRecommendationItem> items) {
         if (items == null || items.isEmpty()) return;
@@ -56,8 +57,12 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ZyraRecommendationResponse getRecommendationsForProduct(String productId, Integer topK) {
-        log.debug("Fetching public recommendations for product={} with topK={}", productId, topK);
+        if (productId == null || productId.trim().isEmpty()) {
+            throw new ZyraValidationException("productId must not be blank");
+        }
+
         ZyraRecommendationResponse response = zyraClient.getRecommendations(productId, topK);
         if (response != null && response.getRecommendations() != null) {
             enrichRecommendationItemImages(response.getRecommendations());
@@ -66,7 +71,7 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ZyraUserRecommendationGenerationResponse generateAndSaveUserRecommendations(
             User user,
             String productId,
@@ -76,7 +81,7 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ZyraUserRecommendationGenerationResponse generateAndSaveUserRecommendations(
             User user,
             String productId,
@@ -153,9 +158,16 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
                         .build();
 
         // 4. Call inference engine
-        ZyraRecommendationResponse zyraResponse = zyraClient.getRecommendations(requestPayload);
+        ZyraRecommendationResponse zyraResponse = null;
+        try {
+            zyraResponse = zyraClient.getRecommendations(requestPayload);
+        } catch (Exception e) {
+            log.warn("Zyra engine recommendation invocation notice for userId={}: {}", user.getId(), e.getMessage());
+        }
+
         if (zyraResponse == null || zyraResponse.getRecommendations() == null || zyraResponse.getRecommendations().isEmpty()) {
-            throw new ZyraValidationException("Zyra engine returned empty recommendation response");
+            log.warn("Zyra engine returned empty recommendation response for userId={}", user.getId());
+            return null;
         }
 
         enrichRecommendationItemImages(zyraResponse.getRecommendations());
