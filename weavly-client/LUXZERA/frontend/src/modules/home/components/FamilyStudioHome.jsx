@@ -17,6 +17,55 @@ const ensureHttps = (url) => {
   return url.replace(/^http:\/\//i, "https://");
 };
 
+// Strict Hard Filters — Prevent 100% of Cross-Gender & Kids Leakage
+export const isStrictlyWomenProduct = (p) => {
+  if (!p) return false;
+  const g = (p.gender || p.department || p.audience || "").toLowerCase().trim();
+  const name = (p.name || p.title || "").toLowerCase();
+  
+  // Rejection rules: Men, Male, Boy, Boys, Kids
+  if (g === "men" || g === "male") return false;
+  if (name.includes("men ") || name.includes(" men") || name.includes("men's") || name.includes("boys") || name.includes("boy ")) return false;
+  if (name.includes("duke men") || name.includes("next look men") || name.includes("newport men") || name.includes("free authority men") || name.includes("parx men") || name.includes("qraa men")) return false;
+
+  // Positive validation: Women, Female, Girl, or Women-specific items
+  return (
+    g.includes("women") ||
+    g.includes("female") ||
+    g.includes("girl") ||
+    name.includes("women") ||
+    name.includes("dress") ||
+    name.includes("kurti") ||
+    name.includes("saree") ||
+    name.includes("lehenga") ||
+    name.includes("playsuit") ||
+    name.includes("gown")
+  );
+};
+
+export const isStrictlyMenProduct = (p) => {
+  if (!p) return false;
+  const g = (p.gender || p.department || p.audience || "").toLowerCase().trim();
+  const name = (p.name || p.title || "").toLowerCase();
+
+  // Rejection rules: Women, Female, Girl, Girls, Kids
+  if (g === "women" || g === "female" || g === "girl") return false;
+  if (name.includes("women ") || name.includes(" women") || name.includes("women's") || name.includes("girls") || name.includes("girl ")) return false;
+  if (name.includes("dress") || name.includes("bra ") || name.includes("kurti") || name.includes("saree") || name.includes("lehenga") || name.includes("playsuit") || name.includes("gown")) return false;
+
+  // Positive validation: Men, Male, Boy, or Men-specific items
+  return (
+    g.includes("men") ||
+    g.includes("male") ||
+    g.includes("boy") ||
+    name.includes("men") ||
+    name.includes("shirt") ||
+    name.includes("blazer") ||
+    name.includes("polo") ||
+    name.includes("trousers")
+  );
+};
+
 const HERO_CATEGORIES = [
   {
     id: "men",
@@ -268,7 +317,9 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [addedProductIds, setAddedProductIds] = useState({});
   const [trendingProducts, setTrendingProducts] = useState([]);
   const [menProducts, setMenProducts] = useState([]);
+  const [menFormalProducts, setMenFormalProducts] = useState([]);
   const [womenProducts, setWomenProducts] = useState([]);
+  const [womenDresses, setWomenDresses] = useState([]);
   const [footwearProducts, setFootwearProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
 
@@ -277,27 +328,44 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [isFitModalOpen, setIsFitModalOpen] = useState(false);
   const firstShelfRef = useRef(null);
 
-  // Initial products fetch across multiple departments
+  // Determine user gender intent
+  const userGenderNorm = (user?.gender || user?.fitData?.gender || "").toLowerCase().trim();
+  const isMaleUser = userGenderNorm.startsWith("men") || userGenderNorm.startsWith("male") || userGenderNorm.startsWith("man");
+  const isFemaleUser = userGenderNorm.startsWith("wom") || userGenderNorm.startsWith("female") || userGenderNorm.startsWith("ladies");
+
+  // Initial products fetch across multiple departments with strict filtering
   useEffect(() => {
     let isMounted = true;
     setLoadingProducts(true);
 
     Promise.allSettled([
-      getProducts({ limit: 40 }),
-      getProducts({ gender: "Men", limit: 40 }),
-      getProducts({ gender: "Women", limit: 40 }),
+      getProducts({ limit: 50 }),
+      getProducts({ gender: "Men", limit: 50 }),
+      getProducts({ gender: "Women", limit: 50 }),
       getProducts({ category: "Footwear", limit: 40 }),
-    ]).then(([trendingRes, menRes, womenRes, footwearRes]) => {
+      getProducts({ gender: "Women", category: "Dresses", limit: 40 }),
+      getProducts({ gender: "Men", category: "Outerwear", limit: 40 }),
+    ]).then(([trendingRes, menRes, womenRes, footwearRes, dressesRes, formalMenRes]) => {
       if (isMounted) {
-        const trending = trendingRes.status === "fulfilled" && Array.isArray(trendingRes.value) ? trendingRes.value : [];
-        const men = menRes.status === "fulfilled" && Array.isArray(menRes.value) ? menRes.value : [];
-        const women = womenRes.status === "fulfilled" && Array.isArray(womenRes.value) ? womenRes.value : [];
-        const footwear = footwearRes.status === "fulfilled" && Array.isArray(footwearRes.value) ? footwearRes.value : [];
+        const rawTrending = trendingRes.status === "fulfilled" && Array.isArray(trendingRes.value) ? trendingRes.value : [];
+        const rawMen = menRes.status === "fulfilled" && Array.isArray(menRes.value) ? menRes.value : [];
+        const rawWomen = womenRes.status === "fulfilled" && Array.isArray(womenRes.value) ? womenRes.value : [];
+        const rawFootwear = footwearRes.status === "fulfilled" && Array.isArray(footwearRes.value) ? footwearRes.value : [];
+        const rawDresses = dressesRes.status === "fulfilled" && Array.isArray(dressesRes.value) ? dressesRes.value : [];
+        const rawFormalMen = formalMenRes.status === "fulfilled" && Array.isArray(formalMenRes.value) ? formalMenRes.value : [];
 
-        setTrendingProducts(trending.length > 0 ? trending : []);
-        setMenProducts(men.length > 0 ? men : trending.filter((p) => (p.gender || "").toLowerCase().includes("men")));
-        setWomenProducts(women.length > 0 ? women : trending.filter((p) => (p.gender || "").toLowerCase().includes("wom")));
-        setFootwearProducts(footwear.length > 0 ? footwear : trending.slice(20, 40));
+        // Apply strict defensive filtering (0% cross contamination)
+        const strictlyMen = rawMen.filter(isStrictlyMenProduct);
+        const strictlyWomen = rawWomen.filter(isStrictlyWomenProduct);
+        const strictlyDresses = rawDresses.filter(isStrictlyWomenProduct);
+        const strictlyFormalMen = rawFormalMen.filter(isStrictlyMenProduct);
+
+        setTrendingProducts(rawTrending);
+        setMenProducts(strictlyMen);
+        setMenFormalProducts(strictlyFormalMen.length > 0 ? strictlyFormalMen : strictlyMen.slice(0, 20));
+        setWomenProducts(strictlyWomen);
+        setWomenDresses(strictlyDresses.length > 0 ? strictlyDresses : strictlyWomen.slice(0, 20));
+        setFootwearProducts(rawFootwear.length > 0 ? rawFootwear : rawTrending.slice(20, 40));
         setLoadingProducts(false);
       }
     });
@@ -446,74 +514,169 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            ROW 1: BEST SELLERS & TRENDING (INFINITE SIDE-SCROLL SHELF)
+            DYNAMIC HOMEPAGE SHELVES ADAPTED TO USER PREFERENCE
         ════════════════════════════════════════════════════════════ */}
-        <div ref={firstShelfRef}>
-          <DepartmentCarousel
-            title="Best Sellers & Trending"
-            subtitle="Most desired seasonal atelier pieces"
-            deptQuery="All"
-            products={trendingProducts}
-            loading={loadingProducts}
-            onAddToCart={handleAddToCart}
-            onToggleLike={handleToggleLike}
-            isSaved={isSaved}
-            addedProductIds={addedProductIds}
-          />
-        </div>
 
-        {/* ════════════════════════════════════════════════════════════
-            ROW 2: MEN'S COLLECTION (INFINITE SIDE-SCROLL SHELF)
-        ════════════════════════════════════════════════════════════ */}
-        <DepartmentCarousel
-          title="Men's Collection"
-          subtitle="Tailored blazers, premium shirts & trousers"
-          deptQuery="Men"
-          products={menProducts}
-          loading={loadingProducts}
-          onAddToCart={handleAddToCart}
-          onToggleLike={handleToggleLike}
-          isSaved={isSaved}
-          addedProductIds={addedProductIds}
-        />
+        {isMaleUser ? (
+          /* ── MALE USER TAILORED HOMEPAGE SHELVES ── */
+          <>
+            <div ref={firstShelfRef}>
+              <DepartmentCarousel
+                title="Trending Men's Essentials"
+                subtitle="Most desired seasonal pieces for men"
+                deptQuery="Men"
+                products={menProducts}
+                loading={loadingProducts}
+                onAddToCart={handleAddToCart}
+                onToggleLike={handleToggleLike}
+                isSaved={isSaved}
+                addedProductIds={addedProductIds}
+              />
+            </div>
 
-        {/* ════════════════════════════════════════════════════════════
-            ROW 3: WOMEN'S COLLECTION (INFINITE SIDE-SCROLL SHELF)
-        ════════════════════════════════════════════════════════════ */}
-        <DepartmentCarousel
-          title="Women's Collection"
-          subtitle="Contemporary silhouettes, dresses & knitwear"
-          deptQuery="Women"
-          products={womenProducts}
-          loading={loadingProducts}
-          onAddToCart={handleAddToCart}
-          onToggleLike={handleToggleLike}
-          isSaved={isSaved}
-          addedProductIds={addedProductIds}
-        />
+            <DepartmentCarousel
+              title="Men's Sartorial & Tailored Wear"
+              subtitle="Tailored blazers, Oxford shirts & formal trousers"
+              deptQuery="Men"
+              products={menFormalProducts}
+              loading={loadingProducts}
+              onAddToCart={handleAddToCart}
+              onToggleLike={handleToggleLike}
+              isSaved={isSaved}
+              addedProductIds={addedProductIds}
+            />
 
-        {/* ════════════════════════════════════════════════════════════
-            ROW 4: FOOTWEAR & ACCENTS (INFINITE SIDE-SCROLL SHELF)
-        ════════════════════════════════════════════════════════════ */}
-        {footwearProducts.length > 0 && (
-          <DepartmentCarousel
-            title="Footwear & Accents"
-            subtitle="Handcrafted leather footwear, shoes & accessories"
-            deptQuery="Footwear"
-            products={footwearProducts}
-            loading={loadingProducts}
-            onAddToCart={handleAddToCart}
-            onToggleLike={handleToggleLike}
-            isSaved={isSaved}
-            addedProductIds={addedProductIds}
-          />
+            <DepartmentCarousel
+              title="Men's Casual, Denim & Polos"
+              subtitle="Everyday streetwear, knit polos & slim-fit denim"
+              deptQuery="Men"
+              products={menProducts.slice(10)}
+              loading={loadingProducts}
+              onAddToCart={handleAddToCart}
+              onToggleLike={handleToggleLike}
+              isSaved={isSaved}
+              addedProductIds={addedProductIds}
+            />
+
+            {footwearProducts.length > 0 && (
+              <DepartmentCarousel
+                title="Footwear & Leather Accents"
+                subtitle="Handcrafted leather shoes, sneakers & belts"
+                deptQuery="Footwear"
+                products={footwearProducts}
+                loading={loadingProducts}
+                onAddToCart={handleAddToCart}
+                onToggleLike={handleToggleLike}
+                isSaved={isSaved}
+                addedProductIds={addedProductIds}
+              />
+            )}
+          </>
+        ) : isFemaleUser ? (
+          /* ── FEMALE USER TAILORED HOMEPAGE SHELVES ── */
+          <>
+            <div ref={firstShelfRef}>
+              <DepartmentCarousel
+                title="Trending Women's Collection"
+                subtitle="Most desired contemporary pieces for women"
+                deptQuery="Women"
+                products={womenProducts}
+                loading={loadingProducts}
+                onAddToCart={handleAddToCart}
+                onToggleLike={handleToggleLike}
+                isSaved={isSaved}
+                addedProductIds={addedProductIds}
+              />
+            </div>
+
+            <DepartmentCarousel
+              title="Dresses, Gowns & Occasionwear"
+              subtitle="Fit & flare silhouettes, midi dresses & eveningwear"
+              deptQuery="Women"
+              products={womenDresses}
+              loading={loadingProducts}
+              onAddToCart={handleAddToCart}
+              onToggleLike={handleToggleLike}
+              isSaved={isSaved}
+              addedProductIds={addedProductIds}
+            />
+
+            <DepartmentCarousel
+              title="Contemporary Tops & Bottoms"
+              subtitle="Linen tops, structured skirts & tailored trousers"
+              deptQuery="Women"
+              products={womenProducts.slice(10)}
+              loading={loadingProducts}
+              onAddToCart={handleAddToCart}
+              onToggleLike={handleToggleLike}
+              isSaved={isSaved}
+              addedProductIds={addedProductIds}
+            />
+
+            {footwearProducts.length > 0 && (
+              <DepartmentCarousel
+                title="Footwear & Designer Bags"
+                subtitle="Handcrafted heels, flats, totes & jewellery"
+                deptQuery="Footwear"
+                products={footwearProducts}
+                loading={loadingProducts}
+                onAddToCart={handleAddToCart}
+                onToggleLike={handleToggleLike}
+                isSaved={isSaved}
+                addedProductIds={addedProductIds}
+              />
+            )}
+          </>
+        ) : (
+          /* ── GUEST / GENERAL STOREFRONT (STRICTLY SEGREGATED) ── */
+          <>
+            <div ref={firstShelfRef}>
+              <DepartmentCarousel
+                title="Men's Collection"
+                subtitle="Tailored blazers, premium shirts & trousers (Strictly Men)"
+                deptQuery="Men"
+                products={menProducts}
+                loading={loadingProducts}
+                onAddToCart={handleAddToCart}
+                onToggleLike={handleToggleLike}
+                isSaved={isSaved}
+                addedProductIds={addedProductIds}
+              />
+            </div>
+
+            <DepartmentCarousel
+              title="Women's Collection"
+              subtitle="Contemporary silhouettes, dresses & knitwear (Strictly Women)"
+              deptQuery="Women"
+              products={womenProducts}
+              loading={loadingProducts}
+              onAddToCart={handleAddToCart}
+              onToggleLike={handleToggleLike}
+              isSaved={isSaved}
+              addedProductIds={addedProductIds}
+            />
+
+            <DepartmentCarousel
+              title="Footwear & Accents"
+              subtitle="Handcrafted leather footwear, shoes & accessories"
+              deptQuery="Footwear"
+              products={footwearProducts}
+              loading={loadingProducts}
+              onAddToCart={handleAddToCart}
+              onToggleLike={handleToggleLike}
+              isSaved={isSaved}
+              addedProductIds={addedProductIds}
+            />
+          </>
         )}
 
         {/* ════════════════════════════════════════════════════════════
-            ROW 5: ZYRA PERSONALIZED RECOMMENDATIONS SECTION
+            ZYRA PERSONALIZED RECOMMENDATIONS SECTION
         ════════════════════════════════════════════════════════════ */}
         <div className="border border-[#183B56] shadow-xs">
-          <ZeraRecommendationsSection />
+          <ZeraRecommendationsSection
+            genderFilter={isMaleUser ? "Men" : isFemaleUser ? "Women" : null}
+          />
         </div>
 
       </main>

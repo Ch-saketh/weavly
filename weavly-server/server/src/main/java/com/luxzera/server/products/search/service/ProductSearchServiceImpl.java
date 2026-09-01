@@ -220,18 +220,19 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         if (genderFilter != null && !genderFilter.isBlank() && !genderFilter.equalsIgnoreCase("All")) {
             String g = genderFilter.trim().toUpperCase();
             if (g.startsWith("MEN") || g.startsWith("MAN") || g.startsWith("MALE")) {
-                return List.of(Audience.MEN, Audience.UNISEX);
+                return List.of(Audience.MEN);
             } else if (g.startsWith("WOM") || g.startsWith("FEMALE")) {
-                return List.of(Audience.WOMEN, Audience.UNISEX);
-            } else if (g.startsWith("KID")) {
+                return List.of(Audience.WOMEN);
+            } else if (g.startsWith("KID") || g.startsWith("BOY") || g.startsWith("GIRL")) {
                 return List.of(Audience.KIDS);
             } else if (g.startsWith("UNI")) {
                 return List.of(Audience.UNISEX);
             }
         }
         if (detectedAudience != null) {
-            if (detectedAudience == Audience.MEN) return List.of(Audience.MEN, Audience.UNISEX);
-            if (detectedAudience == Audience.WOMEN) return List.of(Audience.WOMEN, Audience.UNISEX);
+            if (detectedAudience == Audience.MEN) return List.of(Audience.MEN);
+            if (detectedAudience == Audience.WOMEN) return List.of(Audience.WOMEN);
+            if (detectedAudience == Audience.KIDS) return List.of(Audience.KIDS);
             return List.of(detectedAudience);
         }
         return null;
