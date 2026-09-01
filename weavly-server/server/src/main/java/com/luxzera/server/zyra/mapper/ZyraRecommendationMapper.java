@@ -30,6 +30,15 @@ public final class ZyraRecommendationMapper {
             ZyraRecommendationResponse zyraResponse,
             String occasion
     ) {
+        return toEntity(user, zyraResponse, occasion, null);
+    }
+
+    public static UserRecommendationGeneration toEntity(
+            User user,
+            ZyraRecommendationResponse zyraResponse,
+            String occasion,
+            String userGender
+    ) {
         if (zyraResponse == null) {
             return null;
         }
@@ -46,7 +55,7 @@ public final class ZyraRecommendationMapper {
                 .queryProductId(qPid)
                 .occasion(occasion != null ? occasion.toLowerCase() : null)
                 .modelVersion(zyraResponse.getModelVersion() != null ? zyraResponse.getModelVersion() : "zyra-v1-p9")
-                .itemCount(zyraResponse.getRecommendations() != null ? zyraResponse.getRecommendations().size() : 0)
+                .itemCount(0)
                 .candidateK(meta != null ? meta.getCandidateK() : null)
                 .finalK(meta != null ? meta.getFinalK() : null)
                 .minimumSimilarity(meta != null ? meta.getMinimumSimilarity() : null)
@@ -55,10 +64,24 @@ public final class ZyraRecommendationMapper {
                 .build();
 
         if (zyraResponse.getRecommendations() != null) {
+            int rankCounter = 1;
             for (ZyraRecommendationItem item : zyraResponse.getRecommendations()) {
+                String itemGender = item.getGender() != null ? item.getGender().trim() : "Unisex";
+
+                // DEFENSIVE HARD GENDER CONSTRAINT
+                if (userGender != null) {
+                    String normUGen = userGender.trim().toLowerCase();
+                    if ((normUGen.startsWith("wom") || normUGen.startsWith("fem")) && itemGender.equalsIgnoreCase("Men")) {
+                        continue;
+                    }
+                    if ((normUGen.startsWith("men") || normUGen.startsWith("man") || normUGen.startsWith("mal")) && itemGender.equalsIgnoreCase("Women")) {
+                        continue;
+                    }
+                }
+
                 UserRecommendationItemEntity itemEntity = UserRecommendationItemEntity.builder()
                         .generation(generation)
-                        .rank(item.getRank())
+                        .rank(rankCounter++)
                         .recommendedProductId(item.getProductId())
                         .name(item.getName())
                         .brand(item.getBrand())
@@ -72,6 +95,7 @@ public final class ZyraRecommendationMapper {
                         .build();
                 generation.addItem(itemEntity);
             }
+            generation.setItemCount(generation.getItems().size());
         }
 
         return generation;

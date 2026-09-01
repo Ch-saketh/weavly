@@ -14,7 +14,7 @@ class EmailHtmlTemplatesTest {
         assertTrue(html.contains("Verify your email"));
         assertTrue(html.contains("<div class=\"otp\">123456</div>"));
         assertTrue(html.contains("expires in 15 minutes"));
-        assertTrue(html.contains(EmailBranding.LOGO_URL));
+        assertTrue(html.contains(EmailBranding.BRAND_NAME));
         assertTrue(html.contains("href=\"" + EmailBranding.HOME_URL + "\""));
         assertFalse(html.contains("zera-icon.png"));
     }

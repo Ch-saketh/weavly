@@ -4,6 +4,7 @@ import sys
 import unittest
 import numpy as np
 import pandas as pd
+from pathlib import Path
 from collections import Counter
 from zyra import ZyraV1
 from zyra.metadata import detect_product_occasions, normalize_gender
@@ -12,7 +13,8 @@ class TestZyraOccasionDiversity(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.zyra = ZyraV1(artifact_dir="core-model/p10_production_artifacts")
+        artifact_dir = Path(__file__).parent / "p10_production_artifacts"
+        cls.zyra = ZyraV1(artifact_dir=artifact_dir)
 
     def test_01_standalone_benchmark_regression_frozen(self):
         """Verify that standalone product recommendation query for 10009781 remains 100% frozen."""

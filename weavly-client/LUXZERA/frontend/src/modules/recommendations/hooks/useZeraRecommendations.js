@@ -55,6 +55,18 @@ export function useZeraRecommendations() {
     }
   }, [fetchRecommendations, user]);
 
+  useEffect(() => {
+    const handleProfileUpdate = () => {
+      fetchRecommendations();
+    };
+    window.addEventListener("weavly:profileUpdated", handleProfileUpdate);
+    window.addEventListener("weavly:fitDataUpdated", handleProfileUpdate);
+    return () => {
+      window.removeEventListener("weavly:profileUpdated", handleProfileUpdate);
+      window.removeEventListener("weavly:fitDataUpdated", handleProfileUpdate);
+    };
+  }, [fetchRecommendations]);
+
   const triggerGeneration = useCallback(
     async (params = {}, topK = 50) => {
       if (!isLoggedIn() && !user) return null;

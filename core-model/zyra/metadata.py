@@ -60,7 +60,16 @@ def normalize_gender(
     g_lower = g_str.lower()
     if g_lower in mapping:
         return mapping[g_lower]
-    return g_str
+    # Check prefix matching for safety
+    if g_lower.startswith("wom") or g_lower.startswith("fem"):
+        return "Women"
+    if g_lower.startswith("man") or g_lower.startswith("men") or g_lower.startswith("mal"):
+        return "Men"
+    if g_lower.startswith("kid") or g_lower.startswith("child") or g_lower.startswith("boy") or g_lower.startswith("girl"):
+        return "Kids"
+    if g_lower.startswith("uni"):
+        return "Unisex"
+    return "Unisex"
 
 
 def is_gender_compatible(
@@ -71,10 +80,10 @@ def is_gender_compatible(
     """Evaluate HARD gender compatibility between query and candidate products.
 
     Rules:
-    - Women -> Women, Unisex
-    - Men -> Men, Unisex
-    - Unisex -> Women, Men, Unisex
-    - Kids -> Kids
+    - Women -> Women, Unisex (NEVER Men, NEVER Kids)
+    - Men -> Men, Unisex (NEVER Women, NEVER Kids)
+    - Unisex -> Women, Men, Unisex (NEVER Kids)
+    - Kids -> Kids (NEVER adult Women, NEVER adult Men)
     """
     q_gen = normalize_gender(query_gender)
     c_gen = normalize_gender(candidate_gender)
@@ -104,6 +113,37 @@ def compute_price_score(query_price: float, candidate_price: float) -> float:
     ratio = c_p / q_p
     score = 1.0 - abs(np.log(max(ratio, 1e-12)))
     return float(np.clip(score, 0.0, 1.0))
+
+
+def compute_budget_score(budget_range_str: Optional[str], candidate_price: float) -> float:
+    """Compute compatibility score between user's selected budget range and candidate product price."""
+    if not budget_range_str or candidate_price <= 0:
+        return 0.5
+
+    b_str = str(budget_range_str).lower().replace(",", "").replace("₹", "").replace("rs.", "").strip()
+
+    # Extract bounds
+    import re
+    nums = [float(n) for n in re.findall(r"\d+", b_str)]
+    if not nums:
+        return 0.5
+
+    if len(nums) == 1:
+        if "under" in b_str or "less" in b_str or "below" in b_str:
+            min_p, max_p = 0.0, nums[0]
+        else:
+            min_p, max_p = nums[0], nums[0] * 3.0
+    else:
+        min_p, max_p = min(nums[0], nums[1]), max(nums[0], nums[1])
+
+    if min_p <= candidate_price <= max_p:
+        return 1.0
+    elif candidate_price < min_p:
+        diff_ratio = (min_p - candidate_price) / max(min_p, 1.0)
+        return float(np.clip(1.0 - 0.5 * diff_ratio, 0.3, 1.0))
+    else:
+        diff_ratio = (candidate_price - max_p) / max(max_p, 1.0)
+        return float(np.clip(1.0 - 0.8 * diff_ratio, 0.0, 1.0))
 
 
 def is_valid_url(url: Any) -> bool:

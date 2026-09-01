@@ -82,6 +82,9 @@ def recommend() -> Tuple[Any, int]:
     t_start = time.perf_counter()
 
     data: Optional[Dict[str, Any]] = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"error": "Request body must be valid JSON"}), 400
+
     raw_pid = data.get("productId")
     product_id_str = str(raw_pid).strip() if raw_pid is not None else None
     if product_id_str == "":
@@ -90,10 +93,20 @@ def recommend() -> Tuple[Any, int]:
     user_gender = data.get("userGender")
     occasion = data.get("occasion")
     user_occasions = data.get("userOccasions")
+    preferred_categories = data.get("preferredCategories") or data.get("preferred_categories")
+    preferred_styles = data.get("preferredStyles") or data.get("preferred_styles")
+    preferred_colors = data.get("preferredColors") or data.get("preferred_colors")
+    avoided_categories = data.get("avoidedCategories") or data.get("avoided_categories")
+    avoided_styles = data.get("avoidedStyles") or data.get("avoided_styles")
+    avoided_colors = data.get("avoidedColors") or data.get("avoided_colors")
+    budget_range = data.get("budgetRange") or data.get("budget_range")
+    user_embedding = data.get("userEmbedding") or data.get("user_embedding")
+    user_id = data.get("userId") or data.get("user_id")
 
-    # If no product_id and no occasion context provided, error
-    if product_id_str is None and not occasion and not user_occasions:
-        return jsonify({"error": "productId or occasion is required"}), 400
+    # If no product_id, no occasion, and no user profile context provided, error
+    has_user_context = bool(user_gender or occasion or user_occasions or preferred_categories or preferred_styles or user_embedding)
+    if product_id_str is None and not has_user_context:
+        return jsonify({"error": "productId or user profile context (gender/occasion/preferences) is required"}), 400
 
     # Parse and validate topK
     top_k = zyra.config.final_k
@@ -121,7 +134,7 @@ def recommend() -> Tuple[Any, int]:
 
     # Check product existence if productId is supplied
     if product_id_str is not None and product_id_str not in zyra.product_id_to_index:
-        if not occasion and not user_occasions:
+        if not has_user_context:
             return (
                 jsonify(
                     {
@@ -140,6 +153,14 @@ def recommend() -> Tuple[Any, int]:
             user_gender=user_gender,
             occasion=occasion,
             user_occasions=user_occasions,
+            preferred_categories=preferred_categories,
+            preferred_styles=preferred_styles,
+            preferred_colors=preferred_colors,
+            avoided_categories=avoided_categories,
+            avoided_styles=avoided_styles,
+            avoided_colors=avoided_colors,
+            budget_range=budget_range,
+            user_embedding=user_embedding,
         )
     except ValueError as exc:
         return jsonify({"error": str(exc), "productId": product_id_str}), 400
@@ -149,26 +170,25 @@ def recommend() -> Tuple[Any, int]:
 
     latency_ms = round((time.perf_counter() - t_start) * 1000.0, 2)
     logger.info(
-        "[ZYRA] productId=%s occasion=%s userGender=%s topK=%d latency=%.2fms",
+        "[ZYRA] productId=%s occasion=%s userGender=%s prefCats=%s topK=%d latency=%.2fms",
         product_id_str,
         occasion,
         user_gender,
+        preferred_categories,
         top_k,
         latency_ms,
     )
 
     recs = engine_result.get("recommendations", [])
+    meta = engine_result.get("metadata", {})
+    meta["count"] = len(recs)
+    meta["latencyMs"] = latency_ms
+
     response_payload = {
         "productId": product_id_str,
         "modelVersion": engine_result.get("modelVersion", zyra.config.engine_version),
         "recommendations": recs,
-        "metadata": {
-            "candidateK": zyra.config.candidate_k,
-            "finalK": zyra.config.final_k,
-            "minimumSimilarity": zyra.config.minimum_similarity,
-            "count": len(recs),
-            "latencyMs": latency_ms,
-        },
+        "metadata": meta,
     }
 
     return jsonify(response_payload), 200

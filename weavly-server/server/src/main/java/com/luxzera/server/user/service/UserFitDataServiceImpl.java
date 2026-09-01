@@ -18,6 +18,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.luxzera.server.zyra.service.ZyraRecommendationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +31,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserFitDataServiceImpl implements UserFitDataService {
 
     private final UserFitDataRepository fitDataRepository;
@@ -32,6 +39,7 @@ public class UserFitDataServiceImpl implements UserFitDataService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final UserProfileEventPublisher eventPublisher;
+    private final ZyraRecommendationService zyraRecommendationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -135,6 +143,13 @@ public class UserFitDataServiceImpl implements UserFitDataService {
 
         // ── Emit Zyra Domain Event after database persistence ─────────────────
         eventPublisher.publishProfileUpdated(userId, UserProfileUpdateType.USER_FIT_DATA_UPDATED);
+
+        // ── Refresh Zyra recommendations for updated preferences ─────────────────
+        try {
+            zyraRecommendationService.generateAndSaveUserRecommendations(user, null, 50, saved.getPrimaryOccasion());
+        } catch (Exception e) {
+            log.warn("Non-blocking recommendation refresh note for user={}: {}", userId, e.getMessage());
+        }
 
         return FitDataMapper.toResponseDto(saved, userId);
     }

@@ -65,10 +65,6 @@ public class ZyraClientImpl implements ZyraClient {
             List<String> userOccasions
     ) {
         int effectiveTopK = (topK != null) ? topK : 50;
-        if (effectiveTopK < 1 || effectiveTopK > 50) {
-            throw new ZyraValidationException("topK must be between 1 and 50");
-        }
-
         String cleanProductId = (productId != null && !productId.trim().isEmpty()) ? productId.trim() : null;
         ZyraRecommendationRequest requestPayload = ZyraRecommendationRequest.builder()
                 .productId(cleanProductId)
@@ -78,8 +74,28 @@ public class ZyraClientImpl implements ZyraClient {
                 .userOccasions(userOccasions)
                 .build();
 
-        log.debug("Sending POST /recommend to Zyra Flask for productId={}, topK={}, userGender={}, occasion={}",
-                cleanProductId, effectiveTopK, userGender, occasion);
+        return getRecommendations(requestPayload);
+    }
+
+    @Override
+    public ZyraRecommendationResponse getRecommendations(ZyraRecommendationRequest requestPayload) {
+        if (requestPayload == null) {
+            throw new ZyraValidationException("Zyra recommendation request payload cannot be null");
+        }
+
+        int effectiveTopK = (requestPayload.getTopK() != null) ? requestPayload.getTopK() : 50;
+        if (effectiveTopK < 1 || effectiveTopK > 50) {
+            throw new ZyraValidationException("topK must be between 1 and 50");
+        }
+        requestPayload.setTopK(effectiveTopK);
+
+        String cleanProductId = (requestPayload.getProductId() != null && !requestPayload.getProductId().trim().isEmpty())
+                ? requestPayload.getProductId().trim()
+                : null;
+        requestPayload.setProductId(cleanProductId);
+
+        log.debug("Sending POST /recommend to Zyra Flask: productId={}, topK={}, userGender={}, occasion={}, prefCats={}",
+                cleanProductId, effectiveTopK, requestPayload.getUserGender(), requestPayload.getOccasion(), requestPayload.getPreferredCategories());
 
         ZyraRecommendationResponse response;
         try {
@@ -92,7 +108,7 @@ public class ZyraClientImpl implements ZyraClient {
                         int statusCode = resp.getStatusCode().value();
                         String errorBody = new String(resp.getBody().readAllBytes());
                         if (statusCode == 404) {
-                            throw new ZyraProductNotFoundException(cleanProductId != null ? cleanProductId : "occasion:" + occasion, errorBody);
+                            throw new ZyraProductNotFoundException(cleanProductId != null ? cleanProductId : "occasion:" + requestPayload.getOccasion(), errorBody);
                         } else {
                             throw new ZyraValidationException("Zyra API client error (" + statusCode + "): " + errorBody);
                         }

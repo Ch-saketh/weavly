@@ -114,7 +114,7 @@ class ZyraUserRecommendationPersistenceTest {
                         .build())
                 .build();
 
-        when(zyraClient.getRecommendations(eq(queryProductId), eq(topK), any(), any(), any())).thenReturn(zyraResponse);
+        when(zyraClient.getRecommendations(any(com.luxzera.server.zyra.dto.request.ZyraRecommendationRequest.class))).thenReturn(zyraResponse);
 
         when(generationRepository.save(any(UserRecommendationGeneration.class)))
                 .thenAnswer(invocation -> {

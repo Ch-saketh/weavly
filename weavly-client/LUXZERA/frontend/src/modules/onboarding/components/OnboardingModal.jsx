@@ -341,6 +341,10 @@ export default function OnboardingModal({ isOpen, onClose }) {
         }
       }
 
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("weavly:profileUpdated"));
+      }
+
       setSuccessStep(true);
       setTimeout(() => {
         onClose();

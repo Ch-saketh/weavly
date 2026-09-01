@@ -1,9 +1,11 @@
 """Test all 8 occasions for Men and Women to verify category diversity and occasion alignment."""
 
+from pathlib import Path
 from collections import Counter
 from zyra import ZyraV1
 
-zyra = ZyraV1(artifact_dir="core-model/p10_production_artifacts")
+artifact_dir = Path(__file__).parent / "p10_production_artifacts"
+zyra = ZyraV1(artifact_dir=artifact_dir)
 
 occasions = ["work", "formal", "party", "wedding", "date", "casual", "college", "sport"]
 user_occasions = ["work", "casual", "party"]

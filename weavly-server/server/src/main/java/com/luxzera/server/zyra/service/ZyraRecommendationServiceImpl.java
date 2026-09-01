@@ -101,46 +101,74 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             }
         }
 
-        // 2. Resolve user fit data / occasion preferences
+        // 2. Resolve user fit data & rich preferences
         List<String> userOccasions = null;
         String primaryOccasion = null;
+        List<String> preferredClothingTypes = null;
+        List<String> preferredStyles = null;
+        List<String> preferredColors = null;
+        List<String> avoidedClothingTypes = null;
+        List<String> avoidedStyles = null;
+        List<String> avoidedColors = null;
+        String budgetRange = null;
+
         Optional<UserMetadata> metadataOpt = userMetadataRepository.findByUserId(user.getId());
         if (metadataOpt.isPresent()) {
             Optional<UserFitData> fitDataOpt = userFitDataRepository.findByUserMetadataId(metadataOpt.get().getId());
             if (fitDataOpt.isPresent()) {
-                userOccasions = fitDataOpt.get().getOccasions();
-                primaryOccasion = fitDataOpt.get().getPrimaryOccasion();
+                UserFitData fd = fitDataOpt.get();
+                userOccasions = fd.getOccasions();
+                primaryOccasion = fd.getPrimaryOccasion();
+                preferredClothingTypes = fd.getPreferredClothingTypes();
+                preferredStyles = fd.getPreferredStyles();
+                preferredColors = fd.getPreferredColors();
+                avoidedClothingTypes = fd.getAvoidedClothingTypes();
+                avoidedStyles = fd.getAvoidedStyles();
+                avoidedColors = fd.getAvoidedColors();
+                budgetRange = fd.getBudgetRange();
             }
         }
 
         String targetOccasion = (occasion != null && !occasion.trim().isEmpty()) ? occasion.trim() : primaryOccasion;
 
-        log.info("Generating and persisting recommendations for userId={}, profileGender={}, occasion={}, userOccasions={}, productId={}, topK={}",
-                user.getId(), userGender, targetOccasion, userOccasions, productId, topK);
+        log.info("Generating and persisting personalized recommendations for userId={}, gender={}, occasion={}, prefCats={}, prefStyles={}",
+                user.getId(), userGender, targetOccasion, preferredClothingTypes, preferredStyles);
 
-        // 3. Call inference engine conditioned on user profile gender, occasion, and preferences
-        ZyraRecommendationResponse zyraResponse = zyraClient.getRecommendations(
-                productId,
-                topK,
-                userGender,
-                targetOccasion,
-                userOccasions
-        );
+        // 3. Build rich personalized request payload
+        com.luxzera.server.zyra.dto.request.ZyraRecommendationRequest requestPayload =
+                com.luxzera.server.zyra.dto.request.ZyraRecommendationRequest.builder()
+                        .productId(productId)
+                        .topK(topK != null ? topK : 50)
+                        .userGender(userGender)
+                        .occasion(targetOccasion)
+                        .userOccasions(userOccasions)
+                        .preferredCategories(preferredClothingTypes)
+                        .preferredStyles(preferredStyles)
+                        .preferredColors(preferredColors)
+                        .avoidedCategories(avoidedClothingTypes)
+                        .avoidedStyles(avoidedStyles)
+                        .avoidedColors(avoidedColors)
+                        .budgetRange(budgetRange)
+                        .userId(user.getId().toString())
+                        .build();
+
+        // 4. Call inference engine
+        ZyraRecommendationResponse zyraResponse = zyraClient.getRecommendations(requestPayload);
         if (zyraResponse == null || zyraResponse.getRecommendations() == null || zyraResponse.getRecommendations().isEmpty()) {
             throw new ZyraValidationException("Zyra engine returned empty recommendation response");
         }
 
         enrichRecommendationItemImages(zyraResponse.getRecommendations());
 
-        // 4. Map response and user to persistent entity
-        UserRecommendationGeneration generation = ZyraRecommendationMapper.toEntity(user, zyraResponse, targetOccasion);
+        // 5. Map response and user to persistent entity with defensive gender constraint
+        UserRecommendationGeneration generation = ZyraRecommendationMapper.toEntity(user, zyraResponse, targetOccasion, userGender);
 
-        // 5. Atomically persist generation + items
+        // 6. Atomically persist generation + items
         UserRecommendationGeneration savedGeneration = generationRepository.save(generation);
         log.info("Successfully persisted recommendation generation id={} with {} items for user={}",
                 savedGeneration.getId(), savedGeneration.getItems().size(), user.getId());
 
-        // 6. Return user DTO
+        // 7. Return user DTO
         ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(savedGeneration);
         enrichRecommendationItemImages(responseDto.getRecommendations());
         return responseDto;

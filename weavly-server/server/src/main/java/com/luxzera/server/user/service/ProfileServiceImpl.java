@@ -17,6 +17,10 @@ import com.luxzera.server.user.mapper.UserRecommendationImageMapper;
 import com.luxzera.server.user.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.luxzera.server.zyra.service.ZyraRecommendationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProfileServiceImpl implements ProfileService {
 
     private final UserProfileRepository userProfileRepository;
@@ -37,6 +42,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final UserRecommendationImageRepository imageRepository;
     private final ImageStorageService imageStorageService;
     private final UserProfileEventPublisher eventPublisher;
+    private final ZyraRecommendationService zyraRecommendationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -76,6 +82,16 @@ public class ProfileServiceImpl implements ProfileService {
                 ? UserProfileUpdateType.PROFILE_IMAGE_UPDATED
                 : UserProfileUpdateType.GENERAL_PROFILE_UPDATED;
         eventPublisher.publishProfileUpdated(userId, eventType);
+
+        // ── Refresh Zyra recommendations on gender or profile update ─────────
+        try {
+            User user = updatedProfile.getUser() != null ? updatedProfile.getUser() : userRepository.findById(userId).orElse(null);
+            if (user != null) {
+                zyraRecommendationService.generateAndSaveUserRecommendations(user, null, 50, null);
+            }
+        } catch (Exception e) {
+            log.warn("Non-blocking recommendation refresh note for user={}: {}", userId, e.getMessage());
+        }
 
         return buildAggregatedProfileResponse(updatedProfile, userId);
     }

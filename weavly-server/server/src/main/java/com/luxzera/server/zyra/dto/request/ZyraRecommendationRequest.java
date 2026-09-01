@@ -3,11 +3,12 @@ package com.luxzera.server.zyra.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -15,7 +16,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ZyraRecommendationRequest {
 
-    @NotBlank(message = "productId is required")
     @JsonProperty("productId")
     private String productId;
 
@@ -31,5 +31,32 @@ public class ZyraRecommendationRequest {
     private String occasion;
 
     @JsonProperty("userOccasions")
-    private java.util.List<String> userOccasions;
+    private List<String> userOccasions;
+
+    @JsonProperty("preferredCategories")
+    private List<String> preferredCategories;
+
+    @JsonProperty("preferredStyles")
+    private List<String> preferredStyles;
+
+    @JsonProperty("preferredColors")
+    private List<String> preferredColors;
+
+    @JsonProperty("avoidedCategories")
+    private List<String> avoidedCategories;
+
+    @JsonProperty("avoidedStyles")
+    private List<String> avoidedStyles;
+
+    @JsonProperty("avoidedColors")
+    private List<String> avoidedColors;
+
+    @JsonProperty("budgetRange")
+    private String budgetRange;
+
+    @JsonProperty("userId")
+    private String userId;
+
+    @JsonProperty("userEmbedding")
+    private List<Float> userEmbedding;
 }

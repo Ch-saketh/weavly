@@ -41,14 +41,31 @@ DEFAULT_GENDER_COMPATIBILITY = {
 
 DEFAULT_GENDER_NORMALIZATION = {
     "women": "Women",
+    "woman": "Women",
+    "female": "Women",
+    "females": "Women",
+    "ladies": "Women",
+    "lady": "Women",
     "men": "Men",
+    "man": "Men",
+    "male": "Men",
+    "males": "Men",
+    "gents": "Men",
+    "gentleman": "Men",
+    "gentlemen": "Men",
     "unisex": "Unisex",
+    "all": "Unisex",
     "kids": "Kids",
+    "kid": "Kids",
     "boys": "Kids",
-    "girls": "Kids",
-    "unisex kids": "Kids",
     "boy": "Kids",
+    "girls": "Kids",
     "girl": "Kids",
+    "unisex kids": "Kids",
+    "children": "Kids",
+    "child": "Kids",
+    "infant": "Kids",
+    "baby": "Kids",
 }
 
 

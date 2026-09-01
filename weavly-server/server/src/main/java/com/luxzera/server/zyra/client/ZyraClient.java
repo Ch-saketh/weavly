@@ -1,5 +1,6 @@
 package com.luxzera.server.zyra.client;
 
+import com.luxzera.server.zyra.dto.request.ZyraRecommendationRequest;
 import com.luxzera.server.zyra.dto.response.ZyraRecommendationResponse;
 
 public interface ZyraClient {
@@ -39,4 +40,12 @@ public interface ZyraClient {
             String occasion,
             java.util.List<String> userOccasions
     );
+
+    /**
+     * Call the Zyra Flask recommendation service with a complete typed recommendation request payload.
+     *
+     * @param requestPayload The full recommendation request payload
+     * @return Validated, typed ZyraRecommendationResponse
+     */
+    ZyraRecommendationResponse getRecommendations(ZyraRecommendationRequest requestPayload);
 }
