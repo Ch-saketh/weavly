@@ -189,34 +189,87 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
 
         log.debug("Retrieving latest Zera recommendations for userId={}, occasion={}", user.getId(), occasion);
 
+        // 1. Resolve current user profile gender
+        String currentUserGender = null;
+        Optional<UserProfile> profileOpt = userProfileRepository.findByUserId(user.getId());
+        if (profileOpt.isPresent() && profileOpt.get().getGender() != null) {
+            Gender g = profileOpt.get().getGender();
+            if (g == Gender.MALE) {
+                currentUserGender = "Men";
+            } else if (g == Gender.FEMALE) {
+                currentUserGender = "Women";
+            } else {
+                currentUserGender = "Unisex";
+            }
+        }
+
         if (occasion != null && !occasion.trim().isEmpty() && !occasion.equalsIgnoreCase("all")) {
             String normOcc = occasion.trim().toLowerCase();
             Optional<UserRecommendationGeneration> occGen = generationRepository
                     .findLatestByUserIdAndOccasionWithItems(user.getId(), normOcc);
-            if (occGen.isPresent()) {
+            if (occGen.isPresent() && isGenerationGenderCompatible(occGen.get(), currentUserGender)) {
                 ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(occGen.get());
+                filterResponseByGender(responseDto, currentUserGender);
                 enrichRecommendationItemImages(responseDto.getRecommendations());
                 return responseDto;
             }
             // Generate fresh occasion recommendations on demand
-            log.info("No prior recommendation cache for user={} and occasion={}, generating on demand", user.getId(), normOcc);
+            log.info("No prior or invalid gender recommendation cache for user={} and occasion={}, generating on demand", user.getId(), normOcc);
             return generateAndSaveUserRecommendations(user, null, 50, normOcc);
         }
 
         UserRecommendationGeneration generation = generationRepository.findLatestByUserIdWithItems(user.getId())
                 .or(() -> generationRepository.findFirstByUserIdOrderByGeneratedAtDesc(user.getId()))
-                .orElseGet(() -> {
-                    log.info("No prior recommendation cache for user={}, generating default recommendations", user.getId());
-                    return null;
-                });
+                .orElse(null);
 
-        if (generation == null) {
+        if (generation == null || !isGenerationGenderCompatible(generation, currentUserGender)) {
+            log.info("Generating fresh recommendations for user={} matching gender={}", user.getId(), currentUserGender);
             return generateAndSaveUserRecommendations(user, null, 50, null);
         }
 
         ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(generation);
+        filterResponseByGender(responseDto, currentUserGender);
         enrichRecommendationItemImages(responseDto.getRecommendations());
         return responseDto;
+    }
+
+    private boolean isGenerationGenderCompatible(UserRecommendationGeneration generation, String userGender) {
+        if (generation == null || generation.getItems() == null || generation.getItems().isEmpty()) {
+            return false;
+        }
+        if (userGender == null || userGender.equalsIgnoreCase("Unisex")) {
+            return true;
+        }
+        String uGen = userGender.trim().toLowerCase();
+        if (uGen.startsWith("wom") || uGen.startsWith("fem")) {
+            long menCount = generation.getItems().stream()
+                    .filter(i -> i.getGender() != null && i.getGender().equalsIgnoreCase("Men"))
+                    .count();
+            return menCount == 0;
+        } else if (uGen.startsWith("men") || uGen.startsWith("mal")) {
+            long womenCount = generation.getItems().stream()
+                    .filter(i -> i.getGender() != null && i.getGender().equalsIgnoreCase("Women"))
+                    .count();
+            return womenCount == 0;
+        }
+        return true;
+    }
+
+    private void filterResponseByGender(ZyraUserRecommendationGenerationResponse response, String userGender) {
+        if (response == null || response.getRecommendations() == null || userGender == null) {
+            return;
+        }
+        String uGen = userGender.trim().toLowerCase();
+        if (uGen.startsWith("wom") || uGen.startsWith("fem")) {
+            response.setRecommendations(response.getRecommendations().stream()
+                    .filter(i -> i.getGender() == null || !i.getGender().equalsIgnoreCase("Men"))
+                    .collect(Collectors.toList()));
+        } else if (uGen.startsWith("men") || uGen.startsWith("mal")) {
+            response.setRecommendations(response.getRecommendations().stream()
+                    .filter(i -> i.getGender() == null || !i.getGender().equalsIgnoreCase("Women"))
+                    .collect(Collectors.toList()));
+        }
+        response.setCount(response.getRecommendations().size());
     }
 
     @Override

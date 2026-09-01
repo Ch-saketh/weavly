@@ -168,12 +168,16 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
         bio: formData.bio?.trim() || ""
       }, fileInput);
 
-      // 3. Update local state and trigger navbar re-render
+      // 3. Update local state, AuthContext, and trigger navbar re-render
+      const newAvatarUrl = updatedProfile?.profilePicture || updatedProfile?.generalProfile?.profilePicture || updatedProfile?.avatarUrl || user.profilePicture;
       const nextUser = {
+        ...currentUser,
         ...user,
         firstName: cleanFirstName,
         lastName: cleanLastName,
-        profilePicture: updatedProfile?.profilePicture || user.profilePicture
+        gender: updatedProfile?.gender || formData.gender,
+        profilePicture: newAvatarUrl,
+        avatarUrl: newAvatarUrl
       };
       
       setUser(nextUser);
@@ -190,7 +194,10 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
         try {
           localStorage.setItem("Weavly_user_cache", JSON.stringify(nextUser));
         } catch (e) {}
+        window.dispatchEvent(new CustomEvent("weavly:profileUpdated", { detail: nextUser }));
+        window.dispatchEvent(new CustomEvent("weavly:userUpdated", { detail: nextUser }));
       }
+      setContextUser(nextUser);
       onUserChange?.(nextUser);
       setSuccessMsg("Profile details updated successfully!");
       setTimeout(() => setSuccessMsg(""), 3500);
@@ -214,6 +221,14 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
       const nextUser = { ...user, profilePicture: null, avatarUrl: null };
       setUser(nextUser);
       setProfile((prev) => prev ? { ...prev, profilePicture: null, profileImage: null } : null);
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("Weavly_user_cache", JSON.stringify(nextUser));
+        } catch (e) {}
+        window.dispatchEvent(new CustomEvent("weavly:profileUpdated", { detail: nextUser }));
+        window.dispatchEvent(new CustomEvent("weavly:userUpdated", { detail: nextUser }));
+      }
+      setContextUser(nextUser);
       onUserChange?.(nextUser);
       setSuccessMsg("Profile picture removed.");
       setTimeout(() => setSuccessMsg(""), 3000);
