@@ -51,7 +51,7 @@ export const isStrictlyMenProduct = (p) => {
   // Rejection rules: Women, Female, Girl, Girls, Kids
   if (g === "women" || g === "female" || g === "girl") return false;
   if (name.includes("women ") || name.includes(" women") || name.includes("women's") || name.includes("girls") || name.includes("girl ")) return false;
-  if (name.includes("dress") || name.includes("bra ") || name.includes("kurti") || name.includes("saree") || name.includes("lehenga") || name.includes("playsuit") || name.includes("gown")) return false;
+  if (name.includes("dress") || name.includes("bra ") || name.includes("kurti") || name.includes("saree") || name.includes("lehenga") || name.includes("playsuit") || name.includes("gown") || name.includes("hair dryer")) return false;
 
   // Positive validation: Men, Male, Boy, or Men-specific items
   return (
@@ -63,6 +63,31 @@ export const isStrictlyMenProduct = (p) => {
     name.includes("blazer") ||
     name.includes("polo") ||
     name.includes("trousers")
+  );
+};
+
+export const isStrictlyFootwearProduct = (p) => {
+  if (!p) return false;
+  const c = (p.category || "").toLowerCase();
+  const name = (p.name || p.title || "").toLowerCase();
+  if (c === "shoes" || c === "footwear") return true;
+  return (
+    name.includes("shoe") ||
+    name.includes("sneaker") ||
+    name.includes("loafer") ||
+    name.includes("derby") ||
+    name.includes("derbys") ||
+    name.includes("sandal") ||
+    name.includes("sandals") ||
+    name.includes("boots") ||
+    name.includes("boot") ||
+    name.includes("heels") ||
+    name.includes("heel") ||
+    name.includes("flats") ||
+    name.includes("flat") ||
+    name.includes("oxford") ||
+    name.includes("brogues") ||
+    name.includes("slippers")
   );
 };
 
@@ -380,8 +405,14 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [trendingProducts, setTrendingProducts] = useState([]);
   const [menProducts, setMenProducts] = useState([]);
   const [menFormalProducts, setMenFormalProducts] = useState([]);
+  const [menCasualProducts, setMenCasualProducts] = useState([]);
+  const [menFootwear, setMenFootwear] = useState([]);
+
   const [womenProducts, setWomenProducts] = useState([]);
   const [womenDresses, setWomenDresses] = useState([]);
+  const [womenTops, setWomenTops] = useState([]);
+  const [womenFootwear, setWomenFootwear] = useState([]);
+
   const [footwearProducts, setFootwearProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
 
@@ -420,30 +451,70 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
       getProducts({ limit: 50 }),
       getProducts({ gender: "Men", limit: 50 }),
       getProducts({ gender: "Women", limit: 50 }),
-      getProducts({ category: "Footwear", limit: 40 }),
-      getProducts({ gender: "Women", category: "Dresses", limit: 40 }),
-      getProducts({ gender: "Men", category: "Outerwear", limit: 40 }),
-    ]).then(([trendingRes, menRes, womenRes, footwearRes, dressesRes, formalMenRes]) => {
+      getProducts({ category: "shoes", limit: 50 }),
+      getProducts({ gender: "Men", category: "shoes", limit: 40 }),
+      getProducts({ gender: "Women", category: "shoes", limit: 40 }),
+      getProducts({ gender: "Women", category: "dress", limit: 40 }),
+      getProducts({ gender: "Men", category: "jacket", limit: 40 }),
+      getProducts({ gender: "Men", category: "shirt", limit: 40 }),
+      getProducts({ gender: "Men", category: "tshirt", limit: 40 }),
+      getProducts({ gender: "Women", category: "top", limit: 40 }),
+    ]).then(([
+      trendingRes,
+      menRes,
+      womenRes,
+      footwearRes,
+      menShoesRes,
+      womenShoesRes,
+      dressesRes,
+      menJacketsRes,
+      menShirtsRes,
+      menTshirtsRes,
+      womenTopsRes,
+    ]) => {
       if (isMounted) {
         const rawTrending = trendingRes.status === "fulfilled" && Array.isArray(trendingRes.value) ? trendingRes.value : [];
         const rawMen = menRes.status === "fulfilled" && Array.isArray(menRes.value) ? menRes.value : [];
         const rawWomen = womenRes.status === "fulfilled" && Array.isArray(womenRes.value) ? womenRes.value : [];
         const rawFootwear = footwearRes.status === "fulfilled" && Array.isArray(footwearRes.value) ? footwearRes.value : [];
+        const rawMenShoes = menShoesRes.status === "fulfilled" && Array.isArray(menShoesRes.value) ? menShoesRes.value : [];
+        const rawWomenShoes = womenShoesRes.status === "fulfilled" && Array.isArray(womenShoesRes.value) ? womenShoesRes.value : [];
         const rawDresses = dressesRes.status === "fulfilled" && Array.isArray(dressesRes.value) ? dressesRes.value : [];
-        const rawFormalMen = formalMenRes.status === "fulfilled" && Array.isArray(formalMenRes.value) ? formalMenRes.value : [];
+        const rawMenJackets = menJacketsRes.status === "fulfilled" && Array.isArray(menJacketsRes.value) ? menJacketsRes.value : [];
+        const rawMenShirts = menShirtsRes.status === "fulfilled" && Array.isArray(menShirtsRes.value) ? menShirtsRes.value : [];
+        const rawMenTshirts = menTshirtsRes.status === "fulfilled" && Array.isArray(menTshirtsRes.value) ? menTshirtsRes.value : [];
+        const rawWomenTops = womenTopsRes.status === "fulfilled" && Array.isArray(womenTopsRes.value) ? womenTopsRes.value : [];
 
         // Apply strict defensive filtering (0% cross contamination)
         const strictlyMen = rawMen.filter(isStrictlyMenProduct);
         const strictlyWomen = rawWomen.filter(isStrictlyWomenProduct);
         const strictlyDresses = rawDresses.filter(isStrictlyWomenProduct);
-        const strictlyFormalMen = rawFormalMen.filter(isStrictlyMenProduct);
+        const strictlyMenJackets = rawMenJackets.filter(isStrictlyMenProduct);
+        const strictlyMenShirts = rawMenShirts.filter(isStrictlyMenProduct);
+        const strictlyMenTshirts = rawMenTshirts.filter(isStrictlyMenProduct);
+        const strictlyWomenTops = rawWomenTops.filter(isStrictlyWomenProduct);
+
+        // Footwear: MUST be strictly footwear AND strictly match gender
+        const strictlyMenShoes = rawMenShoes.filter((p) => isStrictlyFootwearProduct(p) && isStrictlyMenProduct(p));
+        const strictlyWomenShoes = rawWomenShoes.filter((p) => isStrictlyFootwearProduct(p) && isStrictlyWomenProduct(p));
+        const strictlyGeneralFootwear = rawFootwear.filter(isStrictlyFootwearProduct);
 
         setTrendingProducts(rawTrending);
         setMenProducts(strictlyMen);
-        setMenFormalProducts(strictlyFormalMen.length > 0 ? strictlyFormalMen : strictlyMen.slice(0, 20));
+        setMenFormalProducts(strictlyMenJackets.length > 0 ? strictlyMenJackets : strictlyMenShirts);
+        setMenCasualProducts(strictlyMenTshirts.length > 0 ? strictlyMenTshirts : strictlyMen.slice(10));
+        setMenFootwear(strictlyMenShoes);
+
         setWomenProducts(strictlyWomen);
         setWomenDresses(strictlyDresses.length > 0 ? strictlyDresses : strictlyWomen.slice(0, 20));
-        setFootwearProducts(rawFootwear.length > 0 ? rawFootwear : rawTrending.slice(20, 40));
+        setWomenTops(strictlyWomenTops.length > 0 ? strictlyWomenTops : strictlyWomen.slice(10));
+        setWomenFootwear(strictlyWomenShoes);
+
+        setFootwearProducts(
+          strictlyGeneralFootwear.length > 0
+            ? strictlyGeneralFootwear
+            : strictlyMenShoes.concat(strictlyWomenShoes)
+        );
         setLoadingProducts(false);
       }
     });
@@ -628,7 +699,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
               title="Men's Casual, Denim & Polos"
               subtitle="Everyday streetwear, knit polos & slim-fit denim"
               deptQuery="Men"
-              products={menProducts.slice(10)}
+              products={menCasualProducts}
               loading={loadingProducts}
               onAddToCart={handleAddToCart}
               onToggleLike={handleToggleLike}
@@ -636,12 +707,12 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
               addedProductIds={addedProductIds}
             />
 
-            {footwearProducts.length > 0 && (
+            {menFootwear.length > 0 && (
               <DepartmentCarousel
-                title="Footwear & Leather Accents"
-                subtitle="Handcrafted leather shoes, sneakers & belts"
-                deptQuery="Footwear"
-                products={footwearProducts}
+                title="Men's Footwear & Leather Accents"
+                subtitle="Handcrafted leather derbys, loafers, sneakers & sandals (Men Only)"
+                deptQuery="Men"
+                products={menFootwear}
                 loading={loadingProducts}
                 onAddToCart={handleAddToCart}
                 onToggleLike={handleToggleLike}
@@ -683,7 +754,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
               title="Contemporary Tops & Bottoms"
               subtitle="Linen tops, structured skirts & tailored trousers"
               deptQuery="Women"
-              products={womenProducts.slice(10)}
+              products={womenTops}
               loading={loadingProducts}
               onAddToCart={handleAddToCart}
               onToggleLike={handleToggleLike}
@@ -691,12 +762,12 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
               addedProductIds={addedProductIds}
             />
 
-            {footwearProducts.length > 0 && (
+            {womenFootwear.length > 0 && (
               <DepartmentCarousel
-                title="Footwear & Designer Bags"
-                subtitle="Handcrafted heels, flats, totes & jewellery"
-                deptQuery="Footwear"
-                products={footwearProducts}
+                title="Women's Footwear & Designer Heels"
+                subtitle="Handcrafted heels, flats, loafers & sandals (Women Only)"
+                deptQuery="Women"
+                products={womenFootwear}
                 loading={loadingProducts}
                 onAddToCart={handleAddToCart}
                 onToggleLike={handleToggleLike}
@@ -736,7 +807,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
 
             <DepartmentCarousel
               title="Footwear & Accents"
-              subtitle="Handcrafted leather footwear, shoes & accessories"
+              subtitle="Handcrafted leather footwear, shoes & loafers (Footwear Only)"
               deptQuery="Footwear"
               products={footwearProducts}
               loading={loadingProducts}

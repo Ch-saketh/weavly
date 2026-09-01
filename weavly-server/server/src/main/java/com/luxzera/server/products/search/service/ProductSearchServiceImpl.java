@@ -137,8 +137,9 @@ public class ProductSearchServiceImpl implements ProductSearchService {
                 mainPredicates.add(root.get("audience").in(audiences));
             }
 
-            if (categoryFilter != null && !categoryFilter.isBlank()) {
-                mainPredicates.add(cb.like(cb.lower(root.get("categoryName")), "%" + categoryFilter + "%"));
+            String cat = resolveCategoryFilter(categoryFilter);
+            if (cat != null && !cat.isBlank()) {
+                mainPredicates.add(cb.like(cb.lower(root.get("categoryName")), "%" + cat + "%"));
             }
 
             List<Predicate> tokenPredicates = new ArrayList<>();
@@ -197,9 +198,50 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         return score;
     }
 
+    private String resolveCategoryFilter(String category) {
+        if (category == null || category.isBlank() || category.equalsIgnoreCase("All")) {
+            return null;
+        }
+        String c = category.trim().toLowerCase();
+        if (c.contains("footwear") || c.contains("shoe") || c.contains("sneaker") || c.contains("boot") || c.contains("loafer") || c.contains("heel") || c.contains("sandal")) {
+            return "shoes";
+        }
+        if (c.contains("tshirt") || c.contains("t-shirt") || c.contains("tee") || c.contains("polo")) {
+            return "tshirt";
+        }
+        if (c.contains("shirt")) {
+            return "shirt";
+        }
+        if (c.contains("pant") || c.contains("trouser") || c.contains("chino") || c.contains("bottom")) {
+            return "trousers";
+        }
+        if (c.contains("jean") || c.contains("denim")) {
+            return "jeans";
+        }
+        if (c.contains("jacket") || c.contains("blazer") || c.contains("coat") || c.contains("outerwear") || c.contains("suit")) {
+            return "jacket";
+        }
+        if (c.contains("dress") || c.contains("gown") || c.contains("frock")) {
+            return "dress";
+        }
+        if (c.contains("top") || c.contains("blouse") || c.contains("tunic")) {
+            return "top";
+        }
+        if (c.contains("bag") || c.contains("handbag") || c.contains("tote") || c.contains("clutch")) {
+            return "bag";
+        }
+        if (c.contains("watch") || c.contains("timepiece")) {
+            return "watch";
+        }
+        if (c.contains("access")) {
+            return "accessory";
+        }
+        return c;
+    }
+
     private Page<ProductResponse> getFilteredPageWithoutQuery(String gender, String category, Pageable pageable) {
         Collection<Audience> audiences = resolveAudiences(gender, null);
-        String catFilter = (category != null && !category.isBlank() && !category.equalsIgnoreCase("All")) ? category.trim().toLowerCase() : null;
+        String catFilter = resolveCategoryFilter(category);
 
         Specification<Product> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
