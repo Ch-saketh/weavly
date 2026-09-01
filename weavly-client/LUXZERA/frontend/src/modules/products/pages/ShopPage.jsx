@@ -4,8 +4,8 @@
 // ──────────────────────────────────────────────────────────────────────────
 // Weavly — Collection Page
 // • Clean typography printed directly on a flat sheet of warm stone paper
-// • No background containers, headers, or redundant item count blocks
-// • Clean Left Sidebar (using standalone FiltersSidebar component)
+// • Strict Department Gender Lock (Women page shows 100% Women items, Men shows 100% Men items)
+// • Dynamic category sections for Dresses, Tops, Skirts, Handbags, Footwear
 // ──────────────────────────────────────────────────────────────────────────
 
 import { useState, useMemo, useEffect, useCallback, useRef, Suspense } from "react";
@@ -47,14 +47,16 @@ const DEPT_META = {
 const DEPT_HERO_CONFIG = {
   Men: {
     bgColor: "bg-[#CFE2EE]",
-    title: "Men's Summer Arrival Outfit",
+    title: "Men's Sartorial & Tailored Wear",
     desc: "Discover quality fashion that reflects your style with unique items for everyday elegance.",
     discount: "50%",
     discountLabel: "OFF",
     heroImage: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=1000&q=80",
-    card1Title: "Tailored Jackets",
+    card1Title: "Tailored Blazers",
+    card1Link: "/market?gender=Men&category=jacket",
     card1Image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80",
-    card2Title: "Minimalist Sneakers",
+    card2Title: "Leather Derbys & Shoes",
+    card2Link: "/market?gender=Men&category=shoes",
     card2Image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=600&q=80"
   },
   Women: {
@@ -64,9 +66,11 @@ const DEPT_HERO_CONFIG = {
     discount: "NEW",
     discountLabel: "ARRIVALS",
     heroImage: "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=1000&q=80",
-    card1Title: "Structured Leather Tote",
+    card1Title: "Structured Leather Handbags",
+    card1Link: "/market?gender=Women&category=bag",
     card1Image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=600&q=80",
-    card2Title: "Silk Pleated Skirts",
+    card2Title: "Dresses & Skirts",
+    card2Link: "/market?gender=Women&category=dress",
     card2Image: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?auto=format&fit=crop&w=600&q=80"
   },
   Unisex: {
@@ -77,8 +81,10 @@ const DEPT_HERO_CONFIG = {
     discountLabel: "EDITION",
     heroImage: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1000&q=80",
     card1Title: "Performance Shoes",
+    card1Link: "/market?category=shoes",
     card1Image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=600&q=80",
     card2Title: "Heavyweight Tees",
+    card2Link: "/market?category=tshirt",
     card2Image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80"
   },
   All: {
@@ -89,8 +95,10 @@ const DEPT_HERO_CONFIG = {
     discountLabel: "LOOKBOOK",
     heroImage: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1000&q=80",
     card1Title: "High-Fashion Apparel",
+    card1Link: "/market",
     card1Image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=600&q=80",
     card2Title: "Luxury Accessories",
+    card2Link: "/market?category=shoes",
     card2Image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
   }
 };
@@ -100,9 +108,11 @@ function ShopPageContent({ initialDepartment = "All" }) {
   const pathname = usePathname() || "";
   const searchParams = useSearchParams();
   const query = searchParams?.get("q")?.trim() || "";
+  const categoryParam = searchParams?.get("category")?.trim() || "";
+  const genderParam = searchParams?.get("gender")?.trim() || "";
   const { user } = useAuth();
 
-  // Derive gender from user profile for server-side filtering
+  // Derive gender from user profile for server-side filtering on generic pages
   const userGender = (() => {
     const g = (user?.gender || "").toLowerCase();
     if (["male", "men", "man", "boy"].includes(g)) return "male";
@@ -124,7 +134,13 @@ function ShopPageContent({ initialDepartment = "All" }) {
   const loadMoreTriggerRef = useRef(null);
 
   // Reset category when department changes
-  useEffect(() => { setActiveCat("All"); }, [initialDepartment]);
+  useEffect(() => { 
+    if (categoryParam) {
+      setActiveCat(categoryParam);
+    } else {
+      setActiveCat("All"); 
+    }
+  }, [initialDepartment, categoryParam]);
 
   const clearAll = useCallback(() => {
     setActiveCat("All"); setActiveSizes([]); setActiveBrand("All"); setPriceMax(5000);
@@ -132,6 +148,15 @@ function ShopPageContent({ initialDepartment = "All" }) {
 
   // Initial products load with AbortController and request cancellation
   const initialLoadAbortRef = useRef(null);
+
+  const resolveEffectiveDept = useCallback(() => {
+    if (genderParam) return genderParam;
+    if (initialDepartment && initialDepartment !== "All") return initialDepartment;
+    if (query) return undefined;
+    if (userGender === "male") return "Men";
+    if (userGender === "female") return "Women";
+    return undefined;
+  }, [genderParam, initialDepartment, query, userGender]);
 
   useEffect(() => {
     if (initialLoadAbortRef.current) {
@@ -144,11 +169,12 @@ function ShopPageContent({ initialDepartment = "All" }) {
       setLoadingProducts(true);
       setProductError("");
       try {
-        const effectiveDept = query ? undefined : (initialDepartment !== "All" ? initialDepartment : (userGender === "male" ? "men" : userGender === "female" ? "women" : undefined));
+        const effectiveDept = resolveEffectiveDept();
         const res = await getPaginatedProducts({
-          limit: 36,
+          limit: 48,
           offset: 0,
           gender: effectiveDept,
+          category: categoryParam || undefined,
           search: query || undefined,
         }, { signal: controller.signal });
 
@@ -177,25 +203,26 @@ function ShopPageContent({ initialDepartment = "All" }) {
     return () => {
       controller.abort();
     };
-  }, [userGender, initialDepartment, query]);
+  }, [resolveEffectiveDept, categoryParam, query]);
 
   // Load more on scroll
   const loadMore = useCallback(async () => {
     if (loadingMore || !hasMore || loadingProducts) return;
     setLoadingMore(true);
     try {
-      const effectiveDept = query ? undefined : (initialDepartment !== "All" ? initialDepartment : (userGender === "male" ? "men" : userGender === "female" ? "women" : undefined));
+      const effectiveDept = resolveEffectiveDept();
       const res = await getPaginatedProducts({
-        limit: 36,
+        limit: 48,
         offset: products.length,
         gender: effectiveDept,
+        category: categoryParam || undefined,
         search: query || undefined,
       });
       if (res.products && res.products.length > 0) {
         setProducts((prev) => {
-          const existingIds = new Set(prev.map((p) => String(p.id)));
-          const uniqueNew = res.products.filter((p) => !existingIds.has(String(p.id)));
-          return [...prev, ...uniqueNew];
+          const ids = new Set(prev.map((x) => x.id));
+          const fresh = res.products.filter((x) => !ids.has(x.id));
+          return [...prev, ...fresh];
         });
         setHasMore(res.hasMore);
       } else {
@@ -207,7 +234,7 @@ function ShopPageContent({ initialDepartment = "All" }) {
     } finally {
       setLoadingMore(false);
     }
-  }, [loadingMore, hasMore, loadingProducts, products.length, userGender, initialDepartment, query]);
+  }, [loadingMore, hasMore, loadingProducts, products.length, resolveEffectiveDept, categoryParam, query]);
 
   // Infinite scroll observer
   useEffect(() => {
@@ -229,79 +256,125 @@ function ShopPageContent({ initialDepartment = "All" }) {
   // ── Filtered & sorted products ─────────────────────────────────────────────
   const displayed = useMemo(() => {
     let list = [...products].filter((p) => p.price <= priceMax);
-    // When NOT searching, apply gender personalization default filter
-    if (!query) {
-      if (userGender === "male") {
-        list = list.filter((p) => {
-          const pg = (p.gender || p.department || "").toLowerCase().trim();
-          const name = (p.name || "").toLowerCase();
-          if (pg.includes("women") || pg.includes("female") || pg.includes("kid") || pg.includes("girl") || pg.includes("boy")) return false;
-          if (name.includes("women") || name.includes("dress") || name.includes("girl") || name.includes("boy")) return false;
-          return ["male", "men", "man"].includes(pg) || (pg === "unisex" && !name.includes("women"));
-        });
-      } else if (userGender === "female") {
-        list = list.filter((p) => {
-          const pg = (p.gender || p.department || "").toLowerCase().trim();
-          const name = (p.name || "").toLowerCase();
-          if (pg.includes("men") || pg.includes("male") || pg.includes("kid") || pg.includes("boy") || pg.includes("girl")) return false;
-          if (name.includes("men ") || name.includes(" men") || name.includes("boy") || name.includes("girl")) return false;
-          return ["female", "women", "woman"].includes(pg) || (pg === "unisex" && !name.includes("men"));
-        });
-      }
-      if (initialDepartment !== "All") list = list.filter((p) => p.department === initialDepartment);
+    
+    // Strict Department-Level Gender Lock
+    const effectiveDept = resolveEffectiveDept();
+    if (effectiveDept === "Women") {
+      list = list.filter((p) => {
+        const pg = (p.gender || p.department || "").toLowerCase().trim();
+        const name = (p.name || "").toLowerCase();
+        if (pg.includes("men") || pg.includes("male") || pg.includes("kid") || pg.includes("boy")) return false;
+        if (name.includes("men ") || name.includes(" men") || name.includes("boy")) return false;
+        return ["female", "women", "woman"].includes(pg) || (pg === "unisex" && !name.includes("men"));
+      });
+    } else if (effectiveDept === "Men") {
+      list = list.filter((p) => {
+        const pg = (p.gender || p.department || "").toLowerCase().trim();
+        const name = (p.name || "").toLowerCase();
+        if (pg.includes("women") || pg.includes("female") || pg.includes("kid") || pg.includes("girl")) return false;
+        if (name.includes("women") || name.includes("dress") || name.includes("girl")) return false;
+        return ["male", "men", "man"].includes(pg) || (pg === "unisex" && !name.includes("women"));
+      });
     }
-    if (activeCat  !== "All") list = list.filter((p) => p.category === activeCat);
-    if (activeBrand !== "All") list = list.filter((p) => p.brand   === activeBrand);
-    if (activeSizes.length)   list = list.filter((p) => activeSizes.some((s) => p.sizes?.includes(s)));
-    if (sortBy === "price_asc")  list.sort((a, b) => a.price - b.price);
+
+    if (activeCat !== "All") {
+      const matchCat = activeCat.toLowerCase();
+      list = list.filter((p) => (p.category || "").toLowerCase().includes(matchCat) || (p.name || "").toLowerCase().includes(matchCat));
+    }
+    if (activeBrand !== "All") list = list.filter((p) => p.brand === activeBrand);
+    if (activeSizes.length) list = list.filter((p) => activeSizes.some((s) => p.sizes?.includes(s)));
+    if (sortBy === "price_asc") list.sort((a, b) => a.price - b.price);
     if (sortBy === "price_desc") list.sort((a, b) => b.price - a.price);
     return list;
-  }, [products, query, userGender, initialDepartment, activeCat, activeBrand, activeSizes, priceMax, sortBy]);
+  }, [products, priceMax, resolveEffectiveDept, activeCat, activeBrand, activeSizes, sortBy]);
 
   const categorySections = useMemo(() => {
     let list = [...products];
-    // Gender filter on category sections too
-    if (userGender === "male") {
+    const effectiveDept = resolveEffectiveDept();
+
+    if (effectiveDept === "Women") {
       list = list.filter((p) => {
         const pg = (p.gender || p.department || "").toLowerCase().trim();
         const name = (p.name || "").toLowerCase();
-        if (pg.includes("women") || pg.includes("female") || pg.includes("kid") || pg.includes("girl") || pg.includes("boy")) return false;
-        if (name.includes("women") || name.includes("dress") || name.includes("girl") || name.includes("boy")) return false;
-        return ["male", "men", "man"].includes(pg) || (pg === "unisex" && !name.includes("women"));
-      });
-    } else if (userGender === "female") {
-      list = list.filter((p) => {
-        const pg = (p.gender || p.department || "").toLowerCase().trim();
-        const name = (p.name || "").toLowerCase();
-        if (pg.includes("men") || pg.includes("male") || pg.includes("kid") || pg.includes("boy") || pg.includes("girl")) return false;
-        if (name.includes("men ") || name.includes(" men") || name.includes("boy") || name.includes("girl")) return false;
+        if (pg.includes("men") || pg.includes("male") || pg.includes("kid") || pg.includes("boy")) return false;
+        if (name.includes("men ") || name.includes(" men") || name.includes("boy")) return false;
         return ["female", "women", "woman"].includes(pg) || (pg === "unisex" && !name.includes("men"));
       });
+
+      const groups = [
+        { id: "Dresses", title: "Dresses & Gowns", subtitle: "Fit & flare silhouettes, midi dresses & eveningwear", items: [] },
+        { id: "Tops", title: "Tops & Blouses", subtitle: "Linen tops, silk blouses & knitwear", items: [] },
+        { id: "Bottoms", title: "Skirts & Trousers", subtitle: "Structured skirts, tailored pants & denim", items: [] },
+        { id: "Footwear", title: "Footwear & Handbags", subtitle: "Handcrafted heels, flats, totes & jewellery", items: [] },
+      ];
+
+      list.forEach((p) => {
+        const cat = (p.category || "").toLowerCase();
+        const name = (p.name || "").toLowerCase();
+        if (cat.includes("dress") || name.includes("dress") || name.includes("gown") || name.includes("saree") || name.includes("lehenga") || name.includes("playsuit")) {
+          groups[0].items.push(p);
+        } else if (cat.includes("top") || cat.includes("shirt") || cat.includes("tee") || name.includes("top") || name.includes("blouse")) {
+          groups[1].items.push(p);
+        } else if (cat.includes("skirt") || cat.includes("pant") || cat.includes("trouser") || cat.includes("jean") || name.includes("skirt")) {
+          groups[2].items.push(p);
+        } else {
+          groups[3].items.push(p);
+        }
+      });
+      return groups.filter((g) => g.items.length > 0);
+    } else if (effectiveDept === "Men") {
+      list = list.filter((p) => {
+        const pg = (p.gender || p.department || "").toLowerCase().trim();
+        const name = (p.name || "").toLowerCase();
+        if (pg.includes("women") || pg.includes("female") || pg.includes("kid") || pg.includes("girl")) return false;
+        if (name.includes("women") || name.includes("dress") || name.includes("girl")) return false;
+        return ["male", "men", "man"].includes(pg) || (pg === "unisex" && !name.includes("women"));
+      });
+
+      const groups = [
+        { id: "Outerwear", title: "Tailored Blazers & Outerwear", subtitle: "Structured blazers, overcoats & jackets", items: [] },
+        { id: "Shirts", title: "Oxford Shirts & Polos", subtitle: "Crisp cotton shirts, linen tops & knit polos", items: [] },
+        { id: "Bottoms", title: "Trousers, Chinos & Denim", subtitle: "Pleated formal trousers & slim-fit jeans", items: [] },
+        { id: "Footwear", title: "Leather Footwear & Accessories", subtitle: "Handcrafted derbys, loafers & belts", items: [] },
+      ];
+
+      list.forEach((p) => {
+        const cat = (p.category || "").toLowerCase();
+        const name = (p.name || "").toLowerCase();
+        if (cat.includes("jacket") || cat.includes("blazer") || cat.includes("outerwear") || name.includes("blazer") || name.includes("jacket")) {
+          groups[0].items.push(p);
+        } else if (cat.includes("shirt") || cat.includes("tshirt") || cat.includes("polo") || name.includes("shirt") || name.includes("polo")) {
+          groups[1].items.push(p);
+        } else if (cat.includes("trouser") || cat.includes("pant") || cat.includes("jean") || cat.includes("chino")) {
+          groups[2].items.push(p);
+        } else {
+          groups[3].items.push(p);
+        }
+      });
+      return groups.filter((g) => g.items.length > 0);
+    } else {
+      const groups = [
+        { id: "Outerwear", title: "Outerwear & Jackets", subtitle: "Tailored blazers, coats & jackets", items: [] },
+        { id: "Tops", title: "Shirts & Tops", subtitle: "Structured tees, linen tops & knitwear", items: [] },
+        { id: "Bottoms", title: "Pants & Bottoms", subtitle: "Pleated trousers, cargo pants & shorts", items: [] },
+        { id: "Footwear", title: "Footwear & Accessories", subtitle: "Minimalist sneakers, loafers & bags", items: [] }
+      ];
+
+      list.forEach((p) => {
+        const cat = (p.category || "").toLowerCase();
+        if (cat.includes("outerwear") || cat.includes("jacket") || cat.includes("blazer")) {
+          groups[0].items.push(p);
+        } else if (cat.includes("top") || cat.includes("shirt") || cat.includes("tee")) {
+          groups[1].items.push(p);
+        } else if (cat.includes("bottom") || cat.includes("pant") || cat.includes("short") || cat.includes("skirt")) {
+          groups[2].items.push(p);
+        } else {
+          groups[3].items.push(p);
+        }
+      });
+      return groups.filter((g) => g.items.length > 0);
     }
-    if (initialDepartment !== "All") list = list.filter((p) => p.department === initialDepartment);
-
-    const groups = [
-      { id: "Outerwear", title: "Outerwear & Jackets", subtitle: "Tailored blazers, coats & jackets", items: [] },
-      { id: "Tops", title: "Shirts & Tops", subtitle: "Structured tees, linen tops & knitwear", items: [] },
-      { id: "Bottoms", title: "Pants & Bottoms", subtitle: "Pleated trousers, cargo pants & shorts", items: [] },
-      { id: "Footwear", title: "Footwear & Accessories", subtitle: "Minimalist sneakers, loafers & bags", items: [] }
-    ];
-
-    list.forEach((p) => {
-      const cat = (p.category || "").toLowerCase();
-      if (cat.includes("outerwear") || cat.includes("jacket") || cat.includes("blazer")) {
-        groups[0].items.push(p);
-      } else if (cat.includes("top") || cat.includes("shirt") || cat.includes("tee")) {
-        groups[1].items.push(p);
-      } else if (cat.includes("bottom") || cat.includes("pant") || cat.includes("short") || cat.includes("skirt")) {
-        groups[2].items.push(p);
-      } else {
-        groups[3].items.push(p);
-      }
-    });
-
-    return groups.filter((g) => g.items.length > 0);
-  }, [products, userGender, initialDepartment, query]);
+  }, [products, resolveEffectiveDept]);
 
   const meta = DEPT_META[initialDepartment] || DEPT_META.All;
   const heroConfig = DEPT_HERO_CONFIG[initialDepartment] || DEPT_HERO_CONFIG.All;
@@ -362,25 +435,33 @@ function ShopPageContent({ initialDepartment = "All" }) {
               </div>
 
               <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
-                <div className="bg-[#F2F0ED] rounded-[28px] p-5 relative overflow-hidden h-[200px] md:h-[220px] flex flex-col justify-between group shadow-xs">
+                <div
+                  onClick={() => heroConfig.card1Link && router.push(heroConfig.card1Link)}
+                  className="bg-[#F2F0ED] rounded-[28px] p-5 relative overflow-hidden h-[200px] md:h-[220px] flex flex-col justify-between group shadow-xs cursor-pointer border border-[#183B56]/20 hover:border-[#183B56] transition-all"
+                >
                   <img
                     src={heroConfig.card1Image}
                     alt={heroConfig.card1Title}
                     className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="z-10 bg-white/90 backdrop-blur-sm self-start px-3 py-1 rounded-full text-xs font-bold text-[#111111]">
-                    {heroConfig.card1Title}
+                  <div className="z-10 bg-white/95 backdrop-blur-sm self-start px-3 py-1 rounded-full text-xs font-bold text-[#183B56] border border-[#183B56]/30 flex items-center gap-1">
+                    <span>{heroConfig.card1Title}</span>
+                    <span>→</span>
                   </div>
                 </div>
 
-                <div className="bg-[#F2F0ED] rounded-[28px] p-5 relative overflow-hidden h-[200px] md:h-[220px] flex flex-col justify-between group shadow-xs">
+                <div
+                  onClick={() => heroConfig.card2Link && router.push(heroConfig.card2Link)}
+                  className="bg-[#F2F0ED] rounded-[28px] p-5 relative overflow-hidden h-[200px] md:h-[220px] flex flex-col justify-between group shadow-xs cursor-pointer border border-[#183B56]/20 hover:border-[#183B56] transition-all"
+                >
                   <img
                     src={heroConfig.card2Image}
                     alt={heroConfig.card2Title}
                     className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="z-10 bg-white/90 backdrop-blur-sm self-start px-3 py-1 rounded-full text-xs font-bold text-[#111111]">
-                    {heroConfig.card2Title}
+                  <div className="z-10 bg-white/95 backdrop-blur-sm self-start px-3 py-1 rounded-full text-xs font-bold text-[#183B56] border border-[#183B56]/30 flex items-center gap-1">
+                    <span>{heroConfig.card2Title}</span>
+                    <span>→</span>
                   </div>
                 </div>
               </div>
@@ -397,12 +478,19 @@ function ShopPageContent({ initialDepartment = "All" }) {
 
         {/* ── PRODUCT GRID / SECTIONS ── */}
         <div className="space-y-16 pt-4">
-          {query ? (
-            /* Search Results Direct Relevance Grid */
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-              {displayed.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
+          {query || activeCat !== "All" ? (
+            /* Search / Filter Results Direct Relevance Grid */
+            <div className="space-y-6">
+              <div className="flex items-center justify-between border-b border-[#183B56]/20 pb-3">
+                <h2 className="text-xl sm:text-2xl font-bold text-[#183B56] uppercase tracking-tight">
+                  {query ? `Search: "${query}"` : `${activeCat} Collection`} ({displayed.length} Pieces)
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                {displayed.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
             </div>
           ) : (
             /* Stacked Category Sections for Catalog Browsing */
@@ -413,7 +501,7 @@ function ShopPageContent({ initialDepartment = "All" }) {
                     <h2 className="text-2xl sm:text-3xl font-bold text-[#183B56] uppercase tracking-tight">
                       {group.title}
                     </h2>
-                    <p className="text-xs font-medium text-[#5A7184] mt-0.5">{group.subtitle}</p>
+                    <p className="text-xs font-medium text-[#5A7184] mt-0.5">{group.subtitle} • {group.items.length} items</p>
                   </div>
                 </div>
 
@@ -448,17 +536,14 @@ function ShopPageContent({ initialDepartment = "All" }) {
               <h3 className="text-sm font-bold uppercase tracking-widest text-[#183B56] mb-2">
                 No products found
               </h3>
-              <p className="text-xs text-[#5A7184] max-w-xs mb-6">
-                No items matched your inquiry. Try checking for typos or searching by brand name.
+              <p className="text-xs text-[#5A7184] max-w-sm mb-6">
+                We couldn&apos;t find any items matching your selected filters. Try broadening your criteria.
               </p>
               <button
-                onClick={() => {
-                  clearAll();
-                  if (query) router.push(pathname);
-                }}
-                className="bg-[#183B56] text-white text-xs font-bold uppercase tracking-wider px-6 py-2.5 hover:bg-[#102A43] transition-colors border border-[#183B56] cursor-pointer"
+                onClick={clearAll}
+                className="py-2.5 px-6 border border-[#183B56] bg-transparent text-[#183B56] text-xs font-bold uppercase tracking-widest hover:bg-[#183B56] hover:text-white transition-all cursor-pointer"
               >
-                Reset Search
+                Reset All Filters
               </button>
             </div>
           )}
@@ -468,14 +553,14 @@ function ShopPageContent({ initialDepartment = "All" }) {
   );
 }
 
-export default function ShopPage(props) {
+export default function ShopPage({ initialDepartment = "All" }) {
   return (
     <Suspense fallback={
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <Loader2 size={24} className="animate-spin text-[#183B56]" />
+      <div className="min-h-screen bg-[#F5EFEB] flex items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-[#183B56]" />
       </div>
     }>
-      <ShopPageContent {...props} />
+      <ShopPageContent initialDepartment={initialDepartment} />
     </Suspense>
   );
 }

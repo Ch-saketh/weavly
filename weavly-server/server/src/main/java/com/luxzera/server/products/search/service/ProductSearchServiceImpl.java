@@ -145,11 +145,37 @@ public class ProductSearchServiceImpl implements ProductSearchService {
             List<Predicate> tokenPredicates = new ArrayList<>();
             for (String token : searchTokens) {
                 if (token.isBlank()) continue;
-                String pattern = "%" + token.toLowerCase() + "%";
-                Predicate nameMatch = cb.like(cb.lower(root.get("name")), pattern);
-                Predicate brandMatch = cb.like(cb.lower(root.get("brandName")), pattern);
-                Predicate catMatch = cb.like(cb.lower(root.get("categoryName")), pattern);
-                tokenPredicates.add(cb.or(nameMatch, brandMatch, catMatch));
+                String base = token.toLowerCase().trim();
+                List<String> variants = new ArrayList<>();
+                variants.add(base);
+
+                // English plural stemming
+                if (base.endsWith("ies") && base.length() > 4) {
+                    variants.add(base.substring(0, base.length() - 3) + "y");
+                } else if (base.endsWith("es") && base.length() > 4) {
+                    variants.add(base.substring(0, base.length() - 2));
+                } else if (base.endsWith("s") && base.length() > 3) {
+                    variants.add(base.substring(0, base.length() - 1));
+                }
+
+                // Synonyms
+                if (base.contains("handbag") || base.contains("purse")) {
+                    variants.add("bag");
+                }
+                if (base.contains("footwear") || base.contains("sneaker") || base.contains("loafer")) {
+                    variants.add("shoes");
+                    variants.add("shoe");
+                }
+
+                List<Predicate> variantPredicates = new ArrayList<>();
+                for (String v : variants) {
+                    String pattern = "%" + v + "%";
+                    Predicate nameMatch = cb.like(cb.lower(root.get("name")), pattern);
+                    Predicate brandMatch = cb.like(cb.lower(root.get("brandName")), pattern);
+                    Predicate catMatch = cb.like(cb.lower(root.get("categoryName")), pattern);
+                    variantPredicates.add(cb.or(nameMatch, brandMatch, catMatch));
+                }
+                tokenPredicates.add(cb.or(variantPredicates.toArray(new Predicate[0])));
             }
 
             if (!tokenPredicates.isEmpty()) {
