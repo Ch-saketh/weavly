@@ -76,8 +76,9 @@ wait_for_url() {
 
     echo -ne "   Waiting for ${name} to be ready..."
     while [ $count -lt $max_retries ]; do
-        if curl -s -o /dev/null -w "%{http_code}" "$url" 2>/dev/null | grep -qE "200|401|404"; then
-            echo -e " ${GREEN}✓ Ready!${RESET}"
+        code=$(curl -s -o /dev/null -w "%{http_code}" "$url" 2>/dev/null || true)
+        if echo "$code" | grep -qE "200|204|301|302|304|307|308|401|403|404"; then
+            echo -e " ${GREEN}✓ Ready! (HTTP $code)${RESET}"
             return 0
         fi
         echo -ne "."

@@ -311,10 +311,10 @@ function IsometricWeavly3D({ word = "WEAVLY" }) {
     container.addEventListener("pointermove", handlePointerMove, { passive: true });
     container.addEventListener("pointerleave", handlePointerLeave, { passive: true });
 
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      const elapsed = clock.getElapsedTime();
+      const elapsed = (performance.now() - startTime) / 1000;
       currentRotX += (targetRotX - currentRotX) * 0.06;
       currentRotY += (targetRotY - currentRotY) * 0.06;
       rootGroup.rotation.x = currentRotX;
