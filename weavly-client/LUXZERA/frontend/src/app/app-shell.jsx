@@ -129,7 +129,7 @@ export default function AppShell({ children }) {
 
   const authPaths = ["/verify-otp", "/forgot-password", "/reset-password", "/complete-google-signup", "/login"];
   const isGuestOnboarding = mounted && !authLoading && pathname === "/" && !currentUser;
-  const isHideLayout = pathname === "/designer-studio" || pathname === "/designer/dashboard" || pathname.startsWith("/admin") || authPaths.includes(pathname) || isGuestOnboarding;
+  const isHideLayout = pathname === "/designer/dashboard" || pathname.startsWith("/admin") || authPaths.includes(pathname) || isGuestOnboarding;
   const showFloatingCart = cartCount > 0 && pathname !== "/cart" && !isHideLayout;
   const showNavbar = !isHideLayout;
 
