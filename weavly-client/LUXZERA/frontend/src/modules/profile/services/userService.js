@@ -30,8 +30,40 @@ export const getProfileDetails = async (userId) => {
   }
 };
 
-export const updateProfile = async (userId, profileData, fileOrInput) => {
+export const updateProfile = async (arg1, arg2, arg3) => {
   const token = getToken();
+
+  let userId = null;
+  let profileData = {};
+  let fileOrInput = null;
+
+  if (arg1 instanceof FormData) {
+    const endpoint = `${config.usersApiUrl}/profile/me`;
+    try {
+      const response = await fetch(endpoint, {
+        method: "PUT",
+        headers: {
+          ...(token ? { "Authorization": `Bearer ${token}` } : {})
+        },
+        body: arg1
+      });
+      return await response.json().catch(() => ({}));
+    } catch (err) {
+      console.warn("Direct FormData update notice:", err);
+      return {};
+    }
+  }
+
+  if (arg1 instanceof File || (arg1 && arg1.name && !arg2 && !arg3)) {
+    fileOrInput = arg1;
+  } else if (typeof arg1 === "string" && (isUuid(arg1) || arg1.length > 10)) {
+    userId = arg1;
+    profileData = arg2 || {};
+    fileOrInput = arg3;
+  } else {
+    profileData = arg1 || {};
+    fileOrInput = arg2;
+  }
 
   // If user has a mock development token, simulate successful local update
   if (!token || token.startsWith("dev_")) {
@@ -47,17 +79,17 @@ export const updateProfile = async (userId, profileData, fileOrInput) => {
   const formData = new FormData();
 
   // 1. Append text fields only when non-empty to respect backend validation
-  if (profileData.phoneNumber && profileData.phoneNumber.trim() !== "") {
-    formData.append("phoneNumber", profileData.phoneNumber.trim());
+  if (profileData.phoneNumber && String(profileData.phoneNumber).trim() !== "") {
+    formData.append("phoneNumber", String(profileData.phoneNumber).trim());
   }
-  if (profileData.gender && profileData.gender.trim() !== "") {
-    formData.append("gender", profileData.gender.trim());
+  if (profileData.gender && String(profileData.gender).trim() !== "") {
+    formData.append("gender", String(profileData.gender).trim());
   }
-  if (profileData.dateOfBirth && profileData.dateOfBirth.trim() !== "") {
-    formData.append("dateOfBirth", profileData.dateOfBirth.trim());
+  if (profileData.dateOfBirth && String(profileData.dateOfBirth).trim() !== "") {
+    formData.append("dateOfBirth", String(profileData.dateOfBirth).trim());
   }
-  if (profileData.bio && profileData.bio.trim() !== "") {
-    formData.append("bio", profileData.bio.trim());
+  if (profileData.bio && String(profileData.bio).trim() !== "") {
+    formData.append("bio", String(profileData.bio).trim());
   }
 
   // 2. Append the actual raw binary image file if provided (File object or DOM input element)
@@ -73,7 +105,7 @@ export const updateProfile = async (userId, profileData, fileOrInput) => {
     const response = await fetch(endpoint, {
       method: "PUT",
       headers: {
-        "Authorization": `Bearer ${token}`
+        ...(token ? { "Authorization": `Bearer ${token}` } : {})
       },
       body: formData
     });

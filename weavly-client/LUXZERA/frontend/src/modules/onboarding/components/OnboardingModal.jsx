@@ -307,14 +307,12 @@ export default function OnboardingModal({ isOpen, onClose }) {
         fashionGoals: formData.fashionGoals,
       };
 
-      await saveFitData(fitPayload);
+      await saveFitData(user?.id, fitPayload);
 
       // 2. Upload Profile Picture if selected
       if (profileImageFile) {
         try {
-          const profileFormData = new FormData();
-          profileFormData.append("file", profileImageFile);
-          await updateProfile(profileFormData);
+          await updateProfile(user?.id, {}, profileImageFile);
         } catch (imgErr) {
           console.warn("Profile image upload skipped or non-blocking:", imgErr);
         }
@@ -324,7 +322,7 @@ export default function OnboardingModal({ isOpen, onClose }) {
       if (recImageFiles.length > 0) {
         for (const item of recImageFiles) {
           try {
-            await uploadRecommendationImage(item.file);
+            await uploadRecommendationImage(user?.id, item.file);
           } catch (recImgErr) {
             console.warn("Recommendation image upload skipped:", recImgErr);
           }

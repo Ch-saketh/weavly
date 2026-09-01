@@ -39,11 +39,18 @@ export const getRecommendationImages = async (userId) => {
 
 /**
  * Uploads a single recommendation/outfit image to Cloudflare R2 via Spring Boot.
- * @param {string} userId - UUID or session indicator
- * @param {File} file - Image binary file
+ * Accepts uploadRecommendationImage(file) or uploadRecommendationImage(userId, file)
+ * @param {string|File} arg1 - userId or image file
+ * @param {File} [arg2] - image binary file if arg1 was userId
  * @returns {Promise<Object>} UserRecommendationImageResponseDto
  */
-export const uploadRecommendationImage = async (userId, file) => {
+export const uploadRecommendationImage = async (arg1, arg2) => {
+  let file = null;
+  if (arg1 instanceof File || (arg1 && arg1.name && !arg2)) {
+    file = arg1;
+  } else {
+    file = arg2 || arg1;
+  }
   if (!file) throw new Error("Image file is required");
 
   const formData = new FormData();
