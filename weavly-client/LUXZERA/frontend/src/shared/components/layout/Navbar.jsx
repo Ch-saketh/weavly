@@ -226,65 +226,93 @@ export default function Navbar({
                 <ChevronDown size={11} strokeWidth={1.5} className={`transition-colors ${isCollectionsActive ? "text-[#183B56]" : "text-[#5A7184] group-hover:text-[#183B56]"}`} />
               </button>
 
-              {/* CardNav-Style Dropdown Menu */}
-              <div className="absolute top-full -left-20 mt-3 w-[720px] bg-[#FFFFFF] border border-[#183B56] shadow-xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
-                <div className="grid grid-cols-3 gap-3">
-                  {/* Card 1: Men */}
-                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
-                    <div className="text-[20px] font-bold uppercase tracking-tight">Men</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/men")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Men&apos;s Atelier
+              {/* Clean Luxury Editorial Dropdown */}
+              <div className="absolute top-full -left-20 mt-3 w-[720px] bg-[#F5EFEB] border border-[#183B56] shadow-[0_16px_40px_rgba(24,59,86,0.12)] p-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2 font-sans">
+                <div className="grid grid-cols-3 gap-6 divide-x divide-[#183B56]/15">
+                  
+                  {/* Column 1: Men */}
+                  <div className="space-y-3">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184] pb-2 border-b border-[#183B56]/15">
+                      Men&apos;s Atelier
+                    </div>
+                    <div className="flex flex-col space-y-1 pt-1">
+                      <button onClick={() => router.push("/men")} className="text-left text-xs font-bold text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Men&apos;s Atelier Hub</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/market?gender=Men&category=shirt")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Suits & Shirts
+                      <button onClick={() => router.push("/market?gender=Men&category=shirt")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Suits, Shirts & Polos</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/market?gender=Men&category=jacket")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Blazers & Pants
+                      <button onClick={() => router.push("/market?gender=Men&category=jacket")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Tailored Blazers & Jackets</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/market?gender=Men&category=shoes")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Leather Footwear
+                      <button onClick={() => router.push("/market?gender=Men&category=trousers")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Trousers & Chinos</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
+                      </button>
+                      <button onClick={() => router.push("/market?gender=Men&category=shoes")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Leather Derbys & Footwear</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
                     </div>
                   </div>
 
-                  {/* Card 2: Women */}
-                  <div className="bg-[#102A43] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#0B1D30] transition-colors border border-[#183B56]">
-                    <div className="text-[20px] font-bold uppercase tracking-tight">Women</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/women")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Women&apos;s Atelier
+                  {/* Column 2: Women */}
+                  <div className="space-y-3 pl-6">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184] pb-2 border-b border-[#183B56]/15">
+                      Women&apos;s Atelier
+                    </div>
+                    <div className="flex flex-col space-y-1 pt-1">
+                      <button onClick={() => router.push("/women")} className="text-left text-xs font-bold text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Women&apos;s Atelier Hub</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/market?gender=Women&category=dress")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Dresses & Gowns
+                      <button onClick={() => router.push("/market?gender=Women&category=dress")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Dresses & Gowns</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/market?gender=Women&category=top")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Tops & Blouses
+                      <button onClick={() => router.push("/market?gender=Women&category=top")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Tops & Silk Blouses</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/market?gender=Women&category=bag")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Skirts & Handbags
+                      <button onClick={() => router.push("/market?gender=Women&category=skirt")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Skirts & Tailored Pants</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
+                      </button>
+                      <button onClick={() => router.push("/market?gender=Women&category=bag")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Footwear & Designer Handbags</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
                     </div>
                   </div>
 
-                  {/* Card 3: Capsules & Market */}
-                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
-                    <div className="text-[20px] font-bold uppercase tracking-tight">Capsules</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/unisex")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Streetwear & Unisex
+                  {/* Column 3: Capsules */}
+                  <div className="space-y-3 pl-6">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184] pb-2 border-b border-[#183B56]/15">
+                      Capsules & Market
+                    </div>
+                    <div className="flex flex-col space-y-1 pt-1">
+                      <button onClick={() => router.push("/unisex")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Streetwear & Unisex</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/new-arrivals")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> New Season Drops
+                      <button onClick={() => router.push("/new-arrivals")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>New Season Drops</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/market")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Full Catalog
+                      <button onClick={() => router.push("/market")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Full Catalog & Search</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/wardrobe")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Saved Wardrobe
+                      <button onClick={() => router.push("/wardrobe")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Saved Wardrobe</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -313,56 +341,73 @@ export default function Navbar({
                 <ChevronDown size={11} strokeWidth={1.5} className={`transition-colors ${isDesignerActive ? "text-[#183B56]" : "text-[#5A7184] group-hover:text-[#183B56]"}`} />
               </button>
 
-              {/* CardNav-Style Dropdown Menu */}
-              <div className="absolute top-full -left-48 mt-3 w-[720px] bg-[#FFFFFF] border border-[#183B56] shadow-xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
-                <div className="grid grid-cols-3 gap-3">
-                  {/* Card 1: Creators & Lookbooks */}
-                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
-                    <div className="text-[20px] font-bold uppercase tracking-tight">Creators</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/designer-studio")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Studio Overview
+              {/* Clean Luxury Editorial Dropdown */}
+              <div className="absolute top-full -left-48 mt-3 w-[720px] bg-[#F5EFEB] border border-[#183B56] shadow-[0_16px_40px_rgba(24,59,86,0.12)] p-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2 font-sans">
+                <div className="grid grid-cols-3 gap-6 divide-x divide-[#183B56]/15">
+                  
+                  {/* Column 1: Creators & Lookbooks */}
+                  <div className="space-y-3">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184] pb-2 border-b border-[#183B56]/15">
+                      Creators & Lookbooks
+                    </div>
+                    <div className="flex flex-col space-y-1 pt-1">
+                      <button onClick={() => router.push("/designer-studio")} className="text-left text-xs font-bold text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Studio Overview & Mission</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/designers")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Verified Creators
+                      <button onClick={() => router.push("/designers")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Verified Creators Directory</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/designs")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Curated Lookbooks
+                      <button onClick={() => router.push("/designs")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Curated Lookbooks</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
                     </div>
                   </div>
 
-                  {/* Card 2: Bespoke Commissions */}
-                  <div className="bg-[#102A43] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#0B1D30] transition-colors border border-[#183B56]">
-                    <div className="text-[20px] font-bold uppercase tracking-tight">Atelier Pass</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/custom-design")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Commission Garment
+                  {/* Column 2: Bespoke Commissions */}
+                  <div className="space-y-3 pl-6">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184] pb-2 border-b border-[#183B56]/15">
+                      Bespoke Commissions
+                    </div>
+                    <div className="flex flex-col space-y-1 pt-1">
+                      <button onClick={() => router.push("/custom-design")} className="text-left text-xs font-bold text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Commission Custom Garment</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/become-designer")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Apply as Designer
+                      <button onClick={() => router.push("/become-designer")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Apply for Atelier Pass</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/designer/login")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Designer Sign In
+                      <button onClick={() => router.push("/designer/login")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Designer Studio Sign In</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
                     </div>
                   </div>
 
-                  {/* Card 3: Client Care */}
-                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
-                    <div className="text-[20px] font-bold uppercase tracking-tight">Client Care</div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/orders")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Track Orders & Escrow
+                  {/* Column 3: Client Care */}
+                  <div className="space-y-3 pl-6">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184] pb-2 border-b border-[#183B56]/15">
+                      Client Care & Escrow
+                    </div>
+                    <div className="flex flex-col space-y-1 pt-1">
+                      <button onClick={() => router.push("/orders")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Track Orders & Escrow</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/about")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> About Weavly
+                      <button onClick={() => router.push("/about")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>About Weavly Maison</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
-                      <button onClick={() => router.push("/faqs")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Atelier FAQs
+                      <button onClick={() => router.push("/faqs")} className="text-left text-xs font-medium text-[#183B56] hover:translate-x-1 transition-all border-none bg-transparent p-0 py-1.5 cursor-pointer flex items-center justify-between group">
+                        <span>Atelier FAQs & Help</span>
+                        <span className="text-[#5A7184] group-hover:text-[#183B56] text-xs transition-colors">→</span>
                       </button>
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
