@@ -26,7 +26,8 @@ public class UserFitDataController {
         if (principal == null) {
             throw new ResourceNotFoundException("Authenticated session not found");
         }
-        User user = userRepository.findByEmail(principal.getName())
+        User user = userRepository.findByEmailIgnoreCase(principal.getName())
+                .or(() -> userRepository.findByEmail(principal.getName()))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return userFitDataService.getFitData(user.getId());
     }
@@ -39,7 +40,8 @@ public class UserFitDataController {
         if (principal == null) {
             throw new ResourceNotFoundException("Authenticated session not found");
         }
-        User user = userRepository.findByEmail(principal.getName())
+        User user = userRepository.findByEmailIgnoreCase(principal.getName())
+                .or(() -> userRepository.findByEmail(principal.getName()))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return userFitDataService.saveFitData(user.getId(), request);
     }

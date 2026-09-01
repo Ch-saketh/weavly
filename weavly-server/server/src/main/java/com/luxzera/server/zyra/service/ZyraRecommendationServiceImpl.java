@@ -246,8 +246,11 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     }
 
     private boolean isGenerationGenderCompatible(UserRecommendationGeneration generation, String userGender) {
-        if (generation == null || generation.getItems() == null || generation.getItems().isEmpty()) {
+        if (generation == null) {
             return false;
+        }
+        if (generation.getItems() == null || generation.getItems().isEmpty()) {
+            return userGender == null;
         }
         if (userGender == null || userGender.equalsIgnoreCase("Unisex")) {
             return true;

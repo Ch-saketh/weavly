@@ -26,6 +26,28 @@ public class ZyraRecommendationController {
 
     private final ZyraRecommendationService zyraRecommendationService;
     private final UserRepository userRepository;
+    private final com.luxzera.server.zyra.client.ZyraClient zyraClient;
+
+    /**
+     * Public / Fallback recommendation endpoint for occasion tabs.
+     * GET /api/recommendations/occasion/{occasion}?gender=Women&topK=50
+     */
+    @GetMapping("/occasion/{occasion}")
+    public ResponseEntity<ZyraRecommendationResponse> getOccasionRecommendations(
+            @PathVariable("occasion") String occasion,
+            @RequestParam(value = "gender", required = false) String gender,
+            @RequestParam(value = "topK", defaultValue = "50", required = false) Integer topK
+    ) {
+        log.info("Received public occasion recommendation request for occasion={}, gender={}, topK={}", occasion, gender, topK);
+        ZyraRecommendationResponse response = zyraClient.getRecommendations(
+                null,
+                topK != null ? topK : 50,
+                gender != null && !gender.trim().isEmpty() ? gender : "Women",
+                occasion,
+                null
+        );
+        return ResponseEntity.ok(response);
+    }
 
     /**
      * Public recommendation endpoint for product pages and widgets.

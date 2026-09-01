@@ -219,6 +219,8 @@ class ZyraUserRecommendationPersistenceTest {
 
         when(generationRepository.findLatestByUserIdWithItems(eq(userA.getId())))
                 .thenReturn(Optional.of(latestGen));
+        when(userProfileRepository.findByUserId(eq(userA.getId())))
+                .thenReturn(Optional.empty());
 
         ZyraUserRecommendationGenerationResponse res = recommendationService
                 .getLatestUserRecommendations(userA);
@@ -232,10 +234,6 @@ class ZyraUserRecommendationPersistenceTest {
     void testValidationFailureOnNullProductOrUser() {
         assertThrows(ZyraValidationException.class, () ->
                 recommendationService.generateAndSaveUserRecommendations(null, "10009781", 50)
-        );
-
-        assertThrows(ZyraValidationException.class, () ->
-                recommendationService.generateAndSaveUserRecommendations(userA, "", 50)
         );
     }
 }

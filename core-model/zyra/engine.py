@@ -14,10 +14,13 @@ import pandas as pd
 from zyra.config import ZyraConfig
 from zyra.metadata import (
     REQUIRED_METADATA_COLUMNS,
+    compute_budget_score,
+    compute_occasion_affinity,
     compute_price_score,
     detect_product_occasions,
     get_product_metadata,
     is_gender_compatible,
+    is_wearable_fashion,
     normalize_gender,
     normalize_product_id,
     validate_metadata_dataframe,
@@ -93,9 +96,13 @@ class ZyraV1:
                     f"Product ordering mismatch: index {idx} has productId {row_pid}, expected {pid}"
                 )
 
-        # 7. Precompute real catalog occasions and text search corpus
+        # 7. Precompute real catalog occasions, wearable status, and text search corpus
         self.product_occasions = [
             detect_product_occasions(self.metadata.iloc[i])
+            for i in range(expected_products)
+        ]
+        self.product_is_wearable = [
+            is_wearable_fashion(self.metadata.iloc[i])
             for i in range(expected_products)
         ]
         self.product_text_corpus = [
@@ -321,7 +328,7 @@ class ZyraV1:
                 remaining.remove(best_position)
 
         else:
-            # Occasion-Aware Multi-Category Pipeline (Frozen)
+            # Occasion-Aware Multi-Category Pipeline with Wearable Fashion & Occasion Specificity
             query_embedding = None
             if query_index is not None:
                 query_emb = self.embeddings[query_index]
@@ -329,7 +336,7 @@ class ZyraV1:
                 if q_norm > 1e-12:
                     query_embedding = query_emb / q_norm
 
-            eligible_indices: List[int] = []
+            scored_candidates = []
             for idx in range(len(self.metadata)):
                 if query_index is not None and idx == query_index:
                     continue
@@ -338,44 +345,38 @@ class ZyraV1:
                 if g not in compatible_genders:
                     continue
 
-                occs = self.product_occasions[idx]
-                if target_occ:
-                    if target_occ in occs or any(o in occs for o in user_occ_set):
-                        eligible_indices.append(idx)
-                elif user_occ_set:
-                    if any(o in occs for o in user_occ_set):
-                        eligible_indices.append(idx)
-                else:
-                    eligible_indices.append(idx)
+                # Filter out non-wearable appliances / beauty kits
+                if not self.product_is_wearable[idx]:
+                    continue
 
-            if len(eligible_indices) < top_k:
-                for idx in range(len(self.metadata)):
-                    if idx not in eligible_indices and str(self.metadata.iloc[idx]["gender_clean"]) in compatible_genders:
-                        eligible_indices.append(idx)
-
-            scored_candidates = []
-            for idx in eligible_indices:
-                row = self.metadata.iloc[idx]
-                cand_occs = self.product_occasions[idx]
                 cand_cat = str(row["category_clean"])
                 cand_brand = str(row["brand_clean"])
-
+                cand_price = float(row["price_numeric"])
+                
+                # Compute fine-grained occasion affinity
+                occ_affinity = compute_occasion_affinity(row, target_occ)
+                
+                # Baseline occasion membership score
+                occs = self.product_occasions[idx]
                 if target_occ:
-                    occ_score = 1.0 if target_occ in cand_occs else (0.6 if any(o in cand_occs for o in user_occ_set) else 0.0)
+                    cand_occ_score = 1.0 if target_occ in occs else (0.4 if any(o in occs for o in user_occ_set) else 0.0)
                 elif user_occ_set:
-                    occ_score = 1.0 if any(o in cand_occs for o in user_occ_set) else 0.0
+                    cand_occ_score = 1.0 if any(o in occs for o in user_occ_set) else 0.0
                 else:
-                    occ_score = 0.5
+                    cand_occ_score = 0.5
+
+                combined_occ = 0.70 * occ_affinity + 0.30 * cand_occ_score
 
                 if query_embedding is not None:
                     cand_emb = self.embeddings[idx]
                     c_norm = np.linalg.norm(cand_emb)
                     sim = float(cand_emb @ query_embedding / (c_norm + 1e-12))
                     sim = max(0.0, min(1.0, sim))
-                    rel = 0.45 * sim + 0.35 * occ_score + 0.20 * (1.0 if str(row["gender_clean"]) == target_gender else 0.7)
+                    rel = 0.40 * sim + 0.45 * combined_occ + 0.15 * (1.0 if g == target_gender else 0.7)
                 else:
-                    sim = 0.92 + 0.06 * occ_score
-                    rel = 0.65 * occ_score + 0.35 * (1.0 if str(row["gender_clean"]) == target_gender else 0.7)
+                    # Dynamic similarity score reflecting occasion alignment
+                    sim = max(0.85, min(0.99, 0.88 + 0.10 * combined_occ))
+                    rel = 0.75 * combined_occ + 0.25 * (1.0 if g == target_gender else 0.7)
 
                 scored_candidates.append(
                     {
@@ -389,10 +390,10 @@ class ZyraV1:
 
             scored_candidates.sort(key=lambda x: -x["relevanceScore"])
 
-            # Greedy selection with brand & progressive category penalties
-            remaining_items = scored_candidates[:500]
+            # Progressive diversity re-ranker across top 400 pool
+            remaining_items = scored_candidates[:400]
             selected_candidates = []
-            brand_counts = {}
+            brand_counts: Dict[str, int] = {}
             cat_counts: Dict[str, int] = {}
 
             while remaining_items and len(selected_candidates) < top_k:
@@ -404,7 +405,7 @@ class ZyraV1:
                     b_pen = 0.0 if b_cnt == 0 else (0.015 if b_cnt == 1 else (0.05 if b_cnt == 2 else 0.12))
 
                     c_cnt = cat_counts.get(item["category"], 0)
-                    c_pen = 0.0 if c_cnt < 3 else (0.05 if c_cnt < 6 else (0.12 if c_cnt < 10 else 0.25 + 0.05 * (c_cnt - 10)))
+                    c_pen = 0.0 if c_cnt < 4 else (0.04 if c_cnt < 7 else (0.10 if c_cnt < 11 else 0.22 + 0.04 * (c_cnt - 11)))
 
                     f_score = item["relevanceScore"] - b_pen - c_pen
                     if f_score > best_score:
@@ -447,13 +448,15 @@ class ZyraV1:
         latency_ms = (time.perf_counter() - start_time) * 1000.0
 
         return {
-            "productId": str(norm_product_id) if norm_product_id else (str(target_occ) if target_occ else "personalized"),
+            "productId": str(norm_product_id) if norm_product_id else (str(target_occ) if target_occ else "occasion-feed"),
             "modelVersion": self.config.engine_version,
             "recommendations": recommendations,
             "metadata": {
                 "candidateK": self.config.candidate_k,
                 "finalK": self.config.final_k,
                 "minimumSimilarity": self.config.minimum_similarity,
+                "targetGender": target_gender,
+                "occasion": target_occ,
                 "latencyMs": round(latency_ms, 2),
             },
         }
@@ -577,6 +580,10 @@ class ZyraV1:
             if cand_gender not in compatible_genders:
                 continue
 
+            # Filter out non-wearable appliances / beauty kits from wardrobe recommendations
+            if not self.product_is_wearable[idx]:
+                continue
+
             total_gender_compatible += 1
 
             cand_cat = str(row["category_clean"])
@@ -596,13 +603,15 @@ class ZyraV1:
             s_style = match_text_signal(text_corpus, pref_styles, avoid_styles)
             s_color = match_text_signal(text_corpus, pref_colors, avoid_colors)
 
-            # Occasion score
+            # Occasion score with high-precision affinity
+            s_occ_aff = compute_occasion_affinity(row, target_occ if target_occ else (list(user_occ_set)[0] if user_occ_set else None))
             if target_occ:
-                s_occ = 1.0 if target_occ in cand_occs else (0.75 if any(o in cand_occs for o in user_occ_set) else 0.25)
+                s_occ_base = 1.0 if target_occ in cand_occs else (0.75 if any(o in cand_occs for o in user_occ_set) else 0.25)
             elif user_occ_set:
-                s_occ = 1.0 if any(o in cand_occs for o in user_occ_set) else 0.25
+                s_occ_base = 1.0 if any(o in cand_occs for o in user_occ_set) else 0.25
             else:
-                s_occ = 0.40
+                s_occ_base = 0.40
+            s_occ = 0.70 * s_occ_aff + 0.30 * s_occ_base
 
             # Budget score
             s_budget = compute_budget_score(budget_range, cand_price) if budget_range else 0.50

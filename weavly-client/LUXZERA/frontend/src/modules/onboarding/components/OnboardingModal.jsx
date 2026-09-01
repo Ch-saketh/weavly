@@ -53,6 +53,8 @@ export default function OnboardingModal({ isOpen, onClose }) {
 
   // ── Form State for UserFitData (15 Areas) ──────────────────────────────────
   const [formData, setFormData] = useState({
+    // Q0: Gender
+    gender: user?.gender || "Women",
     // Q1: Height
     heightRange: "",
     exactHeightCm: "",
@@ -285,7 +287,20 @@ export default function OnboardingModal({ isOpen, onClose }) {
     setErrorMsg("");
 
     try {
-      // 1. Prepare and Save Fit Data
+      // 1. Update Profile (Gender, Name, Photo)
+      try {
+        const profPayload = {};
+        if (formData.gender) profPayload.gender = formData.gender;
+        if (profileImageFile) {
+          await updateProfile(user?.id, profPayload, profileImageFile);
+        } else if (formData.gender) {
+          await updateProfile(user?.id, profPayload);
+        }
+      } catch (profErr) {
+        console.warn("Profile update notice:", profErr);
+      }
+
+      // 2. Prepare and Save Fit Data
       const fitPayload = {
         heightRange: formData.heightRange || null,
         exactHeightCm: formData.exactHeightCm ? parseFloat(formData.exactHeightCm) : null,
@@ -308,15 +323,6 @@ export default function OnboardingModal({ isOpen, onClose }) {
       };
 
       await saveFitData(user?.id, fitPayload);
-
-      // 2. Upload Profile Picture if selected
-      if (profileImageFile) {
-        try {
-          await updateProfile(user?.id, {}, profileImageFile);
-        } catch (imgErr) {
-          console.warn("Profile image upload skipped or non-blocking:", imgErr);
-        }
-      }
 
       // 3. Upload Recommendation Analysis Images
       if (recImageFiles.length > 0) {
@@ -434,6 +440,33 @@ export default function OnboardingModal({ isOpen, onClose }) {
                     <p className="text-xs text-[#5A7184]">
                       Enter your approximate measurements so every curated piece fits your proportions with bespoke precision.
                     </p>
+                  </div>
+
+                  {/* Q0: Gender Selection */}
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#183B56] block">
+                      Gender Category <span className="text-red-500">*</span>
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {["Women", "Men", "Unisex"].map((g) => {
+                        const isSel = (formData.gender || user?.gender || "Women").toLowerCase() === g.toLowerCase();
+                        return (
+                          <button
+                            key={g}
+                            type="button"
+                            onClick={() => setFormData((prev) => ({ ...prev, gender: g }))}
+                            className={`py-2 px-3 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
+                              isSel
+                                ? "bg-[#183B56] text-white border-[#183B56]"
+                                : "bg-white text-[#183B56] border-[#183B56]/30 hover:border-[#183B56]"
+                            }`}
+                          >
+                            {isSel && <Check size={13} />}
+                            <span>{g}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
 
                   {/* Q1: Height */}

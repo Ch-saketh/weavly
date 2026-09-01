@@ -29,9 +29,9 @@ public class ZyraClientImpl implements ZyraClient {
     private final String baseUrl;
 
     public ZyraClientImpl(
-            @Value("${zyra.flask.base-url:http://localhost:5000}") String baseUrl,
-            @Value("${zyra.flask.connect-timeout-ms:3000}") int connectTimeoutMs,
-            @Value("${zyra.flask.read-timeout-ms:10000}") int readTimeoutMs
+            @Value("${zyra.flask.base-url:http://localhost:5001}") String baseUrl,
+            @Value("${zyra.flask.connect-timeout-ms:5000}") int connectTimeoutMs,
+            @Value("${zyra.flask.read-timeout-ms:15000}") int readTimeoutMs
     ) {
         this.baseUrl = baseUrl;
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();

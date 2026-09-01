@@ -77,7 +77,8 @@ public class SecurityConfig {
                                 "/api/products",
                                 "/api/products/**",
                                 "/api/search/ai",
-                                "/api/recommendations/product/**"
+                                "/api/recommendations/product/**",
+                                "/api/recommendations/occasion/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/products/import-catalog").permitAll()
 

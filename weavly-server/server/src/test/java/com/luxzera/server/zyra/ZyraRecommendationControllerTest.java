@@ -48,12 +48,15 @@ class ZyraRecommendationControllerTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private com.luxzera.server.zyra.client.ZyraClient zyraClient;
+
     private User testUser;
     private Principal mockPrincipal;
 
     @BeforeEach
     void setUp() {
-        ZyraRecommendationController controller = new ZyraRecommendationController(zyraRecommendationService, userRepository);
+        ZyraRecommendationController controller = new ZyraRecommendationController(zyraRecommendationService, userRepository, zyraClient);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();

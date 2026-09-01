@@ -168,6 +168,35 @@ export const generateUserRecommendations = async (params = {}, fallbackTopK = 50
 };
 
 /**
+ * Fetch public occasion recommendations.
+ * GET /api/recommendations/occasion/{occasion}
+ */
+export const getOccasionRecommendations = async (occasion, gender = "Women", topK = 50) => {
+  if (!occasion) return [];
+  const url = `${getBaseUrl()}/recommendations/occasion/${encodeURIComponent(occasion)}?gender=${encodeURIComponent(gender)}&topK=${topK}`;
+
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      return [];
+    }
+
+    const data = await res.json();
+    const rawList = data.recommendations || [];
+    return rawList.map(normalizeRecommendationItem);
+  } catch (err) {
+    console.warn("Occasion recommendation fetch notice:", err);
+    return [];
+  }
+};
+
+/**
  * Fetch public product recommendations for a specific product.
  * GET /api/recommendations/product/{productId}
  */

@@ -226,6 +226,95 @@ def validate_metadata_dataframe(
         )
 
 
+NON_WEARABLE_KEYWORDS = [
+    "hair dryer", "hairdryer", "dryer", "straightener", "eyeshadow", "eyeliner", "mascara",
+    "lipstick", "lip color", "lip gloss", "lip liner", "nail polish", "compact", "foundation", "concealer",
+    "blush", "beauty kit", "skin care", "skincare", "body wash", "face wash", "face cream",
+    "body lotion", "lotion", "serum", "sunscreen", "shampoo", "conditioner", "trimmer",
+    "shaver", "epilator", "razor", "scrub", "cleanser", "deodorant", "hair oil", "eau de",
+    "perfume", "parfum", "fragrance", "bra ", " bra", "panty", "briefs", "lingerie", "innerwear"
+]
+
+
+def is_wearable_fashion(row: Any) -> bool:
+    """Check whether a product is a wearable fashion/apparel item."""
+    name = str(row.get("name", "") if hasattr(row, "get") else getattr(row, "name", "")).lower()
+    cat = str(row.get("category_clean", "") if hasattr(row, "get") else getattr(row, "category_clean", "")).lower()
+    full_text = f"{name} {cat}"
+    return not any(kw in full_text for kw in NON_WEARABLE_KEYWORDS)
+
+
+def compute_occasion_affinity(row: Any, target_occ: Optional[str]) -> float:
+    """Compute high-precision affinity score for a specific occasion."""
+    if not target_occ:
+        return 0.5
+
+    occ = target_occ.lower().strip()
+    name = str(row.get("name", "") if hasattr(row, "get") else getattr(row, "name", "")).lower()
+    cat = str(row.get("category_clean", "") if hasattr(row, "get") else getattr(row, "category_clean", "")).lower()
+    desc = str(row.get("description", "") if hasattr(row, "get") else getattr(row, "description", "")).lower()
+    full_text = f"{name} {cat} {desc}"
+
+    if occ == "wedding":
+        if any(w in full_text for w in ["saree", "lehenga", "kurta", "anarkali", "sherwani", "ethnic", "bridal", "festive", "silk", "woven design", "dupatta", "churidar", "nehru jacket"]):
+            return 1.0
+        if any(w in full_text for w in ["suit", "blazer", "heels", "juttis", "clutch", "necklace", "earrings", "bangle", "ring", "jewelry", "jewellery"]):
+            return 0.85
+        if any(w in full_text for w in ["tshirt", "t-shirt", "tank top", "shorts", "gym", "track", "sports"]):
+            return -0.5
+        return 0.1
+
+    elif occ in ["formal", "work"]:
+        if any(w in full_text for w in ["formal shirt", "formal", "office", "workwear", "corporate", "blazer", "suit", "trousers", "chinos", "oxford", "derby", "pencil skirt", "laptop bag", "work tote", "tie"]):
+            return 1.0
+        if any(w in full_text for w in ["shirt", "trousers", "watch", "leather shoes", "flat front", "solid"]):
+            return 0.75
+        if any(w in full_text for w in ["t-shirt", "tank top", "shorts", "hoodie", "graphic", "sequin"]):
+            return -0.4
+        return 0.1
+
+    elif occ == "party":
+        if any(w in full_text for w in ["party", "sequin", "sequinned", "cocktail", "clubwear", "bodycon", "shimmer", "metallic", "glitter", "slit dress", "evening", "night out", "stiletto", "heels", "clutch"]):
+            return 1.0
+        if any(w in full_text for w in ["dress", "crop top", "blazer", "stylish", "heels", "leather jacket"]):
+            return 0.8
+        if any(w in full_text for w in ["formal shirt", "office", "gym", "track"]):
+            return 0.1
+        return 0.2
+
+    elif occ == "date":
+        if any(w in full_text for w in ["date", "romantic", "floral", "wrap dress", "fit and flare", "elegant", "silk", "chiffon", "chic", "lace", "off-shoulder", "ruffle", "heels", "stylish"]):
+            return 1.0
+        if any(w in full_text for w in ["dress", "top", "blouse", "skirt", "jacket", "perfume", "handbag"]):
+            return 0.75
+        return 0.2
+
+    elif occ == "college":
+        if any(w in full_text for w in ["college", "campus", "graphic", "printed t-shirt", "tshirt", "t-shirt", "crop top", "denim", "jeans", "sneakers", "backpack", "hoodie", "sweatshirt", "casual shirt", "flannel"]):
+            return 1.0
+        if any(w in full_text for w in ["casual", "top", "shorts", "canvas shoes", "messenger"]):
+            return 0.8
+        if any(w in full_text for w in ["saree", "suit", "formal", "blazer", "bridal"]):
+            return -0.3
+        return 0.2
+
+    elif occ == "casual":
+        if any(w in full_text for w in ["casual", "daily", "tshirt", "t-shirt", "jeans", "denim", "top", "polo", "shorts", "sneakers", "flats", "slip-on", "cotton"]):
+            return 1.0
+        if any(w in full_text for w in ["shirt", "dress", "jacket", "skirt", "bag"]):
+            return 0.7
+        return 0.3
+
+    elif occ == "sport":
+        if any(w in full_text for w in ["sport", "athletic", "running", "gym", "workout", "training", "track", "joggers", "sports bra", "dry fit", "activewear", "sneakers"]):
+            return 1.0
+        if any(w in full_text for w in ["tshirt", "shorts", "hoodie", "sweatshirt"]):
+            return 0.7
+        return -0.5
+
+    return 0.5
+
+
 def detect_product_occasions(row: Any) -> Set[str]:
     """Detect occasion affinities from product name, description, and category."""
     name = str(row.get("name", "") if hasattr(row, "get") else getattr(row, "name", "")).lower()
@@ -238,28 +327,29 @@ def detect_product_occasions(row: Any) -> Set[str]:
     # Keyword detection
     if any(w in full_text for w in ["party", "clubwear", "cocktail", "celebration", "evening", "night out"]):
         occasions.add("party")
-    if any(w in full_text for w in ["wedding", "bridal", "groom", "festive", "saree", "sherwani", "lehenga"]):
+    if any(w in full_text for w in ["wedding", "bridal", "groom", "festive", "saree", "sherwani", "lehenga", "anarkali"]):
         occasions.add("wedding")
     if any(w in full_text for w in ["formal", "office", "work", "corporate", "business", "suit", "blazer", "tuxedo", "oxford"]):
         occasions.add("formal")
         occasions.add("work")
     if any(w in full_text for w in ["sport", "running", "gym", "training", "athletic", "jogger", "track", "sneaker"]):
         occasions.add("sport")
-    if any(w in full_text for w in ["date", "dinner", "stylish", "romantic", "dress", "heels", "perfume", "fragrance"]):
+    if any(w in full_text for w in ["date", "dinner", "stylish", "romantic", "dress", "heels", "perfume", "floral"]):
         occasions.add("date")
-    if any(w in full_text for w in ["college", "campus", "streetwear", "casual", "denim", "jeans", "tshirt", "t-shirt", "hoodie", "shorts"]):
-        occasions.add("casual")
+    if any(w in full_text for w in ["college", "campus", "streetwear", "denim", "jeans", "tshirt", "t-shirt", "hoodie", "graphic"]):
         occasions.add("college")
+    if any(w in full_text for w in ["casual", "daily", "shorts"]):
+        occasions.add("casual")
 
     # Fashion category affinities
     if cat in ["suit"]:
         occasions.update(["formal", "wedding", "work", "party"])
     elif cat in ["saree", "kurta"]:
-        occasions.update(["wedding", "festive", "party", "ethnic"])
+        occasions.update(["wedding", "festive", "ethnic"])
     elif cat in ["dress", "playsuit"]:
         occasions.update(["party", "date", "casual"])
     elif cat in ["trousers", "shirt"]:
-        occasions.update(["formal", "work", "casual", "date"])
+        occasions.update(["formal", "work", "casual"])
     elif cat in ["tshirt", "jeans", "shorts", "sweatshirt"]:
         occasions.update(["casual", "college"])
     elif cat in ["shoes", "watch", "bag", "accessory", "jacket"]:

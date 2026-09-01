@@ -10,6 +10,7 @@ import { getProducts } from "@/modules/products/services/productService";
 import {
   getMyRecommendations,
   generateUserRecommendations,
+  getOccasionRecommendations,
 } from "@/modules/recommendations/services/recommendationService";
 
 const OCCASIONS = [
@@ -48,9 +49,9 @@ export default function ZeraCollection({
   const userId = user?.id || user?.userId || user?.email || "anonymous_user";
   const userGender = (() => {
     const g = (user?.gender || "").toLowerCase();
-    if (["male", "men", "man", "boy"].includes(g)) return "male";
-    if (["female", "women", "woman", "girl"].includes(g)) return "female";
-    return null;
+    if (["male", "men", "man", "boy"].includes(g)) return "Men";
+    if (["female", "women", "woman", "girl"].includes(g)) return "Women";
+    return "Women";
   })();
 
   const loadRecommendations = useCallback(
@@ -58,27 +59,30 @@ export default function ZeraCollection({
       setLoading(true);
       setError(null);
       try {
-        const occParam = selectedOccasion && selectedOccasion.toLowerCase() !== "all" ? selectedOccasion : null;
+        const occParam = selectedOccasion && selectedOccasion.toLowerCase() !== "all" ? selectedOccasion : "college";
 
-        if (forceRefresh) {
-          try {
-            const generated = await generateUserRecommendations({
-              occasion: occParam,
-              topK: 50,
-            });
-            if (generated.recommendations && generated.recommendations.length > 0) {
-              setRecommendations(generated.recommendations);
-              return;
+        if (user) {
+          if (forceRefresh) {
+            try {
+              const generated = await generateUserRecommendations({
+                occasion: occParam,
+                topK: 50,
+              });
+              if (generated.recommendations && generated.recommendations.length > 0) {
+                setRecommendations(generated.recommendations);
+                return;
+              }
+            } catch (genErr) {
+              console.warn("Recommendation generation notice:", genErr);
             }
-          } catch (genErr) {
-            console.warn("Recommendation generation notice:", genErr);
           }
-        }
 
-        const data = await getMyRecommendations(occParam);
-        if (data.recommendations && data.recommendations.length > 0) {
-          setRecommendations(data.recommendations);
-        } else {
+          const data = await getMyRecommendations(occParam);
+          if (data.recommendations && data.recommendations.length > 0) {
+            setRecommendations(data.recommendations);
+            return;
+          }
+
           try {
             const generated = await generateUserRecommendations({
               occasion: occParam,
@@ -91,19 +95,27 @@ export default function ZeraCollection({
           } catch (genErr) {
             console.warn("Occasion generation notice:", genErr);
           }
-
-          const fallback = await getProducts({ limit: 16, gender: userGender });
-          if (fallback && fallback.length > 0) {
-            setRecommendations(fallback);
-          } else {
-            setRecommendations([]);
-          }
         }
+
+        // Fetch occasion-specific recommendations from Zyra
+        const occasionRecs = await getOccasionRecommendations(occParam, userGender, 50);
+        if (occasionRecs && occasionRecs.length > 0) {
+          setRecommendations(occasionRecs);
+          return;
+        }
+
+        const fallback = await getProducts({ limit: 16, gender: userGender });
+        setRecommendations(fallback || []);
       } catch (err) {
         console.warn("Zera recommendation retrieval note:", err.message);
         try {
-          const fallback = await getProducts({ limit: 16, gender: userGender });
-          setRecommendations(fallback || []);
+          const occasionRecs = await getOccasionRecommendations(selectedOccasion || "college", userGender, 50);
+          if (occasionRecs && occasionRecs.length > 0) {
+            setRecommendations(occasionRecs);
+          } else {
+            const fallback = await getProducts({ limit: 16, gender: userGender });
+            setRecommendations(fallback || []);
+          }
         } catch (catErr) {
           setRecommendations([]);
         }
@@ -111,7 +123,7 @@ export default function ZeraCollection({
         setLoading(false);
       }
     },
-    [userId, selectedOccasion, userGender]
+    [user, selectedOccasion, userGender]
   );
 
   useEffect(() => {
