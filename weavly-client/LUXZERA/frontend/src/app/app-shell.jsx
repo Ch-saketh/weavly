@@ -107,6 +107,8 @@ export default function AppShell({ children }) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
+  }, [pathname]);
+
   const openAuthModal = (view = "login") => {
     setAuthInitialView(view);
     setAuthOpen(true);
