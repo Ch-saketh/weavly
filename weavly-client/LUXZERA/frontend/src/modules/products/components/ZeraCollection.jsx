@@ -61,6 +61,14 @@ export default function ZeraCollection({
       try {
         const occParam = selectedOccasion && selectedOccasion.toLowerCase() !== "all" ? selectedOccasion : "college";
 
+        // 1. Fetch live occasion-specific recommendations from Zyra Engine
+        const occasionRecs = await getOccasionRecommendations(occParam, userGender, 50);
+        if (occasionRecs && occasionRecs.length > 0) {
+          setRecommendations(occasionRecs);
+          return;
+        }
+
+        // 2. If user is authenticated, check personal recommendation profile
         if (user) {
           if (forceRefresh) {
             try {
@@ -82,26 +90,6 @@ export default function ZeraCollection({
             setRecommendations(data.recommendations);
             return;
           }
-
-          try {
-            const generated = await generateUserRecommendations({
-              occasion: occParam,
-              topK: 50,
-            });
-            if (generated.recommendations && generated.recommendations.length > 0) {
-              setRecommendations(generated.recommendations);
-              return;
-            }
-          } catch (genErr) {
-            console.warn("Occasion generation notice:", genErr);
-          }
-        }
-
-        // Fetch occasion-specific recommendations from Zyra
-        const occasionRecs = await getOccasionRecommendations(occParam, userGender, 50);
-        if (occasionRecs && occasionRecs.length > 0) {
-          setRecommendations(occasionRecs);
-          return;
         }
 
         const fallback = await getProducts({ limit: 16, gender: userGender });
@@ -109,13 +97,8 @@ export default function ZeraCollection({
       } catch (err) {
         console.warn("Zera recommendation retrieval note:", err.message);
         try {
-          const occasionRecs = await getOccasionRecommendations(selectedOccasion || "college", userGender, 50);
-          if (occasionRecs && occasionRecs.length > 0) {
-            setRecommendations(occasionRecs);
-          } else {
-            const fallback = await getProducts({ limit: 16, gender: userGender });
-            setRecommendations(fallback || []);
-          }
+          const fallback = await getProducts({ limit: 16, gender: userGender });
+          setRecommendations(fallback || []);
         } catch (catErr) {
           setRecommendations([]);
         }

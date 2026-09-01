@@ -295,8 +295,6 @@ const WarpText = ({
     let geometry;
     let mesh;
     let texture;
-    let resizeObserver;
-    let intersectionObserver;
     let raf = 0;
     let disposed = false;
     let contextLost = false;
@@ -468,10 +466,10 @@ const WarpText = ({
       raf = requestAnimationFrame(loop);
     };
 
-    resizeObserver = new ResizeObserver(resize);
+    const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
 
-    intersectionObserver = new IntersectionObserver(
+    const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
         visible = entry.isIntersecting;
         if (visible && pageVisible && !raf) raf = requestAnimationFrame(loop);

@@ -58,6 +58,20 @@ export const normalizeRecommendationItem = (item, index = 0) => {
   };
 };
 
+const NON_WEARABLE_KEYWORDS = [
+  "hair dryer", "dryer", "eyeshadow", "lipstick", "lip stick", "trimmer", "shaver",
+  "curler", "straightener", "epilator", "cream", "lotion", "face wash", "makeup",
+  "mascara", "eyeliner", "kajal", "perfume", "deodorant", "body mist", "cologne",
+  "nail polish", "shampoo", "conditioner", "cleanser", "moisturizer", "palette", "comb"
+];
+
+export const isWearableFashionItem = (item) => {
+  if (!item) return false;
+  const name = (item.name || item.title || "").toLowerCase();
+  const category = (item.category || "").toLowerCase();
+  return !NON_WEARABLE_KEYWORDS.some((kw) => name.includes(kw) || category.includes(kw));
+};
+
 /**
  * Normalizes the full recommendation collection response.
  */
@@ -74,7 +88,7 @@ export const normalizeRecommendationCollection = (data) => {
   }
 
   const rawRecs = data.recommendations || [];
-  const recommendations = rawRecs.map(normalizeRecommendationItem);
+  const recommendations = rawRecs.filter(isWearableFashionItem).map(normalizeRecommendationItem);
 
   return {
     generationId: data.generationId || null,

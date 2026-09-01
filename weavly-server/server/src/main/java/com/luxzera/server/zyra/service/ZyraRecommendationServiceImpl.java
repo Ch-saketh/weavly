@@ -11,6 +11,7 @@ import com.luxzera.server.zyra.dto.response.ZyraRecommendationItem;
 import com.luxzera.server.zyra.dto.response.ZyraRecommendationResponse;
 import com.luxzera.server.zyra.dto.response.ZyraUserRecommendationGenerationResponse;
 import com.luxzera.server.zyra.entity.UserRecommendationGeneration;
+import com.luxzera.server.zyra.entity.UserRecommendationItemEntity;
 import com.luxzera.server.zyra.exception.ZyraAccessDeniedException;
 import com.luxzera.server.zyra.exception.ZyraGenerationNotFoundException;
 import com.luxzera.server.zyra.exception.ZyraValidationException;
@@ -219,14 +220,14 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             String normOcc = occasion.trim().toLowerCase();
             Optional<UserRecommendationGeneration> occGen = generationRepository
                     .findLatestByUserIdAndOccasionWithItems(user.getId(), normOcc);
-            if (occGen.isPresent() && isGenerationGenderCompatible(occGen.get(), currentUserGender)) {
+            if (occGen.isPresent() && isGenerationValidAndWearable(occGen.get(), currentUserGender, normOcc)) {
                 ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(occGen.get());
                 filterResponseByGender(responseDto, currentUserGender);
                 enrichRecommendationItemImages(responseDto.getRecommendations());
                 return responseDto;
             }
             // Generate fresh occasion recommendations on demand
-            log.info("No prior or invalid gender recommendation cache for user={} and occasion={}, generating on demand", user.getId(), normOcc);
+            log.info("No prior or invalid recommendation cache for user={} and occasion={}, generating on demand", user.getId(), normOcc);
             return generateAndSaveUserRecommendations(user, null, 50, normOcc);
         }
 
@@ -234,7 +235,7 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
                 .or(() -> generationRepository.findFirstByUserIdOrderByGeneratedAtDesc(user.getId()))
                 .orElse(null);
 
-        if (generation == null || !isGenerationGenderCompatible(generation, currentUserGender)) {
+        if (generation == null || !isGenerationValidAndWearable(generation, currentUserGender, null)) {
             log.info("Generating fresh recommendations for user={} matching gender={}", user.getId(), currentUserGender);
             return generateAndSaveUserRecommendations(user, null, 50, null);
         }
@@ -243,6 +244,40 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
         filterResponseByGender(responseDto, currentUserGender);
         enrichRecommendationItemImages(responseDto.getRecommendations());
         return responseDto;
+    }
+
+    private static final List<String> NON_WEARABLE_KEYWORDS = List.of(
+            "hair dryer", "dryer", "eyeshadow", "lipstick", "lip stick", "trimmer", "shaver",
+            "curler", "straightener", "epilator", "cream", "lotion", "face wash", "makeup",
+            "mascara", "eyeliner", "kajal", "perfume", "deodorant", "body mist", "cologne",
+            "nail polish", "shampoo", "conditioner", "cleanser", "moisturizer", "palette", "comb"
+    );
+
+    private boolean isGenerationValidAndWearable(UserRecommendationGeneration generation, String userGender, String occasion) {
+        if (generation == null) {
+            return false;
+        }
+        if (generation.getItems() == null || generation.getItems().isEmpty()) {
+            return userGender == null;
+        }
+        if (!isGenerationGenderCompatible(generation, userGender)) {
+            return false;
+        }
+        if (occasion != null && !occasion.trim().isEmpty() && !occasion.equalsIgnoreCase("all")) {
+            if (generation.getOccasion() == null || !generation.getOccasion().equalsIgnoreCase(occasion.trim())) {
+                return false;
+            }
+        }
+        for (UserRecommendationItemEntity item : generation.getItems()) {
+            String name = (item.getName() != null ? item.getName() : "").toLowerCase();
+            String cat = (item.getCategory() != null ? item.getCategory() : "").toLowerCase();
+            for (String kw : NON_WEARABLE_KEYWORDS) {
+                if (name.contains(kw) || cat.contains(kw)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private boolean isGenerationGenderCompatible(UserRecommendationGeneration generation, String userGender) {

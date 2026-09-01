@@ -36,6 +36,8 @@ logger.info("Initializing RecommendationPersistenceService with %s...", DB_PATH)
 persistence_service = RecommendationPersistenceService(db_path=DB_PATH)
 logger.info("RecommendationPersistenceService initialized successfully.")
 
+app = Flask(__name__)
+
 ALLOWED_ORIGINS = [
     r"^http:\/\/localhost:\d+$",
     r"^https:\/\/.*\.vercel\.app$",
