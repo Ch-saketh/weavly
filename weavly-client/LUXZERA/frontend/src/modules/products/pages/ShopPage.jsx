@@ -233,13 +233,19 @@ function ShopPageContent({ initialDepartment = "All" }) {
     if (!query) {
       if (userGender === "male") {
         list = list.filter((p) => {
-          const pg = (p.gender || "").toLowerCase();
-          return !pg || ["male", "men", "man", "boy", "boys", "unisex"].includes(pg);
+          const pg = (p.gender || p.department || "").toLowerCase().trim();
+          const name = (p.name || "").toLowerCase();
+          if (pg.includes("women") || pg.includes("female") || pg.includes("kid") || pg.includes("girl") || pg.includes("boy")) return false;
+          if (name.includes("women") || name.includes("dress") || name.includes("girl") || name.includes("boy")) return false;
+          return ["male", "men", "man"].includes(pg) || (pg === "unisex" && !name.includes("women"));
         });
       } else if (userGender === "female") {
         list = list.filter((p) => {
-          const pg = (p.gender || "").toLowerCase();
-          return !pg || ["female", "women", "woman", "girl", "girls", "unisex"].includes(pg);
+          const pg = (p.gender || p.department || "").toLowerCase().trim();
+          const name = (p.name || "").toLowerCase();
+          if (pg.includes("men") || pg.includes("male") || pg.includes("kid") || pg.includes("boy") || pg.includes("girl")) return false;
+          if (name.includes("men ") || name.includes(" men") || name.includes("boy") || name.includes("girl")) return false;
+          return ["female", "women", "woman"].includes(pg) || (pg === "unisex" && !name.includes("men"));
         });
       }
       if (initialDepartment !== "All") list = list.filter((p) => p.department === initialDepartment);
@@ -257,13 +263,19 @@ function ShopPageContent({ initialDepartment = "All" }) {
     // Gender filter on category sections too
     if (userGender === "male") {
       list = list.filter((p) => {
-        const pg = (p.gender || "").toLowerCase();
-        return !pg || ["male", "men", "man", "boy", "boys", "unisex"].includes(pg);
+        const pg = (p.gender || p.department || "").toLowerCase().trim();
+        const name = (p.name || "").toLowerCase();
+        if (pg.includes("women") || pg.includes("female") || pg.includes("kid") || pg.includes("girl") || pg.includes("boy")) return false;
+        if (name.includes("women") || name.includes("dress") || name.includes("girl") || name.includes("boy")) return false;
+        return ["male", "men", "man"].includes(pg) || (pg === "unisex" && !name.includes("women"));
       });
     } else if (userGender === "female") {
       list = list.filter((p) => {
-        const pg = (p.gender || "").toLowerCase();
-        return !pg || ["female", "women", "woman", "girl", "girls", "unisex"].includes(pg);
+        const pg = (p.gender || p.department || "").toLowerCase().trim();
+        const name = (p.name || "").toLowerCase();
+        if (pg.includes("men") || pg.includes("male") || pg.includes("kid") || pg.includes("boy") || pg.includes("girl")) return false;
+        if (name.includes("men ") || name.includes(" men") || name.includes("boy") || name.includes("girl")) return false;
+        return ["female", "women", "woman"].includes(pg) || (pg === "unisex" && !name.includes("men"));
       });
     }
     if (initialDepartment !== "All") list = list.filter((p) => p.department === initialDepartment);

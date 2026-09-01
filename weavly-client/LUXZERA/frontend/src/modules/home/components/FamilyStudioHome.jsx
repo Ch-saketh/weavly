@@ -66,6 +66,68 @@ export const isStrictlyMenProduct = (p) => {
   );
 };
 
+const MEN_HERO_CATEGORIES = [
+  {
+    id: "men_shirts",
+    label: "Linen & Oxford Shirts",
+    query: "Shirts",
+    image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80",
+    startPrice: "₹1,499",
+  },
+  {
+    id: "men_blazers",
+    label: "Tailored Blazers & Suits",
+    query: "Blazers",
+    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80",
+    startPrice: "₹2,999",
+  },
+  {
+    id: "men_trousers",
+    label: "Trousers & Chinos",
+    query: "Trousers",
+    image: "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?auto=format&fit=crop&w=800&q=80",
+    startPrice: "₹1,299",
+  },
+  {
+    id: "men_outerwear",
+    label: "Jackets & Outerwear",
+    query: "Jackets",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
+    startPrice: "₹2,499",
+  },
+];
+
+const WOMEN_HERO_CATEGORIES = [
+  {
+    id: "women_dresses",
+    label: "Dresses & Gowns",
+    query: "Dresses",
+    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80",
+    startPrice: "₹1,299",
+  },
+  {
+    id: "women_tops",
+    label: "Tops & Blouses",
+    query: "Tops",
+    image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=80",
+    startPrice: "₹999",
+  },
+  {
+    id: "women_skirts",
+    label: "Skirts & Bottoms",
+    query: "Skirts",
+    image: "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=800&q=80",
+    startPrice: "₹1,499",
+  },
+  {
+    id: "women_outerwear",
+    label: "Jackets & Trench Coats",
+    query: "Jackets",
+    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80",
+    startPrice: "₹2,999",
+  },
+];
+
 const HERO_CATEGORIES = [
   {
     id: "men",
@@ -323,15 +385,31 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [footwearProducts, setFootwearProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
 
-  // Active Category Selection
-  const [selectedCategory, setSelectedCategory] = useState(HERO_CATEGORIES[0]);
-  const [isFitModalOpen, setIsFitModalOpen] = useState(false);
-  const firstShelfRef = useRef(null);
-
   // Determine user gender intent
   const userGenderNorm = (user?.gender || user?.fitData?.gender || "").toLowerCase().trim();
   const isMaleUser = userGenderNorm.startsWith("men") || userGenderNorm.startsWith("male") || userGenderNorm.startsWith("man");
   const isFemaleUser = userGenderNorm.startsWith("wom") || userGenderNorm.startsWith("female") || userGenderNorm.startsWith("ladies");
+
+  const heroCategories = isMaleUser
+    ? MEN_HERO_CATEGORIES
+    : isFemaleUser
+    ? WOMEN_HERO_CATEGORIES
+    : HERO_CATEGORIES;
+
+  // Active Category Selection
+  const [selectedCategory, setSelectedCategory] = useState(heroCategories[0]);
+  const [isFitModalOpen, setIsFitModalOpen] = useState(false);
+  const firstShelfRef = useRef(null);
+
+  useEffect(() => {
+    if (isMaleUser) {
+      setSelectedCategory(MEN_HERO_CATEGORIES[0]);
+    } else if (isFemaleUser) {
+      setSelectedCategory(WOMEN_HERO_CATEGORIES[0]);
+    } else {
+      setSelectedCategory(HERO_CATEGORIES[0]);
+    }
+  }, [isMaleUser, isFemaleUser]);
 
   // Initial products fetch across multiple departments with strict filtering
   useEffect(() => {
@@ -435,7 +513,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
               </div>
               
               <div className="space-y-2">
-                {HERO_CATEGORIES.map((cat) => {
+                {heroCategories.map((cat) => {
                   const active = selectedCategory.id === cat.id;
                   return (
                     <button
