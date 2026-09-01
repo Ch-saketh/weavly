@@ -9,11 +9,11 @@ export const metadata = {
   description: "Curated designer clothing for men, women, unisex, and kids.",
   icons: {
     icon: [
-      { url: "/weavly-favicon.svg?v=13", type: "image/svg+xml" },
-      { url: "/favicon.png?v=13", sizes: "64x64", type: "image/png" },
+      { url: "/weavly-favicon.svg?v=14", type: "image/svg+xml" },
+      { url: "/favicon.png?v=14", sizes: "64x64", type: "image/png" },
     ],
-    shortcut: "/weavly-favicon.svg?v=13",
-    apple: "/favicon.png?v=13",
+    shortcut: "/weavly-favicon.svg?v=14",
+    apple: "/favicon.png?v=14",
   },
 };
 
