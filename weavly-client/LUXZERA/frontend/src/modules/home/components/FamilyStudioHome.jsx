@@ -96,7 +96,7 @@ const MEN_HERO_CATEGORIES = [
     id: "men_shirts",
     label: "Linen & Oxford Shirts",
     query: "Shirts",
-    image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=800&q=80",
     startPrice: "₹1,499",
   },
   {
@@ -110,7 +110,7 @@ const MEN_HERO_CATEGORIES = [
     id: "men_trousers",
     label: "Trousers & Chinos",
     query: "Trousers",
-    image: "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=800&q=80",
     startPrice: "₹1,299",
   },
   {
@@ -158,7 +158,7 @@ const HERO_CATEGORIES = [
     id: "men",
     label: "Men's Essentials",
     query: "Men",
-    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80",
     startPrice: "₹999",
   },
   {
@@ -172,14 +172,14 @@ const HERO_CATEGORIES = [
     id: "shirts",
     label: "Linen & Oxford Shirts",
     query: "Shirts",
-    image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=800&q=80",
     startPrice: "₹1,499",
   },
   {
     id: "outerwear",
     label: "Jackets & Outerwear",
     query: "Jackets",
-    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
     startPrice: "₹2,499",
   },
 ];
@@ -619,18 +619,18 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
 
             {/* CENTER: Big Clean Garment Visual (lg:col-span-4) */}
             <div className="lg:col-span-4 p-6 sm:p-8 flex flex-col items-center justify-center bg-[#F5EFEB]">
-              <div className="w-full aspect-[3/3.6] bg-[#DFE7ED] border border-[#183B56] relative overflow-hidden flex items-center justify-center p-6 shadow-xs">
+              <div className="w-full aspect-[3/3.6] bg-[#DFE7ED] border border-[#183B56] relative overflow-hidden flex items-center justify-center shadow-xs">
                 <img
                   src={selectedCategory.image}
                   alt={selectedCategory.label}
-                  className="w-full h-full object-contain mix-blend-multiply transition-all duration-500 hover:scale-105"
+                  className="w-full h-full object-cover transition-all duration-500 hover:scale-105"
                   onError={(e) => {
                     e.currentTarget.onerror = null;
                     e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
                   }}
                 />
 
-                <div className="absolute bottom-3 left-3 bg-white/90 border border-[#183B56] px-2.5 py-1 text-[10px] font-bold text-[#183B56]">
+                <div className="absolute bottom-3 left-3 bg-white/95 border border-[#183B56] px-2.5 py-1 text-[10px] font-bold text-[#183B56] shadow-xs">
                   From {selectedCategory.startPrice}
                 </div>
               </div>
