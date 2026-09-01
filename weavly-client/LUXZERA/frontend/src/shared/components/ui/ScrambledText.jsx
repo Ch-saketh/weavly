@@ -41,10 +41,13 @@ const ScrambledText = ({
         if (node.parentNode) {
           node.parentNode.replaceChild(frag, node);
         }
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        if (node.tagName !== 'IMG' && node.tagName !== 'SVG' && !node.classList?.contains('scrambled-char')) {
-          Array.from(node.childNodes).forEach(processNode);
-        }
+      } else if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        node.tagName !== 'IMG' &&
+        node.tagName !== 'SVG' &&
+        !node.classList?.contains('scrambled-char')
+      ) {
+        Array.from(node.childNodes).forEach(processNode);
       }
     };
 

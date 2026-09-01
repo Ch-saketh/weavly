@@ -2,10 +2,7 @@ package com.luxzera.server.email.template;
 
 public final class EmailStyles {
 
-    private EmailStyles() {}
-
-    public static String styles() {
-        return """
+    public static final String STYLES = """
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap');
 
@@ -439,5 +436,10 @@ public final class EmailStyles {
 
         </style>
         """;
+
+    private EmailStyles() {}
+
+    public static String styles() {
+        return STYLES;
     }
 }

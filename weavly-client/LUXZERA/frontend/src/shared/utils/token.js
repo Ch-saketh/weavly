@@ -38,5 +38,5 @@ export const removeToken = () => {
 };
 
 export const isLoggedIn = () => {
-  return !!getToken();
+  return Boolean(getToken());
 };

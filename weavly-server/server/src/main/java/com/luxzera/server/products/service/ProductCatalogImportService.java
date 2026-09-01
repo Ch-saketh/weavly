@@ -154,20 +154,21 @@ public class ProductCatalogImportService {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-                List<String> tokens = parseCsvLine(line);
-                if (tokens.size() < 6) continue;
+                if (!line.trim().isEmpty()) {
+                    List<String> tokens = parseCsvLine(line);
+                    if (tokens.size() >= 6) {
+                        String productId = tokens.get(0).trim();
+                        String name = tokens.get(1).trim();
+                        String brand = tokens.get(2).trim();
+                        String gender = tokens.get(3).trim();
+                        String category = tokens.get(4).trim();
+                        BigDecimal price = parsePrice(tokens.get(5));
+                        String imageUrl = tokens.size() > 6 ? tokens.get(6).trim() : null;
+                        String description = tokens.size() > 7 ? tokens.get(7).trim() : null;
 
-                String productId = tokens.get(0).trim();
-                String name = tokens.get(1).trim();
-                String brand = tokens.get(2).trim();
-                String gender = tokens.get(3).trim();
-                String category = tokens.get(4).trim();
-                BigDecimal price = parsePrice(tokens.get(5));
-                String imageUrl = tokens.size() > 6 ? tokens.get(6).trim() : null;
-                String description = tokens.size() > 7 ? tokens.get(7).trim() : null;
-
-                list.add(new ProductCsvRecord(productId, name, brand, gender, category, price, imageUrl, description));
+                        list.add(new ProductCsvRecord(productId, name, brand, gender, category, price, imageUrl, description));
+                    }
+                }
             }
         }
         return list;

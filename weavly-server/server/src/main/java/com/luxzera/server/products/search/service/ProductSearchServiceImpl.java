@@ -217,7 +217,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         }
 
         // 3. Completeness multiplier
-        if (tokens.size() > 0 && matchedTokens == tokens.size()) {
+        if (!tokens.isEmpty() && matchedTokens == tokens.size()) {
             score += 50.0; // All search tokens present
         }
 

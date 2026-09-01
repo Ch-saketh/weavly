@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 @Service
 @Getter
@@ -19,6 +19,7 @@ import java.util.Random;
 public class OtpService {
 
     private static final Logger log = LoggerFactory.getLogger(OtpService.class);
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     private final OtpRepository otpRepository;
     private final EmailService emailService;
@@ -26,8 +27,8 @@ public class OtpService {
     public void generateAndSendOtp(String email) {
         String cleanEmail = email != null ? email.trim().toLowerCase() : "";
 
-        // 1. Generate a random 6-digit code
-        String code = String.format("%06d", new Random().nextInt(1000000));
+        // 1. Generate a cryptographically secure 6-digit code
+        String code = String.format("%06d", SECURE_RANDOM.nextInt(1000000));
 
         // 2. Set expiration time to 15 minutes from now
         LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(15);
@@ -42,10 +43,7 @@ public class OtpService {
 
         otpRepository.save(otp);
 
-        log.info("🔑 [OTP GENERATED] Email: {}, OTP Code: {}", cleanEmail, code);
-        System.out.println("==================================================");
-        System.out.println("🔑 [LUXZERA OTP CODE] Email: " + cleanEmail + " | CODE: " + code);
-        System.out.println("==================================================");
+        log.info("🔑 [OTP GENERATED] OTP generated successfully for email: {}", cleanEmail);
 
         // 4. Trigger email dispatch
         emailService.sendOtpEmail(cleanEmail, code);

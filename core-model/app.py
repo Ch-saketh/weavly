@@ -36,9 +36,14 @@ logger.info("Initializing RecommendationPersistenceService with %s...", DB_PATH)
 persistence_service = RecommendationPersistenceService(db_path=DB_PATH)
 logger.info("RecommendationPersistenceService initialized successfully.")
 
-# Create Flask application
-app = Flask(__name__)
-CORS(app)
+ALLOWED_ORIGINS = [
+    r"^http:\/\/localhost:\d+$",
+    r"^https:\/\/.*\.vercel\.app$",
+    r"^https:\/\/.*\.onrender\.com$",
+    r"^https:\/\/.*\.weavly\.store$",
+    r"^https:\/\/.*\.luxzera\.store$",
+]
+CORS(app, origins=ALLOWED_ORIGINS, supports_credentials=True)
 
 
 @app.route("/health", methods=["GET"])

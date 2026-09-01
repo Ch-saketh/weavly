@@ -13,13 +13,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
 public class AdminAuthServiceImpl {
+
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -35,7 +37,8 @@ public class AdminAuthServiceImpl {
         String email = request.getEmail().trim().toLowerCase();
 
         // 1. Find user & verify admin privileges
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .or(() -> userRepository.findByEmail(email))
                 .orElseThrow(() -> new ResourceNotFoundException("Admin account not found."));
 
         if (user.getRole() != Role.ADMIN && user.getRole() != Role.SUPER_ADMIN) {
@@ -47,8 +50,8 @@ public class AdminAuthServiceImpl {
             throw new BadRequestException("Invalid email or password.");
         }
 
-        // 3. Generate 6-digit OTP
-        String otp = String.format("%06d", new Random().nextInt(999999));
+        // 3. Generate 6-digit OTP using SecureRandom
+        String otp = String.format("%06d", SECURE_RANDOM.nextInt(1000000));
         long expiresAt = System.currentTimeMillis() + OTP_EXPIRATION_MS;
 
         otpStore.put(email, new OtpRecord(otp, expiresAt));

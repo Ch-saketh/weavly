@@ -135,7 +135,7 @@ export default function AboutPage({ onShopNow }) {
           </div>
 
           {/* Large Hero Graphic */}
-          <div className="relative shrink-0 w-44 h-44 bg-[#E2EAEF] rounded-full border border-[#183B56]/30 flex items-center justify-center animate-float hidden lg:flex">
+          <div className="relative shrink-0 w-44 h-44 bg-[#E2EAEF] rounded-full border border-[#183B56]/30 hidden lg:flex items-center justify-center animate-float">
             <div className="absolute inset-2 border border-dashed border-[#183B56]/20 rounded-full animate-pulse-soft" />
             <svg width="80" height="80" viewBox="0 0 100 100" fill="none" stroke="#183B56" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="50" cy="50" r="32" strokeDasharray="4 4" className="text-[#183B56]/20" />

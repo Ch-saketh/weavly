@@ -179,7 +179,7 @@ public class AdminOnboardingServiceImpl implements AdminOnboardingService {
     }
 
     private String uniqueUsername(String email) {
-        String base = email.substring(0, email.indexOf("@")).replaceAll("[^a-zA-Z0-9_]", "");
+        String base = email.substring(0, email.indexOf("@")).replaceAll("\\W", "");
         if (base.length() < 3) {
             base = "admin";
         }
