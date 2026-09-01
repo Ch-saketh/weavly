@@ -2,12 +2,75 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Sparkles, Scissors, ArrowRight, Filter, ShieldCheck } from "lucide-react";
+import { Sparkles, Scissors, ArrowRight, Filter, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { getPublicDesigns } from "../services/designerService";
 
 const CATEGORIES = ["all", "dresses", "suits", "couture", "outerwear", "bridal", "tops", "traditional"];
 const STYLES = ["all", "Contemporary", "Minimalist", "Traditional", "Avant-Garde", "Bohemian"];
 const AUDIENCES = ["all", "Women", "Men", "Unisex"];
+
+const FALLBACK_DESIGNS = [
+  {
+    designId: "DSG-101",
+    title: "Architectural Silk Faille Evening Gown",
+    designerName: "Elena Rostova",
+    category: "couture",
+    targetAudience: "Women",
+    estimatedPrice: 18500,
+    description: "Sculpted bodice with hand-pleated silk faille and structured geometric draping.",
+    primaryImageUrl: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    designId: "DSG-102",
+    title: "Bespoke English Tweed Double-Breasted Blazer",
+    designerName: "Julian Mercer",
+    category: "suits",
+    targetAudience: "Men",
+    estimatedPrice: 22000,
+    description: "Full canvas bespoke blazer cut from Yorkshire heritage wool with horn buttons.",
+    primaryImageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    designId: "DSG-103",
+    title: "Raw Indigo Asymmetrical Linen Tunic",
+    designerName: "Aria Vance",
+    category: "tops",
+    targetAudience: "Women",
+    estimatedPrice: 12800,
+    description: "Natural-dyed Japanese raw linen with fluid asymmetrical drape and hand-stitched seams.",
+    primaryImageUrl: "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    designId: "DSG-104",
+    title: "Artisanal Veg-Tanned Leather Moto Jacket",
+    designerName: "Mateo Silva",
+    category: "outerwear",
+    targetAudience: "Men",
+    estimatedPrice: 26500,
+    description: "Hand-burnished full-grain Italian leather with custom brass hardware and cupro lining.",
+    primaryImageUrl: "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    designId: "DSG-105",
+    title: "Pleated Organza High-Collar Blouse",
+    designerName: "Elena Rostova",
+    category: "tops",
+    targetAudience: "Women",
+    estimatedPrice: 14200,
+    description: "Delicate silk organza with accordion pleats and French cuff detailing.",
+    primaryImageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    designId: "DSG-106",
+    title: "Pleated Savile Row Wool Trousers",
+    designerName: "Julian Mercer",
+    category: "suits",
+    targetAudience: "Men",
+    estimatedPrice: 13500,
+    description: "Double forward pleats with side adjusters in heavy English flannel.",
+    primaryImageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
+  },
+];
 
 export default function PublicDesignsPage() {
   const router = useRouter();
@@ -24,51 +87,79 @@ export default function PublicDesignsPage() {
     setLoading(true);
     getPublicDesigns({ category, style, audience, page, size: 24 })
       .then((data) => {
-        setDesigns(data.content || []);
-        setTotalElements(data.totalElements || 0);
+        if (data?.content && data.content.length > 0) {
+          setDesigns(data.content);
+          setTotalElements(data.totalElements || data.content.length);
+        } else {
+          setDesigns(FALLBACK_DESIGNS);
+          setTotalElements(FALLBACK_DESIGNS.length);
+        }
       })
-      .catch((err) => console.warn("Failed to load designs:", err))
+      .catch((err) => {
+        console.warn("Failed to load designs:", err);
+        setDesigns(FALLBACK_DESIGNS);
+        setTotalElements(FALLBACK_DESIGNS.length);
+      })
       .finally(() => setLoading(false));
   }, [category, style, audience, page]);
 
   return (
-    <div className="min-h-screen bg-[#F5EFEB] text-[#1D1D1F] pb-28">
-      {/* Header */}
-      <section className="bg-gradient-to-b from-[#1D1D1F] via-[#242426] to-[#1D1D1F] text-white pt-28 pb-16 px-6 sm:px-12 text-center relative overflow-hidden">
-        <div className="max-w-4xl mx-auto relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-[#F07020] text-xs font-semibold tracking-wider uppercase mb-5 backdrop-blur-md">
-            <Sparkles size={13} /> Original Creator Creations
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight font-serif mb-4">
-            Curated Designer Lookbook
-          </h1>
-          <p className="text-sm sm:text-base text-white/70 max-w-xl mx-auto font-light leading-relaxed">
-            Browse original concepts handcrafted by independent designers. Select any creation to request custom sizing, color variations, or bespoke adjustments.
-          </p>
-        </div>
-      </section>
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
+      <main className="max-w-[1360px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 py-8 sm:py-12 space-y-10 sm:space-y-14">
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-8 pt-10">
-        {/* Filter Toolbar */}
-        <div className="bg-white rounded-2xl border border-[#ECECEC] p-4 sm:p-6 shadow-sm mb-10 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#ECECEC] pb-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#1D1D1F] uppercase tracking-wider">
-              <Filter size={14} className="text-[#F07020]" /> Filter Creations
+        {/* ── ATELIER HEADER ── */}
+        <section className="border border-[#183B56] bg-[#F5EFEB] p-6 sm:p-10 md:p-12 shadow-xs">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="space-y-3 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#183B56] text-[10px] font-bold tracking-[0.2em] uppercase text-[#183B56]">
+                <Scissors size={12} />
+                <span>Original Creator Creations & Lookbooks</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#183B56] leading-[1.08]">
+                Curated Designer Lookbook.
+              </h1>
+              <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed font-normal">
+                Browse original silhouettes handcrafted by independent couturiers. Select any creation to commission custom sizing, fabric variations, or bespoke alterations.
+              </p>
             </div>
-            <div className="text-xs text-[#86868B]">
-              Showing <span className="font-semibold text-[#1D1D1F]">{designs.length}</span> of {totalElements} creations
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => router.push("/custom-design")}
+                className="py-3.5 px-6 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.16em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all"
+              >
+                <span>Request Custom Brief</span>
+                <ArrowRight size={13} />
+              </button>
+              <button
+                onClick={() => router.push("/designers")}
+                className="py-3.5 px-6 bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] text-xs font-bold uppercase tracking-[0.16em] border border-[#183B56] cursor-pointer transition-all flex items-center justify-center gap-2"
+              >
+                <span>Meet Creators</span>
+                <ArrowUpRight size={13} />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* ── FILTER TOOLBAR ── */}
+        <div className="border border-[#183B56] bg-[#F5EFEB] p-4 sm:p-6 shadow-xs space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#183B56]/30 pb-3">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#183B56] uppercase tracking-wider">
+              <Filter size={14} /> Filter Atelier Creations
+            </div>
+            <div className="text-xs font-bold text-[#5A7184]">
+              Showing <span className="text-[#183B56]">{designs.length}</span> of {totalElements} creations
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-            {/* Category */}
             <div>
-              <label className="block font-medium text-[#6E6E73] mb-1.5">Category</label>
+              <label className="block font-bold uppercase tracking-wider text-[#183B56] mb-1">Category</label>
               <select
                 value={category}
                 onChange={(e) => { setCategory(e.target.value); setPage(0); }}
-                className="w-full px-3 py-2 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] text-[#1D1D1F] outline-none capitalize"
+                className="w-full px-3 py-2 border border-[#183B56] bg-white text-[#183B56] text-xs font-medium outline-none capitalize"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c}>{c === "all" ? "All Categories" : c}</option>
@@ -76,13 +167,12 @@ export default function PublicDesignsPage() {
               </select>
             </div>
 
-            {/* Style */}
             <div>
-              <label className="block font-medium text-[#6E6E73] mb-1.5">Design Style</label>
+              <label className="block font-bold uppercase tracking-wider text-[#183B56] mb-1">Design Style</label>
               <select
                 value={style}
                 onChange={(e) => { setStyle(e.target.value); setPage(0); }}
-                className="w-full px-3 py-2 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] text-[#1D1D1F] outline-none"
+                className="w-full px-3 py-2 border border-[#183B56] bg-white text-[#183B56] text-xs font-medium outline-none"
               >
                 {STYLES.map((s) => (
                   <option key={s} value={s}>{s === "all" ? "All Styles" : s}</option>
@@ -90,13 +180,12 @@ export default function PublicDesignsPage() {
               </select>
             </div>
 
-            {/* Audience */}
             <div>
-              <label className="block font-medium text-[#6E6E73] mb-1.5">Audience</label>
+              <label className="block font-bold uppercase tracking-wider text-[#183B56] mb-1">Audience</label>
               <select
                 value={audience}
                 onChange={(e) => { setAudience(e.target.value); setPage(0); }}
-                className="w-full px-3 py-2 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] text-[#1D1D1F] outline-none"
+                className="w-full px-3 py-2 border border-[#183B56] bg-white text-[#183B56] text-xs font-medium outline-none"
               >
                 {AUDIENCES.map((a) => (
                   <option key={a} value={a}>{a === "all" ? "All Audiences" : a}</option>
@@ -106,112 +195,68 @@ export default function PublicDesignsPage() {
           </div>
         </div>
 
-        {/* Loading Skeletons */}
-        {loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-              <div key={n} className="bg-white rounded-2xl border border-[#ECECEC] overflow-hidden animate-pulse">
-                <div className="aspect-[3/4] bg-[#E5E5E5]" />
-                <div className="p-4 space-y-2">
-                  <div className="h-4 bg-[#E5E5E5] rounded w-3/4" />
-                  <div className="h-3 bg-[#E5E5E5] rounded w-1/2" />
+        {/* ── DESIGNS GRID ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {designs.map((design) => (
+            <div
+              key={design.designId}
+              onClick={() => router.push(`/custom-design`)}
+              className="border border-[#183B56] bg-[#F5EFEB] flex flex-col justify-between shadow-xs hover:bg-[#183B56]/[0.02] transition-colors cursor-pointer group"
+            >
+              <div>
+                <div className="aspect-[3/3.8] bg-[#DFE7ED] border-b border-[#183B56] relative overflow-hidden flex items-center justify-center p-4">
+                  <img
+                    src={design.primaryImageUrl}
+                    alt={design.title}
+                    className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-2.5 left-2.5 bg-white border border-[#183B56] px-2 py-0.5 text-[10px] font-bold text-[#183B56] uppercase">
+                    {design.category}
+                  </div>
+                  <div className="absolute top-2.5 right-2.5 bg-white border border-[#183B56] px-2 py-0.5 text-[10px] font-bold text-[#183B56] uppercase">
+                    {design.targetAudience}
+                  </div>
+                </div>
+
+                <div className="p-5 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-[#5A7184] uppercase tracking-wider">
+                    <span>{design.designerName || "Weavly Couturier"}</span>
+                    <ShieldCheck size={13} className="text-[#183B56]" />
+                  </div>
+
+                  <h3 className="font-bold text-sm sm:text-base text-[#183B56] group-hover:underline line-clamp-1">
+                    {design.title}
+                  </h3>
+
+                  <p className="text-xs text-[#5A7184] line-clamp-2 leading-relaxed font-normal">
+                    {design.description || "Original handcrafted atelier piece."}
+                  </p>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
 
-        {/* Designs Grid */}
-        {!loading && designs.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {designs.map((design) => (
-              <div
-                key={design.designId}
-                className="bg-white rounded-2xl border border-[#ECECEC] overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col justify-between"
-              >
-                <div
-                  onClick={() => router.push(`/designs/${design.designId}`)}
-                  className="cursor-pointer"
+              <div className="p-5 pt-0 space-y-3">
+                <div className="flex items-center justify-between pt-3 border-t border-[#183B56]/20 text-xs">
+                  <span className="text-[10px] font-bold text-[#5A7184] uppercase">Commission Rate</span>
+                  <span className="font-bold text-sm text-[#183B56]">
+                    {design.estimatedPrice ? `₹${Number(design.estimatedPrice).toLocaleString("en-IN")}` : "Custom Quote"}
+                  </span>
+                </div>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/custom-design`);
+                  }}
+                  className="w-full py-2.5 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.16em] border-none cursor-pointer flex items-center justify-center gap-1.5 transition-all shadow-xs"
                 >
-                  <div className="aspect-[3/4] bg-[#F4F1EC] relative overflow-hidden">
-                    <img
-                      src={design.primaryImageUrl}
-                      alt={design.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-3 left-3 flex flex-col gap-1">
-                      <span className="text-[10px] font-medium bg-black/60 text-white px-2 py-0.5 rounded-md backdrop-blur-md capitalize">
-                        {design.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="p-4">
-                    <div className="flex items-center gap-1 text-[11px] text-[#86868B] mb-1">
-                      <span>{design.designerName || "Designer Atelier"}</span>
-                      <ShieldCheck size={11} className="text-[#F07020]" />
-                    </div>
-
-                    <h3 className="font-semibold text-sm text-[#1D1D1F] group-hover:text-[#F07020] transition-colors line-clamp-1">
-                      {design.title}
-                    </h3>
-
-                    <p className="text-xs text-[#6E6E73] line-clamp-2 mt-1 leading-relaxed">
-                      {design.description || "Original handcrafted designer piece."}
-                    </p>
-
-                    <div className="mt-3 flex items-center justify-between text-xs">
-                      <span className="font-bold text-[#1D1D1F]">
-                        {design.estimatedPrice ? `₹${design.estimatedPrice.toLocaleString()}` : "Price on request"}
-                      </span>
-                      <span className="text-[11px] text-[#86868B]">
-                        {design.targetAudience}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-4 pt-0">
-                  <button
-                    onClick={() => router.push(`/designs/${design.designId}`)}
-                    className="w-full py-2 rounded-xl bg-[#1D1D1F] hover:bg-[#F07020] text-white text-xs font-medium transition-colors flex items-center justify-center gap-1"
-                  >
-                    <Scissors size={12} /> Customize This
-                  </button>
-                </div>
+                  <Scissors size={12} />
+                  <span>Customize This Silhouette</span>
+                </button>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
 
-        {/* Empty State */}
-        {!loading && designs.length === 0 && (
-          <div className="py-24 text-center max-w-md mx-auto">
-            <div className="w-16 h-16 rounded-2xl bg-[#F4F1EC] text-[#8C827A] flex items-center justify-center mx-auto mb-4">
-              <Scissors size={28} />
-            </div>
-            <h3 className="text-lg font-semibold text-[#1D1D1F] mb-2 font-serif">
-              No Published Designs Found
-            </h3>
-            <p className="text-xs text-[#86868B] leading-relaxed mb-6">
-              No creations match the selected filters. Try changing your filters or browse verified designers.
-            </p>
-            <div className="flex items-center justify-center gap-3">
-              <button
-                onClick={() => { setCategory("all"); setStyle("all"); setAudience("all"); }}
-                className="px-5 py-2 rounded-full bg-[#FAFAF9] border border-[#ECECEC] text-xs font-medium hover:bg-[#F0F0F0]"
-              >
-                Clear Filters
-              </button>
-              <button
-                onClick={() => router.push("/designers")}
-                className="px-5 py-2 rounded-full bg-[#1D1D1F] text-white text-xs font-medium"
-              >
-                Browse Designers
-              </button>
-            </div>
-          </div>
-        )}
       </main>
     </div>
   );

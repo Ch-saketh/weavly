@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
+import { Sparkles, ArrowRight, Scissors, ShieldCheck } from "lucide-react";
 import { useDesignerAuth } from "../store/useDesignerAuth";
 
 export default function DesignerRegisterPage() {
@@ -38,68 +38,76 @@ export default function DesignerRegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBFBFB] flex items-center justify-center p-4 pt-24 pb-24 text-[#1D1D1F]">
-      <div className="w-full max-w-lg bg-white rounded-3xl border border-[#ECECEC] p-8 sm:p-10 shadow-xl">
-        <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-[#1D1D1F] text-[#F07020] flex items-center justify-center mx-auto mb-4 shadow-md">
-            <Sparkles size={22} />
+    <div className="min-h-screen bg-[#F5EFEB] flex items-center justify-center p-6 text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white">
+      <div className="w-full max-w-lg border border-[#183B56] bg-[#F5EFEB] p-8 sm:p-10 shadow-xs space-y-6">
+        <div className="text-center space-y-2">
+          <div className="w-12 h-12 border border-[#183B56] bg-white text-[#183B56] flex items-center justify-center mx-auto mb-2">
+            <Scissors size={20} />
           </div>
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#F07020]">
+          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184]">
             Atelier Registration
-          </span>
-          <h1 className="text-2xl font-bold font-serif text-[#1D1D1F] mt-1">
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
             Register as a Verified Designer
           </h1>
-          <p className="text-xs text-[#86868B] mt-1.5 leading-relaxed">
-            Create your designer identity, receive a unique Designer ID, and showcase lookbooks.
+          <p className="text-xs text-[#5A7184] leading-relaxed">
+            Create your designer identity, receive a unique Designer ID, and showcase lookbooks to thousands of clients.
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-3.5 rounded-xl bg-red-50 text-red-600 text-xs border border-red-200">
+          <div className="p-3 bg-red-50 text-red-700 text-xs border border-red-300 font-medium">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs font-medium">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-medium text-[#1D1D1F] mb-1">Display Name *</label>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                Display Name *
+              </label>
               <input
                 type="text"
                 required
                 value={formData.displayName}
                 onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
                 placeholder="e.g. Elena Vance"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
+                className="w-full py-2 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
               />
             </div>
             <div>
-              <label className="block font-medium text-[#1D1D1F] mb-1">Atelier / Brand Name</label>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                Atelier / Brand Name
+              </label>
               <input
                 type="text"
                 value={formData.brandName}
                 onChange={(e) => setFormData({ ...formData, brandName: e.target.value })}
                 placeholder="e.g. Vance Couture"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
+                className="w-full py-2 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-medium text-[#1D1D1F] mb-1">Designer Email *</label>
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+              Designer Email *
+            </label>
             <input
               type="email"
               required
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="atelier@domain.com"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
+              className="w-full py-2 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
             />
           </div>
 
           <div>
-            <label className="block font-medium text-[#1D1D1F] mb-1">Password * (min 6 chars)</label>
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+              Password * (min 6 chars)
+            </label>
             <input
               type="password"
               required
@@ -107,29 +115,33 @@ export default function DesignerRegisterPage() {
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               placeholder="••••••••"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
+              className="w-full py-2 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-medium text-[#1D1D1F] mb-1">Location / City</label>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                Location / City
+              </label>
               <input
                 type="text"
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 placeholder="e.g. Mumbai, India"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
+                className="w-full py-2 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
               />
             </div>
             <div>
-              <label className="block font-medium text-[#1D1D1F] mb-1">Primary Specialization</label>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                Primary Specialization
+              </label>
               <input
                 type="text"
                 value={formData.specialization}
                 onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
                 placeholder="e.g. Bridal & Haute Couture"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
+                className="w-full py-2 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
               />
             </div>
           </div>
@@ -138,18 +150,19 @@ export default function DesignerRegisterPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3.5 rounded-xl bg-[#F07020] hover:bg-[#e06214] text-white font-medium text-xs transition-all shadow-lg shadow-[#F07020]/25 flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full py-3.5 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.16em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all disabled:opacity-50"
             >
-              {submitting ? "Creating Atelier..." : "Create Designer Account"} <ArrowRight size={14} />
+              <span>{submitting ? "Creating Atelier..." : "Create Designer Account"}</span>
+              <ArrowRight size={13} />
             </button>
           </div>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-[#ECECEC] text-center text-xs text-[#86868B]">
+        <div className="pt-4 border-t border-[#183B56]/30 text-center text-xs text-[#5A7184]">
           Already have a designer account?{" "}
           <button
             onClick={() => router.push("/designer/login")}
-            className="font-semibold text-[#1D1D1F] hover:underline"
+            className="font-bold text-[#183B56] hover:underline cursor-pointer border-none bg-transparent p-0"
           >
             Sign In
           </button>

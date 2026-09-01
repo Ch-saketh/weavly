@@ -332,6 +332,81 @@ export default function Navbar({
               </div>
             </div>
 
+            {/* Dropdown: Pages */}
+            <div className="relative group">
+              <button
+                className="hover:opacity-75 transition-colors border-none bg-transparent cursor-pointer p-0 flex items-center gap-1.5 font-bold text-[#183B56]"
+              >
+                <span>Pages</span>
+                <ChevronDown size={11} strokeWidth={1.5} className="transition-colors text-[#5A7184] group-hover:text-[#183B56]" />
+              </button>
+
+              {/* CardNav-Style Dropdown Menu */}
+              <div className="absolute top-full -left-72 mt-3 w-[720px] bg-[#FFFFFF] border border-[#183B56] shadow-xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
+                <div className="grid grid-cols-3 gap-3">
+                  {/* Column 1: Storefronts */}
+                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
+                    <div className="text-[18px] font-bold uppercase tracking-tight">Storefronts</div>
+                    <div className="flex flex-col gap-2 mt-auto">
+                      <button onClick={() => router.push("/men")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Men&apos;s Sartorial Atelier
+                      </button>
+                      <button onClick={() => router.push("/women")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Women&apos;s Haute Collection
+                      </button>
+                      <button onClick={() => router.push("/unisex")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Streetwear & Capsules
+                      </button>
+                      <button onClick={() => router.push("/market")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Full Catalog & Search
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Column 2: Designer Atelier */}
+                  <div className="bg-[#102A43] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#0B1D30] transition-colors border border-[#183B56]">
+                    <div className="text-[18px] font-bold uppercase tracking-tight">Designer Studio</div>
+                    <div className="flex flex-col gap-2 mt-auto">
+                      <button onClick={() => router.push("/designer-studio")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Studio Overview
+                      </button>
+                      <button onClick={() => router.push("/designers")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Creators Directory
+                      </button>
+                      <button onClick={() => router.push("/designs")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Curated Lookbooks
+                      </button>
+                      <button onClick={() => router.push("/custom-design")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Bespoke Commission
+                      </button>
+                      <button onClick={() => router.push("/become-designer")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Apply as Designer
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Column 3: Client Care */}
+                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
+                    <div className="text-[18px] font-bold uppercase tracking-tight">Client Care</div>
+                    <div className="flex flex-col gap-2 mt-auto">
+                      <button onClick={() => router.push("/wardrobe")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Saved Wardrobe
+                      </button>
+                      <button onClick={() => router.push("/orders")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Track Orders & Escrow
+                      </button>
+                      <button onClick={() => router.push("/about")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> About Weavly Maison
+                      </button>
+                      <button onClick={() => router.push("/faqs")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Atelier FAQs
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </nav>
 
           {/* ── RIGHT: Minimal Search & Neatly Aligned Action Icons ── */}

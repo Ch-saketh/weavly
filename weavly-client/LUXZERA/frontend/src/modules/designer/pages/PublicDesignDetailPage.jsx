@@ -16,6 +16,9 @@ import {
 import { getPublicDesignById, submitCustomizationRequest, recordDesignView, recordDesignLike } from "../services/designerService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 
+const NEUTRAL_FALLBACK_IMAGE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23DFE7ED'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='16' font-weight='700' fill='%23183B56' text-anchor='middle' letter-spacing='2'%3EWEAVLY CREATION%3C/text%3E%3C/svg%3E";
+
 export default function PublicDesignDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -58,22 +61,14 @@ export default function PublicDesignDetailPage() {
       .then((data) => {
         setDesign(data);
         setActiveImage(data.primaryImageUrl);
-        setLikeCount(data.likeCount || 0);
+        setLikeCount(data.likesCount || 0);
       })
-      .catch((err) => setError(err.message || "Failed to load design"))
+      .catch((err) => {
+        console.warn("Failed to load design details:", err);
+        setError("Design not found.");
+      })
       .finally(() => setLoading(false));
   }, [designId]);
-
-  const handleLike = async () => {
-    if (liked) return;
-    setLiked(true);
-    setLikeCount((prev) => prev + 1);
-    try {
-      await recordDesignLike(designId);
-    } catch (err) {
-      console.warn("Like action failed:", err);
-    }
-  };
 
   useEffect(() => {
     if (user) {
@@ -81,41 +76,54 @@ export default function PublicDesignDetailPage() {
         ...prev,
         customerName: user.name || user.displayName || prev.customerName,
         customerEmail: user.email || prev.customerEmail,
+        customerPhone: user.phone || prev.customerPhone,
       }));
     }
   }, [user]);
 
-  const handleFormSubmit = async (e) => {
+  const handleLike = async () => {
+    if (liked || !designId) return;
+    try {
+      await recordDesignLike(designId);
+      setLiked(true);
+      setLikeCount((prev) => prev + 1);
+    } catch (e) {
+      console.warn("Failed to like:", e);
+    }
+  };
+
+  const handleCustomizationSubmit = async (e) => {
     e.preventDefault();
-    setFormSubmitting(true);
     setFormError(null);
 
+    if (!formData.description.trim()) {
+      setFormError("Please describe your custom adjustments or sizing requirements.");
+      return;
+    }
+    if (!formData.customerEmail.trim()) {
+      setFormError("Please enter your contact email.");
+      return;
+    }
+
+    setFormSubmitting(true);
+
     try {
-      const measurements = {
+      const payload = {
+        ...formData,
+        designerId: design.designerId,
+        designId: design.designId,
+        referenceImage: activeImage || design.primaryImageUrl,
+        budget: formData.budget ? Number(formData.budget) : design.estimatedPrice || null,
         bust: formData.bust ? Number(formData.bust) : null,
         waist: formData.waist ? Number(formData.waist) : null,
         hips: formData.hips ? Number(formData.hips) : null,
-        height: formData.height || null,
-      };
-
-      const payload = {
-        designerId: design.designerId,
-        designId: design.designId,
-        customerName: formData.customerName,
-        customerEmail: formData.customerEmail,
-        customerPhone: formData.customerPhone || null,
-        description: formData.description,
-        preferredColor: formData.preferredColor || null,
-        preferredFabric: formData.preferredFabric || null,
-        measurementsJson: JSON.stringify(measurements),
-        budget: formData.budget ? Number(formData.budget) : (design.estimatedPrice || null),
-        requestedCompletionDate: formData.requestedDate || null,
+        height: formData.height ? Number(formData.height) : null,
       };
 
       const res = await submitCustomizationRequest(payload);
       setRequestSuccess(res);
     } catch (err) {
-      setFormError(err.message || "Failed to submit request");
+      setFormError(err.message || "Failed to submit custom request");
     } finally {
       setFormSubmitting(false);
     }
@@ -123,21 +131,21 @@ export default function PublicDesignDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FBFBFB] flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-[#1D1D1F] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#F5EFEB] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[#183B56] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   if (error || !design) {
     return (
-      <div className="min-h-screen bg-[#FBFBFB] flex items-center justify-center p-6">
-        <div className="bg-white p-8 rounded-2xl border border-[#ECECEC] text-center max-w-md">
-          <h2 className="text-lg font-bold text-[#1D1D1F] mb-2 font-serif">Design Not Found</h2>
-          <p className="text-xs text-[#86868B] mb-6">{error || "This creation is currently unavailable."}</p>
+      <div className="min-h-screen bg-[#F5EFEB] flex items-center justify-center p-6">
+        <div className="border border-[#183B56] bg-[#F5EFEB] p-8 text-center max-w-md shadow-xs space-y-4">
+          <h2 className="text-lg font-bold text-[#183B56]">Design Silhouette Not Found</h2>
+          <p className="text-xs text-[#5A7184]">{error || "This creation is currently unavailable."}</p>
           <button
             onClick={() => router.push("/designs")}
-            className="px-5 py-2 rounded-full bg-[#1D1D1F] text-white text-xs font-medium"
+            className="py-2.5 px-6 bg-[#183B56] text-white text-xs font-bold uppercase tracking-wider border-none cursor-pointer"
           >
             Browse Lookbook
           </button>
@@ -149,24 +157,24 @@ export default function PublicDesignDetailPage() {
   const allImages = [design.primaryImageUrl, ...(design.galleryImageUrls || [])].filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] pt-28 pb-28">
-      <div className="max-w-6xl mx-auto px-4 sm:px-8">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white py-10 pb-28">
+      <div className="max-w-[1360px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24">
         {/* Breadcrumb / Back */}
         <button
           onClick={() => router.back()}
-          className="inline-flex items-center gap-1.5 text-xs text-[#86868B] hover:text-[#1D1D1F] mb-6 font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#183B56] hover:underline mb-8 cursor-pointer border-none bg-transparent p-0"
         >
-          <ChevronLeft size={16} /> Back
+          <ChevronLeft size={16} /> Back to Lookbook
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Left: Image Gallery */}
+          {/* Left: Image Gallery (lg:col-span-7) */}
           <div className="lg:col-span-7 space-y-4">
-            <div className="aspect-[3/4] bg-[#F4F1EC] rounded-3xl overflow-hidden border border-[#ECECEC] shadow-sm">
+            <div className="aspect-[3/3.8] bg-[#DFE7ED] border border-[#183B56] relative overflow-hidden flex items-center justify-center p-6 shadow-xs">
               <img
-                src={activeImage || design.primaryImageUrl}
+                src={activeImage || design.primaryImageUrl || NEUTRAL_FALLBACK_IMAGE}
                 alt={design.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain mix-blend-multiply"
               />
             </div>
 
@@ -176,40 +184,44 @@ export default function PublicDesignDetailPage() {
                   <button
                     key={idx}
                     onClick={() => setActiveImage(img)}
-                    className={`aspect-square rounded-xl overflow-hidden border transition-all ${
+                    className={`aspect-square border p-1 bg-[#DFE7ED] cursor-pointer transition-all ${
                       activeImage === img
-                        ? "border-[#1D1D1F] shadow-md scale-105"
-                        : "border-[#ECECEC] opacity-70 hover:opacity-100"
+                        ? "border-[#183B56] shadow-xs"
+                        : "border-[#183B56]/30 opacity-70 hover:opacity-100"
                     }`}
                   >
-                    <img src={img} alt="Thumb" className="w-full h-full object-cover" />
+                    <img src={img} alt="Thumb" className="w-full h-full object-contain mix-blend-multiply" />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Right: Design Specs & Commission CTA */}
+          {/* Right: Design Specs & Commission CTA (lg:col-span-5) */}
           <div className="lg:col-span-5 space-y-6">
-            {/* Category & Designer Link */}
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold uppercase tracking-wider bg-[#F4F1EC] text-[#8C827A] px-2.5 py-1 rounded-md">
+            <div className="flex items-center justify-between pb-3 border-b border-[#183B56]">
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-white border border-[#183B56] text-[#183B56] px-2.5 py-1">
                 {design.category}
               </span>
-              <span className="text-xs text-[#86868B] font-mono">{design.designId}</span>
+              <span className="text-[10px] text-[#5A7184] font-mono font-bold">{design.designId}</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold font-serif tracking-tight text-[#1D1D1F]">
-              {design.title}
-            </h1>
+            <div className="space-y-2">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
+                {design.title}
+              </h1>
+              <p className="text-xs text-[#5A7184] leading-relaxed">
+                {design.description || "Original handcrafted atelier silhouette."}
+              </p>
+            </div>
 
             {/* Designer Atelier Card */}
             <div
-              onClick={() => router.push(`/designers/${design.designerId}`)}
-              className="p-4 rounded-2xl bg-white border border-[#ECECEC] hover:border-[#1D1D1F]/30 transition-all cursor-pointer flex items-center justify-between group"
+              onClick={() => router.push(`/designer-studio`)}
+              className="p-4 border border-[#183B56] bg-white hover:bg-[#183B56]/5 transition-all cursor-pointer flex items-center justify-between group shadow-xs"
             >
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-full bg-[#FAFAF9] border border-[#ECECEC] overflow-hidden flex items-center justify-center font-bold text-sm text-[#1D1D1F]">
+                <div className="w-11 h-11 rounded-full border border-[#183B56] bg-[#DFE7ED] overflow-hidden flex items-center justify-center font-bold text-sm text-[#183B56]">
                   {design.designerProfileImage ? (
                     <img src={design.designerProfileImage} alt={design.designerName} className="w-full h-full object-cover" />
                   ) : (
@@ -218,271 +230,156 @@ export default function PublicDesignDetailPage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-1">
-                    <span className="text-xs font-semibold text-[#1D1D1F] group-hover:text-[#F07020] transition-colors">
-                      {design.designerName || "Independent Atelier"}
-                    </span>
-                    <ShieldCheck size={13} className="text-[#F07020]" />
+                    <h4 className="font-bold text-xs text-[#183B56] group-hover:underline">
+                      {design.designerName || "Weavly Couturier"}
+                    </h4>
+                    <ShieldCheck size={12} className="text-[#183B56]" />
                   </div>
-                  <span className="text-[11px] text-[#86868B] block">
-                    {design.designerBrand || "Verified Weavly Creator"}
-                  </span>
+                  <p className="text-[10px] text-[#5A7184]">Verified Master Creator</p>
                 </div>
               </div>
-
-              <span className="text-xs text-[#F07020] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                Visit Atelier <ArrowRight size={13} />
-              </span>
+              <span className="text-xs text-[#183B56] font-bold">Visit Atelier →</span>
             </div>
 
-            {/* Estimated Price */}
-            <div className="p-4 rounded-2xl bg-[#FAFAF9] border border-[#ECECEC] flex items-baseline justify-between">
-              <span className="text-xs text-[#86868B]">Estimated Base Price</span>
-              <span className="text-xl font-bold text-[#1D1D1F]">
-                {design.estimatedPrice ? `₹${design.estimatedPrice.toLocaleString()}` : "Price upon request"}
-              </span>
-            </div>
-
-            {/* Description */}
-            {design.description && (
-              <div>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#86868B] mb-2">Design Concept</h3>
-                <p className="text-xs text-[#52525B] leading-relaxed whitespace-pre-line">
-                  {design.description}
-                </p>
+            {/* Price & Specs Table */}
+            <div className="border border-[#183B56] bg-white divide-y divide-[#183B56]/30 text-xs">
+              <div className="p-3.5 flex items-center justify-between">
+                <span className="text-[#5A7184] font-bold uppercase text-[10px]">Estimated Price</span>
+                <span className="font-bold text-base text-[#183B56]">
+                  {design.estimatedPrice ? `₹${Number(design.estimatedPrice).toLocaleString("en-IN")}` : "Price on request"}
+                </span>
               </div>
-            )}
-
-            {/* Materials & Styling Specs */}
-            <div className="space-y-3 pt-4 border-t border-[#ECECEC] text-xs">
-              {design.materials && (
-                <div className="flex justify-between">
-                  <span className="text-[#86868B]">Materials</span>
-                  <span className="font-medium text-[#1D1D1F]">{design.materials}</span>
+              {design.style && (
+                <div className="p-3.5 flex items-center justify-between">
+                  <span className="text-[#5A7184] font-bold uppercase text-[10px]">Aesthetic Style</span>
+                  <span className="font-bold text-[#183B56]">{design.style}</span>
                 </div>
               )}
-              {design.style && (
-                <div className="flex justify-between">
-                  <span className="text-[#86868B]">Style</span>
-                  <span className="font-medium text-[#1D1D1F]">{design.style}</span>
+              {design.materials && (
+                <div className="p-3.5 flex items-center justify-between">
+                  <span className="text-[#5A7184] font-bold uppercase text-[10px]">Materials & Fabric</span>
+                  <span className="font-bold text-[#183B56]">{design.materials}</span>
                 </div>
               )}
               {design.targetAudience && (
-                <div className="flex justify-between">
-                  <span className="text-[#86868B]">Audience</span>
-                  <span className="font-medium text-[#1D1D1F]">{design.targetAudience}</span>
+                <div className="p-3.5 flex items-center justify-between">
+                  <span className="text-[#5A7184] font-bold uppercase text-[10px]">Target Audience</span>
+                  <span className="font-bold text-[#183B56]">{design.targetAudience}</span>
                 </div>
               )}
             </div>
 
-            {/* Main Action Button */}
-            <div className="pt-6">
+            {/* Actions */}
+            <div className="space-y-3 pt-2">
               <button
                 onClick={() => setModalOpen(true)}
-                className="w-full py-4 rounded-2xl bg-[#F07020] hover:bg-[#e06214] text-white font-medium text-sm transition-all shadow-xl shadow-[#F07020]/25 flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-6 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.18em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all"
               >
-                <Sparkles size={16} /> Customize This Garment
+                <Scissors size={14} />
+                <span>Commission Custom Piece</span>
+                <ArrowRight size={13} />
               </button>
-              <p className="text-[11px] text-center text-[#86868B] mt-2.5">
-                Handcrafted directly by {design.designerName || "the designer"} to your body measurements.
-              </p>
+
+              <button
+                onClick={handleLike}
+                className={`w-full py-2.5 px-4 bg-white border border-[#183B56] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer transition-colors ${
+                  liked ? "text-[#183B56]" : "text-[#5A7184] hover:text-[#183B56]"
+                }`}
+              >
+                <Heart size={13} className={liked ? "fill-[#183B56] text-[#183B56]" : ""} />
+                <span>{liked ? "Saved to Moodboard" : "Save to Moodboard"} ({likeCount})</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Customization Request Modal */}
+      {/* ── CUSTOMIZATION MODAL ── */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-          <div className="bg-white rounded-3xl border border-[#ECECEC] w-full max-w-xl p-6 sm:p-8 shadow-2xl relative my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#183B56]/50 backdrop-blur-xs">
+          <div className="bg-[#F5EFEB] border border-[#183B56] w-full max-w-lg p-6 sm:p-8 space-y-6 shadow-2xl relative">
             <button
-              onClick={() => setModalOpen(false)}
-              className="absolute top-6 right-6 p-2 rounded-full hover:bg-[#F0F0F0] text-[#6E6E73] transition-colors"
+              onClick={() => { setModalOpen(false); setRequestSuccess(null); }}
+              className="absolute top-4 right-4 text-[#183B56] hover:opacity-75 cursor-pointer border-none bg-transparent"
             >
               <X size={18} />
             </button>
 
             {requestSuccess ? (
-              <div className="py-10 text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-                  <CheckCircle2 size={32} />
-                </div>
-                <h3 className="text-xl font-bold font-serif text-[#1D1D1F]">
-                  Customization Request Submitted!
-                </h3>
-                <p className="text-xs text-[#6E6E73] max-w-md mx-auto leading-relaxed">
-                  Your request for <strong className="text-[#1D1D1F]">"{design.title}"</strong> has been sent to {design.designerName}.
+              <div className="py-8 text-center space-y-3">
+                <CheckCircle2 size={36} className="text-[#2E7D32] mx-auto" />
+                <h3 className="text-xl font-bold text-[#183B56]">Commission Dispatched</h3>
+                <p className="text-xs text-[#5A7184] max-w-sm mx-auto">
+                  Your customization inquiry for &ldquo;{design.title}&rdquo; has been sent to the atelier.
                 </p>
-                <div className="font-mono text-sm font-bold bg-[#FAFAF9] border border-[#ECECEC] py-2 px-4 rounded-xl inline-block text-[#1D1D1F]">
-                  {requestSuccess.requestId}
-                </div>
-                <p className="text-xs text-[#86868B]">
-                  The designer will review your measurements and reach out to {formData.customerEmail}.
-                </p>
-                <div className="pt-4">
-                  <button
-                    onClick={() => setModalOpen(false)}
-                    className="px-6 py-2.5 rounded-full bg-[#1D1D1F] text-white text-xs font-medium"
-                  >
-                    Done
-                  </button>
+                <div className="font-mono text-xs font-bold bg-white border border-[#183B56] py-2 px-4 inline-block text-[#183B56] mt-2">
+                  Reference: {requestSuccess.requestId || "OK"}
                 </div>
               </div>
             ) : (
-              <div>
-                <div className="mb-6">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-[#F07020]">
-                    Bespoke Customization Request
-                  </span>
-                  <h3 className="text-xl font-bold font-serif text-[#1D1D1F] mt-1">
-                    Customize "{design.title}"
+              <form onSubmit={handleCustomizationSubmit} className="space-y-4">
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184]">
+                    Custom Atelier Request
+                  </div>
+                  <h3 className="text-xl font-bold text-[#183B56]">
+                    Customize: {design.title}
                   </h3>
-                  <p className="text-xs text-[#86868B] mt-1">
-                    Atelier: {design.designerName}
-                  </p>
                 </div>
 
-                {formError && (
-                  <div className="mb-4 p-3 rounded-xl bg-red-50 text-red-600 text-xs border border-red-200">
-                    {formError}
-                  </div>
-                )}
-
-                <form onSubmit={handleFormSubmit} className="space-y-4 text-xs">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block font-medium text-[#1D1D1F] mb-1">Your Full Name *</label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.customerName}
-                        onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                        placeholder="e.g. Sophia Vance"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-medium text-[#1D1D1F] mb-1">Email Address *</label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.customerEmail}
-                        onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
-                        placeholder="sophia@example.com"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
-                      />
-                    </div>
-                  </div>
-
+                <div className="space-y-3">
                   <div>
-                    <label className="block font-medium text-[#1D1D1F] mb-1">Customization Requirements *</label>
-                    <textarea
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                      Your Name *
+                    </label>
+                    <input
+                      type="text"
                       required
-                      rows={3}
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="Specify neckline changes, hemlines, sleeve adjustments, or custom color requirements..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
+                      value={formData.customerName}
+                      onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
+                      className="w-full py-2 px-3 bg-white border border-[#183B56] text-xs outline-none"
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block font-medium text-[#1D1D1F] mb-1">Preferred Color</label>
-                      <input
-                        type="text"
-                        value={formData.preferredColor}
-                        onChange={(e) => setFormData({ ...formData, preferredColor: e.target.value })}
-                        placeholder="e.g. Royal Blue"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-medium text-[#1D1D1F] mb-1">Preferred Fabric</label>
-                      <input
-                        type="text"
-                        value={formData.preferredFabric}
-                        onChange={(e) => setFormData({ ...formData, preferredFabric: e.target.value })}
-                        placeholder={design.materials || "e.g. Italian Wool"}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={formData.customerEmail}
+                      onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
+                      className="w-full py-2 px-3 bg-white border border-[#183B56] text-xs outline-none"
+                    />
                   </div>
 
-                  {/* Body Measurements (Optional) */}
-                  <div className="pt-2 border-t border-[#ECECEC]">
-                    <span className="block font-semibold text-[#1D1D1F] mb-2">Body Measurements (Inches, Optional)</span>
-                    <div className="grid grid-cols-4 gap-2">
-                      <input
-                        type="number"
-                        placeholder="Bust"
-                        value={formData.bust}
-                        onChange={(e) => setFormData({ ...formData, bust: e.target.value })}
-                        className="w-full px-2.5 py-2 rounded-lg border border-[#ECECEC] bg-[#FAFAF9] text-center text-xs"
-                      />
-                      <input
-                        type="number"
-                        placeholder="Waist"
-                        value={formData.waist}
-                        onChange={(e) => setFormData({ ...formData, waist: e.target.value })}
-                        className="w-full px-2.5 py-2 rounded-lg border border-[#ECECEC] bg-[#FAFAF9] text-center text-xs"
-                      />
-                      <input
-                        type="number"
-                        placeholder="Hips"
-                        value={formData.hips}
-                        onChange={(e) => setFormData({ ...formData, hips: e.target.value })}
-                        className="w-full px-2.5 py-2 rounded-lg border border-[#ECECEC] bg-[#FAFAF9] text-center text-xs"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Height (5'7)"
-                        value={formData.height}
-                        onChange={(e) => setFormData({ ...formData, height: e.target.value })}
-                        className="w-full px-2.5 py-2 rounded-lg border border-[#ECECEC] bg-[#FAFAF9] text-center text-xs"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                      Customization Notes & Alterations *
+                    </label>
+                    <textarea
+                      rows={3}
+                      required
+                      placeholder="Specify your sizing, color preference, neckline changes, or specific alterations..."
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      className="w-full py-2 px-3 bg-white border border-[#183B56] text-xs outline-none resize-none"
+                    />
                   </div>
+                </div>
 
-                  <div className="grid grid-cols-2 gap-3 pt-2">
-                    <div>
-                      <label className="block font-medium text-[#1D1D1F] mb-1">Target Budget (₹)</label>
-                      <input
-                        type="number"
-                        value={formData.budget}
-                        onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                        placeholder={design.estimatedPrice ? String(design.estimatedPrice) : "15000"}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-medium text-[#1D1D1F] mb-1">Needed By</label>
-                      <input
-                        type="date"
-                        value={formData.requestedDate}
-                        onChange={(e) => setFormData({ ...formData, requestedDate: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="pt-4 flex items-center justify-end gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setModalOpen(false)}
-                      className="px-5 py-2.5 rounded-full hover:bg-[#F0F0F0] text-[#6E6E73] font-medium"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={formSubmitting}
-                      className="px-6 py-2.5 rounded-full bg-[#F07020] hover:bg-[#e06214] text-white font-medium shadow-md flex items-center gap-1.5 disabled:opacity-60"
-                    >
-                      {formSubmitting ? "Submitting..." : "Send Request"}
-                    </button>
-                  </div>
-                </form>
-              </div>
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={formSubmitting}
+                    className="w-full py-3 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.16em] border-none cursor-pointer flex items-center justify-center gap-2 transition-all shadow-xs"
+                  >
+                    <Scissors size={13} />
+                    <span>{formSubmitting ? "Submitting..." : "Send Request to Atelier"}</span>
+                  </button>
+                </div>
+              </form>
             )}
           </div>
         </div>
