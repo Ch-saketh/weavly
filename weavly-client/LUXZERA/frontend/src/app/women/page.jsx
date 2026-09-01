@@ -1,7 +1,7 @@
 "use client";
 
-import ShopPage from "@/modules/products/pages/ShopPage";
+import WomenPage from "@/modules/products/pages/WomenPage";
 
 export default function WomenRoute() {
-  return <ShopPage initialDepartment="Women" />;
+  return <WomenPage />;
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import ShopPage from "@/modules/products/pages/ShopPage";
+import MenPage from "@/modules/products/pages/MenPage";
 
 export default function MenRoute() {
-  return <ShopPage initialDepartment="Men" />;
+  return <MenPage />;
 }

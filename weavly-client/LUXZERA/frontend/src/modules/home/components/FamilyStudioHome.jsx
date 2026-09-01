@@ -411,6 +411,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [womenProducts, setWomenProducts] = useState([]);
   const [womenDresses, setWomenDresses] = useState([]);
   const [womenTops, setWomenTops] = useState([]);
+  const [womenSkirts, setWomenSkirts] = useState([]);
   const [womenFootwear, setWomenFootwear] = useState([]);
 
   const [footwearProducts, setFootwearProducts] = useState([]);
@@ -459,6 +460,9 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
       getProducts({ gender: "Men", category: "shirt", limit: 40 }),
       getProducts({ gender: "Men", category: "tshirt", limit: 40 }),
       getProducts({ gender: "Women", category: "top", limit: 40 }),
+      getProducts({ gender: "Women", category: "skirt", limit: 40 }),
+      getProducts({ gender: "Women", category: "trousers", limit: 40 }),
+      getProducts({ gender: "Women", category: "bag", limit: 40 }),
     ]).then(([
       trendingRes,
       menRes,
@@ -471,6 +475,9 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
       menShirtsRes,
       menTshirtsRes,
       womenTopsRes,
+      womenSkirtsRes,
+      womenTrousersRes,
+      womenBagsRes,
     ]) => {
       if (isMounted) {
         const rawTrending = trendingRes.status === "fulfilled" && Array.isArray(trendingRes.value) ? trendingRes.value : [];
@@ -484,6 +491,9 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         const rawMenShirts = menShirtsRes.status === "fulfilled" && Array.isArray(menShirtsRes.value) ? menShirtsRes.value : [];
         const rawMenTshirts = menTshirtsRes.status === "fulfilled" && Array.isArray(menTshirtsRes.value) ? menTshirtsRes.value : [];
         const rawWomenTops = womenTopsRes.status === "fulfilled" && Array.isArray(womenTopsRes.value) ? womenTopsRes.value : [];
+        const rawWomenSkirts = womenSkirtsRes.status === "fulfilled" && Array.isArray(womenSkirtsRes.value) ? womenSkirtsRes.value : [];
+        const rawWomenTrousers = womenTrousersRes.status === "fulfilled" && Array.isArray(womenTrousersRes.value) ? womenTrousersRes.value : [];
+        const rawWomenBags = womenBagsRes.status === "fulfilled" && Array.isArray(womenBagsRes.value) ? womenBagsRes.value : [];
 
         // Apply strict defensive filtering (0% cross contamination)
         const strictlyMen = rawMen.filter(isStrictlyMenProduct);
@@ -493,6 +503,8 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         const strictlyMenShirts = rawMenShirts.filter(isStrictlyMenProduct);
         const strictlyMenTshirts = rawMenTshirts.filter(isStrictlyMenProduct);
         const strictlyWomenTops = rawWomenTops.filter(isStrictlyWomenProduct);
+        const strictlyWomenSkirts = rawWomenSkirts.concat(rawWomenTrousers).filter(isStrictlyWomenProduct);
+        const strictlyWomenBags = rawWomenBags.filter(isStrictlyWomenProduct);
 
         // Footwear: MUST be strictly footwear AND strictly match gender
         const strictlyMenShoes = rawMenShoes.filter((p) => isStrictlyFootwearProduct(p) && isStrictlyMenProduct(p));
@@ -508,7 +520,8 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         setWomenProducts(strictlyWomen);
         setWomenDresses(strictlyDresses.length > 0 ? strictlyDresses : strictlyWomen.slice(0, 20));
         setWomenTops(strictlyWomenTops.length > 0 ? strictlyWomenTops : strictlyWomen.slice(10));
-        setWomenFootwear(strictlyWomenShoes);
+        setWomenSkirts(strictlyWomenSkirts.length > 0 ? strictlyWomenSkirts : strictlyWomen.slice(20));
+        setWomenFootwear(strictlyWomenShoes.concat(strictlyWomenBags));
 
         setFootwearProducts(
           strictlyGeneralFootwear.length > 0
@@ -751,8 +764,8 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
             />
 
             <DepartmentCarousel
-              title="Contemporary Tops & Bottoms"
-              subtitle="Linen tops, structured skirts & tailored trousers"
+              title="Tops, Silk Blouses & Linen Knitwear"
+              subtitle="Linen tops, silk blouses & lightweight knits"
               deptQuery="Women"
               products={womenTops}
               loading={loadingProducts}
@@ -762,10 +775,22 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
               addedProductIds={addedProductIds}
             />
 
+            <DepartmentCarousel
+              title="Skirts, Tailored Pants & Denim"
+              subtitle="Pleated skirts, tailored trousers & straight-leg denim"
+              deptQuery="Women"
+              products={womenSkirts}
+              loading={loadingProducts}
+              onAddToCart={handleAddToCart}
+              onToggleLike={handleToggleLike}
+              isSaved={isSaved}
+              addedProductIds={addedProductIds}
+            />
+
             {womenFootwear.length > 0 && (
               <DepartmentCarousel
-                title="Women's Footwear & Designer Heels"
-                subtitle="Handcrafted heels, flats, loafers & sandals (Women Only)"
+                title="Women's Footwear & Designer Handbags"
+                subtitle="Handcrafted heels, flats, loafers & designer tote bags (Women Only)"
                 deptQuery="Women"
                 products={womenFootwear}
                 loading={loadingProducts}
