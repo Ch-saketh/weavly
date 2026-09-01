@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   ChevronLeft,
   Upload,
+  ArrowRight,
 } from "lucide-react";
 import { getPublicDesigners, submitCustomizationRequest } from "../services/designerService";
 import { useAuth } from "@/modules/auth/store/useAuth";
@@ -59,42 +60,38 @@ export default function CustomDesignRequestPage() {
         ...prev,
         customerName: user.name || user.displayName || prev.customerName,
         customerEmail: user.email || prev.customerEmail,
+        customerPhone: user.phone || prev.customerPhone,
       }));
     }
   }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError(null);
+
     if (!formData.designerId) {
       setFormError("Please select a designer atelier.");
       return;
     }
+    if (!formData.description.trim()) {
+      setFormError("Please describe your custom design requirement.");
+      return;
+    }
+    if (!formData.customerEmail.trim()) {
+      setFormError("Please provide your contact email.");
+      return;
+    }
 
     setFormSubmitting(true);
-    setFormError(null);
 
     try {
-      const measurements = {
+      const payload = {
+        ...formData,
+        budget: formData.budget ? Number(formData.budget) : null,
         bust: formData.bust ? Number(formData.bust) : null,
         waist: formData.waist ? Number(formData.waist) : null,
         hips: formData.hips ? Number(formData.hips) : null,
-        height: formData.height || null,
-      };
-
-      const refImages = formData.referenceImage ? [formData.referenceImage.trim()] : [];
-
-      const payload = {
-        designerId: formData.designerId,
-        customerName: formData.customerName,
-        customerEmail: formData.customerEmail,
-        customerPhone: formData.customerPhone || null,
-        description: formData.description,
-        referenceImageUrls: refImages,
-        preferredColor: formData.preferredColor || null,
-        preferredFabric: formData.preferredFabric || null,
-        measurementsJson: JSON.stringify(measurements),
-        budget: formData.budget ? Number(formData.budget) : null,
-        requestedCompletionDate: formData.requestedDate || null,
+        height: formData.height ? Number(formData.height) : null,
       };
 
       const res = await submitCustomizationRequest(payload);
@@ -107,78 +104,76 @@ export default function CustomDesignRequestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] pt-28 pb-28">
-      <div className="max-w-4xl mx-auto px-4 sm:px-8">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white py-12 pb-28">
+      <div className="max-w-4xl mx-auto px-6 sm:px-12">
         <button
           onClick={() => router.back()}
-          className="inline-flex items-center gap-1.5 text-xs text-[#86868B] hover:text-[#1D1D1F] mb-6 font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#183B56] hover:underline mb-6 cursor-pointer border-none bg-transparent p-0"
         >
-          <ChevronLeft size={16} /> Back
+          <ChevronLeft size={16} /> Back to Studio
         </button>
 
         {requestSuccess ? (
-          <div className="bg-white rounded-3xl border border-[#ECECEC] p-10 sm:p-14 text-center shadow-xl space-y-5">
-            <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-              <CheckCircle2 size={40} />
+          <div className="border border-[#183B56] bg-[#F5EFEB] p-10 sm:p-14 text-center shadow-xs space-y-6">
+            <div className="w-16 h-16 rounded-full border border-[#183B56] bg-white text-[#2E7D32] flex items-center justify-center mx-auto">
+              <CheckCircle2 size={32} />
             </div>
-            <h1 className="text-3xl font-bold font-serif text-[#1D1D1F]">
-              Custom Garment Request Submitted!
+            <h1 className="text-3xl font-bold text-[#183B56]">
+              Custom Commission Dispatched!
             </h1>
-            <p className="text-sm text-[#6E6E73] max-w-md mx-auto leading-relaxed">
-              Your bespoke commission has been dispatched to the selected designer atelier.
+            <p className="text-xs sm:text-sm text-[#5A7184] max-w-md mx-auto leading-relaxed">
+              Your bespoke garment brief has been received by the selected atelier. The couturier will review your specifications and contact you.
             </p>
-            <div className="font-mono text-base font-bold bg-[#FAFAF9] border border-[#ECECEC] py-3 px-6 rounded-2xl inline-block text-[#1D1D1F]">
-              Reference ID: {requestSuccess.requestId}
+            <div className="font-mono text-sm font-bold bg-white border border-[#183B56] py-2.5 px-6 inline-block text-[#183B56]">
+              Reference ID: {requestSuccess.requestId || "REQ-COMMISSION-OK"}
             </div>
-            <p className="text-xs text-[#86868B] max-w-sm mx-auto">
-              We have forwarded confirmation to <strong className="text-[#1D1D1F]">{formData.customerEmail}</strong>. The designer will review your specifications and follow up.
-            </p>
             <div className="pt-4 flex justify-center gap-3">
               <button
-                onClick={() => router.push("/designers")}
-                className="px-6 py-2.5 rounded-full bg-[#1D1D1F] text-white text-xs font-medium"
+                onClick={() => router.push("/designer-studio")}
+                className="py-3 px-6 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider border-none cursor-pointer"
               >
-                Browse Designers
+                Return to Designer Studio
               </button>
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-3xl border border-[#ECECEC] p-8 sm:p-12 shadow-xl">
-            <div className="mb-8 pb-6 border-b border-[#ECECEC]">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F07020]/10 text-[#F07020] text-xs font-semibold uppercase tracking-wider mb-3">
-                <Sparkles size={13} /> Bespoke Commission
+          <div className="border border-[#183B56] bg-[#F5EFEB] p-8 sm:p-12 shadow-xs space-y-8">
+            <div className="pb-6 border-b border-[#183B56]">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#183B56] text-[10px] font-bold uppercase tracking-[0.2em] text-[#183B56] mb-3">
+                <Scissors size={12} />
+                <span>Bespoke Commission Brief</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold font-serif text-[#1D1D1F]">
+              <h1 className="text-3xl sm:text-4xl font-bold text-[#183B56] tracking-tight">
                 Commission a Custom Garment
               </h1>
-              <p className="text-xs sm:text-sm text-[#86868B] mt-1.5 leading-relaxed">
-                Have a dream outfit in mind? Describe your vision, choose a verified creator, and have your piece tailored exclusively for you.
+              <p className="text-xs sm:text-sm text-[#5A7184] mt-1.5 leading-relaxed font-normal">
+                Describe your dream silhouette, select a verified creator, and have a one-of-a-kind piece handcrafted to your exact body measurements.
               </p>
             </div>
 
             {formError && (
-              <div className="mb-6 p-4 rounded-2xl bg-red-50 text-red-600 text-xs border border-red-200">
+              <div className="p-4 bg-red-50 text-red-700 text-xs border border-red-300 font-medium">
                 {formError}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6 text-xs">
+            <form onSubmit={handleSubmit} className="space-y-6 text-xs font-medium">
               {/* Select Designer */}
               <div>
-                <label className="block font-semibold text-[#1D1D1F] mb-2">
-                  Select Designer Atelier *
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-2">
+                  Select Atelier Couturier *
                 </label>
                 {loadingDesigners ? (
-                  <div className="h-12 bg-[#FAFAF9] rounded-xl border border-[#ECECEC] animate-pulse" />
-                ) : designers.length > 0 ? (
+                  <div className="h-12 bg-white border border-[#183B56]/30 animate-pulse" />
+                ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {designers.map((d) => (
                       <label
                         key={d.designerId}
-                        className={`p-3.5 rounded-2xl border cursor-pointer flex items-center gap-3 transition-all ${
+                        className={`p-3.5 border cursor-pointer flex items-center gap-3 transition-all ${
                           formData.designerId === d.designerId
-                            ? "border-[#1D1D1F] bg-[#FAFAF9] shadow-sm ring-1 ring-[#1D1D1F]"
-                            : "border-[#ECECEC] hover:border-[#86868B]/50"
+                            ? "border-[#183B56] bg-white shadow-xs"
+                            : "border-[#183B56]/30 bg-transparent hover:border-[#183B56]"
                         }`}
                       >
                         <input
@@ -187,196 +182,174 @@ export default function CustomDesignRequestPage() {
                           value={d.designerId}
                           checked={formData.designerId === d.designerId}
                           onChange={(e) => setFormData({ ...formData, designerId: e.target.value })}
-                          className="sr-only"
+                          className="accent-[#183B56]"
                         />
-                        <div className="w-10 h-10 rounded-full bg-[#E5E5E5] overflow-hidden shrink-0 flex items-center justify-center font-bold text-xs">
-                          {d.profileImageUrl ? (
-                            <img src={d.profileImageUrl} alt={d.displayName} className="w-full h-full object-cover" />
-                          ) : (
-                            <span>{(d.displayName || "D")[0]}</span>
-                          )}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-1">
-                            <span className="font-semibold text-[#1D1D1F] truncate">{d.displayName}</span>
-                            <ShieldCheck size={12} className="text-[#F07020] shrink-0" />
-                          </div>
-                          <span className="text-[10px] text-[#86868B] block truncate">
-                            {d.specialization || d.brandName || "Custom Tailoring"}
-                          </span>
+                        <div>
+                          <div className="font-bold text-[#183B56]">{d.displayName}</div>
+                          <div className="text-[10px] text-[#5A7184]">{d.brandName || "Independent Studio"} • {d.specialization || "Couture"}</div>
                         </div>
                       </label>
                     ))}
                   </div>
-                ) : (
-                  <p className="text-xs text-[#86868B]">No designers available right now.</p>
                 )}
               </div>
 
-              {/* Customer Contact */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              {/* Contact Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block font-medium text-[#1D1D1F] mb-1.5">Your Name *</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                    Your Name *
+                  </label>
                   <input
                     type="text"
                     required
                     value={formData.customerName}
                     onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                    placeholder="e.g. Sophia Vance"
-                    className="w-full px-4 py-3 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
+                    className="w-full py-2.5 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block font-medium text-[#1D1D1F] mb-1.5">Email Address *</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                    Email Address *
+                  </label>
                   <input
                     type="email"
                     required
                     value={formData.customerEmail}
                     onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
-                    placeholder="sophia@example.com"
-                    className="w-full px-4 py-3 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
+                    className="w-full py-2.5 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.customerPhone}
+                    onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
+                    className="w-full py-2.5 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
                   />
                 </div>
               </div>
 
-              {/* Vision Description */}
+              {/* Description */}
               <div>
-                <label className="block font-medium text-[#1D1D1F] mb-1.5">
-                  Garment Vision & Styling Details *
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                  Garment Vision & Design Brief *
                 </label>
                 <textarea
-                  required
                   rows={4}
+                  required
+                  placeholder="Describe the occasion, silhouette style, neckline, draping, and any specific inspiration..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Describe the silhouette, neckline, sleeve style, fabric weight, occasion, or any specific details..."
-                  className="w-full px-4 py-3 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs leading-relaxed"
+                  className="w-full py-2.5 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none resize-none"
                 />
               </div>
 
-              {/* Reference Image URL */}
-              <div>
-                <label className="block font-medium text-[#1D1D1F] mb-1.5">
-                  Reference Image URL (Optional)
-                </label>
-                <input
-                  type="url"
-                  value={formData.referenceImage}
-                  onChange={(e) => setFormData({ ...formData, referenceImage: e.target.value })}
-                  placeholder="https://example.com/dress-inspiration.jpg"
-                  className="w-full px-4 py-3 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
-                />
-              </div>
-
-              {/* Color & Fabric */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Fabric, Color, Budget */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block font-medium text-[#1D1D1F] mb-1.5">Preferred Color</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                    Preferred Fabric
+                  </label>
                   <input
                     type="text"
-                    value={formData.preferredColor}
-                    onChange={(e) => setFormData({ ...formData, preferredColor: e.target.value })}
-                    placeholder="e.g. Midnight Black"
-                    className="w-full px-4 py-3 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
-                  />
-                </div>
-                <div>
-                  <label className="block font-medium text-[#1D1D1F] mb-1.5">Preferred Fabric</label>
-                  <input
-                    type="text"
+                    placeholder="e.g. Mulberry Silk, Wool Faille"
                     value={formData.preferredFabric}
                     onChange={(e) => setFormData({ ...formData, preferredFabric: e.target.value })}
-                    placeholder="e.g. Mulberry Silk Velvet"
-                    className="w-full px-4 py-3 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
+                    className="w-full py-2.5 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                    Color Palette
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Midnight Navy, Ivory, Olive"
+                    value={formData.preferredColor}
+                    onChange={(e) => setFormData({ ...formData, preferredColor: e.target.value })}
+                    className="w-full py-2.5 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
+                    Estimated Budget (INR ₹)
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 25000"
+                    value={formData.budget}
+                    onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                    className="w-full py-2.5 px-3 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
                   />
                 </div>
               </div>
 
-              {/* Body Measurements */}
-              <div className="p-4 rounded-2xl bg-[#FAFAF9] border border-[#ECECEC] space-y-3">
-                <span className="block font-semibold text-[#1D1D1F]">Custom Body Measurements (Inches, Optional)</span>
+              {/* Measurements (Optional) */}
+              <div className="border border-[#183B56]/30 p-4 bg-white/50 space-y-3">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[#183B56]">
+                  Body Measurements (Inches — Optional)
+                </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div>
-                    <label className="block text-[10px] text-[#86868B] mb-1">Bust</label>
+                    <label className="block text-[10px] text-[#5A7184] mb-1">Bust / Chest</label>
                     <input
                       type="number"
+                      step="0.5"
                       placeholder="36"
                       value={formData.bust}
                       onChange={(e) => setFormData({ ...formData, bust: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg border border-[#ECECEC] bg-white text-xs text-center"
+                      className="w-full py-2 px-2.5 bg-white border border-[#183B56] text-xs outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-[#86868B] mb-1">Waist</label>
+                    <label className="block text-[10px] text-[#5A7184] mb-1">Waist</label>
                     <input
                       type="number"
-                      placeholder="28"
+                      step="0.5"
+                      placeholder="30"
                       value={formData.waist}
                       onChange={(e) => setFormData({ ...formData, waist: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg border border-[#ECECEC] bg-white text-xs text-center"
+                      className="w-full py-2 px-2.5 bg-white border border-[#183B56] text-xs outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-[#86868B] mb-1">Hips</label>
+                    <label className="block text-[10px] text-[#5A7184] mb-1">Hips</label>
                     <input
                       type="number"
+                      step="0.5"
                       placeholder="38"
                       value={formData.hips}
                       onChange={(e) => setFormData({ ...formData, hips: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg border border-[#ECECEC] bg-white text-xs text-center"
+                      className="w-full py-2 px-2.5 bg-white border border-[#183B56] text-xs outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-[#86868B] mb-1">Height</label>
+                    <label className="block text-[10px] text-[#5A7184] mb-1">Height (cm)</label>
                     <input
-                      type="text"
-                      placeholder="5'7"
+                      type="number"
+                      placeholder="175"
                       value={formData.height}
                       onChange={(e) => setFormData({ ...formData, height: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg border border-[#ECECEC] bg-white text-xs text-center"
+                      className="w-full py-2 px-2.5 bg-white border border-[#183B56] text-xs outline-none"
                     />
                   </div>
-                </div>
-              </div>
-
-              {/* Budget & Target Date */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-medium text-[#1D1D1F] mb-1.5">Estimated Budget (₹)</label>
-                  <input
-                    type="number"
-                    value={formData.budget}
-                    onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                    placeholder="e.g. 20000"
-                    className="w-full px-4 py-3 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
-                  />
-                </div>
-                <div>
-                  <label className="block font-medium text-[#1D1D1F] mb-1.5">Target Completion Date</label>
-                  <input
-                    type="date"
-                    value={formData.requestedDate}
-                    onChange={(e) => setFormData({ ...formData, requestedDate: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-[#ECECEC] bg-[#FAFAF9] outline-none focus:border-[#1D1D1F] focus:bg-white text-xs"
-                  />
                 </div>
               </div>
 
               {/* Submit CTA */}
-              <div className="pt-6 border-t border-[#ECECEC] flex items-center justify-end gap-4">
-                <button
-                  type="button"
-                  onClick={() => router.back()}
-                  className="px-6 py-3 rounded-full hover:bg-[#F0F0F0] text-[#6E6E73] font-medium"
-                >
-                  Cancel
-                </button>
+              <div className="pt-4">
                 <button
                   type="submit"
                   disabled={formSubmitting}
-                  className="px-8 py-3 rounded-full bg-[#F07020] hover:bg-[#e06214] text-white font-medium text-xs shadow-lg shadow-[#F07020]/25 flex items-center gap-2 disabled:opacity-60"
+                  className="w-full py-3.5 px-6 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.18em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                 >
-                  {formSubmitting ? "Dispatching Request..." : "Send Request to Designer"}
+                  <Sparkles size={14} />
+                  <span>{formSubmitting ? "Dispatching Brief to Atelier..." : "Submit Bespoke Commission"}</span>
+                  <ArrowRight size={13} />
                 </button>
               </div>
             </form>

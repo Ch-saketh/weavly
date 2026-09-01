@@ -11,14 +11,14 @@ import {
 
 /* ─── tiny helpers ─────────────────────────────────── */
 const Tag = ({ children }) => (
-  <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#F07020] border border-[#F07020]/30 bg-[#F07020]/8 px-3 py-1.5 rounded-full">
-    <span className="w-1.5 h-1.5 rounded-full bg-[#F07020] inline-block" />
+  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#183B56] border border-[#183B56] bg-white px-3 py-1.5 rounded-none">
+    <span className="w-1.5 h-1.5 bg-[#183B56] inline-block" />
     {children}
   </span>
 );
 
 const SectionLabel = ({ children }) => (
-  <p className="text-[9px] font-extrabold uppercase tracking-[0.38em] text-[#C6A15B] mb-4">{children}</p>
+  <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#5A7184] mb-4">{children}</p>
 );
 
 /* ─── data ──────────────────────────────────────────── */
