@@ -107,12 +107,6 @@ export default function AppShell({ children }) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [pathname]);
-
-  const handleAppleSignInAction = () => {
-    console.log("Apple secure token identity handshake triggered.");
-  };
-
   const openAuthModal = (view = "login") => {
     setAuthInitialView(view);
     setAuthOpen(true);
@@ -194,7 +188,6 @@ export default function AppShell({ children }) {
             }
           }}
           initialView={authInitialView}
-          onAppleSignIn={handleAppleSignInAction}
         />
       )}
 
