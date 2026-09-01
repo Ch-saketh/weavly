@@ -9,13 +9,12 @@ export const metadata = {
   description: "Curated designer clothing for men, women, unisex, and kids.",
   icons: {
     icon: [
-      { url: "/weavly-favicon.svg?v=17", type: "image/svg+xml" },
-      { url: "/favicon-light.png?v=17", media: "(prefers-color-scheme: light)", type: "image/png" },
-      { url: "/favicon-dark.png?v=17", media: "(prefers-color-scheme: dark)", type: "image/png" },
-      { url: "/favicon-light.png?v=17", sizes: "512x512", type: "image/png" },
+      { url: "/favicon-light.png?v=21", media: "(prefers-color-scheme: light)", type: "image/png" },
+      { url: "/favicon-dark.png?v=21", media: "(prefers-color-scheme: dark)", type: "image/png" },
+      { url: "/favicon-dark.png?v=21", type: "image/png" },
     ],
-    shortcut: "/weavly-favicon.svg?v=17",
-    apple: "/apple-touch-icon.png?v=17",
+    shortcut: "/favicon-dark.png?v=21",
+    apple: "/apple-touch-icon.png?v=21",
   },
 };
 
@@ -27,32 +26,39 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap" rel="stylesheet" />
-        <link
-          rel="icon"
-          href="/favicon-dark.png?v=17"
-          media="(prefers-color-scheme: dark)"
-          type="image/png"
-        />
-        <link
-          rel="icon"
-          href="/favicon-light.png?v=17"
-          media="(prefers-color-scheme: light)"
-          type="image/png"
-        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                try {
-                  var mql = window.matchMedia('(prefers-color-scheme: dark)');
-                  function updateIcon(e) {
-                    var link = document.querySelector("link[rel*='icon']:not([type='image/svg+xml'])");
-                    if (link) {
-                      link.href = e.matches ? '/favicon-dark.png?v=17' : '/favicon-light.png?v=17';
+                function updateThemeFavicon() {
+                  try {
+                    var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    var targetHref = isDark ? '/favicon-dark.png?v=21' : '/favicon-light.png?v=21';
+                    
+                    var existingLinks = document.querySelectorAll("link[rel*='icon']");
+                    var found = false;
+                    existingLinks.forEach(function(link) {
+                      link.href = targetHref;
+                      link.type = 'image/png';
+                      link.removeAttribute('media');
+                      found = true;
+                    });
+                    
+                    if (!found && document.head) {
+                      var newLink = document.createElement('link');
+                      newLink.rel = 'icon';
+                      newLink.type = 'image/png';
+                      newLink.href = targetHref;
+                      document.head.appendChild(newLink);
                     }
-                  }
-                  mql.addEventListener('change', updateIcon);
-                } catch(e) {}
+                  } catch(e) {}
+                }
+                
+                updateThemeFavicon();
+                if (window.matchMedia) {
+                  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeFavicon);
+                }
+                document.addEventListener('DOMContentLoaded', updateThemeFavicon);
               })();
             `,
           }}
