@@ -32,5 +32,11 @@ export default function HomePage() {
     return <HomeSkeleton />;
   }
 
+  // When user is logged out (guest), immediately show the Guest Onboarding Page
+  if (!user) {
+    return <GuestOnboardingPage onOpenAuth={handleOpenAuth} />;
+  }
+
+  // When user is authenticated, show personalized FamilyStudioHome
   return <FamilyStudioHome onShopNow={handleShopNow} onOpenAuth={handleOpenAuth} />;
 }
