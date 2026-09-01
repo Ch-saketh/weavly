@@ -25,20 +25,33 @@ export function useZeraRecommendations() {
   const fetchedRef = useRef(false);
 
   const fetchRecommendations = useCallback(async (occasion = null) => {
-    if (!isLoggedIn() && !user) {
-      setCollection(null);
-      setRecommendations([]);
-      setLoading(false);
-      setError(null);
-      return;
-    }
-
     setLoading(true);
     setError(null);
     try {
-      const data = await getMyRecommendations(occasion);
-      setCollection(data);
-      setRecommendations(data.recommendations || []);
+      if (isLoggedIn() || user) {
+        const data = await getMyRecommendations(occasion);
+        if (data && data.recommendations && data.recommendations.length > 0) {
+          setCollection(data);
+          setRecommendations(data.recommendations);
+          return;
+        }
+      }
+      // Guest or first-time user fallback: fetch curated benchmark Zyra recommendations
+      const { getProductRecommendations } = await import("@/modules/recommendations/services/recommendationService");
+      const publicRecs = await getProductRecommendations("10009781", 50);
+      if (publicRecs && publicRecs.length > 0) {
+        setCollection({
+          generationId: "public-curated",
+          productId: "10009781",
+          modelVersion: "zyra-v1-p9",
+          count: publicRecs.length,
+          recommendations: publicRecs,
+        });
+        setRecommendations(publicRecs);
+      } else {
+        setCollection(null);
+        setRecommendations([]);
+      }
     } catch (err) {
       console.warn("Zera recommendation retrieval note:", err.message);
       setError(err.message);
@@ -49,11 +62,11 @@ export function useZeraRecommendations() {
   }, [user]);
 
   useEffect(() => {
-    if (!fetchedRef.current && (isLoggedIn() || user)) {
+    if (!fetchedRef.current) {
       fetchedRef.current = true;
       fetchRecommendations();
     }
-  }, [fetchRecommendations, user]);
+  }, [fetchRecommendations]);
 
   useEffect(() => {
     const handleProfileUpdate = () => {

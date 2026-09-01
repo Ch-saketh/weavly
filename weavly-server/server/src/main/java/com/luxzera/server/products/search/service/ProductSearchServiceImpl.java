@@ -239,13 +239,34 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 
     private ProductResponse toResponse(Product product) {
         String effectiveBrand = product.getBrandName();
-        if (effectiveBrand == null && product.getBrands() != null && !product.getBrands().isEmpty()) {
-            effectiveBrand = product.getBrands().iterator().next().getName();
+        if (effectiveBrand == null || effectiveBrand.isBlank()) {
+            try {
+                if (product.getBrands() != null && !product.getBrands().isEmpty()) {
+                    effectiveBrand = product.getBrands().iterator().next().getName();
+                }
+            } catch (Exception ignored) {
+                effectiveBrand = "Weavly Atelier";
+            }
+        }
+        if (effectiveBrand == null || effectiveBrand.isBlank()) {
+            effectiveBrand = "Weavly Atelier";
         }
 
         String primaryImage = product.getImageUrl();
-        if (primaryImage == null && product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
-            primaryImage = product.getImageUrls().get(0);
+        List<String> images = null;
+        try {
+            if (product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
+                images = new ArrayList<>(product.getImageUrls());
+                if (primaryImage == null && !images.isEmpty()) {
+                    primaryImage = images.get(0);
+                }
+            }
+        } catch (Exception ignored) {
+            // Defensive fallback in case lazy collection was detached
+        }
+
+        if (images == null) {
+            images = (primaryImage != null && !primaryImage.isBlank()) ? List.of(primaryImage) : List.of();
         }
 
         return ProductResponse.builder()
@@ -262,7 +283,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
                 .gender(product.getAudience() != null ? product.getAudience().name() : "UNISEX")
                 .imageUrl(primaryImage)
                 .productUrl(product.getProductUrl())
-                .imageUrls(product.getImageUrls() != null ? product.getImageUrls() : (primaryImage != null ? List.of(primaryImage) : List.of()))
+                .imageUrls(images)
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();

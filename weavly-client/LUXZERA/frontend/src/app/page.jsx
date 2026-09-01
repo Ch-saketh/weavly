@@ -32,10 +32,5 @@ export default function HomePage() {
     return <HomeSkeleton />;
   }
 
-  // Once authentication resolution is complete:
-  if (!user) {
-    return <GuestOnboardingPage onOpenAuth={handleOpenAuth} />;
-  }
-
   return <FamilyStudioHome onShopNow={handleShopNow} onOpenAuth={handleOpenAuth} />;
 }

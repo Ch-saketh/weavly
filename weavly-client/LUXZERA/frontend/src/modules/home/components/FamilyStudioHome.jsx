@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowDown, ChevronLeft, ChevronRight, ShoppingBag, Bookmark, Sparkles, Camera } from "lucide-react";
+import { ArrowRight, ArrowDown, ChevronLeft, ChevronRight, ShoppingBag, Bookmark, Camera } from "lucide-react";
 import { getProducts } from "@/modules/products/services/productService";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
@@ -49,20 +49,76 @@ const HERO_CATEGORIES = [
 ];
 
 // Department Carousel Component (Infinite Side-Scroll Shelf)
-function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddToCart, onToggleLike, isSaved, addedProductIds }) {
+function DepartmentCarousel({
+  title,
+  subtitle,
+  deptQuery,
+  products = [],
+  loading = false,
+  onAddToCart,
+  onToggleLike,
+  isSaved,
+  addedProductIds = {},
+}) {
   const router = useRouter();
   const scrollRef = useRef(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeftPos = useRef(0);
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const offset = direction === "left" ? -580 : 580;
+      const offset = direction === "left" ? -520 : 520;
       scrollRef.current.scrollBy({ left: offset, behavior: "smooth" });
     }
   };
 
-  const displayList = products.length > 0 ? products : [];
+  // Drag-to-scroll handlers
+  const handleMouseDown = (e) => {
+    isDragging.current = true;
+    startX.current = e.pageX - scrollRef.current.offsetLeft;
+    scrollLeftPos.current = scrollRef.current.scrollLeft;
+  };
 
-  if (displayList.length === 0) return null;
+  const handleMouseLeave = () => {
+    isDragging.current = false;
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.5;
+    scrollRef.current.scrollLeft = scrollLeftPos.current - walk;
+  };
+
+  if (loading) {
+    return (
+      <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
+        <div className="py-4 px-6 border-b border-[#183B56] flex justify-between items-center">
+          <div>
+            <div className="h-6 w-48 bg-[#183B56]/15 rounded-xs animate-pulse mb-1" />
+            <div className="h-3.5 w-32 bg-[#183B56]/10 rounded-xs animate-pulse" />
+          </div>
+        </div>
+        <div className="flex overflow-hidden divide-x divide-[#183B56]">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <div key={n} className="w-[240px] sm:w-[260px] shrink-0 p-4 space-y-3">
+              <div className="aspect-[3/3.7] bg-[#DFE7ED] rounded-xs animate-pulse" />
+              <div className="h-4 bg-[#183B56]/10 rounded-xs animate-pulse w-3/4 mx-auto" />
+              <div className="h-4 bg-[#183B56]/15 rounded-xs animate-pulse w-1/2 mx-auto" />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (!products || products.length === 0) return null;
 
   return (
     <section className="border border-[#183B56] bg-[#F5EFEB] shadow-xs">
@@ -73,13 +129,13 @@ function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddTo
             {title}
           </h2>
           <p className="text-xs text-[#5A7184] pt-0.5">
-            {subtitle} • {displayList.length} Curated Items (Scroll Horizontally →)
+            {subtitle} • {products.length} Curated Items (Scroll Horizontally →)
           </p>
         </div>
 
         <div className="flex items-center gap-3 self-end sm:self-auto">
           <button
-            onClick={() => router.push(`/market?gender=${deptQuery}`)}
+            onClick={() => router.push(`/market?gender=${encodeURIComponent(deptQuery)}`)}
             className="text-xs font-semibold text-[#183B56] hover:underline flex items-center gap-1 bg-transparent border-none cursor-pointer p-0"
           >
             <span>Explore All</span>
@@ -90,14 +146,14 @@ function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddTo
             <button
               onClick={() => scroll("left")}
               aria-label="Scroll left"
-              className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] flex items-center justify-center cursor-pointer transition-colors"
+              className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] flex items-center justify-center cursor-pointer transition-colors active:scale-95"
             >
               <ChevronLeft size={14} />
             </button>
             <button
               onClick={() => scroll("right")}
               aria-label="Scroll right"
-              className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] flex items-center justify-center cursor-pointer transition-colors"
+              className="w-7 h-7 rounded-full border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] flex items-center justify-center cursor-pointer transition-colors active:scale-95"
             >
               <ChevronRight size={14} />
             </button>
@@ -105,12 +161,17 @@ function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddTo
         </div>
       </div>
 
-      {/* Horizontal Infinite Side-Scroll Track */}
+      {/* Horizontal Continuous Side-Scroll Track with Drag support */}
       <div
         ref={scrollRef}
-        className="flex overflow-x-auto scroll-smooth scrollbar-none divide-x divide-[#183B56]"
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        className="flex overflow-x-auto scroll-smooth scrollbar-none divide-x divide-[#183B56] snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {displayList.map((product, idx) => {
+        {products.map((product, idx) => {
           const pid = product.id || product.productId || `dept-${idx}`;
           const pName = product.name || product.title || "Essential Piece";
           const rawImg = product.imageUrl || product.image || product.images?.[0];
@@ -123,19 +184,26 @@ function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddTo
             <div
               key={pid}
               onClick={() => product.id && router.push(`/product/${product.id}`)}
-              className="w-[240px] sm:w-[270px] shrink-0 group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
+              className="w-[220px] sm:w-[250px] md:w-[270px] shrink-0 snap-start group cursor-pointer flex flex-col justify-between hover:bg-[#183B56]/[0.02] transition-colors"
             >
               {/* Product Image Box */}
               <div className="relative aspect-[3/3.7] bg-[#DFE7ED] border-b border-[#183B56] overflow-hidden flex items-center justify-center p-4 sm:p-5">
                 <img
                   src={pImg}
                   alt={pName}
+                  loading="lazy"
+                  draggable={false}
                   className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
                   onError={(e) => {
                     e.currentTarget.onerror = null;
                     e.currentTarget.src = NEUTRAL_FALLBACK_IMAGE;
                   }}
                 />
+
+                {/* Rank Tag */}
+                <div className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-xs border border-[#183B56] px-2 py-0.5 rounded-xs text-[10px] font-bold text-[#183B56]">
+                  #{idx + 1}
+                </div>
 
                 {/* Wardrobe Bookmark Icon on Hover */}
                 <button
@@ -168,14 +236,18 @@ function DepartmentCarousel({ title, subtitle, deptQuery, products = [], onAddTo
               </div>
 
               {/* Bottom Rate & Title Box (Clean 2-Line Wrapping, No Text Cutoff) */}
-              <div className="py-3.5 px-3 text-center flex flex-col items-center justify-between min-h-[82px] bg-[#F5EFEB]">
+              <div className="py-3 px-3 text-center flex flex-col items-center justify-between min-h-[92px] bg-[#F5EFEB] space-y-1">
+                <div className="flex items-center justify-between w-full text-[10px] font-bold text-[#5A7184] uppercase tracking-wider px-1">
+                  <span className="truncate max-w-[110px]">{product.brand || "WEAVLY"}</span>
+                  <span>{product.gender || product.department || "UNISEX"}</span>
+                </div>
                 <div
                   className="text-xs sm:text-[13px] font-bold text-[#183B56] group-hover:underline line-clamp-2 leading-snug w-full text-center px-1"
                   title={pName}
                 >
                   {pName}
                 </div>
-                <div className="text-sm sm:text-base font-bold text-[#183B56] tracking-tight mt-1">
+                <div className="text-sm sm:text-base font-bold text-[#183B56] tracking-tight">
                   ₹{Math.round(pPrice).toLocaleString("en-IN")}
                 </div>
               </div>
@@ -194,7 +266,10 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const { addToCart } = useCart();
 
   const [addedProductIds, setAddedProductIds] = useState({});
-  const [productsList, setProductsList] = useState([]);
+  const [trendingProducts, setTrendingProducts] = useState([]);
+  const [menProducts, setMenProducts] = useState([]);
+  const [womenProducts, setWomenProducts] = useState([]);
+  const [footwearProducts, setFootwearProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
 
   // Active Category Selection
@@ -202,36 +277,35 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
   const [isFitModalOpen, setIsFitModalOpen] = useState(false);
   const firstShelfRef = useRef(null);
 
-  // Initial products fetch
+  // Initial products fetch across multiple departments
   useEffect(() => {
     let isMounted = true;
     setLoadingProducts(true);
-    getProducts({ limit: 100 }).then((items) => {
+
+    Promise.allSettled([
+      getProducts({ limit: 40 }),
+      getProducts({ gender: "Men", limit: 40 }),
+      getProducts({ gender: "Women", limit: 40 }),
+      getProducts({ category: "Footwear", limit: 40 }),
+    ]).then(([trendingRes, menRes, womenRes, footwearRes]) => {
       if (isMounted) {
-        const list = Array.isArray(items) ? items : [];
-        setProductsList(list);
+        const trending = trendingRes.status === "fulfilled" && Array.isArray(trendingRes.value) ? trendingRes.value : [];
+        const men = menRes.status === "fulfilled" && Array.isArray(menRes.value) ? menRes.value : [];
+        const women = womenRes.status === "fulfilled" && Array.isArray(womenRes.value) ? womenRes.value : [];
+        const footwear = footwearRes.status === "fulfilled" && Array.isArray(footwearRes.value) ? footwearRes.value : [];
+
+        setTrendingProducts(trending.length > 0 ? trending : []);
+        setMenProducts(men.length > 0 ? men : trending.filter((p) => (p.gender || "").toLowerCase().includes("men")));
+        setWomenProducts(women.length > 0 ? women : trending.filter((p) => (p.gender || "").toLowerCase().includes("wom")));
+        setFootwearProducts(footwear.length > 0 ? footwear : trending.slice(20, 40));
         setLoadingProducts(false);
       }
     });
+
     return () => {
       isMounted = false;
     };
   }, []);
-
-  // Segregate products into Men, Women, Kids
-  const menProducts = productsList.filter((p) => {
-    const g = (p.gender || p.department || "").toLowerCase();
-    const c = (p.category || "").toLowerCase();
-    return g.includes("men") || g.includes("male") || (!g.includes("women") && !g.includes("female") && !g.includes("kid") && !g.includes("girl") && c.includes("shirt"));
-  });
-
-  const womenProducts = productsList.filter((p) => {
-    const g = (p.gender || p.department || "").toLowerCase();
-    const c = (p.category || "").toLowerCase();
-    return g.includes("women") || g.includes("female") || g.includes("girl") || c.includes("dress") || c.includes("top");
-  });
-
-  const bestSellers = productsList.slice(0, 30);
 
   const handleScrollToShelf = () => {
     if (firstShelfRef.current) {
@@ -379,7 +453,8 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
             title="Best Sellers & Trending"
             subtitle="Most desired seasonal atelier pieces"
             deptQuery="All"
-            products={bestSellers}
+            products={trendingProducts}
+            loading={loadingProducts}
             onAddToCart={handleAddToCart}
             onToggleLike={handleToggleLike}
             isSaved={isSaved}
@@ -395,6 +470,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
           subtitle="Tailored blazers, premium shirts & trousers"
           deptQuery="Men"
           products={menProducts}
+          loading={loadingProducts}
           onAddToCart={handleAddToCart}
           onToggleLike={handleToggleLike}
           isSaved={isSaved}
@@ -409,6 +485,7 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
           subtitle="Contemporary silhouettes, dresses & knitwear"
           deptQuery="Women"
           products={womenProducts}
+          loading={loadingProducts}
           onAddToCart={handleAddToCart}
           onToggleLike={handleToggleLike}
           isSaved={isSaved}
@@ -416,7 +493,24 @@ export default function FamilyStudioHome({ onShopNow, onOpenAuth }) {
         />
 
         {/* ════════════════════════════════════════════════════════════
-            ZYRA PERSONALIZED RECOMMENDATIONS SECTION
+            ROW 4: FOOTWEAR & ACCENTS (INFINITE SIDE-SCROLL SHELF)
+        ════════════════════════════════════════════════════════════ */}
+        {footwearProducts.length > 0 && (
+          <DepartmentCarousel
+            title="Footwear & Accents"
+            subtitle="Handcrafted leather footwear, shoes & accessories"
+            deptQuery="Footwear"
+            products={footwearProducts}
+            loading={loadingProducts}
+            onAddToCart={handleAddToCart}
+            onToggleLike={handleToggleLike}
+            isSaved={isSaved}
+            addedProductIds={addedProductIds}
+          />
+        )}
+
+        {/* ════════════════════════════════════════════════════════════
+            ROW 5: ZYRA PERSONALIZED RECOMMENDATIONS SECTION
         ════════════════════════════════════════════════════════════ */}
         <div className="border border-[#183B56] shadow-xs">
           <ZeraRecommendationsSection />
