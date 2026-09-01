@@ -146,6 +146,10 @@ export default function Navbar({
     if (query) {
       recordSearchActivity(query);
       setShowSuggestions(false);
+      setDesktopSearchOpen(false);
+      setMobileSearchOpen(false);
+      desktopSearchInputRef.current?.blur();
+      mobileSearchInputRef.current?.blur();
       onSearch?.(query);
       setMobileOpen(false);
     }
@@ -155,6 +159,10 @@ export default function Navbar({
     setSearchQuery(q);
     recordSearchActivity(q);
     setShowSuggestions(false);
+    setDesktopSearchOpen(false);
+    setMobileSearchOpen(false);
+    desktopSearchInputRef.current?.blur();
+    mobileSearchInputRef.current?.blur();
     onSearch?.(q);
   };
 

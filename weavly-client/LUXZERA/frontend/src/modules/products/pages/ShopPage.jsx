@@ -81,11 +81,15 @@ function ShopPageContent({ initialDepartment = "All" }) {
       if (genderParam.toLowerCase().includes("men") || genderParam.toLowerCase().includes("male")) return "Men";
       return genderParam;
     }
+    // When actively searching a keyword, search across ALL products
+    if (query) {
+      return "All";
+    }
     if (initialDepartment && initialDepartment !== "All") return initialDepartment;
     if (userGender === "female") return "Women";
     if (userGender === "male") return "Men";
     return "All";
-  }, [genderParam, initialDepartment, userGender]);
+  }, [genderParam, query, initialDepartment, userGender]);
 
   // ── State ──────────────────────────────────────────────────────────────────
   const [activeCat, setActiveCat] = useState(categoryParam || "");
@@ -201,10 +205,13 @@ function ShopPageContent({ initialDepartment = "All" }) {
   const displayed = useMemo(() => {
     let list = [...products].filter((p) => p.price <= priceMax);
 
-    if (effectiveGender === "Women") {
-      list = list.filter(isStrictlyWomenProduct);
-    } else if (effectiveGender === "Men") {
-      list = list.filter(isStrictlyMenProduct);
+    // Only filter strictly by gender if NOT a freeform text search query OR if explicit genderParam is given
+    if (!query || genderParam) {
+      if (effectiveGender === "Women") {
+        list = list.filter(isStrictlyWomenProduct);
+      } else if (effectiveGender === "Men") {
+        list = list.filter(isStrictlyMenProduct);
+      }
     }
 
     if (activeCat) {
@@ -222,7 +229,7 @@ function ShopPageContent({ initialDepartment = "All" }) {
     if (sortBy === "price_asc") list.sort((a, b) => a.price - b.price);
     if (sortBy === "price_desc") list.sort((a, b) => b.price - a.price);
     return list;
-  }, [products, priceMax, effectiveGender, activeCat, sortBy]);
+  }, [products, priceMax, effectiveGender, activeCat, sortBy, query, genderParam]);
 
   const quickFilters = useMemo(() => {
     if (effectiveGender === "Women") return WOMEN_QUICK_FILTERS;
@@ -262,6 +269,9 @@ function ShopPageContent({ initialDepartment = "All" }) {
   };
 
   const getPageSubtitle = () => {
+    if (query) {
+      return `Showing matching pieces across all departments for "${query}"`;
+    }
     if (effectiveGender === "Women") {
       return "Curated strictly for women • 100% verified silhouettes • Zero cross-gender contamination";
     }
@@ -282,7 +292,9 @@ function ShopPageContent({ initialDepartment = "All" }) {
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#183B56] text-[10px] font-bold tracking-[0.2em] uppercase text-[#183B56]">
                 <Sparkles size={12} />
                 <span>
-                  {effectiveGender !== "All" ? `${effectiveGender}'s Department` : "Weavly Collection"}
+                  {query
+                    ? "Search Results"
+                    : (effectiveGender !== "All" ? `${effectiveGender}'s Department` : "Weavly Collection")}
                 </span>
               </div>
 
