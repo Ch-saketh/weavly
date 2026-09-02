@@ -369,12 +369,6 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
   return (
     <div className="min-h-screen bg-[#F5EFEB] font-sans text-[#183B56] selection:bg-[#183B56] selection:text-white">
 
-      {/* ─── 0. TOP ARCHITECTURAL ANNOUNCEMENT BAR ─── */}
-      <div className="bg-[#183B56] text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] py-2.5 px-4 sm:px-8 border-b border-[#183B56] flex items-center justify-between">
-        <span className="hidden md:inline">FOUNDING COHORT · 2026 ATELIER CURATION</span>
-        <span className="mx-auto md:mx-0">3D VIRTUAL STYLIST &amp; BESPOKE LUXURY ATELIER</span>
-        <span className="hidden md:inline">100% SMART ESCROW FIT GUARANTEE</span>
-      </div>
 
       {/* ─── 1. ARCHITECTURAL HEADER ─── */}
       <header className="w-full h-20 flex items-center justify-between px-4 sm:px-8 md:px-12 border-b border-[#183B56] bg-white sticky top-0 z-50">
