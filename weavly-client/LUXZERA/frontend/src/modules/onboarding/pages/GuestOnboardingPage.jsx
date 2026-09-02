@@ -2,11 +2,12 @@
 
 // src/modules/onboarding/pages/GuestOnboardingPage.jsx
 // ──────────────────────────────────────────────────────────────────────────
-// WEAVLY GUEST ONBOARDING & ATELIER LANDING
-// • Art-directed editorial fashion design language inspired by reference
-// • Signature Lime Green, Sunny Yellow, Electric Blue & Crisp Ink color blocking
-// • Asymmetrical organic geometry, circular badges, and vertical accent typography
-// • Interactive Zyra AI agent with real-time responsive cursor eye-tracking
+// WEAVLY GUEST ONBOARDING & ATELIER LANDING PAGE
+// • Signature Warm Stone (#F5EFEB) & Architectural Navy (#183B56) Theme
+// • Art-directed editorial fashion composition inspired by reference
+// • Zero sidebar clutter · Authentic Weavly branding & typography
+// • Pure white background for Zyra mascot container with real-time eye tracking
+// • Value-driven patron storytelling: What is Weavly, What is Zyra, 100% Escrow Fit
 // ──────────────────────────────────────────────────────────────────────────
 
 import { useState, useEffect, useRef } from "react";
@@ -17,16 +18,21 @@ import {
   ShoppingBag, 
   Sparkles, 
   ShieldCheck, 
-  Check 
+  Check, 
+  Layers, 
+  Scissors, 
+  Lock,
+  ChevronRight,
+  User
 } from "lucide-react";
 import AuthModal from "@/modules/auth/components/AuthModal";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import Footer from "@/shared/components/layout/Footer";
 
-// High quality studio photography matching reference image
-const MODEL_MEN = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&q=80"; // Smiling male model in white
+// High quality studio photography matching reference aesthetic
+const MODEL_MEN = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&q=80"; // Handsome portrait male
 const MODEL_WOMEN = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80"; // Female model in white collared shirt
-const MODEL_BLAZER = "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&q=80"; // Female in yellow blazer & sunglasses
+const MODEL_BLAZER = "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&q=80"; // Female in tailored blazer & sunglasses
 
 const LOOK_1 = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80";
 const LOOK_2 = "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&q=80";
@@ -59,6 +65,7 @@ function ZeraInteractiveEyesMascot() {
     };
   }, []);
 
+  // Snappy responsive lerp loop (0.35 factor)
   useEffect(() => {
     let animationFrameId;
     let currentX = smoothPos.x;
@@ -76,28 +83,31 @@ function ZeraInteractiveEyesMascot() {
   }, [targetPos]);
 
   return (
-    <div className="relative flex items-center justify-center select-none" style={{ width: 360, height: 360 }}>
+    <div className="relative flex items-center justify-center select-none" style={{ width: 340, height: 340 }}>
+      {/* Subtle ambient glow */}
       <div
         style={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 380,
-          height: 380,
-          background: "radial-gradient(ellipse at center, rgba(59,130,246,0.18) 0%, transparent 70%)",
-          filter: "blur(28px)",
+          width: 360,
+          height: 360,
+          background: "radial-gradient(ellipse at center, rgba(24,59,86,0.08) 0%, transparent 70%)",
+          filter: "blur(24px)",
           pointerEvents: "none",
         }}
       />
 
+      {/* Mascot Base Emblem */}
       <img
         src="/zera_clean.svg?v=2"
         alt="Zyra AI"
-        style={{ width: 360, height: 360, objectFit: "contain", position: "relative", zIndex: 2, userSelect: "none" }}
+        style={{ width: 340, height: 340, objectFit: "contain", position: "relative", zIndex: 2, userSelect: "none" }}
         draggable={false}
       />
 
+      {/* Fast & Responsive Face Container */}
       <div
         className="absolute z-10 flex flex-col items-center justify-center pointer-events-none transition-transform duration-75 ease-out"
         style={{
@@ -107,37 +117,40 @@ function ZeraInteractiveEyesMascot() {
           willChange: "transform",
         }}
       >
+        {/* Raised Happy Eyebrows */}
         <div className="flex items-center gap-7 mb-1.5 opacity-90 transition-all duration-200">
           <div
-            className="w-[22px] h-[3px] bg-[#111827] rounded-full transition-transform duration-150"
+            className="w-[22px] h-[3px] bg-[#183B56] rounded-full transition-transform duration-150"
             style={{ transform: `rotate(${-5 + smoothPos.x * 10}deg) translateY(${isMoving ? -2 : 0}px)` }}
           />
           <div
-            className="w-[22px] h-[3px] bg-[#111827] rounded-full transition-transform duration-150"
+            className="w-[22px] h-[3px] bg-[#183B56] rounded-full transition-transform duration-150"
             style={{ transform: `rotate(${5 + smoothPos.x * 10}deg) translateY(${isMoving ? -2 : 0}px)` }}
           />
         </div>
 
+        {/* Shiny Eyes */}
         <div className="relative flex items-center justify-center gap-5">
-          <div className="w-[26px] h-[26px] rounded-full bg-[#111827] relative shadow-md overflow-hidden">
+          <div className="w-[26px] h-[26px] rounded-full bg-[#183B56] relative shadow-md overflow-hidden">
             <div className="w-[9px] h-[9px] rounded-full bg-white absolute top-1 left-1 shadow-sm" />
             <div className="w-[3.5px] h-[3.5px] rounded-full bg-white/90 absolute bottom-1 right-1" />
           </div>
 
-          <div className="w-[26px] h-[26px] rounded-full bg-[#111827] relative shadow-md overflow-hidden">
+          <div className="w-[26px] h-[26px] rounded-full bg-[#183B56] relative shadow-md overflow-hidden">
             <div className="w-[9px] h-[9px] rounded-full bg-white absolute top-1 left-1 shadow-sm" />
             <div className="w-[3.5px] h-[3.5px] rounded-full bg-white/90 absolute bottom-1 right-1" />
           </div>
         </div>
 
+        {/* Crisp Mouth */}
         <div className="mt-2 opacity-95 transition-all duration-150">
           {isMoving ? (
             <svg width="22" height="11" viewBox="0 0 22 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="11" cy="5.5" r="4" fill="#111827" />
+              <circle cx="11" cy="5.5" r="4" fill="#183B56" />
             </svg>
           ) : (
             <svg width="24" height="11" viewBox="0 0 24 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 4 2 Q 12 9 20 2" stroke="#111827" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+              <path d="M 4 2 Q 12 9 20 2" stroke="#183B56" strokeWidth="2.4" strokeLinecap="round" fill="none" />
             </svg>
           )}
         </div>
@@ -165,357 +178,376 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#A8E635] text-[#111827] font-sans selection:bg-black selection:text-white flex flex-col">
+    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white flex flex-col">
 
-      {/* ─── MAIN ASYMMETRICAL LAYOUT CONTAINER WITH LEFT VERTICAL RAIL ─── */}
-      <div className="flex flex-1 w-full min-h-screen">
-        
-        {/* ─── LEFT VERTICAL STRIP (Matching Reference Image) ─── */}
-        <aside className="w-16 sm:w-20 md:w-24 bg-[#A8E635] border-r border-black/15 flex flex-col justify-between items-center py-6 select-none shrink-0 z-20">
-          {/* Logo Badge Icon */}
-          <div 
-            onClick={() => triggerAuth("register")}
-            className="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center font-extrabold text-sm cursor-pointer shadow-sm hover:scale-105 transition-transform"
+      {/* ─── 1. TOP ARCHITECTURAL HEADER ─── */}
+      <header className="w-full h-20 px-6 sm:px-12 md:px-16 border-b border-[#183B56]/15 bg-white sticky top-0 z-50 flex items-center justify-between shadow-2xs">
+        <WeavlyLogo />
+
+        {/* Center Nav Links */}
+        <nav className="hidden md:flex items-center gap-10 text-xs font-bold uppercase tracking-[0.15em] text-[#5A7184]">
+          <a href="#discover" className="hover:text-[#183B56] transition-colors no-underline text-inherit">Discover</a>
+          <a href="#meet-zyra" className="hover:text-[#183B56] transition-colors no-underline text-inherit">Meet Zyra</a>
+          <a href="#why-weavly" className="hover:text-[#183B56] transition-colors no-underline text-inherit">Why Weavly</a>
+          <a href="#escrow-vault" className="hover:text-[#183B56] transition-colors no-underline text-inherit">Escrow Guarantee</a>
+          <a href="/creator-guide" className="hover:text-[#183B56] transition-colors no-underline text-inherit">For Creators</a>
+        </nav>
+
+        {/* Right Action Buttons */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => triggerAuth("login")}
+            className="bg-[#F5EFEB] text-[#183B56] px-5 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-white active:scale-95 transition-all cursor-pointer border border-[#183B56]/20"
           >
-            W
-          </div>
+            Sign In
+          </button>
+          <button
+            onClick={handleStartOnboarding}
+            className="bg-[#183B56] text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-[#102A43] active:scale-95 transition-all cursor-pointer border border-[#183B56] shadow-xs"
+          >
+            Build My Style
+          </button>
+        </div>
+      </header>
 
-          {/* Rotated Vertical Typography */}
-          <div className="flex-1 flex items-center justify-center my-12">
-            <span 
-              className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.3em] text-[#111827] whitespace-nowrap"
-              style={{ transform: "rotate(-90deg)" }}
-            >
-              NEW FASHION TREND · 2026
-            </span>
-          </div>
+      {/* ─── 2. UPPER HERO CANVAS (Warm Stone #F5EFEB) ─── */}
+      <section id="discover" className="bg-[#F5EFEB] px-6 sm:px-12 md:px-16 py-12 lg:py-20 border-b border-[#183B56]/15 relative">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          
+          {/* Left Column: Architectural Arch with Men's Model */}
+          <div className="lg:col-span-4 flex flex-col items-center lg:items-start space-y-4">
+            <div className="relative">
+              {/* Starburst Icon */}
+              <div className="absolute -top-3 -left-5 text-[#183B56] text-2xl font-bold select-none opacity-80">
+                ✺
+              </div>
 
-          {/* Bottom Sparkle Indicator */}
-          <div className="w-3 h-3 rounded-full bg-black/80 animate-ping" />
-        </aside>
-
-        {/* ─── RIGHT MAIN CANVAS (Two-Tone Green & Electric Blue Layout) ─── */}
-        <div className="flex-1 flex flex-col min-w-0">
-
-          {/* ── 1. TOP NAV ON GREEN BACKGROUND ── */}
-          <header className="h-20 px-6 sm:px-12 flex items-center justify-between border-b border-black/10 bg-[#A8E635]">
-            
-            {/* Left: Instagram Handle */}
-            <div className="flex items-center gap-3">
-              <span className="text-xs sm:text-sm font-bold text-[#111827]">Instagram</span>
-              <div className="w-8 h-[1.5px] bg-black/40" />
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-[#111827] cursor-pointer">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
+              {/* Arch Frame with Soft Slate Backdrop */}
+              <div className="w-56 sm:w-64 md:w-72 aspect-[3/4] bg-[#DFE7ED] rounded-t-full overflow-hidden border border-[#183B56]/20 shadow-sm relative group cursor-pointer" onClick={handleStartOnboarding}>
+                <img
+                  src={MODEL_MEN}
+                  alt="Sartorial Men's Look"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute bottom-3 left-3 bg-white/95 border border-[#183B56]/20 text-[9px] font-mono font-bold uppercase px-2.5 py-1 text-[#183B56]">
+                  MEN · BESPOKE
+                </div>
+              </div>
             </div>
 
-            {/* Center: Clean Minimal Navigation */}
-            <nav className="hidden md:flex items-center gap-8 text-xs sm:text-sm font-bold text-[#111827]">
-              <a href="#discover" className="hover:opacity-75 transition-opacity no-underline text-inherit">Shop</a>
-              <a href="#collections" className="hover:opacity-75 transition-opacity no-underline text-inherit">Collection</a>
-              <a href="/creator-guide" className="hover:opacity-75 transition-opacity no-underline text-inherit">Atelier</a>
-              <a href="#meet-zyra" className="hover:opacity-75 transition-opacity no-underline text-inherit">Zyra AI</a>
-            </nav>
+            <button
+              onClick={handleStartOnboarding}
+              className="inline-flex items-center gap-2 text-base sm:text-lg font-extrabold uppercase tracking-tight text-[#183B56] hover:text-[#102A43] cursor-pointer bg-transparent border-none p-0"
+            >
+              <span>Explore Men's Edit</span>
+              <ArrowRight size={18} />
+            </button>
+          </div>
 
-            {/* Right: Search, Cart & Auth Actions */}
-            <div className="flex items-center gap-5">
-              <button 
-                onClick={() => triggerAuth("login")}
-                className="hover:opacity-70 transition-opacity bg-transparent border-none cursor-pointer p-0 text-[#111827]"
+          {/* Center Column: Grand Headline & Value Story */}
+          <div className="lg:col-span-4 text-center lg:text-left space-y-6">
+            <div className="inline-flex items-center gap-2 bg-white border border-[#183B56]/20 px-3.5 py-1 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#183B56] shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-[#183B56] animate-pulse" />
+              <span>AI 3D STYLIST &amp; BESPOKE ATELIER</span>
+            </div>
+
+            <h1 className="text-4xl sm:text-6xl lg:text-[72px] font-extrabold uppercase tracking-tight text-[#183B56] leading-[0.92]">
+              DISCOVER<br />
+              THE NEW<br />
+              COMFORT
+            </h1>
+
+            <p className="text-sm sm:text-base text-[#5A7184] font-medium leading-relaxed max-w-sm">
+              Weavly connects patrons directly with independent couturiers—crafting made-to-measure garments tailored to your exact 3D silhouette.
+            </p>
+
+            <div className="pt-2">
+              <button
+                onClick={handleStartOnboarding}
+                className="bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider px-8 py-4 border border-[#183B56] transition-all cursor-pointer shadow-sm flex items-center gap-3 mx-auto lg:mx-0"
               >
-                <Search size={18} />
+                <span>Calibrate My Profile</span>
+                <ArrowRight size={14} />
               </button>
-              <button 
-                onClick={() => triggerAuth("login")}
-                className="hover:opacity-70 transition-opacity bg-transparent border-none cursor-pointer p-0 text-[#111827]"
+            </div>
+          </div>
+
+          {/* Right Column: Female Model in Tailored White Shirt */}
+          <div className="lg:col-span-4 flex flex-col items-center lg:items-end space-y-4">
+            <div className="w-56 sm:w-64 md:w-72 aspect-[3/4] bg-[#DFE7ED] rounded-lg overflow-hidden border border-[#183B56]/20 shadow-sm relative group cursor-pointer" onClick={handleStartOnboarding}>
+              <img
+                src={MODEL_WOMEN}
+                alt="Women's Sartorial Look"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute top-3 right-3 bg-white/95 border border-[#183B56]/20 text-[9px] font-mono font-bold uppercase px-2.5 py-1 text-[#183B56]">
+                WOMEN · ATELIER
+              </div>
+            </div>
+
+            <button
+              onClick={handleStartOnboarding}
+              className="inline-flex items-center gap-2 text-base sm:text-lg font-extrabold uppercase tracking-tight text-[#183B56] hover:text-[#102A43] cursor-pointer bg-transparent border-none p-0"
+            >
+              <span>Explore Women's Edit</span>
+              <ArrowRight size={18} />
+            </button>
+          </div>
+
+        </div>
+
+        {/* Overlapping Central Emblem Badge */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-30 pointer-events-none">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white text-[#183B56] border-2 border-[#183B56] flex items-center justify-center shadow-md">
+            <div className="text-center font-mono text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest leading-tight">
+              ✦ WEAVLY ✦<br />
+              ATELIER<br />
+              ZYRA AI
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 3. LOWER HERO CANVAS (Architectural Navy #183B56) ─── */}
+      <section className="bg-[#183B56] text-white px-6 sm:px-12 md:px-16 py-16 lg:py-24 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          
+          {/* Left: Circular Model Framing in Soft Slate */}
+          <div className="lg:col-span-5 flex justify-center lg:justify-start">
+            <div className="w-56 sm:w-64 md:w-72 h-56 sm:h-64 md:h-72 rounded-full bg-[#DFE7ED] p-2 overflow-hidden border-2 border-white/20 shadow-xl group cursor-pointer" onClick={handleStartOnboarding}>
+              <div className="w-full h-full rounded-full overflow-hidden">
+                <img
+                  src={MODEL_BLAZER}
+                  alt="Statement Bespoke Blazer"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right: "Dress like you're already famous" + Value Prop */}
+          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+            <h2 className="text-4xl sm:text-6xl lg:text-[68px] font-extrabold tracking-tight text-white leading-[1.02] uppercase">
+              Dress like you’re<br />
+              already famous.
+            </h2>
+            <p className="text-sm sm:text-base text-[#DFE7ED] max-w-lg font-medium leading-relaxed">
+              Skip generic fast fashion. Zyra AI indexes your exact measurements, favorite fabrics, and aesthetic palette so every piece feels like bespoke haute couture.
+            </p>
+
+            <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4">
+              <button
+                onClick={handleStartOnboarding}
+                className="bg-white hover:bg-[#F5EFEB] text-[#183B56] text-xs sm:text-sm font-extrabold uppercase tracking-widest px-8 py-4 border-none cursor-pointer shadow-md transition-transform hover:scale-105"
               >
-                <ShoppingBag size={18} />
+                BUILD MY STYLE NOW
               </button>
               <button
-                onClick={() => triggerAuth("login")}
-                className="hidden sm:inline-block bg-black text-white hover:bg-neutral-800 text-xs font-bold uppercase tracking-wider px-4 py-2 border-none cursor-pointer"
+                onClick={() => triggerAuth("register")}
+                className="bg-transparent hover:bg-white/10 text-white text-xs sm:text-sm font-extrabold uppercase tracking-widest px-8 py-4 border border-white/40 cursor-pointer transition-colors"
               >
-                Sign In
+                Join Atelier Cohort
               </button>
             </div>
-          </header>
+          </div>
 
-          {/* ── 2. UPPER HERO CANVAS (Green Background) ── */}
-          <section id="discover" className="bg-[#A8E635] px-6 sm:px-12 py-10 lg:py-16 relative">
+        </div>
+      </section>
+
+      {/* ─── 4. MEET ZYRA AI (Pure White Box Container with Interactive Mascot) ─── */}
+      <section id="meet-zyra" className="bg-[#F5EFEB] px-6 sm:px-12 md:px-16 py-20 border-b border-[#183B56]/15">
+        <div className="max-w-6xl mx-auto bg-white border border-[#183B56]/15 p-8 sm:p-14 shadow-xs">
+          
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
             
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-6xl mx-auto">
-              
-              {/* Left Column: Yellow Arch Circle with Male Model + Men Link */}
-              <div className="lg:col-span-4 flex flex-col items-center lg:items-start space-y-4">
-                <div className="relative">
-                  {/* Starburst Accent */}
-                  <div className="absolute -top-4 -left-6 text-black text-2xl font-bold select-none">
-                    ✺
-                  </div>
-
-                  {/* Yellow Arch Framing */}
-                  <div className="w-56 sm:w-64 md:w-72 aspect-[3/4] bg-[#FFDE00] rounded-t-full overflow-hidden border-2 border-black/20 shadow-md relative group">
-                    <img
-                      src={MODEL_MEN}
-                      alt="Men's Fashion Look"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                </div>
-
-                {/* Men's Action Link */}
-                <button
-                  onClick={handleStartOnboarding}
-                  className="inline-flex items-center gap-2 text-xl font-bold text-[#111827] hover:underline cursor-pointer bg-transparent border-none p-0"
-                >
-                  <span>Men</span>
-                  <ArrowRight size={20} />
-                </button>
+            {/* Left Column: Pure White Box Container for SVG Mascot (No Color Leaks) */}
+            <div className="lg:w-1/2 flex flex-col items-center justify-center p-6 bg-white border border-[#183B56]/10 w-full min-h-[400px] relative overflow-hidden shadow-2xs">
+              <span className="absolute top-4 left-4 bg-[#183B56] text-white text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1">
+                ZYRA 3D VECTOR AGENT
+              </span>
+              <ZeraInteractiveEyesMascot />
+              <div className="text-center mt-3 space-y-0.5">
+                <span className="text-xs font-bold uppercase text-[#183B56]">
+                  Real-Time Stylist Intelligence
+                </span>
+                <p className="text-[11px] text-[#5A7184] font-medium">
+                  Follows your gaze and calibrates bespoke 3D silhouettes.
+                </p>
               </div>
+            </div>
 
-              {/* Center Column: Massive Headline */}
-              <div className="lg:col-span-4 text-center lg:text-left space-y-4">
-                <h1 className="text-5xl sm:text-6xl lg:text-[72px] font-extrabold uppercase tracking-tight text-[#111827] leading-[0.94]">
-                  Discover<br />
-                  the new<br />
-                  comfort
-                </h1>
-                <p className="text-xs sm:text-sm text-black/75 font-medium max-w-xs leading-relaxed">
-                  Weavly combines bespoke craftsmanship and 3D silhouette calibration for clothing that fits you effortlessly.
+            {/* Right Column: Intelligent Fashion Narrative */}
+            <div className="lg:w-1/2 space-y-6">
+              <div className="space-y-2">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56]/15 px-3 py-1 inline-block">
+                  WHAT IS ZYRA AI?
+                </span>
+                <h3 className="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#183B56]">
+                  Curates Outfits.<br />Not Disconnected Clothes.
+                </h3>
+                <p className="text-sm text-[#5A7184] font-medium leading-relaxed">
+                  Unlike traditional ecommerce that floods you with random products, Zyra analyzes your proportions, palette preferences, and lifestyle goals to assemble complete, wearable collections.
                 </p>
               </div>
 
-              {/* Right Column: Female Model in White Shirt + Women Link */}
-              <div className="lg:col-span-4 flex flex-col items-center lg:items-end space-y-4">
-                <div className="w-56 sm:w-64 md:w-72 aspect-[3/4] overflow-hidden relative group">
-                  <img
-                    src={MODEL_WOMEN}
-                    alt="Women's Fashion Look"
-                    className="w-full h-full object-cover rounded-md group-hover:scale-105 transition-transform duration-700"
-                  />
-                </div>
-
-                {/* Women's Action Link */}
-                <button
-                  onClick={handleStartOnboarding}
-                  className="inline-flex items-center gap-2 text-xl font-bold text-[#111827] hover:underline cursor-pointer bg-transparent border-none p-0"
-                >
-                  <span>Women</span>
-                  <ArrowRight size={20} />
-                </button>
-              </div>
-
-            </div>
-
-            {/* Overlapping Central Rotating Badge */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-30 pointer-events-none">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white text-black border-2 border-black flex items-center justify-center shadow-xl">
-                <div className="text-center font-mono text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest leading-tight">
-                  ✦ FASHION ✦<br />
-                  ATELIER<br />
-                  WEAVLY
-                </div>
-              </div>
-            </div>
-
-          </section>
-
-          {/* ── 3. BOTTOM HERO CANVAS (Electric Blue Background) ── */}
-          <section className="bg-[#2563EB] text-white px-6 sm:px-12 py-16 lg:py-24 relative overflow-hidden">
-            
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-6xl mx-auto">
-              
-              {/* Left Column: Lime Green Circle Frame with Yellow Blazer Model */}
-              <div className="lg:col-span-5 flex justify-center lg:justify-start">
-                <div className="w-56 sm:w-64 md:w-72 h-56 sm:h-64 md:h-72 rounded-full bg-[#A8E635] p-2 overflow-hidden border-2 border-black/20 shadow-xl group">
-                  <div className="w-full h-full rounded-full overflow-hidden">
-                    <img
-                      src={MODEL_BLAZER}
-                      alt="Statement Fashion Silhouette"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: "Dress like you're already famous" + CTA */}
-              <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-                <h2 className="text-4xl sm:text-6xl lg:text-[68px] font-extrabold tracking-tight text-white leading-[1.02]">
-                  Dress like you’re<br />
-                  already famous
-                </h2>
-                <p className="text-sm sm:text-base text-blue-100 max-w-md font-medium leading-relaxed">
-                  Start your 2-minute personal styling calibration and unlock bespoke creator commissions with guaranteed escrow fitting.
-                </p>
-
-                <div className="pt-2">
-                  <button
-                    onClick={handleStartOnboarding}
-                    className="bg-black hover:bg-neutral-900 text-white text-xs sm:text-sm font-extrabold uppercase tracking-widest px-8 py-4 border-none cursor-pointer shadow-lg transition-transform hover:scale-105"
-                  >
-                    BUILD MY STYLE
-                  </button>
-                </div>
-              </div>
-
-            </div>
-
-          </section>
-
-          {/* ── 4. MEET ZYRA AI SECTION (Interactive Mascot & 3D Intelligence) ── */}
-          <section id="meet-zyra" className="bg-[#E5EAE5] px-6 sm:px-12 py-20 border-t border-black/15">
-            <div className="max-w-6xl mx-auto bg-white border border-[#D2D8D2] p-8 sm:p-14 shadow-sm">
-              
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-                
-                {/* Left: Interactive Blue Star Mascot with Eye Tracking */}
-                <div className="lg:w-1/2 flex flex-col items-center justify-center p-6 bg-[#A8E635] border border-black/10 w-full min-h-[420px] relative overflow-hidden shadow-inner">
-                  <span className="absolute top-4 left-4 bg-black text-white text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1">
-                    ZYRA 3D VECTOR AGENT
-                  </span>
-                  <ZeraInteractiveEyesMascot />
-                  <div className="text-center mt-3 space-y-0.5">
-                    <span className="text-xs font-bold uppercase text-[#111827]">
-                      Real-Time Stylist Intelligence
-                    </span>
-                    <p className="text-[11px] text-black/70 font-medium">
-                      Tracks your gaze and calibrates bespoke silhouettes.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right: AI Stylist Benefits */}
-                <div className="lg:w-1/2 space-y-6">
-                  <div className="space-y-2">
-                    <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#4B5563] bg-[#E5EAE5] px-3 py-1 inline-block">
-                      INTELLIGENT FASHION
-                    </span>
-                    <h3 className="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#111827]">
-                      Curates Outfits.<br />Not Disconnected Clothes.
-                    </h3>
-                    <p className="text-sm text-[#4B5563] font-medium leading-relaxed">
-                      Zyra maps your proportions, favorite color palettes, and lifestyle priorities to assemble cohesive made-to-measure collections.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {[
-                      { title: "01. Silhouette Scan", desc: "Maps your height, size & drape preferences." },
-                      { title: "02. Aesthetic Vectoring", desc: "Calibrates favorite fabrics & color palettes." },
-                      { title: "03. Look Synthesis", desc: "Curates matching capsules from top couturiers." },
-                      { title: "04. 100% Escrow Fit", desc: "Funds held securely until your piece arrives and fits." },
-                    ].map((step, i) => (
-                      <div key={i} className="p-3.5 bg-[#E5EAE5] border border-[#D2D8D2] space-y-1">
-                        <span className="text-xs font-bold uppercase text-black block">{step.title}</span>
-                        <p className="text-[11px] text-[#4B5563] font-medium">{step.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="pt-2">
-                    <button
-                      onClick={handleStartOnboarding}
-                      className="bg-black hover:bg-neutral-800 text-white px-8 py-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm flex items-center gap-3"
-                    >
-                      <span>Start Free Calibration</span>
-                      <ArrowRight size={14} />
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-          </section>
-
-          {/* ── 5. CURATED ATELIER EDIT & 100% ESCROW PROTECTION ── */}
-          <section id="collections" className="bg-[#E5EAE5] px-6 sm:px-12 py-16 border-t border-black/15">
-            <div className="max-w-6xl mx-auto space-y-10">
-              
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D2D8D2] pb-6">
-                <div>
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#4B5563]">
-                    ATELIER CAPSULES
-                  </span>
-                  <h3 className="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#111827]">
-                    Curated Style Drops
-                  </h3>
-                </div>
-                <button
-                  onClick={() => triggerAuth("register")}
-                  className="bg-black text-white hover:bg-neutral-800 px-6 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer border-none self-start sm:self-auto"
-                >
-                  Join Cohort
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* 4 Calibration Steps */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
-                  { title: "Architectural Tailoring", image: LOOK_1, tag: "Haute Couture" },
-                  { title: "Elevated Urban Street", image: LOOK_2, tag: "Streetwear" },
-                  { title: "Sartorial Silk & Flannel", image: LOOK_3, tag: "Quiet Luxury" },
-                ].map((item, idx) => (
-                  <div key={idx} className="bg-white border border-[#D2D8D2] p-4 space-y-3 shadow-xs">
-                    <div className="aspect-[4/5] bg-[#E5EAE5] overflow-hidden relative group cursor-pointer" onClick={handleStartOnboarding}>
-                      <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      <span className="absolute top-3 left-3 bg-black text-white text-[9px] font-mono font-bold px-2 py-0.5 uppercase">
-                        {item.tag}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between pt-1">
-                      <span className="text-xs font-bold uppercase text-[#111827]">{item.title}</span>
-                      <span className="text-xs font-bold text-black">🔒 Locked</span>
-                    </div>
+                  { title: "01. Silhouette Scan", desc: "Maps height, body type, and drape tolerances in under 2 minutes." },
+                  { title: "02. Aesthetic Vectoring", desc: "Learns favorite color palettes, natural fibers, and wardrobe goals." },
+                  { title: "03. Look Synthesis", desc: "Assembles coordinated capsules from verified couture ateliers." },
+                  { title: "04. 100% Escrow Fit", desc: "Guarantees full satisfaction before funds are released to artisans." },
+                ].map((step, i) => (
+                  <div key={i} className="p-4 bg-[#F5EFEB] border border-[#183B56]/10 space-y-1">
+                    <span className="text-xs font-bold uppercase text-[#183B56] block">{step.title}</span>
+                    <p className="text-[11px] text-[#5A7184] font-medium leading-relaxed">{step.desc}</p>
                   </div>
                 ))}
               </div>
 
-              {/* 3 Escrow Protection Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
-                <div className="p-6 bg-white border border-[#D2D8D2] space-y-2">
-                  <span className="text-[10px] font-mono font-bold bg-[#A8E635] text-black px-2 py-0.5 inline-block">
-                    GUARANTEE 01
-                  </span>
-                  <h4 className="text-xs font-extrabold uppercase text-[#111827]">100% Escrow Vault</h4>
-                  <p className="text-[11px] text-[#4B5563] font-medium leading-relaxed">
-                    Artisans receive funds only after you receive the garment and confirm fit.
-                  </p>
-                </div>
-
-                <div className="p-6 bg-white border border-[#D2D8D2] space-y-2">
-                  <span className="text-[10px] font-mono font-bold bg-[#A8E635] text-black px-2 py-0.5 inline-block">
-                    GUARANTEE 02
-                  </span>
-                  <h4 className="text-xs font-extrabold uppercase text-[#111827]">Verified Couturiers</h4>
-                  <p className="text-[11px] text-[#4B5563] font-medium leading-relaxed">
-                    Every designer is audited for fabric authenticity and stitch precision.
-                  </p>
-                </div>
-
-                <div className="p-6 bg-white border border-[#D2D8D2] space-y-2">
-                  <span className="text-[10px] font-mono font-bold bg-[#A8E635] text-black px-2 py-0.5 inline-block">
-                    GUARANTEE 03
-                  </span>
-                  <h4 className="text-xs font-extrabold uppercase text-[#111827]">Zero Listing Fees</h4>
-                  <p className="text-[11px] text-[#4B5563] font-medium leading-relaxed">
-                    Independent designers publish lookbooks freely without subscription gates.
-                  </p>
-                </div>
+              <div className="pt-2">
+                <button
+                  onClick={handleStartOnboarding}
+                  className="bg-[#183B56] hover:bg-[#102A43] text-white px-8 py-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs flex items-center gap-3"
+                >
+                  <span>Start Free Calibration</span>
+                  <ArrowRight size={14} />
+                </button>
               </div>
-
             </div>
-          </section>
 
-          {/* ── 6. FOOTER ── */}
-          <Footer 
-            requireAuth={true}
-            onRequireAuth={() => triggerAuth("login")}
-            onShopNow={() => triggerAuth("login")}
-          />
+          </div>
 
         </div>
+      </section>
 
-      </div>
+      {/* ─── 5. WHY WEAVLY IS DIFFERENT (The 4 Core Value Pillars) ─── */}
+      <section id="why-weavly" className="bg-white px-6 sm:px-12 md:px-16 py-20 border-b border-[#183B56]/15">
+        <div className="max-w-6xl mx-auto space-y-12">
+          
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56]/15 px-3 py-1 inline-block">
+              THE WEAVLY ADVANTAGE
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-[#183B56]">
+              Why Patrons Choose Weavly
+            </h2>
+            <p className="text-sm text-[#5A7184] font-medium leading-relaxed">
+              We eliminated the frustrations of retail markups, ill-fitting clothes, and closet clutter by reinventing the fashion model.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                num: "01",
+                title: "Personal Style Identity",
+                desc: "Never browse endless generic stores again. Weavly calibrates recommendations based on what genuinely flatters you."
+              },
+              {
+                num: "02",
+                title: "Direct Designer Access",
+                desc: "Connect directly with independent couture ateliers worldwide. Receive limited drops and bespoke commissions."
+              },
+              {
+                num: "03",
+                title: "100% Escrow Protection",
+                desc: "Zero financial risk. Your payment stays locked in escrow vaults until your piece arrives and you confirm fit."
+              },
+              {
+                num: "04",
+                title: "Zero Fast-Fashion Waste",
+                desc: "Every garment is made-to-measure or crafted in small limited-edition runs using authentic natural fibers."
+              }
+            ].map((item, idx) => (
+              <div key={idx} className="p-6 bg-[#F5EFEB] border border-[#183B56]/15 flex flex-col justify-between min-h-[220px] shadow-2xs space-y-4">
+                <span className="text-xs font-mono font-bold text-[#183B56] bg-white border border-[#183B56]/15 px-2.5 py-1 self-start">
+                  PILLAR {item.num}
+                </span>
+                <div className="space-y-2">
+                  <h4 className="text-base font-bold uppercase tracking-tight text-[#183B56]">{item.title}</h4>
+                  <p className="text-xs text-[#5A7184] font-medium leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* ─── 6. 100% ESCROW FIT GUARANTEE (Patron & Creator Protection) ─── */}
+      <section id="escrow-vault" className="bg-[#F5EFEB] px-6 sm:px-12 md:px-16 py-20 border-b border-[#183B56]/15">
+        <div className="max-w-6xl mx-auto space-y-12">
+          
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-[#183B56]/15 pb-8">
+            <div className="space-y-2">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#5A7184]">
+                DUAL PATRON &amp; ATELIER SECURITY
+              </span>
+              <h3 className="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#183B56]">
+                100% Escrow Fit Guarantee
+              </h3>
+            </div>
+            <div className="inline-flex items-center gap-2 bg-white border border-[#183B56]/20 px-4 py-2 text-xs font-bold text-[#183B56]">
+              <ShieldCheck size={16} />
+              <span>72-Hour Fit Audit Window</span>
+            </div>
+          </div>
+
+          {/* 3 Phases of Escrow Protection */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { phase: "PHASE 01", title: "Commission & Vault Lock", desc: "When you commission a piece, funds are safely secured in Weavly Escrow Vaults. Artisans begin crafting." },
+              { phase: "PHASE 02", title: "Delivery & 72h Fit Window", desc: "Your bespoke garment arrives in atelier luxury casing. You have 72 hours to try it on and inspect fit." },
+              { phase: "PHASE 03", title: "Fit Confirmation & Settlement", desc: "Once you confirm the fit satisfies your tolerances, escrow funds are automatically released to the creator." },
+            ].map((p, idx) => (
+              <div key={idx} className="p-8 bg-white border border-[#183B56]/15 shadow-xs space-y-4 flex flex-col justify-between">
+                <span className="text-[10px] font-mono font-bold text-[#183B56] bg-[#DFE7ED] px-2.5 py-1 inline-block self-start">
+                  {p.phase}
+                </span>
+                <div className="space-y-2">
+                  <h4 className="text-base font-bold uppercase text-[#183B56]">{p.title}</h4>
+                  <p className="text-xs text-[#5A7184] font-medium leading-relaxed">{p.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* ─── 7. FINAL ONBOARDING CTA ─── */}
+      <section className="bg-[#183B56] text-white px-6 sm:px-12 py-16 text-center space-y-6">
+        <div className="max-w-2xl mx-auto space-y-4">
+          <h2 className="text-3xl sm:text-5xl font-extrabold uppercase tracking-tight leading-tight">
+            Ready to Discover Fashion<br />That Truly Fits You?
+          </h2>
+          <p className="text-sm sm:text-base text-[#DFE7ED] font-medium">
+            Join the founding cohort of patrons and start your personal Zyra AI styling calibration.
+          </p>
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={handleStartOnboarding}
+              className="w-full sm:w-auto bg-white hover:bg-[#F5EFEB] text-[#183B56] text-xs sm:text-sm font-extrabold uppercase tracking-widest px-9 py-4 border-none cursor-pointer shadow-md transition-transform hover:scale-105"
+            >
+              Start Free Calibration
+            </button>
+            <button
+              onClick={() => triggerAuth("login")}
+              className="w-full sm:w-auto bg-transparent hover:bg-white/10 text-white text-xs sm:text-sm font-bold uppercase tracking-widest px-8 py-4 border border-white/40 cursor-pointer"
+            >
+              Sign In
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 8. FOOTER ─── */}
+      <Footer 
+        requireAuth={true}
+        onRequireAuth={() => triggerAuth("login")}
+        onShopNow={() => triggerAuth("login")}
+      />
 
       {/* Auth Modal */}
       {!onOpenAuth && (
