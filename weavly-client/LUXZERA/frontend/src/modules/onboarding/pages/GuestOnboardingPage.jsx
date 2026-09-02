@@ -549,10 +549,10 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
   };
 
   return (
-    <div className="min-h-screen bg-white font-sans text-[#1A1A1A] overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#F5EFEB] font-sans text-[#183B56] overflow-x-hidden relative">
 
       {/* 1. Dedicated Onboarding Header */}
-      <header className="relative z-50 w-full h-20 flex items-center justify-between px-4 sm:px-8 md:px-16 pt-4">
+      <header className="relative z-50 w-full h-20 flex items-center justify-between px-4 sm:px-8 md:px-16 pt-4 bg-[#F5EFEB] border-b border-[#183B56]/10">
         <WeavlyLogo />
 
         {/* Center Nav Links — desktop only */}
@@ -568,7 +568,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                 const el = document.getElementById(target);
                 if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
-              className="text-[13px] font-semibold text-[#37352F]/70 hover:text-[#1D1D1F] transition-colors bg-transparent border-none cursor-pointer tracking-wide"
+              className="text-[13px] font-semibold text-[#5A7184] hover:text-[#183B56] transition-colors bg-transparent border-none cursor-pointer tracking-wide"
             >
               {label}
             </button>
@@ -581,7 +581,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             e.stopPropagation();
             triggerAuth("login");
           }}
-          className="relative z-50 bg-black text-white px-5 sm:px-6 py-2.5 rounded-full text-[13px] font-semibold hover:bg-black/85 active:scale-[0.98] transition-all cursor-pointer shadow-sm touch-manipulation"
+          className="relative z-50 bg-[#183B56] text-white px-5 sm:px-6 py-2.5 rounded-full text-[13px] font-semibold hover:bg-[#102A43] active:scale-[0.98] transition-all cursor-pointer shadow-sm touch-manipulation"
         >
           Sign In
         </button>
@@ -592,14 +592,14 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         <h1 className="text-4xl md:text-6xl lg:text-[72px] font-semibold tracking-tight leading-[1.1] mb-6 max-w-4xl">
           Find Less. Wear Better.
         </h1>
-        <p className="text-[#666666] text-[15px] max-w-2xl mb-16 leading-relaxed">
+        <p className="text-[#5A7184] text-[15px] max-w-2xl mb-16 leading-relaxed">
           Weavly curates outfits you'll actually want to wear—bringing together clothing, footwear, and accessories into complete looks tailored to your style.
         </p>
 
         {/* Staggered Images */}
         <div className="flex flex-col md:flex-row items-stretch justify-center gap-5 w-full h-auto md:h-[420px]">
           {/* Left Block */}
-          <div className="relative w-full md:w-[320px] h-[340px] md:h-[380px] bg-[#3B2925] text-white rounded-[32px] p-8 flex flex-col justify-between overflow-hidden self-end shadow-md">
+          <div className="relative w-full md:w-[320px] h-[340px] md:h-[380px] bg-[#183B56] text-white rounded-[32px] p-8 flex flex-col justify-between overflow-hidden self-end shadow-md">
             <div>
               <div className="text-3xl font-semibold mb-3 tracking-tight">100+ collections</div>
               <p className="text-[13px] leading-relaxed text-white/70 max-w-[220px] font-normal">
@@ -614,9 +614,9 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             </div>
 
             {/* Circular Rosette BEST COLLECTION Badge */}
-            <div className="absolute top-1/2 -right-6 transform -translate-y-1/2 w-24 h-24 rounded-full bg-[#5C4035] border-4 border-white flex flex-col items-center justify-center text-center p-2 shadow-lg z-10">
+            <div className="absolute top-1/2 -right-6 transform -translate-y-1/2 w-24 h-24 rounded-full bg-[#DFE7ED] border-4 border-white flex flex-col items-center justify-center text-center p-2 shadow-lg z-10">
               <div className="w-full h-full rounded-full border border-dashed border-white/40 flex flex-col items-center justify-center p-1">
-                <span className="text-[9px] font-extrabold uppercase tracking-widest text-white leading-tight">
+                <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#183B56] leading-tight">
                   BEST<br />COLLECTION
                 </span>
               </div>
@@ -1077,7 +1077,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
       </section>
 
       {/* ═══ SHARED DOTTED BACKGROUND WRAPPER — spans CTA → Gallery ═══ */}
-      <div className="relative bg-white">
+      <div className="relative bg-[#F5EFEB]">
         {/* Single canvas behind all sections below */}
         <AnimatedDottedMeshBackground />
 
@@ -1086,12 +1086,12 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
 
         <div className="relative z-20 max-w-3xl flex flex-col items-center gap-8 py-6">
-          <h2 className="text-[32px] md:text-[52px] font-semibold tracking-tight text-[#1D1D1F] leading-[1.15]">
+          <h2 className="text-[32px] md:text-[52px] font-semibold tracking-tight text-[#183B56] leading-[1.15]">
             Finding your next favourite outfit should feel effortless.
           </h2>
           <button
             onClick={() => triggerAuth("login")}
-            className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-9 py-4 rounded-full text-[15px] font-medium flex items-center gap-3 shadow-md hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-0.5"
+            className="bg-[#183B56] hover:bg-[#102A43] text-white px-9 py-4 rounded-full text-[15px] font-medium flex items-center gap-3 shadow-md hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-0.5"
           >
             Explore With Zyra <span>→</span>
           </button>
@@ -1106,11 +1106,11 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
           {/* Header */}
           <div className="mb-16 text-center">
-            <h2 className="text-[52px] md:text-[72px] font-bold tracking-tighter text-[#1D1D1F] mb-8 leading-none flex flex-wrap justify-center items-center gap-4">
+            <h2 className="text-[52px] md:text-[72px] font-bold tracking-tighter text-[#183B56] mb-8 leading-none flex flex-wrap justify-center items-center gap-4">
               Zyra
               <RotatingText
                 texts={['Collections', 'Edits', 'Looks', 'Styles']}
-                mainClassName="bg-[#1D1D1F] text-white overflow-hidden px-4 sm:px-5 md:px-6 py-1.5 sm:py-2 md:py-2.5 items-center justify-center rounded-2xl inline-flex leading-tight whitespace-nowrap text-3xl sm:text-4xl md:text-5xl"
+                mainClassName="bg-[#183B56] text-white overflow-hidden px-4 sm:px-5 md:px-6 py-1.5 sm:py-2 md:py-2.5 items-center justify-center rounded-2xl inline-flex leading-tight whitespace-nowrap text-3xl sm:text-4xl md:text-5xl"
                 staggerFrom={"last"}
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
@@ -1122,7 +1122,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                 rotationInterval={3000}
               />
             </h2>
-            <p className="text-[#37352F] text-[22px] md:text-[28px] leading-[1.55] max-w-3xl mx-auto font-normal">
+            <p className="text-[#5A7184] text-[22px] md:text-[28px] leading-[1.55] max-w-3xl mx-auto font-normal">
               Once you sign in, Zyra studies your taste and crafts personalised outfit combinations just for you — called <strong className="font-bold">Zyra Collections</strong>. Not products. Complete curated looks.
             </p>
           </div>
@@ -1172,12 +1172,12 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                   </svg>
                 </div>
 
-                <h3 className="text-[18px] font-bold text-[#1D1D1F] mb-1">{col.label}</h3>
+                <h3 className="text-[18px] font-bold text-[#183B56] mb-1">{col.label}</h3>
                 <p className="text-[13px]" style={{ color: col.accent }}>{col.desc}</p>
 
                 <div className="absolute bottom-5 left-7 right-7">
                   <div className="h-px bg-black/10 mb-4" />
-                  <span className="text-[12px] font-semibold text-[#37352F]/50 uppercase tracking-widest">Unlocks on sign in</span>
+                  <span className="text-[12px] font-semibold text-[#5A7184]/60 uppercase tracking-widest">Unlocks on sign in</span>
                 </div>
               </div>
             ))}
@@ -1187,28 +1187,28 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
           <div className="flex items-center gap-4">
             <button
               onClick={() => triggerAuth('register')}
-              className="bg-black text-white px-8 py-3.5 rounded-full text-[13px] font-semibold hover:bg-black/85 transition-all cursor-pointer"
+              className="bg-[#183B56] text-white px-8 py-3.5 rounded-full text-[13px] font-semibold hover:bg-[#102A43] transition-all cursor-pointer"
             >
               Sign up to unlock Collections
             </button>
-            <span className="text-[13px] text-[#9B9B9B]">
+            <span className="text-[13px] text-[#5A7184]">
               Already have an account?{' '}
-              <button onClick={() => triggerAuth('login')} className="text-[#F07020] font-semibold bg-transparent border-none cursor-pointer hover:underline">Sign in</button>
+              <button onClick={() => triggerAuth('login')} className="text-[#183B56] font-semibold underline bg-transparent border-none cursor-pointer hover:opacity-70">Sign in</button>
             </span>
           </div>
         </div>
       </section>
 
       {/* Thin divider */}
-      <div className="w-full h-px bg-black/5 max-w-7xl mx-auto my-12" />
+      <div className="w-full h-px bg-[#183B56]/10 max-w-7xl mx-auto my-12" />
 
       {/* ─── CURATED STYLES (MASONRY GALLERY) ─── */}
       <section className="py-24 px-8 md:px-16 max-w-7xl mx-auto zera-font relative z-20">
         <div className="mb-16 text-center">
-          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1D1D1F] mb-4">
+          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#183B56] mb-4">
             Curated Styles
           </h2>
-          <p className="text-[#666666] text-[15px] max-w-xl mx-auto">
+          <p className="text-[#5A7184] text-[15px] max-w-xl mx-auto">
             A glimpse into the premium pieces waiting for you. 
             Sign up to unlock thousands of items and get personalized outfits created just for you.
           </p>
@@ -1223,7 +1223,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         <div className="mt-16 flex justify-center">
           <button
             onClick={() => triggerAuth('register')}
-            className="bg-[#1D1D1F] text-white px-10 py-4 rounded-full text-[14px] font-semibold hover:bg-black hover:shadow-lg transition-all cursor-pointer shadow-md flex items-center gap-2"
+            className="bg-[#183B56] text-white px-10 py-4 rounded-full text-[14px] font-semibold hover:bg-[#102A43] hover:shadow-lg transition-all cursor-pointer shadow-md flex items-center gap-2"
           >
             Sign up to shop the collection <ArrowRight size={16} />
           </button>
@@ -1237,12 +1237,12 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
           {/* Left — Copy */}
           <div>
-            <p className="text-[20px] font-black uppercase tracking-[0.15em] text-[#F07020] block mb-4">For Creators</p>
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1D1D1F] mb-6 leading-tight">
+            <p className="text-[20px] font-black uppercase tracking-[0.15em] text-[#183B56]/60 block mb-4">For Creators</p>
+            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#183B56] mb-6 leading-tight">
               Publish your designs.
               <br />Set your own price.
             </h2>
-            <p className="text-[#666666] text-[15px] leading-relaxed mb-8 max-w-md">
+            <p className="text-[#5A7184] text-[15px] leading-relaxed mb-8 max-w-md">
               Weavly is built for independent designers who want to reach a discerning audience without middlemen. Upload your collection, set your pricing, and let Zyra match your work to the customers who'll love it most.
             </p>
 
@@ -1254,15 +1254,15 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                 { icon: '✦', text: 'Build your brand directly on Weavly' },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <span className="text-[#F07020] text-[12px] mt-1 font-bold">{item.icon}</span>
-                  <span className="text-[14px] text-[#37352F] leading-relaxed">{item.text}</span>
+                  <span className="text-[#183B56] text-[12px] mt-1 font-bold">{item.icon}</span>
+                  <span className="text-[14px] text-[#5A7184] leading-relaxed">{item.text}</span>
                 </div>
               ))}
             </div>
 
             <button
               onClick={() => triggerAuth('register')}
-              className="bg-[#1D1D1F] text-white px-8 py-3.5 rounded-full text-[13px] font-semibold hover:bg-[#1D1D1F]/85 transition-all cursor-pointer"
+              className="bg-[#183B56] text-white px-8 py-3.5 rounded-full text-[13px] font-semibold hover:bg-[#102A43] transition-all cursor-pointer"
             >
               Apply as a Designer →
             </button>
@@ -1309,10 +1309,10 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                     </div>
                   </div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[14px] font-bold text-[#1D1D1F]">{card.designer}</span>
-                    <span className="text-[12px] font-semibold text-[#F07020] font-mono">{card.brand}</span>
+                    <span className="text-[14px] font-bold text-[#183B56]">{card.designer}</span>
+                    <span className="text-[12px] font-semibold text-[#5A7184] font-mono">{card.brand}</span>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#9B9B9B] font-medium">
+                  <div className="flex items-center justify-between text-[11px] text-[#5A7184] font-medium">
                     <span>{card.piece}</span>
                     <span>{card.location}</span>
                   </div>
@@ -1330,10 +1330,10 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         <div className="max-w-7xl mx-auto relative z-20">
 
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1D1D1F] mb-4">
+            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#183B56] mb-4">
               Your money is safe. Always.
             </h2>
-            <p className="text-[#666666] text-[15px] max-w-lg mx-auto leading-relaxed">
+            <p className="text-[#5A7184] text-[15px] max-w-lg mx-auto leading-relaxed">
               Weavly holds every payment in secure escrow. Designers only get paid after you receive your order and confirm satisfaction. No exceptions.
             </p>
           </div>
@@ -1391,7 +1391,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             ].map((item, i) => (
               <div 
                 key={i} 
-                className="group relative flex flex-col items-start text-left p-8 rounded-[28px] bg-white/80 backdrop-blur-md border border-[#EBE8E1] shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300"
+                className="group relative flex flex-col items-start text-left p-8 rounded-[28px] bg-white border border-[#183B56]/15 shadow-[0_10px_30px_rgba(24,59,86,0.04)] hover:shadow-[0_20px_40px_rgba(24,59,86,0.1)] hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="w-full flex items-center justify-between mb-4">
                   {item.icon}
@@ -1399,8 +1399,8 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                     {item.step}
                   </span>
                 </div>
-                <h3 className="text-[20px] font-bold text-[#1D1D1F] mb-2 tracking-tight">{item.title}</h3>
-                <p className="text-[14px] text-[#666666] leading-relaxed font-normal">{item.desc}</p>
+                <h3 className="text-[20px] font-bold text-[#183B56] mb-2 tracking-tight">{item.title}</h3>
+                <p className="text-[14px] text-[#5A7184] leading-relaxed font-normal">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -1411,7 +1411,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
-            <span className="text-[13px] text-[#9B9B9B]">
+            <span className="text-[13px] text-[#5A7184]">
               Funds held by Weavly until order is confirmed satisfied — protecting both buyers and honest designers.
             </span>
           </div>
@@ -1421,8 +1421,8 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
       {/* 6. Made To Raise Your Standards */}
       <section className="py-24 px-8 md:px-16 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-semibold mb-4">Made To Raise Your Standards</h2>
-          <p className="text-[#666666] text-[14px] max-w-lg mx-auto">
+          <h2 className="text-4xl font-semibold mb-4 text-[#183B56]">Made To Raise Your Standards</h2>
+          <p className="text-[#5A7184] text-[14px] max-w-lg mx-auto">
             We strive to provide superior quality in every piece we make, using high-performance yarns woven to perfection for longevity and comfort.
           </p>
         </div>
@@ -1433,8 +1433,8 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               <img src={KNIT_1} className="w-full h-full object-cover" alt="Top Knit Outside" />
             </div>
             <div className="px-4">
-              <h3 className="font-bold text-[16px]">Top Knit Outside</h3>
-              <p className="text-[12px] text-[#666666]">Soft Cashmere Blend</p>
+              <h3 className="font-bold text-[16px] text-[#183B56]">Top Knit Outside</h3>
+              <p className="text-[12px] text-[#5A7184]">Soft Cashmere Blend</p>
             </div>
           </div>
 
@@ -1450,8 +1450,8 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               <img src={KNIT_3} className="w-full h-full object-cover" alt="Top Knit Pants" />
             </div>
             <div className="px-4">
-              <h3 className="font-bold text-[16px]">Top Knit Pants</h3>
-              <p className="text-[12px] text-[#666666]">Comfortable Ribbed Fit</p>
+              <h3 className="font-bold text-[16px] text-[#183B56]">Top Knit Pants</h3>
+              <p className="text-[12px] text-[#5A7184]">Comfortable Ribbed Fit</p>
             </div>
           </div>
         </div>
@@ -1460,8 +1460,8 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
       {/* 7. Styles That Welcome Sunshine's Return (3D Circular Gallery) */}
       <section className="py-20 overflow-hidden relative">
         <div className="text-center mb-10 px-8 relative z-20">
-          <h2 className="text-4xl md:text-5xl font-semibold mb-4">Styles That Welcome Sunshine's Return</h2>
-          <p className="text-[#666666] text-[14px] max-w-xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-semibold mb-4 text-[#183B56]">Styles That Welcome Sunshine's Return</h2>
+          <p className="text-[#5A7184] text-[14px] max-w-xl mx-auto">
             As the days grow longer and the sun shines brighter, refresh your wardrobe with pieces designed to embrace the warmth and vibrant energy of the season.
           </p>
         </div>
@@ -1469,7 +1469,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         <div style={{ height: '520px', position: 'relative', width: '100%' }}>
           <CircularGallery
             bend={3}
-            textColor="#1D1D1F"
+            textColor="#183B56"
             borderRadius={0.06}
             scrollEase={0.03}
             scrollSpeed={2.5}
