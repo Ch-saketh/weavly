@@ -440,6 +440,32 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
               &copy; {currentYear} {branding.name}, Inc.
             </p>
 
+            {/* Privacy & Data Protection Note */}
+            <div className="pt-2 border-t border-white/10 space-y-2 max-w-sm">
+              <div className="flex items-center gap-1.5 text-[#CCCCCC] text-[11px] font-semibold tracking-wide uppercase">
+                <ShieldCheck size={13} className="text-[#38BDF8]" />
+                <span>Privacy &amp; Data Security Vow</span>
+              </div>
+              <p className="text-[11px] text-[#8E8E93] leading-relaxed font-normal">
+                Your body measurements, fitting uploads, and styling history are strictly confidential. We never sell your personal data or biometric vectors to third-party advertisers.
+              </p>
+              <div className="flex items-center gap-3 pt-0.5 text-[11px]">
+                <button
+                  onClick={() => handleLinkClick("/privacy")}
+                  className="text-[#38BDF8] hover:underline transition-all cursor-pointer border-none bg-transparent p-0 font-medium"
+                >
+                  Privacy Policy
+                </button>
+                <span className="text-[#52525B]">•</span>
+                <button
+                  onClick={() => handleLinkClick("/terms")}
+                  className="text-[#CCCCCC] hover:text-white underline transition-colors cursor-pointer border-none bg-transparent p-0"
+                >
+                  Terms of Service
+                </button>
+              </div>
+            </div>
+
             <div className="flex items-center gap-3 pt-2 text-xs text-[#52525B]">
               <button
                 onClick={() => {}}
@@ -560,15 +586,16 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
               </ul>
             </div>
 
-            {/* Column 4: POLICIES */}
+            {/* Column 4: POLICIES & PRIVACY */}
             <div className="space-y-4">
               <h4 className="text-[12px] font-semibold text-[#8E8E93] tracking-normal">
-                Company
+                Legal &amp; Privacy
               </h4>
               <ul className="space-y-2.5 font-normal p-0 m-0 list-none text-xs">
                 <li>
-                  <button onClick={() => handleLinkClick("/privacy")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] block">
-                    Privacy Policy
+                  <button onClick={() => handleLinkClick("/privacy")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] flex items-center gap-1.5 group">
+                    <ShieldCheck size={13} className="text-[#38BDF8] group-hover:scale-110 transition-transform" />
+                    <span className="font-medium text-white">Privacy Policy</span>
                   </button>
                 </li>
                 <li>
@@ -577,14 +604,19 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleLinkClick("/faq")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] block">
-                    Help & FAQs
+                  <button onClick={() => handleLinkClick("/privacy")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] block">
+                    Data Rights &amp; GDPR
                   </button>
                 </li>
                 <li>
-                  <span className="text-[#71717A] text-xs flex items-center gap-1.5 pt-1">
-                    <ShieldCheck size={12} className="text-white/80" />
-                    <span>Verified Atelier</span>
+                  <button onClick={() => handleLinkClick("/faq")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] block">
+                    Help &amp; FAQs
+                  </button>
+                </li>
+                <li>
+                  <span className="text-[#71717A] text-[11px] flex items-center gap-1.5 pt-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
+                    <span>Zero-Tracker Architecture</span>
                   </span>
                 </li>
               </ul>
@@ -592,6 +624,31 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
 
           </div>
 
+        </div>
+      </div>
+
+      {/* ═══ PRIVACY & TRUST STRIP ═══ */}
+      <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-16 mb-8">
+        <div className="border border-white/10 bg-white/[0.03] backdrop-blur-xs rounded-xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[#38BDF8]/10 border border-[#38BDF8]/20 flex items-center justify-center shrink-0">
+              <ShieldCheck size={16} className="text-[#38BDF8]" />
+            </div>
+            <div>
+              <p className="text-white font-medium text-[12px] leading-tight">
+                Patron Confidentiality &amp; Data Security Guarantee
+              </p>
+              <p className="text-[#8E8E93] text-[11px] leading-normal mt-0.5">
+                Zero third-party trackers. End-to-end encrypted biometric fitting data and style vectors.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => handleLinkClick("/privacy")}
+            className="shrink-0 text-[11px] font-semibold text-[#38BDF8] hover:text-white underline underline-offset-4 transition-colors cursor-pointer border-none bg-transparent p-0"
+          >
+            Read Our Privacy Vow →
+          </button>
         </div>
       </div>
 

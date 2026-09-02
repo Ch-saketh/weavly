@@ -9,3 +9,6 @@ export * from './pages/PrivacyPolicyPage.jsx';
 
 export { default as NotFoundPage } from './pages/NotFoundPage.jsx';
 export * from './pages/NotFoundPage.jsx';
+
+export { default as TermsPage } from './pages/TermsPage.jsx';
+export * from './pages/TermsPage.jsx';
