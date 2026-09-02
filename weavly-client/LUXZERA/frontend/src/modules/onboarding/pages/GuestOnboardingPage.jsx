@@ -372,7 +372,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
 
       {/* ─── 1. ARCHITECTURAL HEADER ─── */}
-      <header className="w-full h-20 flex items-center justify-between px-4 sm:px-8 md:px-12 border-b border-[#183B56] bg-white sticky top-0 z-50">
+      <header className="w-full h-20 flex items-center justify-between px-4 sm:px-8 md:px-12 bg-white sticky top-0 z-50">
         <WeavlyLogo />
 
         {/* Center Nav Links */}
@@ -475,7 +475,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
           </div>
 
           {/* Right 5 Columns: DriftWall */}
-          <div className="lg:col-span-5 bg-[#183B56] flex flex-col relative overflow-hidden" style={{ minHeight: '520px' }}>
+          <div className="lg:col-span-5 bg-[#F5EFEB] flex flex-col relative overflow-hidden" style={{ minHeight: '520px' }}>
             <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '520px' }}>
               <DriftWall
                 items={[
@@ -504,7 +504,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                 lift={50}
                 fade={0.55}
                 dim={0.65}
-                overlayColor="#183B56"
+                overlayColor="#F5EFEB"
               />
             </div>
           </div>
