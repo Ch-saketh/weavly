@@ -224,8 +224,15 @@ export default function AuthModal({ isOpen, onClose, initialView = "login" }) {
         closeAndReset();
         router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
       } else {
-        await login(email, password);
+        const loginData = await login(email, password);
         closeAndReset();
+        // Check if user has completed onboarding profile
+        const cached = typeof window !== "undefined" ? localStorage.getItem("Weavly_user_cache") : null;
+        let u = null;
+        try { u = JSON.parse(cached); } catch {}
+        if (u && (u.profileCompleted === false || loginData?.user?.profileCompleted === false)) {
+          router.push("/onboarding");
+        }
       }
     } catch (err) {
       setErrorMsg(formatErrorMessage(err, view === "register" ? "Sign up failed." : "Invalid email or password."));
@@ -248,13 +255,21 @@ export default function AuthModal({ isOpen, onClose, initialView = "login" }) {
       const data = await googleLogin(credentialResponse.credential);
       if (data?.token || data?.accessToken) {
         setToken(data.accessToken || data.token);
+        let targetUser = null;
         try {
           const profile = await getCurrentUser();
           setUser(profile);
+          targetUser = profile;
         } catch {
-          if (data.user) setUser(data.user);
+          if (data.user) {
+            setUser(data.user);
+            targetUser = data.user;
+          }
         }
         closeAndReset();
+        if (targetUser && targetUser.profileCompleted === false) {
+          router.push("/onboarding");
+        }
         return;
       }
 
