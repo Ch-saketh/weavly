@@ -356,7 +356,59 @@ function ZeraInteractiveEyesMascot() {
 export default function GuestOnboardingPage({ onOpenAuth }) {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authInitialView, setAuthInitialView] = useState("register");
+  const [activePrivilege, setActivePrivilege] = useState(0);
   const inlineTextRef = useRef(null);
+
+  const creatorPrivileges = [
+    {
+      id: 'escrow',
+      title: '100% Milestone Escrow',
+      desc: 'Funds secured upfront before custom tailoring begins.',
+      tag: 'ESCROW VAULT ✦',
+      badge: 'VAULT SECURED',
+      stat: '100% Guaranteed',
+      highlight: 'Funds are locked into a dedicated escrow account before the artisan cuts fabric. Zero chargebacks, zero non-payment risk.',
+      image: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&q=80',
+      sampleCommission: '38R Tailored Silk Tuxedo · $1,850 Escrow Funded',
+      color: '#183B56'
+    },
+    {
+      id: 'fees',
+      title: 'Zero Listing Fees',
+      desc: 'No upfront subscriptions, listing fees, or recurring platform retainers.',
+      tag: 'FAIR SPLIT ✦',
+      badge: '0% UPFRONT',
+      stat: 'Keep 92% Net Payout',
+      highlight: 'Publish unlimited bespoke lookbooks without monthly charges. Only a modest platform fee upon confirmed customer fit.',
+      image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=80',
+      sampleCommission: 'Custom Linen Overcoat · $1,200 Commission Accepted',
+      color: '#C2846B'
+    },
+    {
+      id: 'indexing',
+      title: 'Zyra Style Indexing',
+      desc: 'Direct matching with patrons actively searching your aesthetic.',
+      tag: 'INTENT MATCH ✦',
+      badge: 'VECTOR DISCOVERY',
+      stat: 'High-Intent Patrons',
+      highlight: 'Zyra indexes your lookbooks and recommends your bespoke garments directly to verified buyers whose silhouette & taste align.',
+      image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80',
+      sampleCommission: 'Deconstructed Wool Blazer · Matched to Patron Profile',
+      color: '#486581'
+    },
+    {
+      id: 'packaging',
+      title: 'Complimentary Packaging',
+      desc: 'Signature luxury presentation boxes & archival garment bags.',
+      tag: 'LOGISTICS ✦',
+      badge: 'FREE ARCHIVAL KITS',
+      stat: 'Archival Boxes Included',
+      highlight: 'Every commissioned piece ships in signature Weavly debossed presentation boxes with custom tissue and authenticity seals.',
+      image: 'https://images.unsplash.com/photo-1513094735237-8f2714d57c13?w=800&q=80',
+      sampleCommission: 'Bespoke Package #0482 · Ready for Worldwide Insured Dispatch',
+      color: '#7A8B7B'
+    },
+  ];
 
   const triggerAuth = (view = "register") => {
     if (onOpenAuth) {
@@ -796,7 +848,8 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         <section id="for-designers" className="border border-[#183B56] bg-white shadow-xs overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
             
-            <div className="lg:col-span-6 p-8 sm:p-14 bg-white flex flex-col justify-between space-y-8">
+            {/* Left Column: Editorial Info & Live Interactive Showcase */}
+            <div className="lg:col-span-6 p-8 sm:p-12 bg-white flex flex-col justify-between space-y-6">
               <div className="space-y-4">
                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-3 py-1 inline-block">
                   For Fashion Creators &amp; Designers
@@ -808,19 +861,53 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                 <p className="text-sm text-[#5A7184] font-medium leading-relaxed">
                   Weavly connects independent designers directly with patrons worldwide. Set your pricing, configure custom made-to-measure options, and receive guaranteed milestone escrow payouts.
                 </p>
+
+                {/* Interactive Dynamic Preview Card */}
+                <div className="relative aspect-[16/10] w-full bg-[#DFE7ED] border border-[#183B56] overflow-hidden rounded-xs mt-2 shadow-xs group">
+                  <img
+                    key={creatorPrivileges[activePrivilege].image}
+                    src={creatorPrivileges[activePrivilege].image}
+                    alt={creatorPrivileges[activePrivilege].title}
+                    className="w-full h-full object-cover object-top filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                  />
+                  
+                  {/* Frosted header pill */}
+                  <div className="absolute top-3 left-3 bg-white/95 border border-[#183B56] px-3 py-1 shadow-xs flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: creatorPrivileges[activePrivilege].color }} />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#183B56]">
+                      {creatorPrivileges[activePrivilege].tag}
+                    </span>
+                  </div>
+
+                  {/* Floating Stat Pill */}
+                  <div className="absolute top-3 right-3 bg-[#183B56] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1">
+                    {creatorPrivileges[activePrivilege].badge}
+                  </div>
+
+                  {/* Bottom Commission Simulator Bar */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-[#183B56]/95 backdrop-blur-xs text-white p-3 border-t border-[#183B56] flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <span className="text-[9px] font-mono uppercase text-[#DFE7ED] block">LIVE COMMISSION SIMULATION</span>
+                      <p className="text-xs font-bold truncate">{creatorPrivileges[activePrivilege].sampleCommission}</p>
+                    </div>
+                    <span className="text-[9px] font-bold uppercase bg-white text-[#183B56] px-2 py-1 shrink-0">
+                      CONFIRMED
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4 pt-1">
                 <button
                   onClick={() => triggerAuth("register")}
-                  className="bg-[#183B56] text-white hover:bg-[#102A43] px-7 py-3.5 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer flex items-center gap-2"
+                  className="bg-[#183B56] text-white hover:bg-[#102A43] px-7 py-3 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer flex items-center gap-2 shadow-xs hover:shadow-sm"
                 >
                   <span>Apply as a Creator</span>
                   <ArrowRight size={14} />
                 </button>
                 <a
                   href="/creator-guide"
-                  className="bg-[#F5EFEB] text-[#183B56] hover:bg-white px-7 py-3.5 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all flex items-center gap-2 no-underline"
+                  className="bg-[#F5EFEB] text-[#183B56] hover:bg-white px-7 py-3 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all flex items-center gap-2 no-underline"
                 >
                   <span>Creator Handbook</span>
                   <span>→</span>
@@ -828,27 +915,71 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               </div>
             </div>
 
-            <div className="lg:col-span-6 p-8 sm:p-14 bg-[#F5EFEB] flex flex-col justify-between space-y-6">
+            {/* Right Column: 4 Interactive Clickable / Hoverable Privilege Cards */}
+            <div className="lg:col-span-6 p-8 sm:p-12 bg-[#F5EFEB] flex flex-col justify-between space-y-6">
               <div className="space-y-4">
-                <h3 className="text-base font-bold uppercase text-[#183B56] border-b border-[#183B56] pb-3">
-                  Creator Program Privileges
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    { title: '100% Milestone Escrow', desc: 'Funds secured upfront before custom tailoring begins.' },
-                    { title: 'Zero Listing Fees', desc: 'No upfront subscriptions or listing charges.' },
-                    { title: 'Zyra Style Indexing', desc: 'Direct matching with patrons actively searching your aesthetic.' },
-                    { title: 'Complimentary Packaging', desc: 'Complimentary luxury bespoke packaging boxes.' },
-                  ].map((item, idx) => (
-                    <div key={idx} className="border border-[#183B56] bg-white p-5 space-y-1">
-                      <span className="text-xs font-bold text-[#183B56] uppercase block">{item.title}</span>
-                      <p className="text-[11px] text-[#5A7184] font-medium leading-relaxed">{item.desc}</p>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between border-b border-[#183B56] pb-3">
+                  <h3 className="text-base font-bold uppercase text-[#183B56]">
+                    Creator Program Privileges
+                  </h3>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#5A7184] bg-white border border-[#183B56] px-2 py-0.5">
+                    Select to Preview
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  {creatorPrivileges.map((item, idx) => {
+                    const isActive = activePrivilege === idx;
+                    return (
+                      <div
+                        key={item.id}
+                        onMouseEnter={() => setActivePrivilege(idx)}
+                        onClick={() => setActivePrivilege(idx)}
+                        className={`p-5 border transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[160px] relative group ${
+                          isActive
+                            ? "bg-[#183B56] text-white border-[#183B56] shadow-sm transform -translate-y-0.5"
+                            : "bg-white text-[#183B56] border-[#183B56]/30 hover:border-[#183B56] hover:bg-white/80"
+                        }`}
+                      >
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className={`text-[10px] font-mono font-bold px-2 py-0.5 border ${
+                              isActive ? "bg-white/10 text-white border-white/30" : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20"
+                            }`}>
+                              0{idx + 1}
+                            </span>
+                            <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 ${
+                              isActive ? "bg-white text-[#183B56]" : "bg-[#F5EFEB] text-[#5A7184]"
+                            }`}>
+                              {item.stat}
+                            </span>
+                          </div>
+                          
+                          <h4 className="text-sm font-bold uppercase mt-1 leading-snug">
+                            {item.title}
+                          </h4>
+                          <p className={`text-[11px] font-medium leading-relaxed ${
+                            isActive ? "text-[#DFE7ED]" : "text-[#5A7184]"
+                          }`}>
+                            {item.desc}
+                          </p>
+                        </div>
+
+                        <div className={`pt-3 mt-3 border-t text-[10px] font-bold uppercase tracking-wider flex items-center justify-between ${
+                          isActive ? "border-white/20 text-white" : "border-[#183B56]/10 text-[#5A7184] group-hover:text-[#183B56]"
+                        }`}>
+                          <span>{isActive ? "Active Preview" : "Hover to Preview"}</span>
+                          <span className={`transition-transform duration-200 ${isActive ? "translate-x-1" : "group-hover:translate-x-1"}`}>→</span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-              <div className="text-[11px] font-bold uppercase tracking-wider text-[#5A7184] pt-4 border-t border-[#183B56]">
-                Curation audit completed within 48 hours of submission.
+
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#5A7184] pt-4 border-t border-[#183B56] flex items-center justify-between">
+                <span>✦ Curation audit completed within 48h</span>
+                <span className="font-mono text-[#183B56]">100% ESCROW PROTECTED</span>
               </div>
             </div>
 
