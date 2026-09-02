@@ -1,194 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Search, ShoppingBag, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import AuthModal from "@/modules/auth/components/AuthModal";
 import CircularGallery from "@/shared/components/ui/CircularGallery";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
-import Masonry from "@/shared/components/ui/Masonry";
-import ChromaGrid from "@/shared/components/ui/ChromaGrid";
-import StaggeredTransitionOverlay from "@/shared/components/ui/StaggeredTransitionOverlay";
-import StaggeredMenu from "@/shared/components/ui/StaggeredMenu";
 import Footer from "@/shared/components/layout/Footer";
-import RotatingText from "@/shared/components/ui/RotatingText";
-import VariableProximity from "@/shared/components/ui/VariableProximity";
-import CardNav from "@/shared/components/ui/CardNav";
-import CardSwap, { Card } from "@/shared/components/ui/CardSwap";
-
-const CARD_NAV_ITEMS = [
-  {
-    label: "Explore Zyra",
-    bgColor: "#1D1D1F",
-    textColor: "#FFFFFF",
-    links: [
-      { label: "What is Zyra", href: "#meet-zera", ariaLabel: "What is Zyra" },
-      { label: "Curated Styles", href: "#curated-styles", ariaLabel: "Curated Styles" },
-      { label: "Buyer Protection", href: "#escrow-protection", ariaLabel: "Buyer Protection" }
-    ]
-  },
-  {
-    label: "Collections",
-    bgColor: "#F07020",
-    textColor: "#FFFFFF",
-    links: [
-      { label: "Zyra Edits", href: "#zera-collections", ariaLabel: "Zyra Edits" },
-      { label: "Summer Capsule", href: "#zera-collections", ariaLabel: "Summer Capsule" },
-      { label: "Atelier Looks", href: "#zera-collections", ariaLabel: "Atelier Looks" }
-    ]
-  },
-  {
-    label: "For Creators",
-    bgColor: "#C6A15B",
-    textColor: "#FFFFFF",
-    links: [
-      { label: "Publish Designs", href: "#for-designers", ariaLabel: "Publish Designs" },
-      { label: "Designer Pass", href: "#for-designers", ariaLabel: "Designer Pass" },
-      { label: "Join Network", href: "#for-designers", ariaLabel: "Join Network" }
-    ]
-  }
-];
-
-// Masonry Showcase Items
-const MASONRY_ITEMS = [
-  {
-    id: "m1",
-    img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80",
-    title: "Elegance Satin Gown",
-    category: "Haute Couture",
-    price: "₹3,480",
-    height: 520,
-    url: "/market",
-  },
-  {
-    id: "m2",
-    img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&q=80",
-    title: "Tailored Linen Blazer",
-    category: "Menswear",
-    price: "₹2,320",
-    height: 380,
-    url: "/men",
-  },
-  {
-    id: "m3",
-    img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80",
-    title: "Silk Corset Ensemble",
-    category: "Womenswear",
-    price: "₹1,890",
-    height: 580,
-    url: "/women",
-  },
-  {
-    id: "m4",
-    img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80",
-    title: "Monochrome Trench Coat",
-    category: "Outerwear",
-    price: "₹3,540",
-    height: 420,
-    url: "/market",
-  },
-  {
-    id: "m5",
-    img: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&q=80",
-    title: "Modern Statement Dress",
-    category: "Evening Edition",
-    price: "₹2,410",
-    height: 540,
-    url: "/women",
-  },
-  {
-    id: "m6",
-    img: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&q=80",
-    title: "Minimalist Leather Tote",
-    category: "Accessories",
-    price: "₹1,860",
-    height: 360,
-    url: "/market",
-  },
-  {
-    id: "m7",
-    img: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=800&q=80",
-    title: "Structured Velvet Suit",
-    category: "Runway Capsule",
-    price: "₹4,690",
-    height: 480,
-    url: "/market",
-  },
-  {
-    id: "m8",
-    img: "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=800&q=80",
-    title: "Plissé Pleated Skirt",
-    category: "Resort Collection",
-    price: "₹2,340",
-    height: 440,
-    url: "/women",
-  },
-];
-
-const CHROMA_ITEMS = [
-  {
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
-    title: 'Minimalist Silk Dress',
-    subtitle: 'Womenswear · Atelier',
-    handle: '₹2,320',
-    borderColor: '#F07020',
-    gradient: 'linear-gradient(145deg, #FFFFFF, #FAFAF9)',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
-    title: 'Tailored Italian Suit',
-    subtitle: 'Menswear · Sartorial',
-    handle: '₹5,850',
-    borderColor: '#C6A15B',
-    gradient: 'linear-gradient(180deg, #FFFFFF, #FAFAF9)',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80',
-    title: 'Oversized Wool Overcoat',
-    subtitle: 'Unisex · Drop #04',
-    handle: '₹3,480',
-    borderColor: '#3B82F6',
-    gradient: 'linear-gradient(165deg, #FFFFFF, #FAFAF9)',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80',
-    title: 'Monochrome Trench Coat',
-    subtitle: 'Womenswear · Capsule',
-    handle: '₹2,410',
-    borderColor: '#10B981',
-    gradient: 'linear-gradient(195deg, #FFFFFF, #FAFAF9)',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1516826957135-700dedea698c?auto=format&fit=crop&w=800&q=80',
-    title: 'Suede Chelsea Boots',
-    subtitle: 'Footwear · Handmade',
-    handle: '₹2,290',
-    borderColor: '#8B5CF6',
-    gradient: 'linear-gradient(225deg, #FFFFFF, #FAFAF9)',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=80',
-    title: 'Sculptural Leather Bag',
-    subtitle: 'Accessories · Studio',
-    handle: '₹2,360',
-    borderColor: '#EF4444',
-    gradient: 'linear-gradient(135deg, #FFFFFF, #FAFAF9)',
-  },
-];
 
 // Helper Images
-const HERO_IMG_LEFT = "https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=800&q=80"; // Abstract/texture
-const HERO_IMG_MID = "https://images.unsplash.com/photo-1550639525-c97d455acf70?w=800&q=80"; // Two women/fashion
-const HERO_IMG_RIGHT = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80"; // Single woman
-
-const PILL_1 = "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=400&q=80";
-const PILL_2 = "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?w=400&q=80";
-const PILL_3 = "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&q=80";
-
-const COL_1 = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80";
-const COL_2 = "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80";
-const COL_3 = "https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=800&q=80";
-
-const FEAT_IMG = "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=1000&q=80";
+const HERO_IMG_MID = "https://images.unsplash.com/photo-1550639525-c97d455acf70?w=800&q=80";
 
 const KNIT_1 = "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=800&q=80";
 const KNIT_2 = "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&q=80";
@@ -200,8 +20,6 @@ const GAL_3 = "https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=60
 const GAL_4 = "https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?w=600&q=80";
 const GAL_5 = "https://images.unsplash.com/photo-1514315384763-ba401779410f?w=600&q=80";
 const GAL_6 = "https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=600&q=80";
-
-const FOOTER_BG = "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1600&q=80";
 
 
 
@@ -549,18 +367,26 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5EFEB] font-sans text-[#183B56] overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#F5EFEB] font-sans text-[#183B56] selection:bg-[#183B56] selection:text-white">
 
-      {/* 1. Dedicated Onboarding Header */}
-      <header className="relative z-50 w-full h-20 flex items-center justify-between px-4 sm:px-8 md:px-16 pt-4 bg-[#F5EFEB] border-b border-[#183B56]/10">
+      {/* ─── 0. TOP ARCHITECTURAL ANNOUNCEMENT BAR ─── */}
+      <div className="bg-[#183B56] text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] py-2.5 px-4 sm:px-8 border-b border-[#183B56] flex items-center justify-between">
+        <span className="hidden md:inline">FOUNDING COHORT · 2026 ATELIER CURATION</span>
+        <span className="mx-auto md:mx-0">3D VIRTUAL STYLIST &amp; BESPOKE LUXURY ATELIER</span>
+        <span className="hidden md:inline">100% SMART ESCROW FIT GUARANTEE</span>
+      </div>
+
+      {/* ─── 1. ARCHITECTURAL HEADER ─── */}
+      <header className="w-full h-20 flex items-center justify-between px-4 sm:px-8 md:px-12 border-b border-[#183B56] bg-white sticky top-0 z-50">
         <WeavlyLogo />
 
-        {/* Center Nav Links — desktop only */}
+        {/* Center Nav Links */}
         <nav className="hidden md:flex items-center gap-8">
           {[
-            { label: 'What is Zera', target: 'meet-zera' },
+            { label: 'Meet Zyra', target: 'meet-zera' },
             { label: 'Collections', target: 'zera-collections' },
-            { label: 'Designers', target: 'for-designers' },
+            { label: 'For Creators', target: 'for-designers' },
+            { label: 'Escrow Fit', target: 'escrow-protection' },
           ].map(({ label, target }) => (
             <button
               key={target}
@@ -568,932 +394,426 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                 const el = document.getElementById(target);
                 if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
-              className="text-[13px] font-semibold text-[#5A7184] hover:text-[#183B56] transition-colors bg-transparent border-none cursor-pointer tracking-wide"
+              className="text-xs font-bold uppercase tracking-wider text-[#5A7184] hover:text-[#183B56] transition-colors bg-transparent border-none cursor-pointer p-0"
             >
               {label}
             </button>
           ))}
         </nav>
 
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            triggerAuth("login");
-          }}
-          className="relative z-50 bg-[#183B56] text-white px-5 sm:px-6 py-2.5 rounded-full text-[13px] font-semibold hover:bg-[#102A43] active:scale-[0.98] transition-all cursor-pointer shadow-sm touch-manipulation"
-        >
-          Sign In
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              triggerAuth("login");
+            }}
+            className="bg-[#F5EFEB] text-[#183B56] px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-white active:scale-95 transition-all cursor-pointer border border-[#183B56]"
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              triggerAuth("register");
+            }}
+            className="bg-[#183B56] text-white px-5 sm:px-6 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-[#102A43] active:scale-95 transition-all cursor-pointer border border-[#183B56] shadow-xs"
+          >
+            Join Atelier
+          </button>
+        </div>
       </header>
 
-      {/* 2. Hero Section */}
-      <section className="px-8 md:px-16 pt-16 pb-16 max-w-7xl mx-auto flex flex-col items-center text-center">
-        <h1 className="text-4xl md:text-6xl lg:text-[72px] font-semibold tracking-tight leading-[1.1] mb-6 max-w-4xl">
-          Find Less. Wear Better.
-        </h1>
-        <p className="text-[#5A7184] text-[15px] max-w-2xl mb-16 leading-relaxed">
-          Weavly curates outfits you'll actually want to wear—bringing together clothing, footwear, and accessories into complete looks tailored to your style.
-        </p>
-
-        {/* Staggered Images */}
-        <div className="flex flex-col md:flex-row items-stretch justify-center gap-5 w-full h-auto md:h-[420px]">
-          {/* Left Block */}
-          <div className="relative w-full md:w-[320px] h-[340px] md:h-[380px] bg-[#183B56] text-white rounded-[32px] p-8 flex flex-col justify-between overflow-hidden self-end shadow-md">
-            <div>
-              <div className="text-3xl font-semibold mb-3 tracking-tight">100+ collections</div>
-              <p className="text-[13px] leading-relaxed text-white/70 max-w-[220px] font-normal">
-                Fashion website is an online destination dedicated to showcasing the latest trends in fashion
-              </p>
-            </div>
-
-            <div className="flex justify-between items-end">
-              <span className="text-[14px] font-medium tracking-wide text-white/90 cursor-pointer hover:underline" onClick={() => triggerAuth("login")}>
-                Shop now
-              </span>
-            </div>
-
-            {/* Circular Rosette BEST COLLECTION Badge */}
-            <div className="absolute top-1/2 -right-6 transform -translate-y-1/2 w-24 h-24 rounded-full bg-[#DFE7ED] border-4 border-white flex flex-col items-center justify-center text-center p-2 shadow-lg z-10">
-              <div className="w-full h-full rounded-full border border-dashed border-white/40 flex flex-col items-center justify-center p-1">
-                <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#183B56] leading-tight">
-                  BEST<br />COLLECTION
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Middle Main Image */}
-          <div
-            className="relative w-full md:w-[480px] h-[360px] md:h-[420px] rounded-[32px] overflow-hidden self-start shadow-md group cursor-pointer"
-            style={{ clipPath: "polygon(0% 0%, 72% 0%, 100% 20%, 100% 100%, 0% 100%)" }}
-          >
-            <img src={HERO_IMG_MID} className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" alt="Main Hero" />
-            <div className="absolute inset-0 bg-black/25 flex flex-col items-center justify-center text-white text-center p-6">
-              <span className="text-3xl md:text-4xl font-extrabold tracking-tight uppercase">Weavly</span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/90 mt-1">From Local Designers</span>
-            </div>
-          </div>
-
-          {/* Right Image */}
-          <div className="relative w-full md:w-[300px] h-[340px] md:h-[380px] rounded-[32px] overflow-hidden self-center mt-8 md:mt-0 shadow-md group cursor-pointer">
-            <img src={HERO_IMG_RIGHT} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Right Hero" />
-            <div className="absolute inset-0 bg-black/25 flex flex-col items-center justify-center text-white text-center p-6">
-              <span className="text-2xl md:text-3xl font-extrabold tracking-tight uppercase">Weavly</span>
-              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/90 mt-1">From Local Designers</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Inline Text Section */}
-      <section className="py-20 px-8 md:px-16 text-center bg-white w-full overflow-hidden">
-        <div ref={inlineTextRef} className="max-w-5xl mx-auto text-2xl md:text-4xl lg:text-[42px] font-medium leading-[1.6] text-black relative">
-          <VariableProximity
-            label="Discover thoughtfully curated outfits that bring together"
-            className="inline"
-            fromFontVariationSettings="'wght' 400, 'opsz' 9"
-            toFontVariationSettings="'wght' 1000, 'opsz' 40"
-            containerRef={inlineTextRef}
-            radius={100}
-            falloff="linear"
-          />
-          <span className="inline-block w-[80px] md:w-[100px] h-[40px] md:h-[50px] mx-2 align-middle rounded-full overflow-hidden border border-black/10">
-            <img src={PILL_1} className="w-full h-full object-cover" alt="Clothing" />
-          </span>
-          <VariableProximity
-            label="clothing, footwear, and"
-            className="inline"
-            fromFontVariationSettings="'wght' 400, 'opsz' 9"
-            toFontVariationSettings="'wght' 1000, 'opsz' 40"
-            containerRef={inlineTextRef}
-            radius={100}
-            falloff="linear"
-          />
-          <span className="inline-block w-[80px] md:w-[100px] h-[40px] md:h-[50px] mx-2 align-middle rounded-full overflow-hidden border border-black/10">
-            <img src={PILL_2} className="w-full h-full object-cover" alt="Accessories" />
-          </span>
-          <VariableProximity
-            label="accessories into complete looks tailored to your style—so you spend less time searching and more time dressing with"
-            className="inline"
-            fromFontVariationSettings="'wght' 400, 'opsz' 9"
-            toFontVariationSettings="'wght' 1000, 'opsz' 40"
-            containerRef={inlineTextRef}
-            radius={100}
-            falloff="linear"
-          />
-          <span className="inline-block w-[80px] md:w-[100px] h-[40px] md:h-[50px] mx-2 align-middle rounded-full overflow-hidden border border-black/10">
-            <img src={PILL_3} className="w-full h-full object-cover" alt="Confidence" />
-          </span>
-          <VariableProximity
-            label="confidence."
-            className="inline font-bold"
-            fromFontVariationSettings="'wght' 700, 'opsz' 14"
-            toFontVariationSettings="'wght' 1000, 'opsz' 40"
-            containerRef={inlineTextRef}
-            radius={100}
-            falloff="linear"
-          />
-        </div>
-      </section>
-
-
-
-      {/* 5. Feature Banner */}
-      <section className="bg-white py-20 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-8 md:px-16 flex flex-col md:flex-row items-center gap-16">
-          <div className="w-full md:w-1/2 relative">
-            <div
-              className="w-full h-[500px] overflow-hidden relative shadow-md"
-              style={{ borderRadius: "200px 200px 24px 24px" }}
-            >
-              <img src={FEAT_IMG} className="w-full h-full object-cover object-center" alt="Featured Woman" />
-              <div className="absolute inset-0 bg-black/10" />
-            </div>
-
-            {/* Scalloped Premium Leather Stamp Seal Badge */}
-            <div className="absolute top-6 -right-8 md:-right-14 w-36 h-36 md:w-44 md:h-44 -rotate-12 filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.35)] z-20 pointer-events-none">
-              <div className="relative w-full h-full flex items-center justify-center">
-                <svg viewBox="0 0 120 120" className="w-full h-full text-[#38231C]">
-                  <defs>
-                    <radialGradient id="stampGradient" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#4A2E24" />
-                      <stop offset="70%" stopColor="#331E17" />
-                      <stop offset="100%" stopColor="#24140F" />
-                    </radialGradient>
-                    <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#F5D089" />
-                      <stop offset="50%" stopColor="#C6A15B" />
-                      <stop offset="100%" stopColor="#E5B969" />
-                    </linearGradient>
-                    <filter id="emboss">
-                      <feDropShadow dx="0.5" dy="0.5" stdDeviation="0.5" floodColor="#000000" floodOpacity="0.4" />
-                    </filter>
-                  </defs>
-
-                  {/* Scalloped Outer Leather Edges (24 smooth points) */}
-                  <path
-                    d="M 60,6 C 63,6 66,9 69,9 C 72,9 75,6 78,7 C 81,8 83,11 86,12 C 89,13 92,11 95,13 C 98,15 99,18 101,20 C 103,22 106,24 107,27 C 108,30 107,33 108,36 C 109,39 113,42 113,45 C 113,48 110,51 110,54 C 110,57 113,60 113,63 C 113,66 109,69 108,72 C 107,75 108,78 107,81 C 106,84 103,86 101,88 C 99,90 98,93 95,95 C 92,97 89,95 86,96 C 83,97 81,100 78,101 C 75,102 72,99 69,99 C 66,99 63,102 60,102 C 57,102 54,99 51,99 C 48,99 45,102 42,101 C 39,100 37,97 34,96 C 31,95 28,97 25,95 C 22,93 21,90 19,88 C 17,86 14,84 13,81 C 12,78 13,75 12,72 C 11,69 7,66 7,63 C 7,60 10,57 10,54 C 10,51 7,48 7,45 C 7,42 11,39 12,36 C 13,33 12,30 13,27 C 14,24 17,22 19,20 C 21,18 22,15 25,13 C 28,11 31,13 34,12 C 37,11 39,8 42,7 C 45,6 48,9 51,9 C 54,9 57,6 60,6 Z"
-                    fill="url(#stampGradient)"
-                    stroke="#1E100B"
-                    strokeWidth="1.5"
-                  />
-
-                  {/* Outer Gold Border */}
-                  <circle cx="60" cy="60" r="48" fill="none" stroke="url(#goldStroke)" strokeWidth="1.8" />
-
-                  {/* Dashed Stitched Inner Border */}
-                  <circle cx="60" cy="60" r="43" fill="none" stroke="#FFFFFF" strokeWidth="1.2" strokeDasharray="4 2.5" opacity="0.85" />
-
-                  {/* Arc Text: Weavly ATELIER */}
-                  <path id="stampTextArcTop" fill="transparent" d="M 22 60 A 38 38 0 1 1 98 60" />
-                  <text className="text-[8px] font-bold uppercase tracking-[0.25em]" fill="#F5D089" filter="url(#emboss)">
-                    <textPath href="#stampTextArcTop" startOffset="50%" textAnchor="middle">
-                      Weavly ATELIER
-                    </textPath>
-                  </text>
-
-                  {/* Arc Text: SARTORIAL EDIT */}
-                  <path id="stampTextArcBottom" fill="transparent" d="M 98 60 A 38 38 0 0 1 22 60" />
-                  <text className="text-[7.5px] font-semibold uppercase tracking-[0.2em]" fill="#F5D089" opacity="0.9">
-                    <textPath href="#stampTextArcBottom" startOffset="50%" textAnchor="middle">
-                      SARTORIAL EDIT
-                    </textPath>
-                  </text>
-
-                  {/* Decorative Stars */}
-                  <text x="28" y="62" textAnchor="middle" fill="#F5D089" fontSize="6">★</text>
-                  <text x="92" y="62" textAnchor="middle" fill="#F5D089" fontSize="6">★</text>
-                </svg>
-
-                {/* Inner Core Box with Refined Typography */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-3 z-10 pointer-events-none">
-                  <div className="border-t border-b border-[#F5D089]/60 py-1 px-2">
-                    <span className="text-[12px] md:text-[14px] font-black uppercase tracking-[0.15em] text-white leading-tight block drop-shadow-md font-sans">
-                      BEST
-                    </span>
-                    <span className="text-[9px] md:text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#F5D089] leading-none block mt-0.5">
-                      COLLECTION
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="w-full md:w-1/2 flex flex-col items-start max-w-md">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#8B8B8B] mb-4">Limited Edition</span>
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight mb-4 text-black">
-              Everyone deserves
-            </h2>
-            <p className="text-[14px] text-[#4A4A4A] mb-2 font-medium">Top Quality Materials</p>
-            <p className="text-2xl font-bold text-black mb-8">₹2,289</p>
-
-            <div className="flex gap-4 mb-6">
-              <span className="text-[12px] font-bold text-black">Description</span>
-              <span className="text-[12px] font-medium text-[#8B8B8B] cursor-pointer">Details</span>
-              <span className="text-[12px] font-medium text-[#8B8B8B] cursor-pointer">Sizing</span>
-              <span className="text-[12px] font-medium text-[#8B8B8B] cursor-pointer">Shipping</span>
-            </div>
-
-            <p className="text-[#666666] text-[13px] leading-relaxed mb-8">
-              Crafted from the finest blends of natural fibers, this piece offers an unparalleled softness against the skin. Its tailored fit ensures a flattering silhouette while maintaining absolute comfort throughout the day.
-            </p>
-
-            <button
-              onClick={() => triggerAuth("login")}
-              className="w-full py-4 rounded-full border border-black text-black font-bold uppercase tracking-widest text-[12px] hover:bg-black hover:text-white transition-colors cursor-pointer"
-            >
-              Explore Style
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ MEET ZERA — Premium Magazine Section ═══ */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap');
-        .zera-font { font-family: 'Inter Tight', 'SF Pro Display', Inter, system-ui, sans-serif; }
-        .zera-cta-link { position: relative; display: inline-flex; align-items: center; gap: 8px; }
-        .zera-cta-link::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 100%; height: 2px; background: #2563EB; }
-        .zera-cta-link:hover::after { background: #1D4ED8; }
-      `}</style>
-
-      <section id="meet-zera" className="zera-font bg-white py-[120px] px-[24px] md:px-[100px] relative overflow-hidden" style={{ maxWidth: '100%' }}>
-        {/* Interactive Dotted Net Background scoped to Meet Zera section */}
-        <AnimatedDottedMeshBackground />
-        <div style={{ maxWidth: 1240, margin: '0 auto' }}>
-
-          {/* ── TWO COLUMN: Left 42% · Right 58% ── */}
-          <div className="flex flex-col lg:flex-row items-start gap-0 mb-[100px]">
-
-            {/* ─── LEFT 42% ─── */}
-            <div className="w-full lg:w-[42%] flex flex-col items-start pt-8">
-
-              {/* Eyebrow */}
-              <div className="mb-7">
-                <span style={{
-                  fontSize: 13,
-                  fontWeight: 600,
-                  letterSpacing: '0.28em',
-                  textTransform: 'uppercase',
-                  color: '#3B82F6',
-                  display: 'block',
-                  marginBottom: 10,
-                }}>Meet Zyra</span>
-                <div style={{ width: 30, height: 2, background: '#3B82F6', borderRadius: 1 }} />
+      {/* ─── 2. MAIN HERO SECTION (MODULAR BOX MATRIX) ─── */}
+      <section className="border-b border-[#183B56] bg-[#F5EFEB]">
+        <div className="max-w-7xl mx-auto border-x border-[#183B56] grid grid-cols-1 lg:grid-cols-12">
+          
+          {/* Left 7 Columns: Headline, Summary & CTAs */}
+          <div className="lg:col-span-7 p-8 sm:p-12 lg:p-16 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#183B56] bg-white space-y-10">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 border border-[#183B56] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#183B56] bg-[#F5EFEB]">
+                <span className="w-2 h-2 rounded-full bg-[#183B56]" />
+                <span>Zyra Stylist &amp; Made-to-Measure</span>
               </div>
 
-              {/* Main heading */}
-              <h2 style={{
-                fontSize: 'clamp(52px, 5.5vw, 72px)',
-                fontWeight: 700,
-                lineHeight: '78px',
-                letterSpacing: '-0.045em',
-                color: '#111111',
-                maxWidth: 520,
-                marginBottom: 40,
-              }}>
-                Meet Zyra.<br />
-                Your Personal<br />
-                Style Companion.
-              </h2>
+              <h1 className="text-4xl sm:text-6xl lg:text-[68px] font-bold tracking-tight text-[#183B56] leading-[1.05] uppercase">
+                Find Less.<br />Wear Better.
+              </h1>
 
-              {/* Paragraph */}
-              <p style={{
-                fontSize: 22,
-                fontWeight: 400,
-                lineHeight: '42px',
-                color: '#686868',
-                maxWidth: 460,
-                marginBottom: 48,
-              }}>
-                Zyra understands your style, explores thousands of designers, and curates complete outfits—not individual products.
+              <p className="text-sm sm:text-base text-[#5A7184] leading-relaxed max-w-xl font-medium">
+                Weavly curates outfits you will actually wear—bringing together luxury garments, bespoke footwear, and handcrafted silhouettes tailored to your exact 3D proportions.
               </p>
 
-              {/* Inline CTA — not a button */}
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <button
+                  onClick={() => triggerAuth("register")}
+                  className="bg-[#183B56] text-white hover:bg-[#102A43] px-8 py-4 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer shadow-xs flex items-center gap-2"
+                >
+                  <span>Start Free Calibration</span>
+                  <ArrowRight size={14} />
+                </button>
+                <button
+                  onClick={() => triggerAuth("login")}
+                  className="bg-[#F5EFEB] text-[#183B56] hover:bg-white px-8 py-4 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer"
+                >
+                  Explore Drops
+                </button>
+              </div>
+            </div>
+
+            {/* Metrics Strip */}
+            <div className="grid grid-cols-3 border-t border-[#183B56] pt-8 divide-x divide-[#183B56]">
+              <div className="pr-4">
+                <div className="text-2xl sm:text-3xl font-bold text-[#183B56]">100+</div>
+                <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#5A7184] mt-1">Verified Drops</div>
+              </div>
+              <div className="px-4">
+                <div className="text-2xl sm:text-3xl font-bold text-[#183B56]">3D</div>
+                <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#5A7184] mt-1">Vector Fitting</div>
+              </div>
+              <div className="pl-4">
+                <div className="text-2xl sm:text-3xl font-bold text-[#183B56]">100%</div>
+                <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#5A7184] mt-1">Escrow Fit</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right 5 Columns: Featured Atelier Card */}
+          <div className="lg:col-span-5 bg-[#DFE7ED] flex flex-col justify-between relative overflow-hidden">
+            <div className="relative aspect-[3/4] w-full overflow-hidden">
+              <img
+                src={HERO_IMG_MID}
+                alt="Atelier Showcase"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute top-4 left-4 bg-white/95 border border-[#183B56] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#183B56]">
+                Lookbook Edit #01
+              </div>
+            </div>
+            <div className="p-6 bg-[#F5EFEB] border-t border-[#183B56] flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] block">Featured Sartorial Ensemble</span>
+                <span className="text-sm font-bold uppercase text-[#183B56]">Hand-Draped Silk &amp; Flannel Wool</span>
+              </div>
               <button
-                onClick={() => triggerAuth("login")}
-                className="zera-cta-link cursor-pointer bg-transparent border-0 p-0"
-                style={{
-                  fontSize: 22,
-                  fontWeight: 600,
-                  color: '#2563EB',
-                  letterSpacing: '-0.01em',
-                }}
+                onClick={() => triggerAuth("register")}
+                className="text-xs font-bold uppercase tracking-wider text-[#183B56] hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
               >
-                Explore Zyra
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
+                <span>View</span>
+                <span>→</span>
               </button>
             </div>
+          </div>
 
-            {/* ─── RIGHT 58% — Zera + floating doodles ─── */}
-            <div className="w-full lg:w-[58%] flex items-center justify-center relative" style={{ minHeight: 520 }}>
+        </div>
+      </section>
 
-              {/* Zera Dynamic Interactive Mascot — 404 Inspired Eyes & Expressions */}
-              <ZeraInteractiveEyesMascot />
-
-              {/* ── Doodle: Search (top-center-left) ── */}
-              <div style={{ position: 'absolute', top: 40, left: '18%', opacity: 0.32, zIndex: 3 }}>
-                <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-                  <circle cx="22" cy="22" r="12" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" />
-                  <path d="M31 31L42 42" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" />
-                  {/* sparkle above */}
-                  <path d="M36 8l1 3M36 8l-1 3M36 8l3 1M36 8l-3 1" stroke="#2F6DFF" strokeWidth="1.4" strokeLinecap="round" />
-                </svg>
-              </div>
-
-              {/* ── Doodle: Shirt/Hanger (top-right) ── */}
-              <div style={{ position: 'absolute', top: 32, right: '10%', opacity: 0.30, zIndex: 3 }}>
-                <svg width="68" height="68" viewBox="0 0 68 68" fill="none">
-                  {/* hanger hook */}
-                  <path d="M34 10 C34 6 38 6 38 10 C38 14 34 14 34 18" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-                  {/* hanger bar */}
-                  <path d="M10 26 L34 18 L58 26" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" />
-                  {/* shirt body */}
-                  <path d="M10 26 L14 54 L54 54 L58 26" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  {/* sparkle */}
-                  <path d="M56 14l1 2.5M56 14l-1 2.5M56 14l2.5 1M56 14l-2.5 1" stroke="#2F6DFF" strokeWidth="1.4" strokeLinecap="round" />
-                  {/* light blue dot accent */}
-                  <circle cx="55" cy="18" r="6" fill="#EFF6FF" opacity="0.9" />
-                </svg>
-              </div>
-
-              {/* ── Doodle: Heart (bottom-left) ── */}
-              <div style={{ position: 'absolute', bottom: 64, left: '12%', opacity: 0.30, zIndex: 3 }}>
-                <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-                  <path d="M28 44 C28 44 8 32 8 20 C8 14 13 10 18 10 C22 10 25 12 28 16 C31 12 34 10 38 10 C43 10 48 14 48 20 C48 32 28 44 28 44Z" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="46" cy="16" r="5" fill="#EFF6FF" opacity="0.9" />
-                  <path d="M44 10l1 2M44 10l-1 2M44 10l2 1M44 10l-2 1" stroke="#2F6DFF" strokeWidth="1.3" strokeLinecap="round" />
-                </svg>
-              </div>
-
-              {/* ── Doodle: Sparkle (bottom-right) ── */}
-              <div style={{ position: 'absolute', bottom: 72, right: '12%', opacity: 0.28, zIndex: 3 }}>
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                  <path d="M24 4 L26 20 L42 24 L26 28 L24 44 L22 28 L6 24 L22 20 Z" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="38" cy="36" r="5" fill="#EFF6FF" opacity="0.9" />
-                </svg>
-              </div>
-
-              {/* ── Dashed curved path connecting doodles ── */}
-              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }} viewBox="0 0 600 520" fill="none">
-                <path
-                  d="M 130 80 Q 200 180 300 260 Q 380 320 460 400"
-                  stroke="#2F6DFF"
-                  strokeWidth="1.5"
-                  strokeDasharray="8 8"
-                  opacity="0.18"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M 460 90 Q 360 180 300 260 Q 200 330 140 400"
-                  stroke="#2F6DFF"
-                  strokeWidth="1.5"
-                  strokeDasharray="8 8"
-                  opacity="0.14"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
-
+      {/* ─── 3. MEET ZYRA AI INTELLIGENCE (2X2 BOX MATRIX) ─── */}
+      <section id="meet-zera" className="border-b border-[#183B56] bg-white">
+        <div className="max-w-7xl mx-auto border-x border-[#183B56]">
+          
+          {/* Header Bar */}
+          <div className="p-6 sm:p-8 border-b border-[#183B56] bg-[#F5EFEB] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block mb-1">Zyra Virtual Engine</span>
+              <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
+                Personalized Style Intelligence
+              </h2>
+            </div>
+            <div className="inline-flex items-center gap-2 border border-[#183B56] bg-white px-3.5 py-1.5 text-xs font-bold text-[#183B56]">
+              <span className="w-2 h-2 rounded-full bg-[#183B56] animate-pulse" />
+              <span>Vector Silhouette Calibration</span>
             </div>
           </div>
 
-          {/* ── PROCESS FLOW — horizontal 4-step with dashed connectors ── */}
-          <div id="how-zera-works">
-
-
-            <div className="flex flex-col md:flex-row items-start gap-0 w-full">
-              {[
-                {
-                  num: '01',
-                  icon: (
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-                      <circle cx="12" cy="13" r="3" />
-                    </svg>
-                  ),
-                  title: 'Show Yourself',
-                  desc: 'Upload 3 to 4 photos to begin your style journey.',
-                },
-                {
-                  num: '02',
-                  icon: (
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  ),
-                  title: 'Style, Understood',
-                  desc: 'Zyra studies your proportions, colors, and personal aesthetic.',
-                },
-                {
-                  num: '03',
-                  icon: (
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z" />
-                    </svg>
-                  ),
-                  title: 'Curated For You',
-                  desc: 'Complete outfits are assembled from designers that match your style—not random recommendations.',
-                },
-                {
-                  num: '04',
-                  icon: (
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                  ),
-                  title: 'Wear With Confidence',
-                  desc: 'Save, refine, and shop looks designed specifically for you.',
-                },
-              ].map((step, i) => (
-                <div key={step.num} className="flex flex-row md:flex-col items-start md:items-start flex-1">
-                  {/* Step column */}
-                  <div className="flex flex-col items-start" style={{ minWidth: 220 }}>
-                    {/* Number */}
-                    <span style={{
-                      fontSize: 13,
-                      fontWeight: 700,
-                      color: '#2563EB',
-                      letterSpacing: '0.04em',
-                      marginBottom: 16,
-                      fontFamily: 'monospace',
-                    }}>{step.num}</span>
-
-                    {/* Icon circle + dashed connector row */}
-                    <div className="flex flex-row items-center w-full mb-6">
-                      <div style={{
-                        width: 64,
-                        height: 64,
-                        borderRadius: '50%',
-                        background: '#EFECE6',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                      }}>
-                        {step.icon}
-                      </div>
-                      {/* Dashed connector — only between steps, not after last */}
-                      {i < 3 && (
-                        <div className="hidden md:flex flex-1 items-center" style={{ marginLeft: 8, marginRight: 8 }}>
-                          <svg width="100%" height="16" viewBox="0 0 120 16" fill="none" preserveAspectRatio="none">
-                            <line x1="4" y1="8" x2="108" y2="8" stroke="#2F6DFF" strokeWidth="1.5" strokeDasharray="8 6" opacity="0.28" strokeLinecap="round" />
-                            {/* Arrow */}
-                            <path d="M104 4 L112 8 L104 12" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Text */}
-                    <h4 style={{
-                      fontSize: 20,
-                      fontWeight: 600,
-                      color: '#111111',
-                      lineHeight: '28px',
-                      marginBottom: 8,
-                      maxWidth: 200,
-                    }}>{step.title}</h4>
-                    <p style={{
-                      fontSize: 16,
-                      fontWeight: 400,
-                      color: '#686868',
-                      lineHeight: '28px',
-                      maxWidth: 200,
-                    }}>{step.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ═══ SHARED DOTTED BACKGROUND WRAPPER — spans CTA → Gallery ═══ */}
-      <div className="relative bg-[#F5EFEB]">
-        {/* Single canvas behind all sections below */}
-        <AnimatedDottedMeshBackground />
-
-      {/* ─── Explore With Zyra CTA Banner ─── */}
-      <section className="relative py-36 px-6 md:px-16 overflow-hidden flex items-center justify-center text-center w-full min-h-[460px]">
-
-
-        <div className="relative z-20 max-w-3xl flex flex-col items-center gap-8 py-6">
-          <h2 className="text-[32px] md:text-[52px] font-semibold tracking-tight text-[#183B56] leading-[1.15]">
-            Finding your next favourite outfit should feel effortless.
-          </h2>
-          <button
-            onClick={() => triggerAuth("login")}
-            className="bg-[#183B56] hover:bg-[#102A43] text-white px-9 py-4 rounded-full text-[15px] font-medium flex items-center gap-3 shadow-md hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-0.5"
-          >
-            Explore With Zyra <span>→</span>
-          </button>
-        </div>
-      </section>
-
-      {/* ─── ZYRA COLLECTIONS ─── */}
-
-      <section id="zera-collections" className="relative py-24 px-8 md:px-16">
-
-        <div className="max-w-7xl mx-auto relative z-20">
-
-          {/* Header */}
-          <div className="mb-16 text-center">
-            <h2 className="text-[52px] md:text-[72px] font-bold tracking-tighter text-[#183B56] mb-8 leading-none flex flex-wrap justify-center items-center gap-4">
-              Zyra
-              <RotatingText
-                texts={['Collections', 'Edits', 'Looks', 'Styles']}
-                mainClassName="bg-[#183B56] text-white overflow-hidden px-4 sm:px-5 md:px-6 py-1.5 sm:py-2 md:py-2.5 items-center justify-center rounded-2xl inline-flex leading-tight whitespace-nowrap text-3xl sm:text-4xl md:text-5xl"
-                staggerFrom={"last"}
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                exit={{ y: "-120%" }}
-                staggerDuration={0.025}
-                splitLevelClassName="overflow-hidden px-1.5 py-1"
-                elementLevelClassName="px-[0.5px]"
-                transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                rotationInterval={3000}
-              />
-            </h2>
-            <p className="text-[#5A7184] text-[22px] md:text-[28px] leading-[1.55] max-w-3xl mx-auto font-normal">
-              Once you sign in, Zyra studies your taste and crafts personalised outfit combinations just for you — called <strong className="font-bold">Zyra Collections</strong>. Not products. Complete curated looks.
-            </p>
-          </div>
-
-          {/* 3 Mock Collection Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
-            {[
-              {
-                label: 'Your Summer Edit',
-                desc: '6 looks · Casual & Coastal',
-                color: '#F0EDE8',
-                accent: '#C6A15B',
-                lock: true,
-              },
-              {
-                label: 'Office-Ready Mix',
-                desc: '8 looks · Smart-Casual',
-                color: '#EAE8F0',
-                accent: '#6B5CE7',
-                lock: true,
-              },
-              {
-                label: 'Weekend Capsule',
-                desc: '5 looks · Relaxed Luxury',
-                color: '#E8F0EA',
-                accent: '#2D7D46',
-                lock: true,
-              },
-            ].map((col, i) => (
-              <div
-                key={i}
-                className="relative rounded-3xl overflow-hidden"
-                style={{ background: col.color, minHeight: 260, padding: '32px 28px' }}
-              >
-                {/* Zera Z mark */}
-                <div className="absolute top-5 right-5 opacity-10">
-                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                    <text x="4" y="42" fontSize="48" fontWeight="900" fontFamily="system-ui" fill={col.accent}>Z</text>
-                  </svg>
-                </div>
-
-                {/* Lock icon */}
-                <div className="w-10 h-10 rounded-full bg-white/60 flex items-center justify-center mb-5">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={col.accent} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
-                </div>
-
-                <h3 className="text-[18px] font-bold text-[#183B56] mb-1">{col.label}</h3>
-                <p className="text-[13px]" style={{ color: col.accent }}>{col.desc}</p>
-
-                <div className="absolute bottom-5 left-7 right-7">
-                  <div className="h-px bg-black/10 mb-4" />
-                  <span className="text-[12px] font-semibold text-[#5A7184]/60 uppercase tracking-widest">Unlocks on sign in</span>
-                </div>
+          {/* 2-Column Split: Mascot Panel & Step Matrix */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
+            
+            {/* Left 5 Cols: Mascot & Explainer */}
+            <div className="lg:col-span-5 p-8 sm:p-12 flex flex-col justify-between bg-[#F5EFEB] space-y-8">
+              <div>
+                <h3 className="text-3xl sm:text-4xl font-bold uppercase text-[#183B56] leading-tight mb-4">
+                  Curates Outfits.<br />Not Disconnected Items.
+                </h3>
+                <p className="text-sm text-[#5A7184] leading-relaxed font-medium">
+                  Zyra analyzes your exact proportions, color palette, and lifestyle priorities to construct harmonious wardrobe collections from verified couturiers.
+                </p>
               </div>
-            ))}
-          </div>
 
-          {/* CTA */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => triggerAuth('register')}
-              className="bg-[#183B56] text-white px-8 py-3.5 rounded-full text-[13px] font-semibold hover:bg-[#102A43] transition-all cursor-pointer"
-            >
-              Sign up to unlock Collections
-            </button>
-            <span className="text-[13px] text-[#5A7184]">
-              Already have an account?{' '}
-              <button onClick={() => triggerAuth('login')} className="text-[#183B56] font-semibold underline bg-transparent border-none cursor-pointer hover:opacity-70">Sign in</button>
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Thin divider */}
-      <div className="w-full h-px bg-[#183B56]/10 max-w-7xl mx-auto my-12" />
-
-      {/* ─── CURATED STYLES (MASONRY GALLERY) ─── */}
-      <section className="py-24 px-8 md:px-16 max-w-7xl mx-auto zera-font relative z-20">
-        <div className="mb-16 text-center">
-          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#183B56] mb-4">
-            Curated Styles
-          </h2>
-          <p className="text-[#5A7184] text-[15px] max-w-xl mx-auto">
-            A glimpse into the premium pieces waiting for you. 
-            Sign up to unlock thousands of items and get personalized outfits created just for you.
-          </p>
-        </div>
-        
-        <ChromaGrid 
-          items={CHROMA_ITEMS} 
-          radius={350}
-          onItemClick={() => triggerAuth('register')}
-        />
-        
-        <div className="mt-16 flex justify-center">
-          <button
-            onClick={() => triggerAuth('register')}
-            className="bg-[#183B56] text-white px-10 py-4 rounded-full text-[14px] font-semibold hover:bg-[#102A43] hover:shadow-lg transition-all cursor-pointer shadow-md flex items-center gap-2"
-          >
-            Sign up to shop the collection <ArrowRight size={16} />
-          </button>
-        </div>
-      </section>
-
-      {/* ─── FOR DESIGNERS ─── */}
-      <section id="for-designers" className="relative py-24 px-8 md:px-16">
-
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center relative z-20">
-
-          {/* Left — Copy */}
-          <div>
-            <p className="text-[20px] font-black uppercase tracking-[0.15em] text-[#183B56]/60 block mb-4">For Creators</p>
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#183B56] mb-6 leading-tight">
-              Publish your designs.
-              <br />Set your own price.
-            </h2>
-            <p className="text-[#5A7184] text-[15px] leading-relaxed mb-8 max-w-md">
-              Weavly is built for independent designers who want to reach a discerning audience without middlemen. Upload your collection, set your pricing, and let Zyra match your work to the customers who'll love it most.
-            </p>
-
-            <div className="flex flex-col gap-4 mb-10">
-              {[
-                { icon: '✦', text: 'Upload your designs — photos, descriptions, sizing' },
-                { icon: '✦', text: 'Set your own price for every piece' },
-                { icon: '✦', text: 'Zyra surfaces your work to matched customers' },
-                { icon: '✦', text: 'Build your brand directly on Weavly' },
-              ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <span className="text-[#183B56] text-[12px] mt-1 font-bold">{item.icon}</span>
-                  <span className="text-[14px] text-[#5A7184] leading-relaxed">{item.text}</span>
-                </div>
-              ))}
+              <div className="bg-white border border-[#183B56] p-6 rounded-xs flex items-center justify-center min-h-[260px] relative shadow-xs">
+                <ZeraInteractiveEyesMascot />
+              </div>
             </div>
 
-            <button
-              onClick={() => triggerAuth('register')}
-              className="bg-[#183B56] text-white px-8 py-3.5 rounded-full text-[13px] font-semibold hover:bg-[#102A43] transition-all cursor-pointer"
-            >
-              Apply as a Designer →
-            </button>
-          </div>
-
-          {/* Right — Animated CardSwap of independent designer cards */}
-          <div className="relative flex items-center justify-center w-full min-h-[420px]">
-            <CardSwap
-              width={280}
-              height={330}
-              cardDistance={35}
-              verticalDistance={35}
-              delay={4500}
-              pauseOnHover={true}
-            >
+            {/* Right 7 Cols: 4-Step Connected Box Matrix */}
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x sm:divide-y divide-[#183B56] bg-white">
               {[
-                {
-                  designer: 'Aria Chen',
-                  brand: '@chen_studio',
-                  location: 'Paris, France',
-                  img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80',
-                  piece: 'Plissé Atelier Dress',
-                },
-                {
-                  designer: 'Marcus Thorne',
-                  brand: '@thorne_sartorial',
-                  location: 'London, UK',
-                  img: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80',
-                  piece: 'Sculptural Wool Trench',
-                },
-                {
-                  designer: 'Elena Vance',
-                  brand: '@elena_atelier',
-                  location: 'Milan, Italy',
-                  img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-                  piece: 'Hand-Draped Silk Ensemble',
-                },
-              ].map((card, i) => (
-                <Card key={i} className="cursor-pointer hover:shadow-2xl transition-shadow">
-                  <div className="w-full h-44 rounded-2xl overflow-hidden mb-3 relative">
-                    <img src={card.img} alt={card.designer} className="w-full h-full object-cover" />
-                    <div className="absolute top-2.5 right-2.5 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-semibold text-white uppercase tracking-wider">
-                      Verified Creator
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[14px] font-bold text-[#183B56]">{card.designer}</span>
-                    <span className="text-[12px] font-semibold text-[#5A7184] font-mono">{card.brand}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#5A7184] font-medium">
-                    <span>{card.piece}</span>
-                    <span>{card.location}</span>
-                  </div>
-                </Card>
-              ))}
-            </CardSwap>
-          </div>
-        </div>
-      </section>
-
-      {/* Thin divider */}
-
-      {/* ─── BUYER PROTECTION / ESCROW ─── */}
-      <section className="relative py-24 px-8 md:px-16">
-        <div className="max-w-7xl mx-auto relative z-20">
-
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#183B56] mb-4">
-              Your money is safe. Always.
-            </h2>
-            <p className="text-[#5A7184] text-[15px] max-w-lg mx-auto leading-relaxed">
-              Weavly holds every payment in secure escrow. Designers only get paid after you receive your order and confirm satisfaction. No exceptions.
-            </p>
-          </div>
-
-          {/* 3-Step Escrow Timeline */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative max-w-6xl mx-auto">
-            {[
-              {
-                step: '01',
-                title: 'You Place the Order',
-                desc: 'Payment is captured and held securely by Weavly — the designer receives nothing yet.',
-                badgeBg: 'bg-[#F07020]/10 text-[#F07020] border-[#F07020]/20',
-                icon: (
-                  <div className="w-14 h-14 rounded-2xl bg-[#FFF7F2] border border-[#F07020]/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[#F07020] transition-all duration-300">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F07020" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-white transition-colors duration-300">
-                      <rect x="2" y="5" width="20" height="14" rx="2" />
-                      <line x1="2" y1="10" x2="22" y2="10" />
-                      <path d="M6 15h4" />
-                      <rect x="15" y="13.5" width="5" height="4" rx="1" />
-                      <path d="M16.5 13.5v-1a1 1 0 0 1 2 0v1" />
-                    </svg>
-                  </div>
-                ),
-              },
-              {
-                step: '02',
-                title: 'Order Delivered',
-                desc: 'Your order arrives. You have a window to inspect it and confirm everything is as expected.',
-                badgeBg: 'bg-[#C6A15B]/10 text-[#C6A15B] border-[#C6A15B]/20',
-                icon: (
-                  <div className="w-14 h-14 rounded-2xl bg-[#FFFDF5] border border-[#C6A15B]/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[#C6A15B] transition-all duration-300">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C6A15B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-white transition-colors duration-300">
-                      <path d="m7.5 4.27 9 5.15" />
-                      <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-                      <path d="m3.3 7 8.7 5 8.7-5" />
-                      <path d="M12 22V12" />
-                    </svg>
-                  </div>
-                ),
-              },
-              {
-                step: '03',
-                title: 'Designer Gets Paid',
-                desc: 'Only after your confirmation, funds are released to the designer. Dispute? We step in.',
-                badgeBg: 'bg-[#2D7D46]/10 text-[#2D7D46] border-[#2D7D46]/20',
-                icon: (
-                  <div className="w-14 h-14 rounded-2xl bg-[#F4FAF5] border border-[#2D7D46]/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[#2D7D46] transition-all duration-300">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2D7D46" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-white transition-colors duration-300">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                      <path d="m9 12 2 2 4-4" strokeWidth="2.2" />
-                    </svg>
-                  </div>
-                ),
-              },
-            ].map((item, i) => (
-              <div 
-                key={i} 
-                className="group relative flex flex-col items-start text-left p-8 rounded-[28px] bg-white border border-[#183B56]/15 shadow-[0_10px_30px_rgba(24,59,86,0.04)] hover:shadow-[0_20px_40px_rgba(24,59,86,0.1)] hover:-translate-y-1 transition-all duration-300"
-              >
-                <div className="w-full flex items-center justify-between mb-4">
-                  {item.icon}
-                  <span className={`text-[12px] font-extrabold font-mono px-3 py-1 rounded-full border ${item.badgeBg}`}>
-                    {item.step}
+                { num: '01', title: 'Silhouette Scan', desc: 'Calibrate your exact height, size, and fit tolerances in under 2 minutes.' },
+                { num: '02', title: 'Aesthetic Vectoring', desc: 'Zyra maps your favorite color tones, fabrics, and wardrobe priorities.' },
+                { num: '03', title: 'Look Synthesis', desc: 'Complete bespoke outfits assembled from independent couture ateliers.' },
+                { num: '04', title: '100% Escrow Guarantee', desc: 'Made-to-measure orders held in escrow until you confirm satisfaction.' },
+              ].map((step, idx) => (
+                <div
+                  key={step.num}
+                  className={`p-8 flex flex-col justify-between min-h-[220px] bg-white hover:bg-[#F5EFEB]/50 transition-colors ${
+                    idx >= 2 ? 'border-t border-[#183B56]' : ''
+                  }`}
+                >
+                  <span className="text-xs font-mono font-bold text-[#183B56] bg-[#DFE7ED] border border-[#183B56] px-2.5 py-0.5 self-start">
+                    STEP {step.num}
                   </span>
+                  <div className="mt-6 space-y-2">
+                    <h4 className="text-base font-bold uppercase tracking-tight text-[#183B56]">{step.title}</h4>
+                    <p className="text-xs text-[#5A7184] leading-relaxed font-medium">{step.desc}</p>
+                  </div>
                 </div>
-                <h3 className="text-[20px] font-bold text-[#183B56] mb-2 tracking-tight">{item.title}</h3>
-                <p className="text-[14px] text-[#5A7184] leading-relaxed font-normal">{item.desc}</p>
+              ))}
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 4. ZYRA CURATED COLLECTIONS (3-COLUMN BOX MATRIX) ─── */}
+      <section id="zera-collections" className="border-b border-[#183B56] bg-[#F5EFEB]">
+        <div className="max-w-7xl mx-auto border-x border-[#183B56]">
+          
+          <div className="p-6 sm:p-8 border-b border-[#183B56] bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block mb-1">Locked Patron Capsules</span>
+              <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
+                Curated Zyra Collections
+              </h2>
+            </div>
+            <button
+              onClick={() => triggerAuth("register")}
+              className="bg-[#183B56] text-white hover:bg-[#102A43] px-6 py-2.5 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer self-start sm:self-auto"
+            >
+              Sign Up To Unlock All
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#183B56] bg-white">
+            {[
+              { label: 'Sartorial Summer Edit', desc: '6 complete looks · Coastal Linen & Tailored Silk', pieces: '6 Items' },
+              { label: 'Architectural Office Mix', desc: '8 complete looks · Double-Breasted Flannel', pieces: '8 Items' },
+              { label: 'Weekend Atelier Capsule', desc: '5 complete looks · Hand-Draped Raw Cottons', pieces: '5 Items' },
+            ].map((col, i) => (
+              <div key={i} className="p-8 flex flex-col justify-between min-h-[300px] bg-[#F5EFEB] hover:bg-white transition-colors space-y-8">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] bg-white border border-[#183B56] px-2 py-0.5">
+                      {col.pieces}
+                    </span>
+                    <span className="text-xs font-bold text-[#183B56]">🔒 LOCKED</span>
+                  </div>
+                  <h3 className="text-xl font-bold uppercase text-[#183B56]">{col.label}</h3>
+                  <p className="text-xs text-[#5A7184] font-medium leading-relaxed">{col.desc}</p>
+                </div>
+                <button
+                  onClick={() => triggerAuth("login")}
+                  className="w-full py-3 bg-white hover:bg-[#183B56] text-[#183B56] hover:text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer text-center"
+                >
+                  Sign In to Unlock →
+                </button>
               </div>
             ))}
           </div>
 
-          {/* Bottom note */}
-          <div className="mt-16 flex items-center justify-center gap-3">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9B9B9B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            <span className="text-[13px] text-[#5A7184]">
-              Funds held by Weavly until order is confirmed satisfied — protecting both buyers and honest designers.
+        </div>
+      </section>
+
+      {/* ─── 5. FOR CREATORS & ATELIERS (12-COL BOX MATRIX) ─── */}
+      <section id="for-designers" className="border-b border-[#183B56] bg-white">
+        <div className="max-w-7xl mx-auto border-x border-[#183B56] grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
+          
+          <div className="lg:col-span-6 p-8 sm:p-14 bg-white flex flex-col justify-between space-y-8">
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-3 py-1 inline-block">
+                For Fashion Creators &amp; Ateliers
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56] leading-tight">
+                Publish Your Lookbooks.<br />
+                Receive Bespoke Commissions.
+              </h2>
+              <p className="text-sm text-[#5A7184] font-medium leading-relaxed">
+                Weavly connects independent designers directly with patrons worldwide. Set your pricing, configure custom made-to-measure options, and receive guaranteed milestone escrow payouts.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <button
+                onClick={() => triggerAuth("register")}
+                className="bg-[#183B56] text-white hover:bg-[#102A43] px-7 py-3.5 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer flex items-center gap-2"
+              >
+                <span>Apply as a Creator</span>
+                <ArrowRight size={14} />
+              </button>
+              <a
+                href="/creator-guide"
+                className="bg-[#F5EFEB] text-[#183B56] hover:bg-white px-7 py-3.5 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all flex items-center gap-2 no-underline"
+              >
+                <span>Creator Handbook</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="lg:col-span-6 p-8 sm:p-14 bg-[#F5EFEB] flex flex-col justify-between space-y-6">
+            <div className="space-y-4">
+              <h3 className="text-base font-bold uppercase text-[#183B56] border-b border-[#183B56] pb-3">
+                Creator Program Privileges
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { title: '100% Milestone Escrow', desc: 'Funds secured upfront before custom tailoring begins.' },
+                  { title: 'Zero Listing Fees', desc: 'No upfront subscriptions or listing charges.' },
+                  { title: 'Zyra Style Indexing', desc: 'Direct matching with patrons actively searching your aesthetic.' },
+                  { title: 'Atelier Packaging', desc: 'Complimentary luxury bespoke packaging boxes.' },
+                ].map((item, idx) => (
+                  <div key={idx} className="border border-[#183B56] bg-white p-5 space-y-1">
+                    <span className="text-xs font-bold text-[#183B56] uppercase block">{item.title}</span>
+                    <p className="text-[11px] text-[#5A7184] font-medium leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="text-[11px] font-bold uppercase tracking-wider text-[#5A7184] pt-4 border-t border-[#183B56]">
+              Curation audit completed within 48 hours of submission.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ─── 6. ESCROW FIT & SECURITY VAULT (3-COLUMN BOX MATRIX) ─── */}
+      <section id="escrow-protection" className="border-b border-[#183B56] bg-[#F5EFEB]">
+        <div className="max-w-7xl mx-auto border-x border-[#183B56]">
+          
+          <div className="p-6 sm:p-8 border-b border-[#183B56] bg-white text-center space-y-2">
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184]">
+              Dual Patron &amp; Designer Protection
             </span>
+            <h2 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
+              100% Escrow Fit Guarantee
+            </h2>
+            <p className="text-xs sm:text-sm text-[#5A7184] max-w-xl mx-auto font-medium">
+              Funds remain safely locked in Weavly Escrow Vaults. Artisans only receive payout after you receive the garment and confirm fit.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#183B56] bg-white">
+            {[
+              { step: '01', title: 'Order Commissioned', desc: 'Payment captured into Weavly Escrow Vault. Artisan starts tailoring.' },
+              { step: '02', title: 'Delivery & Fitting Audit', desc: 'Garment arrives in Weavly luxury casing. 72h window for fit inspection.' },
+              { step: '03', title: 'Guaranteed Settlement', desc: 'Upon your fit confirmation, escrow funds are released to the designer.' },
+            ].map((item, idx) => (
+              <div key={idx} className="p-8 bg-[#F5EFEB] hover:bg-white transition-colors flex flex-col justify-between min-h-[220px]">
+                <span className="text-xs font-mono font-bold text-[#183B56] bg-[#DFE7ED] border border-[#183B56] px-2.5 py-1 self-start">
+                  PHASE {item.step}
+                </span>
+                <div className="mt-6 space-y-2">
+                  <h3 className="text-base font-bold uppercase text-[#183B56]">{item.title}</h3>
+                  <p className="text-xs text-[#5A7184] font-medium leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* ─── 7. CRAFTSMANSHIP & ATELIER STANDARDS ─── */}
+      <section className="border-b border-[#183B56] bg-white">
+        <div className="max-w-7xl mx-auto border-x border-[#183B56]">
+          
+          <div className="p-6 sm:p-8 border-b border-[#183B56] bg-[#F5EFEB] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block mb-1">Couture Specifications</span>
+              <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
+                Crafted Without Compromise
+              </h2>
+            </div>
+            <span className="text-xs font-bold uppercase text-[#183B56]">Mulberry Silk &amp; Flannel Wool</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#183B56] bg-white">
+            <div className="p-6 flex flex-col justify-between space-y-4">
+              <div className="aspect-[4/5] bg-[#DFE7ED] border border-[#183B56] overflow-hidden">
+                <img src={KNIT_1} alt="Mulberry Knit" className="w-full h-full object-cover" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-sm font-bold uppercase text-[#183B56]">Mulberry Silk Knit</h4>
+                <p className="text-xs text-[#5A7184] font-medium">Soft Cashmere &amp; Silk Blend</p>
+              </div>
+            </div>
+
+            <div className="p-6 flex flex-col justify-between space-y-4">
+              <div className="aspect-[4/5] bg-[#DFE7ED] border border-[#183B56] overflow-hidden">
+                <img src={KNIT_2} alt="Atelier Ensemble" className="w-full h-full object-cover" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-sm font-bold uppercase text-[#183B56]">Hand-Draped Flannel</h4>
+                <p className="text-xs text-[#5A7184] font-medium">Architectural Silhouette Cut</p>
+              </div>
+            </div>
+
+            <div className="p-6 flex flex-col justify-between space-y-4">
+              <div className="aspect-[4/5] bg-[#DFE7ED] border border-[#183B56] overflow-hidden">
+                <img src={KNIT_3} alt="Sartorial Trousers" className="w-full h-full object-cover" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-sm font-bold uppercase text-[#183B56]">Bespoke Sartorial Trousers</h4>
+                <p className="text-xs text-[#5A7184] font-medium">Comfortable Ribbed Wool</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ─── 8. INTERACTIVE CIRCULAR GALLERY BOX ─── */}
+      <section className="border-b border-[#183B56] bg-[#F5EFEB] py-16 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto border border-[#183B56] bg-white p-8 sm:p-12 text-center space-y-8 shadow-xs">
+          <div className="space-y-2">
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184]">Atelier Showcase</span>
+            <h2 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
+              Styles That Welcome Sunshine's Return
+            </h2>
+            <p className="text-xs sm:text-sm text-[#5A7184] max-w-xl mx-auto font-medium">
+              Explore season edits designed with natural fibers and bespoke architectural geometry.
+            </p>
+          </div>
+
+          <div style={{ height: '480px', position: 'relative', width: '100%' }}>
+            <CircularGallery
+              bend={3}
+              textColor="#183B56"
+              borderRadius={0.02}
+              scrollEase={0.03}
+              scrollSpeed={2.5}
+              items={[
+                { image: GAL_1, text: "Summer Denim" },
+                { image: GAL_2, text: "Sheer Evening" },
+                { image: GAL_3, text: "Active Movement" },
+                { image: GAL_4, text: "Breezy Linen" },
+                { image: GAL_5, text: "Sunset Coastal" },
+                { image: GAL_6, text: "Athletic Chic" }
+              ]}
+            />
           </div>
         </div>
       </section>
 
-      {/* 6. Made To Raise Your Standards */}
-      <section className="py-24 px-8 md:px-16 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-semibold mb-4 text-[#183B56]">Made To Raise Your Standards</h2>
-          <p className="text-[#5A7184] text-[14px] max-w-lg mx-auto">
-            We strive to provide superior quality in every piece we make, using high-performance yarns woven to perfection for longevity and comfort.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-          <div className="flex flex-col gap-4">
-            <div className="w-full h-[360px] rounded-[32px] overflow-hidden bg-gray-100">
-              <img src={KNIT_1} className="w-full h-full object-cover" alt="Top Knit Outside" />
-            </div>
-            <div className="px-4">
-              <h3 className="font-bold text-[16px] text-[#183B56]">Top Knit Outside</h3>
-              <p className="text-[12px] text-[#5A7184]">Soft Cashmere Blend</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <div className="w-full h-[440px] rounded-[32px] overflow-hidden relative shadow-lg">
-              <img src={KNIT_2} className="w-full h-full object-cover" alt="Middle Knit" />
-              <div className="absolute inset-0 bg-black/20" />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="w-full h-[360px] rounded-[32px] overflow-hidden bg-gray-100">
-              <img src={KNIT_3} className="w-full h-full object-cover" alt="Top Knit Pants" />
-            </div>
-            <div className="px-4">
-              <h3 className="font-bold text-[16px] text-[#183B56]">Top Knit Pants</h3>
-              <p className="text-[12px] text-[#5A7184]">Comfortable Ribbed Fit</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Styles That Welcome Sunshine's Return (3D Circular Gallery) */}
-      <section className="py-20 overflow-hidden relative">
-        <div className="text-center mb-10 px-8 relative z-20">
-          <h2 className="text-4xl md:text-5xl font-semibold mb-4 text-[#183B56]">Styles That Welcome Sunshine's Return</h2>
-          <p className="text-[#5A7184] text-[14px] max-w-xl mx-auto">
-            As the days grow longer and the sun shines brighter, refresh your wardrobe with pieces designed to embrace the warmth and vibrant energy of the season.
-          </p>
-        </div>
-
-        <div style={{ height: '520px', position: 'relative', width: '100%' }}>
-          <CircularGallery
-            bend={3}
-            textColor="#183B56"
-            borderRadius={0.06}
-            scrollEase={0.03}
-            scrollSpeed={2.5}
-            items={[
-              { image: GAL_1, text: "Summer Denim" },
-              { image: GAL_2, text: "Sheer Evening" },
-              { image: GAL_3, text: "Active Movement" },
-              { image: GAL_4, text: "Breezy Linen" },
-              { image: GAL_5, text: "Sunset Coastal" },
-              { image: GAL_6, text: "Athletic Chic" }
-            ]}
-          />
-        </div>
-      </section>
-
-      </div>{/* end shared dotted background wrapper */}
-
+      {/* ─── 9. FOOTER ─── */}
       <Footer 
         requireAuth={true}
         onRequireAuth={() => triggerAuth("login")}
         onShopNow={() => triggerAuth("login")}
       />
 
-      {/* Auth Modal (only rendered if not handled by parent AppShell) */}
+      {/* Auth Modal */}
       {!onOpenAuth && (
         <AuthModal
           isOpen={authModalOpen}
