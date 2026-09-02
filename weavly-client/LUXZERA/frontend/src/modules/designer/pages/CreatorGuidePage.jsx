@@ -7,23 +7,23 @@ import {
   Palette,
   Scissors,
   Sparkles,
-  Upload,
-  CheckCircle2,
   ArrowRight,
   ShieldCheck,
   Layers,
-  Zap,
   Globe,
   DollarSign,
   TrendingUp,
   Image as ImageIcon,
   Ruler,
-  Clock,
-  HelpCircle,
-  FileCheck,
+  Check,
+  CheckCircle2,
   Award,
   ChevronRight,
-  UserCheck
+  UserCheck,
+  HelpCircle,
+  Package,
+  Clock,
+  BookOpen
 } from "lucide-react";
 
 export default function CreatorGuidePage({ initialTab = "become-creator" }) {
@@ -33,54 +33,54 @@ export default function CreatorGuidePage({ initialTab = "become-creator" }) {
   const BECOME_CREATOR_STEPS = [
     {
       stepNumber: "01",
-      title: "Submit Your Atelier Application",
-      headline: "Showcase your craftsmanship and unique aesthetic",
-      description: "Complete our streamlined designer registration. Share your brand story, past collection lookbooks, Instagram/portfolio links, and design specialty (e.g., Haute Couture, Modern Streetwear, Festive Ethnic, Avant-Garde Minimal).",
+      title: "Submit 3 Photos or Sketches",
+      headline: "Simple 5-minute designer application",
+      description: "Tell us your brand name and upload 3 photos or drawings of your clothing (dresses, suits, shirts, or jackets). Share your Instagram or website portfolio link so we can see your style.",
       details: [
-        "Portfolio & Lookbook Upload (minimum 3 sample garments/sketches)",
-        "Atelier location, production capacity & tailoring specialty",
-        "Fabric sourcing philosophy and craftsmanship standards"
+        "Brand name, location, and your personal design specialty",
+        "Upload at least 3 photos or sketches of your past work",
+        "Zero joining fee — 100% free to apply and join"
       ],
-      tip: "Ateliers with clear garment construction details and fabric composition notes are approved 3x faster.",
+      tip: "Clear photos taken in good natural lighting on a clean background get approved the quickest!",
       icon: Scissors
     },
     {
       stepNumber: "02",
-      title: "Curation Committee Review",
-      headline: "48-Hour quality and authenticity audit",
-      description: "Our fashion board reviews every applicant for design originality, fabric durability, and atelier reliability. We ensure all creators meet our luxury patron expectations.",
+      title: "Fast 48-Hour Review",
+      headline: "Our curation team approves your brand",
+      description: "Our fashion curators review your application within 48 hours to ensure genuine craftsmanship and quality. Once approved, you receive an invitation email with your verified Designer ID.",
       details: [
-        "Design originality and brand uniqueness verification",
-        "Production capability & tailoring timeline commitment",
-        "Agreement to Weavly 100% Milestone Escrow & Fit Integrity Standard"
+        "Authenticity & quality check within 2 business days",
+        "Confirmation of your tailoring turnaround time (e.g. 7–14 days)",
+        "Direct acceptance into the verified Weavly creator network"
       ],
-      tip: "We accept both established luxury houses and emerging avant-garde artisans with proven tailoring skill.",
+      tip: "We welcome both established luxury boutiques and passionate independent fashion creators.",
       icon: Award
     },
     {
       stepNumber: "03",
-      title: "Atelier Studio Onboarding & KYC",
-      headline: "Configure your digital storefront & payout gateway",
-      description: "Once approved, unlock your personalized Designer Studio dashboard. Set up your verified bio, atelier banner, currency preferences, and secure direct-deposit bank payouts.",
+      title: "Set Up Your Bank & Profile",
+      headline: "Get ready to receive direct payouts",
+      description: "Log into your Designer Studio. Add your brand logo, a short bio explaining your style, and link your bank account so your earnings are deposited automatically.",
       details: [
-        "Direct bank payout integration (automated multi-currency disbursements)",
-        "Atelier profile customization with badges, lookbooks, and patron reviews",
-        "Access to bespoke commission queue and Zyra style mapping"
+        "Link your bank account for secure automated payouts",
+        "Customize your public storefront with your banner & story",
+        "Access your live commission queue and patron measurement sheets"
       ],
-      tip: "You retain 100% copyright ownership of all your lookbooks and proprietary garment designs.",
+      tip: "You keep 100% copyright ownership of your designs and photos at all times.",
       icon: UserCheck
     },
     {
       stepNumber: "04",
-      title: "Launch & Receive Global Commissions",
-      headline: "Reach high-intent luxury buyers worldwide",
-      description: "Your collections go live instantly on the Weavly Marketplace and are automatically integrated into Zyra's stylist recommendations for high-intent patrons across 100+ countries.",
+      title: "Publish & Get Paid via Escrow",
+      headline: "Receive orders from patrons worldwide",
+      description: "Publish your lookbooks. When a buyer commissions an outfit, 100% of the money is locked safely in the Weavly Escrow Vault before you cut fabric. Payout is released directly to you upon delivery!",
       details: [
-        "Featured on 'Discover Designers' and 'Curated Lookbooks'",
-        "Live patron custom commission requests with full measurement specs",
-        "Complimentary Weavly luxury garment covers and packaging boxes"
+        "Your designs appear in 'Discover Designers' and member lookbooks",
+        "Buyers submit their exact measurements for bespoke fit",
+        "Complimentary Weavly luxury presentation boxes & garment covers"
       ],
-      tip: "Funds for every custom order are locked safely in escrow before you ever touch a piece of fabric.",
+      tip: "Funds are 100% guaranteed in escrow upfront — zero non-payment risk, zero chargeback worry.",
       icon: Globe
     }
   ];
@@ -88,234 +88,307 @@ export default function CreatorGuidePage({ initialTab = "become-creator" }) {
   const PUBLISH_DESIGN_STEPS = [
     {
       stepNumber: "01",
-      title: "Open Designer Studio & Create New Design",
+      title: "Pick Your Category & Title",
       headline: "Start your new lookbook garment draft",
-      description: "Navigate to your Designer Studio dashboard and click '+ Publish New Design'. Select the primary department (Women, Men, Unisex, Capsule) and fashion category (e.g., Couture Gown, Kurta Set, Blazer, Overcoat).",
+      description: "Go to your Designer Studio dashboard and click '+ Publish New Design'. Pick the department (Women, Men, Unisex) and clothing type (e.g., Blazer, Dress, Tuxedo, Casual Overcoat).",
       details: [
-        "Give your design an evocative, luxury title and collection name",
-        "Write a compelling narrative: the inspiration, drape silhouette, and tailoring philosophy",
-        "Select occasion affinity (Wedding, Formal, Party, College, Casual, Sport)"
+        "Give your outfit an elegant, distinctive title",
+        "Write a short description: the inspiration, fit, and silhouette",
+        "Pick the occasion (Formal, Office, Wedding, Everyday, Party)"
       ],
-      tip: "Assigning accurate occasion affinities ensures Zyra recommends your garment to the right patrons.",
+      tip: "Accurate occasion tags ensure Zyra recommends your outfit to buyers searching for that exact event.",
       icon: Palette
     },
     {
       stepNumber: "02",
-      title: "Upload High-Resolution Renders & Lookbooks",
-      headline: "Visuals that captivate luxury patrons",
-      description: "Upload clean, high-resolution photography, 3D model renders, or editorial sketches. We recommend providing full-length front, back, drape detail, and fabric texture close-ups.",
+      title: "Upload Clear Outfit Photos",
+      headline: "Crisp photography that showcases your tailoring",
+      description: "Upload clean, sharp photos of your outfit. We recommend providing a front view, back view, and a close-up showing the fabric texture and fine stitching detail.",
       details: [
-        "Minimum 1200x1600px crisp PNG/JPEG on clean studio backgrounds",
-        "Showcase front, back, silhouette movement, and garment lining",
-        "Optional 360-degree video or runway video loop"
+        "High-resolution photos on clean, simple backgrounds",
+        "Show front, back, silhouette movement, and lining",
+        "Natural daylight or studio lighting works best"
       ],
-      tip: "Garments with clean neutral studio backdrops achieve 45% higher patron commission conversions.",
+      tip: "Outfits on neutral, uncluttered backdrops receive 45% more bespoke order commissions.",
       icon: ImageIcon
     },
     {
       stepNumber: "03",
-      title: "Define Fabric Composition & Artisan Specs",
-      headline: "Transparency in materials and craftsmanship",
-      description: "Specify the exact textile composition, GSM fabric weight, weave pattern, lining materials, and artisan care instructions. Luxury patrons value material integrity.",
+      title: "Enter Fabric & Crafting Specs",
+      headline: "Explain what your garment is made of",
+      description: "List the fabric materials (e.g. 100% Linen, Mulberry Silk, Structured Wool), the care instructions (Dry clean only or hand wash), and how many days it takes you to stitch.",
       details: [
-        "Fabric composition (e.g., 100% Mulberry Silk, Raw Linen, Heavyweight 450GSM Wool)",
-        "Hand-embroidery, block print, or custom hardware specifications",
-        "Dry-cleaning & preservation guidelines"
+        "Textile composition (Silk, Linen, Wool, Cotton, Raw Blends)",
+        "Hand-embroidery, custom buttons, or special hardware notes",
+        "Care instructions & preservation booklet details"
       ],
-      tip: "Highlighting sustainable, organic, or heirloom fabrics increases brand prestige on patron feeds.",
+      tip: "Highlighting natural and organic fabrics builds trust and attracts high-intent buyers.",
       icon: Layers
     },
     {
       stepNumber: "04",
-      title: "Configure Pricing, Ready Sizes & Bespoke Options",
-      headline: "Give patrons flexibility between ready-to-wear and made-to-measure",
-      description: "Set your pricing structure. You can offer ready-to-wear standard sizes (XS through XXL) and enable the 'Custom Made-to-Measure' toggle to receive custom patron body measurements.",
+      title: "Set Price & Bespoke Sizing",
+      headline: "Offer ready-to-wear sizes or custom measurements",
+      description: "Set your price. You can offer standard sizes (XS to XXL) and flip the 'Made-to-Measure' switch on so buyers can submit their exact body measurements for a 1-of-1 bespoke fit.",
       details: [
-        "Set standard retail price and optional bespoke tailoring premium",
-        "Enable 'Made-to-Measure' toggle to accept custom bust/waist/hip/shoulder specs",
-        "Specify crafting timeline (e.g., 7–14 business days for bespoke tailoring)"
+        "Set your standard retail price in your local currency",
+        "Enable 'Made-to-Measure' to accept custom client proportions",
+        "Specify your crafting timeline (typically 7–14 business days)"
       ],
-      tip: "Offering custom measurement options allows Zyra to match your design to patrons seeking perfect fit.",
+      tip: "Enabling made-to-measure allows Zyra to match your design to clients looking for guaranteed perfect fit.",
       icon: Ruler
     },
     {
       stepNumber: "05",
       title: "Publish Live & Track Milestone Payouts",
-      headline: "Instant indexing and automated escrow fulfillment",
-      description: "Hit 'Publish'. Your design is indexed across Weavly catalogs immediately. When an order arrives, follow structured milestones (Order Confirmed → Cutting → Sewing → Shipped) and receive instant bank payouts upon client receipt.",
+      headline: "Instant publishing and guaranteed escrow payout",
+      description: "Click 'Publish'. Your lookbook goes live immediately. When an order arrives, follow simple milestone check-ins (Confirmed → Cutting → Sewing → Shipped), and receive guaranteed payment on delivery.",
       details: [
-        "Instant storefront display across marketplace lookbooks",
-        "Milestone-based patron progress updates with photo check-ins",
-        "Automated 100% escrow release to your bank upon delivery verification"
+        "Instant storefront display across global lookbooks",
+        "Simple progress updates for your customer with milestone check-ins",
+        "Automated bank payout release upon client receipt"
       ],
-      tip: "Keeping patrons updated at tailoring milestones earns you Top Atelier badges on Weavly.",
+      tip: "Updating patrons at key milestones earns you Top Designer badges and repeat commissions!",
       icon: TrendingUp
     }
+  ];
+
+  const QUICK_LINKS = [
+    { label: "Creator Handbook", path: "/creator-guide", active: true },
+    { label: "Apply as Designer", path: "/become-designer" },
+    { label: "Designer Registration", path: "/designer/register" },
+    { label: "Designer Studio Login", path: "/designer/login" },
+    { label: "Browse Verified Designers", path: "/designers" }
   ];
 
   return (
     <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
       
-      {/* ── Editorial Hero Header ── */}
-      <div className="relative border-b border-[#183B56]/15 bg-gradient-to-b from-white/60 to-[#F5EFEB] pt-20 pb-16 px-6 sm:px-12">
-        <div className="max-w-7xl mx-auto">
+      {/* ── BREADCRUMBS & TOP SUBNAV BAR ── */}
+      <div className="border-b border-[#183B56]/20 bg-white/70 backdrop-blur-xs sticky top-0 z-40 px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 py-3.5">
+        <div className="max-w-[1360px] mx-auto flex flex-wrap items-center justify-between gap-4">
           
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#5A7184]">
-              <button 
-                onClick={() => router.push("/")} 
-                className="hover:text-[#183B56] transition-colors border-none bg-transparent cursor-pointer p-0"
-              >
-                Weavly
-              </button>
-              <span>/</span>
-              <button 
-                onClick={() => router.push("/designer-studio")} 
-                className="hover:text-[#183B56] transition-colors border-none bg-transparent cursor-pointer p-0"
-              >
-                Designer Studio
-              </button>
-              <span>/</span>
-              <span className="text-[#183B56]">Creator Handbook</span>
-            </div>
-
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#183B56]/10 border border-[#183B56]/20 text-[#183B56] text-[11px] font-semibold">
-              <Award size={13} className="text-[#183B56]" />
-              <span>Official Atelier Creator Handbook</span>
-            </div>
+          {/* Breadcrumbs */}
+          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#5A7184]">
+            <button 
+              onClick={() => router.push("/")} 
+              className="hover:text-[#183B56] transition-colors border-none bg-transparent cursor-pointer p-0"
+            >
+              Weavly
+            </button>
+            <span>/</span>
+            <button 
+              onClick={() => router.push("/designer-studio")} 
+              className="hover:text-[#183B56] transition-colors border-none bg-transparent cursor-pointer p-0"
+            >
+              Designer Studio
+            </button>
+            <span>/</span>
+            <span className="text-[#183B56]">Creator Handbook</span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
-            <div className="lg:col-span-8 space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="h-px w-6 bg-[#183B56]" />
-                <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#183B56]">
-                  Atelier Enablement &amp; Publishing Guide
-                </p>
-              </div>
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold uppercase tracking-tight text-[#183B56] leading-[0.92]">
-                Creator Handbook &amp;<br />
-                <span className="font-serif italic font-normal lowercase text-[#183B56]/90">publishing standard.</span>
-              </h1>
-              <p className="text-[14px] sm:text-[15px] text-[#5A7184] leading-relaxed max-w-2xl font-medium pt-2">
-                Everything you need to know about joining the Weavly verified creator network, publishing your custom lookbooks, configuring bespoke sizing, and managing milestone escrow payouts.
-              </p>
-            </div>
-
-            <div className="lg:col-span-4 lg:text-right flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
+          {/* Quick Subnav Hub Links */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {QUICK_LINKS.map((link) => (
               <button
-                onClick={() => router.push("/become-designer")}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-xs rounded-xs cursor-pointer border border-[#183B56]"
+                key={link.path}
+                onClick={() => router.push(link.path)}
+                className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer border ${
+                  link.active
+                    ? "bg-[#183B56] text-white border-[#183B56] shadow-2xs"
+                    : "bg-white text-[#5A7184] border-[#183B56]/20 hover:border-[#183B56] hover:text-[#183B56]"
+                }`}
               >
-                <span>Apply as Designer</span>
-                <ArrowRight size={14} />
+                {link.label}
               </button>
-              <button
-                onClick={() => router.push("/designer/login")}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-[#F5EFEB] text-[#183B56] text-xs font-bold uppercase tracking-wider transition-all border border-[#183B56]/30 shadow-2xs rounded-xs cursor-pointer"
-              >
-                <span>Open Designer Studio</span>
-                <ChevronRight size={14} />
-              </button>
-            </div>
+            ))}
           </div>
 
         </div>
       </div>
 
-      {/* ── Interactive Workflow Switcher ── */}
-      <div className="border-b border-[#183B56]/15 bg-white/80 backdrop-blur-xs sticky top-0 z-30 py-4 px-6 sm:px-12 shadow-2xs">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+      <main className="max-w-[1360px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 py-8 sm:py-12 space-y-12 sm:space-y-16">
+
+        {/* ── 1. ARCHITECTURAL HERO BANNER ── */}
+        <section className="border border-[#183B56] bg-white p-8 sm:p-12 lg:p-16 shadow-xs relative overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            
+            <div className="lg:col-span-8 space-y-5">
+              <div className="flex items-center gap-2.5">
+                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-3 py-1 inline-block">
+                  Designer Enablement &amp; Publishing Standard
+                </span>
+                <span className="text-[10px] font-mono font-bold text-[#183B56] bg-[#DFE7ED] border border-[#183B56] px-2.5 py-1">
+                  OFFICIAL GUIDE
+                </span>
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold uppercase tracking-tight text-[#183B56] leading-[1.02]">
+                Creator Handbook &amp;<br />
+                <span className="text-[#5A7184]">Publishing Standard.</span>
+              </h1>
+
+              <p className="text-sm sm:text-base text-[#5A7184] leading-relaxed max-w-2xl font-medium">
+                Everything you need to know about joining the Weavly verified creator network, publishing your custom lookbooks, configuring bespoke sizing, and managing milestone escrow payouts.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <button
+                  onClick={() => router.push("/become-designer")}
+                  className="px-7 py-3.5 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider transition-all border border-[#183B56] cursor-pointer shadow-xs flex items-center gap-2"
+                >
+                  <span>Apply as a Designer</span>
+                  <ArrowRight size={14} />
+                </button>
+
+                <button
+                  onClick={() => router.push("/designer/login")}
+                  className="px-7 py-3.5 bg-[#F5EFEB] hover:bg-white text-[#183B56] text-xs font-bold uppercase tracking-wider transition-all border border-[#183B56] cursor-pointer shadow-xs flex items-center gap-2"
+                >
+                  <span>Open Designer Studio</span>
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+
+              {/* 4 Pillars Summary */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-[#183B56]/20">
+                <div>
+                  <span className="text-[9px] font-mono font-bold text-[#5A7184] uppercase block">COST TO JOIN</span>
+                  <div className="font-bold text-sm text-[#183B56]">Zero Fees</div>
+                  <div className="text-[11px] text-[#5A7184]">100% free application</div>
+                </div>
+                <div>
+                  <span className="text-[9px] font-mono font-bold text-[#5A7184] uppercase block">PAYMENT SAFETY</span>
+                  <div className="font-bold text-sm text-[#183B56]">100% Escrow</div>
+                  <div className="text-[11px] text-[#5A7184]">Guaranteed deposits</div>
+                </div>
+                <div>
+                  <span className="text-[9px] font-mono font-bold text-[#5A7184] uppercase block">TAILORING SIZING</span>
+                  <div className="font-bold text-sm text-[#183B56]">Bespoke Drape</div>
+                  <div className="text-[11px] text-[#5A7184]">Exact measurements</div>
+                </div>
+                <div>
+                  <span className="text-[9px] font-mono font-bold text-[#5A7184] uppercase block">WORLDWIDE REACH</span>
+                  <div className="font-bold text-sm text-[#183B56]">Global Patrons</div>
+                  <div className="text-[11px] text-[#5A7184]">100+ countries</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Editorial Lookbook Card */}
+            <div className="lg:col-span-4 flex justify-center">
+              <div className="w-full max-w-sm aspect-[4/5] bg-[#DFE7ED] border border-[#183B56] relative overflow-hidden shadow-xs group">
+                <img
+                  src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&q=80"
+                  alt="Designer Studio Craftsmanship"
+                  className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500"
+                />
+
+                <div className="absolute top-3 left-3 bg-white/95 border border-[#183B56] px-3 py-1 shadow-xs">
+                  <div className="text-[9px] uppercase tracking-wider text-[#5A7184] font-bold">VERIFIED DESIGNER</div>
+                  <div className="text-xs font-bold text-[#183B56]">Creator Standard</div>
+                </div>
+
+                <div className="absolute bottom-3 right-3 bg-[#183B56] text-white px-3.5 py-1.5 shadow-xs text-right">
+                  <div className="text-[9px] uppercase tracking-wider text-[#DFE7ED] font-mono">ESCROW VAULT</div>
+                  <div className="text-xs font-bold">100% Protected Payouts</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ── 2. WORKFLOW TAB SWITCHER BAR ── */}
+        <section className="border border-[#183B56] bg-white p-2 shadow-xs">
+          <div className="flex flex-col sm:flex-row gap-2">
             <button
               onClick={() => setActiveTab("become-creator")}
-              className={`px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer border flex items-center gap-2
-                ${activeTab === "become-creator"
+              className={`flex-1 py-3.5 px-6 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2.5 border ${
+                activeTab === "become-creator"
                   ? "bg-[#183B56] text-white border-[#183B56] shadow-xs"
-                  : "bg-white text-[#5A7184] border-[#183B56]/20 hover:border-[#183B56] hover:text-[#183B56]"}`}
+                  : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:bg-white hover:border-[#183B56]"
+              }`}
             >
-              <UserCheck size={14} />
-              <span>1. How to Become a Creator</span>
+              <UserCheck size={16} />
+              <span>Guide 1: How to Become a Verified Creator (4 Steps)</span>
             </button>
 
             <button
               onClick={() => setActiveTab("publish-design")}
-              className={`px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer border flex items-center gap-2
-                ${activeTab === "publish-design"
+              className={`flex-1 py-3.5 px-6 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2.5 border ${
+                activeTab === "publish-design"
                   ? "bg-[#183B56] text-white border-[#183B56] shadow-xs"
-                  : "bg-white text-[#5A7184] border-[#183B56]/20 hover:border-[#183B56] hover:text-[#183B56]"}`}
+                  : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:bg-white hover:border-[#183B56]"
+              }`}
             >
-              <Palette size={14} />
-              <span>2. How to Publish Your Design</span>
+              <Palette size={16} />
+              <span>Guide 2: How to Publish a Design in Your Studio (5 Steps)</span>
             </button>
           </div>
+        </section>
 
-          <div className="text-[11px] text-[#5A7184] font-medium hidden sm:block">
-            {activeTab === "become-creator" ? "4-Step Onboarding Workflow" : "5-Step Publishing Blueprint"}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Main Content Container ── */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 py-16">
-        
-        {/* TAB 1: HOW TO BECOME A CREATOR */}
+        {/* ── 3. GUIDE 1: HOW TO BECOME A CREATOR ── */}
         {activeTab === "become-creator" && (
-          <div className="space-y-16 animate-in fade-in duration-200">
+          <section className="space-y-8 animate-fadeIn">
             
-            <div className="max-w-3xl space-y-3">
-              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56]">
-                <span className="w-2 h-2 rounded-full bg-[#183B56]" />
-                <span>Path to Verification</span>
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#183B56] pb-4">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
+                  Path to Verification
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
+                  How to Become a Verified Designer on Weavly
+                </h2>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
-                How to Become a Verified Creator on Weavly
-              </h2>
-              <p className="text-[14px] text-[#5A7184] font-medium leading-relaxed">
-                Join our international community of premier fashion designers, master couturiers, and artisanal tailoring studios. Here is the straightforward 4-step path from application to verified storefront.
-              </p>
+              <span className="text-xs font-mono text-[#5A7184]">
+                4 STRAIGHTFORWARD STEPS • ZERO UPFRONT FEES
+              </span>
             </div>
 
-            {/* Steps Timeline Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {BECOME_CREATOR_STEPS.map((item, idx) => {
-                const IconComponent = item.icon;
+            {/* 4 Steps Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {BECOME_CREATOR_STEPS.map((step) => {
+                const StepIcon = step.icon;
                 return (
                   <div
-                    key={idx}
-                    className="border border-[#183B56]/20 rounded-2xl p-8 bg-white shadow-xs hover:border-[#183B56]/50 transition-all flex flex-col justify-between space-y-6 group"
+                    key={step.stepNumber}
+                    className="border border-[#183B56] bg-white p-7 sm:p-8 flex flex-col justify-between space-y-6 shadow-xs hover:bg-[#F5EFEB]/20 transition-colors"
                   >
                     <div className="space-y-4">
-                      {/* Step Header */}
+                      {/* Step Number & Icon */}
                       <div className="flex items-center justify-between">
-                        <div className="w-12 h-12 rounded-xl bg-[#183B56] text-white flex items-center justify-center font-bold font-mono text-base border border-[#183B56]">
-                          {item.stepNumber}
+                        <div className="w-10 h-10 border border-[#183B56] bg-[#183B56] text-white flex items-center justify-center font-mono font-bold text-sm">
+                          {step.stepNumber}
                         </div>
-                        <div className="w-10 h-10 rounded-full bg-[#E2EAEF] text-[#183B56] flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <IconComponent size={20} />
+                        <div className="w-10 h-10 border border-[#183B56] bg-[#DFE7ED] text-[#183B56] flex items-center justify-center">
+                          <StepIcon size={18} />
                         </div>
                       </div>
 
                       <div>
-                        <h3 className="text-xl font-bold uppercase tracking-tight text-[#183B56] mt-2">
-                          {item.title}
+                        <h3 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-[#183B56]">
+                          {step.title}
                         </h3>
-                        <p className="text-xs font-semibold text-[#183B56] mt-1">
-                          {item.headline}
+                        <p className="text-xs font-bold text-[#5A7184] uppercase tracking-wider mt-0.5">
+                          {step.headline}
                         </p>
-                        <p className="text-[13px] text-[#5A7184] leading-relaxed font-medium mt-3">
-                          {item.description}
+                        <p className="text-xs text-[#5A7184] leading-relaxed font-medium mt-3">
+                          {step.description}
                         </p>
                       </div>
 
                       {/* Checklist */}
-                      <div className="pt-2 border-t border-[#183B56]/10 space-y-2">
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-[#183B56]">Key Requirements:</p>
+                      <div className="pt-3 border-t border-[#183B56]/15 space-y-2">
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-[#183B56]">
+                          What to Expect:
+                        </p>
                         <ul className="space-y-1.5 p-0 m-0 list-none text-xs text-[#5A7184] font-medium">
-                          {item.details.map((d, dIdx) => (
+                          {step.details.map((detail, dIdx) => (
                             <li key={dIdx} className="flex items-start gap-2">
-                              <CheckCircle2 size={13} className="text-emerald-600 mt-0.5 shrink-0" />
-                              <span>{d}</span>
+                              <CheckCircle2 size={13} className="text-[#183B56] mt-0.5 shrink-0" />
+                              <span>{detail}</span>
                             </li>
                           ))}
                         </ul>
@@ -323,107 +396,113 @@ export default function CreatorGuidePage({ initialTab = "become-creator" }) {
                     </div>
 
                     {/* Pro Tip Box */}
-                    <div className="p-3.5 bg-[#F5EFEB] rounded-xl border border-[#183B56]/15 text-[11px] text-[#183B56] leading-relaxed">
-                      <span className="font-bold uppercase tracking-wider text-[9px] text-[#183B56] block mb-0.5">✦ Pro-Tip:</span>
-                      {item.tip}
+                    <div className="p-3.5 bg-[#F5EFEB] border border-[#183B56] text-[11px] text-[#183B56] leading-relaxed">
+                      <span className="font-bold uppercase tracking-wider text-[9px] text-[#183B56] block mb-0.5">
+                        ✦ Simple Tip:
+                      </span>
+                      {step.tip}
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* CTA Banner */}
-            <div className="bg-[#183B56] text-white rounded-3xl p-8 sm:p-12 shadow-md flex flex-col lg:flex-row items-center justify-between gap-8">
-              <div className="space-y-3 max-w-xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-semibold">
-                  <Sparkles size={13} className="text-[#38BDF8]" />
-                  <span>Zero Upfront Membership Fees</span>
-                </div>
+            {/* Bottom Step 1 Action Strip */}
+            <div className="border border-[#183B56] bg-[#183B56] text-white p-8 sm:p-12 shadow-xs flex flex-col lg:flex-row items-center justify-between gap-6">
+              <div className="space-y-2 max-w-xl">
+                <span className="text-[9px] font-mono font-bold tracking-[0.2em] uppercase text-[#DFE7ED] bg-white/10 px-2 py-0.5">
+                  FAST ONBOARDING
+                </span>
                 <h3 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight">
-                  Ready to launch your atelier on Weavly?
+                  Ready to launch your clothing brand on Weavly?
                 </h3>
-                <p className="text-xs sm:text-[13px] text-white/80 leading-relaxed font-normal">
-                  Applications take under 5 minutes to submit. Our curation team evaluates submissions within 48 hours.
+                <p className="text-xs text-white/80 leading-relaxed">
+                  Applications take under 5 minutes. Our curation team evaluates submissions within 48 hours with guaranteed response.
                 </p>
               </div>
 
               <button
                 onClick={() => router.push("/become-designer")}
-                className="shrink-0 px-8 py-4 bg-white text-[#183B56] hover:bg-[#F5EFEB] text-xs font-bold uppercase tracking-wider transition-all shadow-sm rounded-xs cursor-pointer border-none flex items-center gap-2"
+                className="px-8 py-4 bg-white hover:bg-[#F5EFEB] text-[#183B56] border border-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs flex items-center gap-2 shrink-0"
               >
                 <span>Start Creator Application</span>
                 <ArrowRight size={14} />
               </button>
             </div>
 
-          </div>
+          </section>
         )}
 
-        {/* TAB 2: HOW TO PUBLISH YOUR DESIGN */}
+        {/* ── 4. GUIDE 2: HOW TO PUBLISH A DESIGN ── */}
         {activeTab === "publish-design" && (
-          <div className="space-y-16 animate-in fade-in duration-200">
+          <section className="space-y-8 animate-fadeIn">
             
-            <div className="max-w-3xl space-y-3">
-              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56]">
-                <span className="w-2 h-2 rounded-full bg-[#183B56]" />
-                <span>Lookbook &amp; Design Architecture</span>
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#183B56] pb-4">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
+                  Studio Blueprint
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
+                  How to Publish Your Design in the Designer Studio
+                </h2>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
-                How to Publish Your Design in the Designer Studio
-              </h2>
-              <p className="text-[14px] text-[#5A7184] font-medium leading-relaxed">
-                Publishing garments on Weavly connects your bespoke pieces to high-intent luxury shoppers and integrates your lookbooks directly into Zyra's virtual styling engine.
-              </p>
+              <span className="text-xs font-mono text-[#5A7184]">
+                5 STEP BLUEPRINT • STEP-BY-STEP WORKFLOW
+              </span>
             </div>
 
-            {/* 5-Step Publishing Timeline */}
-            <div className="space-y-8">
-              {PUBLISH_DESIGN_STEPS.map((item, idx) => {
-                const IconComponent = item.icon;
+            {/* 5 Steps Stack */}
+            <div className="space-y-6">
+              {PUBLISH_DESIGN_STEPS.map((step) => {
+                const StepIcon = step.icon;
                 return (
                   <div
-                    key={idx}
-                    className="border border-[#183B56]/20 rounded-2xl p-8 bg-white shadow-xs hover:border-[#183B56]/50 transition-all grid grid-cols-1 lg:grid-cols-12 gap-8 items-start group"
+                    key={step.stepNumber}
+                    className="border border-[#183B56] bg-white p-7 sm:p-8 shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
                   >
-                    {/* Step Number & Title */}
+                    {/* Left 5 Cols: Step Header & Description */}
                     <div className="lg:col-span-5 space-y-3">
                       <div className="flex items-center gap-3">
-                        <span className="w-10 h-10 rounded-lg bg-[#183B56] text-white flex items-center justify-center font-bold font-mono text-sm border border-[#183B56]">
-                          {item.stepNumber}
+                        <span className="w-10 h-10 border border-[#183B56] bg-[#183B56] text-white flex items-center justify-center font-mono font-bold text-sm">
+                          {step.stepNumber}
                         </span>
-                        <div className="w-8 h-8 rounded-full bg-[#E2EAEF] text-[#183B56] flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <IconComponent size={16} />
+                        <div className="w-10 h-10 border border-[#183B56] bg-[#DFE7ED] text-[#183B56] flex items-center justify-center">
+                          <StepIcon size={18} />
                         </div>
                       </div>
 
-                      <h3 className="text-xl font-bold uppercase tracking-tight text-[#183B56]">
-                        {item.title}
+                      <h3 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-[#183B56]">
+                        {step.title}
                       </h3>
-                      <p className="text-xs font-semibold text-[#183B56]">
-                        {item.headline}
+                      <p className="text-xs font-bold text-[#5A7184] uppercase tracking-wider">
+                        {step.headline}
                       </p>
-                      <p className="text-[13px] text-[#5A7184] leading-relaxed font-medium">
-                        {item.description}
+                      <p className="text-xs text-[#5A7184] leading-relaxed font-medium">
+                        {step.description}
                       </p>
                     </div>
 
-                    {/* Step Details & Pro-Tip */}
-                    <div className="lg:col-span-7 space-y-4 lg:border-l lg:border-[#183B56]/15 lg:pl-8">
+                    {/* Right 7 Cols: Checklist & Curation Tip */}
+                    <div className="lg:col-span-7 space-y-4 lg:border-l lg:border-[#183B56]/20 lg:pl-8">
                       <div className="space-y-2">
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-[#183B56]">Action Checklist:</p>
-                        <ul className="space-y-2 p-0 m-0 list-none text-xs text-[#5A7184] font-medium">
-                          {item.details.map((d, dIdx) => (
-                            <li key={dIdx} className="flex items-start gap-2.5">
-                              <CheckCircle2 size={14} className="text-emerald-600 mt-0.5 shrink-0" />
-                              <span>{d}</span>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-[#183B56]">
+                          Checklist Items:
+                        </p>
+                        <ul className="space-y-1.5 p-0 m-0 list-none text-xs text-[#5A7184] font-medium">
+                          {step.details.map((detail, dIdx) => (
+                            <li key={dIdx} className="flex items-start gap-2">
+                              <CheckCircle2 size={13} className="text-[#183B56] mt-0.5 shrink-0" />
+                              <span>{detail}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
 
-                      <div className="p-4 bg-[#F5EFEB] rounded-xl border border-[#183B56]/15 text-[11px] text-[#183B56] leading-relaxed">
-                        <span className="font-bold uppercase tracking-wider text-[9px] text-[#183B56] block mb-0.5">✦ Curation Best Practice:</span>
-                        {item.tip}
+                      <div className="p-3.5 bg-[#F5EFEB] border border-[#183B56] text-[11px] text-[#183B56] leading-relaxed">
+                        <span className="font-bold uppercase tracking-wider text-[9px] text-[#183B56] block mb-0.5">
+                          ✦ Best Practice:
+                        </span>
+                        {step.tip}
                       </div>
                     </div>
                   </div>
@@ -431,25 +510,114 @@ export default function CreatorGuidePage({ initialTab = "become-creator" }) {
               })}
             </div>
 
-            {/* Studio Action Strip */}
-            <div className="border border-[#183B56]/30 bg-white rounded-2xl p-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6">
+            {/* Bottom Launch Strip */}
+            <div className="border border-[#183B56] bg-white p-8 sm:p-10 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6">
               <div>
-                <h4 className="text-base font-bold uppercase text-[#183B56]">Ready to draft your next collection piece?</h4>
-                <p className="text-xs text-[#5A7184] font-medium mt-1">Open your Designer Studio dashboard to begin uploading garments, sketches, and bespoke options.</p>
+                <h4 className="text-base font-bold uppercase text-[#183B56]">
+                  Ready to draft your next collection piece?
+                </h4>
+                <p className="text-xs text-[#5A7184] font-medium mt-1">
+                  Open your Designer Studio dashboard to begin uploading garments, sketches, and bespoke options.
+                </p>
               </div>
+
               <button
                 onClick={() => router.push("/designer/login")}
-                className="shrink-0 px-6 py-3.5 bg-[#183B56] text-white hover:bg-[#102A43] text-xs font-bold uppercase tracking-wider transition-all rounded-xs cursor-pointer border-none flex items-center gap-2"
+                className="px-8 py-3.5 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs flex items-center gap-2 shrink-0"
               >
                 <span>Launch Designer Studio</span>
                 <ArrowRight size={14} />
               </button>
             </div>
 
-          </div>
+          </section>
         )}
 
-      </div>
+        {/* ── 5. CREATOR HUB DIRECTORY OF LINKS ── */}
+        <section className="border border-[#183B56] bg-[#F5EFEB] p-8 sm:p-12 shadow-xs space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#183B56]/20 pb-4">
+            <div>
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
+                Creator Ecosystem
+              </span>
+              <h3 className="text-xl font-bold uppercase text-[#183B56]">
+                All Creator Hub Pages &amp; Direct Portals
+              </h3>
+            </div>
+            <span className="text-xs font-mono text-[#5A7184]">
+              OFFICIAL HUB DIRECTORY
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              {
+                title: "Apply as a Designer",
+                path: "/become-designer",
+                desc: "Learn about the Designer Pass, zero listing fees, and submit your portfolio.",
+                icon: Scissors
+              },
+              {
+                title: "Creator Registration",
+                path: "/designer/register",
+                desc: "Direct registration portal for approved fashion artisans and brands.",
+                icon: UserCheck
+              },
+              {
+                title: "Designer Studio Portal",
+                path: "/designer/login",
+                desc: "Manage live orders, lookbooks, commission queues, and bank payouts.",
+                icon: Palette
+              },
+              {
+                title: "Verified Designers Directory",
+                path: "/designers",
+                desc: "Explore all verified fashion creators and their bespoke collections.",
+                icon: Globe
+              },
+              {
+                title: "Creator Guide (This Page)",
+                path: "/creator-guide",
+                desc: "Official handbook and publishing standard for all Weavly creators.",
+                icon: BookOpen
+              },
+              {
+                title: "Concierge & Support",
+                path: "/account",
+                desc: "Direct contact with founder concierge at chokkapusaketh@gmail.com.",
+                icon: ShieldCheck
+              }
+            ].map((portal, idx) => {
+              const PortalIcon = portal.icon;
+              return (
+                <div
+                  key={idx}
+                  onClick={() => router.push(portal.path)}
+                  className="border border-[#183B56] bg-white p-5 flex flex-col justify-between space-y-3 cursor-pointer hover:bg-[#183B56] hover:text-white group transition-all shadow-2xs"
+                >
+                  <div className="space-y-2">
+                    <div className="w-8 h-8 border border-[#183B56] bg-[#DFE7ED] group-hover:bg-white flex items-center justify-center text-[#183B56]">
+                      <PortalIcon size={16} />
+                    </div>
+                    <h4 className="text-sm font-bold uppercase group-hover:text-white text-[#183B56]">
+                      {portal.title}
+                    </h4>
+                    <p className="text-xs text-[#5A7184] group-hover:text-[#DFE7ED] font-medium leading-relaxed">
+                      {portal.desc}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#183B56]/15 group-hover:border-white/20 text-[10px] font-bold uppercase tracking-wider flex items-center justify-between text-[#183B56] group-hover:text-white">
+                    <span>Visit Page</span>
+                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+      </main>
     </div>
   );
 }

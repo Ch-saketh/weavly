@@ -60,20 +60,20 @@ export default function PublicDesignersPage() {
     <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
       <main className="max-w-[1360px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 py-8 sm:py-12 space-y-10 sm:space-y-14">
 
-        {/* ── EDITORIAL ATELIER HEADER ── */}
+        {/* ── EDITORIAL DESIGNER HEADER ── */}
         <section className="border border-[#183B56] bg-white p-6 sm:p-10 md:p-12 shadow-xs">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div className="space-y-3 max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#F5EFEB] border border-[#183B56] text-[10px] font-bold tracking-[0.2em] uppercase text-[#183B56]">
                 <Sparkles size={12} />
-                <span>The Weavly Atelier Guild</span>
+                <span>The Weavly Designer Guild</span>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#183B56] leading-[1.08]">
                 Discover Independent <br />
                 Fashion Creators &amp; Tailors.
               </h1>
               <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed font-medium">
-                Connect directly with verified custom designers, bespoke couturiers, and artisanal pattern-makers. Commission original 1-of-1 silhouettes handcrafted to your exact proportions.
+                Connect directly with verified custom designers, bespoke creators, and artisanal pattern-makers. Commission original 1-of-1 silhouettes handcrafted to your exact proportions.
               </p>
             </div>
 
@@ -96,22 +96,22 @@ export default function PublicDesignersPage() {
           </div>
         </section>
 
-        {/* ── FOUNDING ATELIER ONBOARDING PHASE STATE (When no designers onboarded yet) ── */}
+        {/* ── FOUNDING DESIGNER ONBOARDING PHASE STATE (When no designers onboarded yet) ── */}
         {!loading && designers.length === 0 && (
           <div className="space-y-10">
             
             {/* Curation Announcement Banner */}
-            <div className="border border-[#183B56] bg-[#183B56] text-white p-8 sm:p-12 shadow-sm rounded-2xl relative overflow-hidden">
+            <div className="border border-[#183B56] bg-[#183B56] text-white p-8 sm:p-12 shadow-xs relative overflow-hidden">
               <div className="max-w-2xl space-y-4 relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 border border-white/20 text-[10px] font-bold tracking-wider uppercase text-[#38BDF8] rounded-full">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 border border-white/20 text-[10px] font-bold tracking-wider uppercase text-[#DFE7ED]">
                   <Award size={13} />
                   <span>Founding Cohort Curation in Progress</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight leading-snug">
-                  The Atelier is vetting its inaugural class of verified couturiers.
+                  Weavly is vetting its inaugural class of verified fashion designers.
                 </h2>
                 <p className="text-xs sm:text-[13px] text-white/80 leading-relaxed font-normal">
-                  Weavly is currently onboarding independent fashion designers, master tailors, and luxury ateliers. Once creator portfolios complete our craft &amp; authenticity review, their bespoke lookbooks will debut here.
+                  Weavly is currently onboarding independent fashion designers, master tailors, and luxury creators. Once creator portfolios complete our craft &amp; authenticity review, their bespoke lookbooks will debut here.
                 </p>
                 <div className="pt-2 flex flex-wrap items-center gap-4 text-xs font-semibold text-white/90">
                   <span className="flex items-center gap-1.5">
@@ -134,9 +134,9 @@ export default function PublicDesignersPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
               {/* Card 1: Apply to Join */}
-              <div className="border border-[#183B56]/30 bg-white p-6 sm:p-8 rounded-xl shadow-xs space-y-4 flex flex-col justify-between hover:border-[#183B56] transition-colors">
+              <div className="border border-[#183B56] bg-white p-6 sm:p-8 shadow-xs space-y-4 flex flex-col justify-between hover:bg-[#F5EFEB]/30 transition-colors">
                 <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#183B56] text-white flex items-center justify-center font-bold">
+                  <div className="w-10 h-10 border border-[#183B56] bg-[#183B56] text-white flex items-center justify-center font-bold">
                     <UserPlus size={18} />
                   </div>
                   <h3 className="text-base font-bold uppercase tracking-tight text-[#183B56]">
@@ -148,7 +148,7 @@ export default function PublicDesignersPage() {
                 </div>
                 <button
                   onClick={() => router.push("/become-designer")}
-                  className="w-full py-3 px-4 bg-[#183B56] hover:bg-[#102A43] text-white text-[11px] font-bold uppercase tracking-wider transition-all border-none cursor-pointer flex items-center justify-center gap-2 mt-2"
+                  className="w-full py-3 px-4 bg-[#183B56] hover:bg-[#102A43] text-white text-[11px] font-bold uppercase tracking-wider transition-all border border-[#183B56] cursor-pointer flex items-center justify-center gap-2 mt-2 shadow-xs"
                 >
                   <span>Start Application</span>
                   <ArrowRight size={13} />
@@ -156,9 +156,9 @@ export default function PublicDesignersPage() {
               </div>
 
               {/* Card 2: Publishing Guide */}
-              <div className="border border-[#183B56]/30 bg-white p-6 sm:p-8 rounded-xl shadow-xs space-y-4 flex flex-col justify-between hover:border-[#183B56] transition-colors">
+              <div className="border border-[#183B56] bg-white p-6 sm:p-8 shadow-xs space-y-4 flex flex-col justify-between hover:bg-[#F5EFEB]/30 transition-colors">
                 <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#183B56] text-white flex items-center justify-center font-bold">
+                  <div className="w-10 h-10 border border-[#183B56] bg-[#183B56] text-white flex items-center justify-center font-bold">
                     <BookOpen size={18} />
                   </div>
                   <h3 className="text-base font-bold uppercase tracking-tight text-[#183B56]">
@@ -170,7 +170,7 @@ export default function PublicDesignersPage() {
                 </div>
                 <button
                   onClick={() => router.push("/how-to-publish")}
-                  className="w-full py-3 px-4 bg-white hover:bg-[#F5EFEB] text-[#183B56] text-[11px] font-bold uppercase tracking-wider transition-all border border-[#183B56] cursor-pointer flex items-center justify-center gap-2 mt-2"
+                  className="w-full py-3 px-4 bg-white hover:bg-[#F5EFEB] text-[#183B56] text-[11px] font-bold uppercase tracking-wider transition-all border border-[#183B56] cursor-pointer flex items-center justify-center gap-2 mt-2 shadow-xs"
                 >
                   <span>View Publishing Guide</span>
                   <ArrowRight size={13} />
@@ -178,9 +178,9 @@ export default function PublicDesignersPage() {
               </div>
 
               {/* Card 3: Custom Garment Commission */}
-              <div className="border border-[#183B56]/30 bg-white p-6 sm:p-8 rounded-xl shadow-xs space-y-4 flex flex-col justify-between hover:border-[#183B56] transition-colors">
+              <div className="border border-[#183B56] bg-white p-6 sm:p-8 shadow-xs space-y-4 flex flex-col justify-between hover:bg-[#F5EFEB]/30 transition-colors">
                 <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#183B56] text-white flex items-center justify-center font-bold">
+                  <div className="w-10 h-10 border border-[#183B56] bg-[#183B56] text-white flex items-center justify-center font-bold">
                     <Scissors size={18} />
                   </div>
                   <h3 className="text-base font-bold uppercase tracking-tight text-[#183B56]">
@@ -192,7 +192,7 @@ export default function PublicDesignersPage() {
                 </div>
                 <button
                   onClick={() => router.push("/custom-design")}
-                  className="w-full py-3 px-4 bg-white hover:bg-[#F5EFEB] text-[#183B56] text-[11px] font-bold uppercase tracking-wider transition-all border border-[#183B56] cursor-pointer flex items-center justify-center gap-2 mt-2"
+                  className="w-full py-3 px-4 bg-white hover:bg-[#F5EFEB] text-[#183B56] text-[11px] font-bold uppercase tracking-wider transition-all border border-[#183B56] cursor-pointer flex items-center justify-center gap-2 mt-2 shadow-xs"
                 >
                   <span>Submit Commission</span>
                   <ArrowRight size={13} />
