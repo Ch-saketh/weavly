@@ -112,7 +112,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = (redirectToOnboarding = true) => {
     // 1. Synchronously remove authentication and user state
     removeToken();
     setUserRaw(null);
@@ -136,6 +136,13 @@ export const AuthProvider = ({ children }) => {
     try {
       apiLogout().catch((err) => console.warn("Background API logout:", err?.message));
     } catch (e) {}
+
+    // 4. Force redirect to guest onboarding page if specified
+    if (redirectToOnboarding && typeof window !== "undefined") {
+      if (window.location.pathname !== "/") {
+        window.location.href = "/";
+      }
+    }
   };
 
   const refreshUser = async () => {
