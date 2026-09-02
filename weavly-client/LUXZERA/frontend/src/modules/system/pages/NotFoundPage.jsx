@@ -53,11 +53,11 @@ export default function NotFoundPage({ isErrorFallback = false }) {
             className="relative flex flex-col items-center justify-center transition-transform duration-150 ease-out"
             style={{ transform: `translate(${mousePos.x * 24}px, ${mousePos.y * 24}px)` }}
           >
-            {/* Authentic Logo */}
+            {/* Authentic Zyra Mascot Symbol */}
             <img 
-              src="/logo.png" 
-              alt="Weavly Symbol" 
-              className="w-28 h-28 object-contain relative z-10"
+              src="/zyra.png" 
+              alt="Zyra Mascot" 
+              className="w-28 h-28 object-contain relative z-10 select-none pointer-events-none drop-shadow-sm"
             />
 
             {/* Facial Expressions */}
