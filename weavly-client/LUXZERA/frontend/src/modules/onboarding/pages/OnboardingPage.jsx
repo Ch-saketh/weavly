@@ -33,6 +33,7 @@ import { saveFitData, getFitData } from "@/modules/profile/services/userFitDataS
 import { updateProfile } from "@/modules/profile/services/userService";
 import { formatErrorMessage } from "@/shared/utils/errorUtils";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
+import Stepper, { Step } from "@/shared/components/ui/Stepper";
 
 // ── Editorial Look References for Visual Style Discovery (Step 4) ────────────
 const STYLE_DISCOVERY_LOOKS = [
@@ -64,9 +65,9 @@ const STYLE_DISCOVERY_LOOKS = [
     id: "look-4",
     title: "Deconstructed Classic",
     aesthetic: "Neo-Sartorial",
-    tags: ["#TexturedWool", "#HighWaisted", "#Atelier"],
+    tags: ["#TexturedWool", "#HighWaisted", "#Designer"],
     image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80",
-    desc: "Classic British tailoring reworked with asymmetrical cuts."
+    desc: "Classic tailoring reworked with modern asymmetrical cuts."
   },
   {
     id: "look-5",
@@ -74,12 +75,12 @@ const STYLE_DISCOVERY_LOOKS = [
     aesthetic: "Effortless Studio",
     tags: ["#Linen", "#EarthTones", "#CleanCut"],
     image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&q=80",
-    desc: "Raw selvedge textures paired with relaxed garment-dyed cottons."
+    desc: "Raw textures paired with relaxed garment-dyed cottons."
   },
   {
     id: "look-6",
     title: "Sculptural Avant-Garde",
-    aesthetic: "Experimental Atelier",
+    aesthetic: "Experimental Designer",
     tags: ["#Asymmetrical", "#Sculpted", "#Bold"],
     image: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=800&q=80",
     desc: "Voluminous geometric silhouettes designed for statement occasions."
@@ -373,8 +374,8 @@ export default function OnboardingPage() {
                     alt="Editorial Model"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute bottom-4 left-4 bg-black text-white text-[9px] font-mono font-bold uppercase tracking-widest px-2.5 py-1">
-                    BESPOKE ATELIER
+                  <div className="absolute bottom-4 left-4 bg-[#183B56] text-white text-[9px] font-mono font-bold uppercase tracking-widest px-2.5 py-1">
+                    BESPOKE DESIGNER
                   </div>
                 </div>
 
@@ -404,333 +405,352 @@ export default function OnboardingPage() {
         )}
 
         {/* ═══════════════════════════════════════════════════════════════════
-            STEP 1: STYLE IDENTITY (Visual Typographic Selections)
+            STEPS 1–4: INTEGRATED STEPPER FORM
             ═══════════════════════════════════════════════════════════════════ */}
-        {step === 1 && (
-          <div className="max-w-5xl mx-auto w-full space-y-10">
-            <div className="space-y-3 text-center sm:text-left">
-              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#4B5563] bg-[#DCE2DC] px-3 py-1 inline-block">
-                01. STYLE IDENTITY
-              </span>
-              <h2 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#111827]">
-                How would you describe your style?
-              </h2>
-              <p className="text-sm sm:text-base text-[#4B5563] font-medium max-w-xl">
-                Select one or more fashion aesthetics that reflect how you dress or aspire to dress.
-              </p>
-            </div>
-
-            {/* Visual Choice Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {STYLE_OPTIONS.map((style) => {
-                const isSelected = formData.preferredStyles.includes(style.id);
-                return (
-                  <div
-                    key={style.id}
-                    onClick={() => toggleArrayItem("preferredStyles", style.id)}
-                    className={`p-6 border transition-all duration-200 cursor-pointer flex flex-col justify-between min-h-[160px] relative ${
-                      isSelected
-                        ? "bg-black text-white border-black shadow-md scale-[1.02]"
-                        : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider opacity-60">
-                        {isSelected ? "SELECTED" : "AESTHETIC"}
-                      </span>
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                        isSelected ? "bg-white border-white text-black" : "border-[#CCD4CC]"
-                      }`}>
-                        {isSelected && <Check size={12} strokeWidth={3} />}
-                      </div>
-                    </div>
-
-                    <div className="space-y-1.5 mt-4">
-                      <h3 className="text-lg font-extrabold uppercase tracking-tight">{style.label}</h3>
-                      <p className={`text-[11px] leading-relaxed font-medium ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
-                        {style.mood}
-                      </p>
-                    </div>
+        {step >= 1 && step <= 4 && (
+          <div className="max-w-5xl mx-auto w-full">
+            <Stepper
+              initialStep={step}
+              onStepChange={(newStep) => {
+                setStep(newStep);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              onFinalStepCompleted={() => {
+                setStep(5);
+                startZyraAnalysis();
+              }}
+              onBackToStart={() => {
+                setStep(0);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              backButtonText="Back"
+              nextButtonText="Continue"
+              className="w-full"
+            >
+              {/* ── STEP 1: STYLE IDENTITY ── */}
+              <Step>
+                <div className="space-y-8 p-1 sm:p-3">
+                  <div className="space-y-2 text-center sm:text-left">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#5A7184] bg-[#DFE7ED] px-2.5 py-1 inline-block border border-[#183B56]/20">
+                      01. STYLE IDENTITY
+                    </span>
+                    <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
+                      How would you describe your style?
+                    </h2>
+                    <p className="text-xs sm:text-sm text-[#5A7184] font-medium max-w-xl">
+                      Select one or more fashion aesthetics that reflect how you dress or aspire to dress.
+                    </p>
                   </div>
-                );
-              })}
-            </div>
 
-            {/* Gender Expression Filter */}
-            <div className="pt-6 border-t border-[#D2D8D2] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <span className="text-xs font-bold uppercase text-[#111827] block">Preferred Collection Filter</span>
-                <span className="text-xs text-[#4B5563]">Tailors lookbook recommendations to your wardrobe.</span>
-              </div>
-              <div className="flex items-center gap-2">
-                {["Women", "Men", "Unisex"].map((g) => (
-                  <button
-                    key={g}
-                    onClick={() => setFormData({ ...formData, gender: g })}
-                    className={`px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${
-                      formData.gender === g
-                        ? "bg-black text-white border-black"
-                        : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
-                    }`}
-                  >
-                    {g}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+                  {/* Visual Choice Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
+                    {STYLE_OPTIONS.map((style) => {
+                      const isSelected = formData.preferredStyles.includes(style.id);
+                      return (
+                        <div
+                          key={style.id}
+                          onClick={() => toggleArrayItem("preferredStyles", style.id)}
+                          className={`p-5 border transition-all duration-200 cursor-pointer flex flex-col justify-between min-h-[150px] relative ${
+                            isSelected
+                              ? "bg-[#183B56] text-white border-[#183B56] shadow-sm scale-[1.01]"
+                              : "bg-[#F5EFEB]/50 text-[#183B56] border-[#183B56]/30 hover:border-[#183B56] hover:bg-white"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-mono font-bold uppercase tracking-wider opacity-70">
+                              {isSelected ? "SELECTED" : "AESTHETIC"}
+                            </span>
+                            <div className={`w-4.5 h-4.5 rounded-full border flex items-center justify-center ${
+                              isSelected ? "bg-white border-white text-[#183B56]" : "border-[#183B56]/40"
+                            }`}>
+                              {isSelected && <Check size={11} strokeWidth={3} />}
+                            </div>
+                          </div>
 
-        {/* ═══════════════════════════════════════════════════════════════════
-            STEP 2: FIT & BODY PROFILE (Non-Clinical Fashion Profiling)
-            ═══════════════════════════════════════════════════════════════════ */}
-        {step === 2 && (
-          <div className="max-w-5xl mx-auto w-full space-y-10">
-            <div className="space-y-3 text-center sm:text-left">
-              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#4B5563] bg-[#DCE2DC] px-3 py-1 inline-block">
-                02. SILHOUETTE &amp; FIT
-              </span>
-              <h2 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#111827]">
-                How do you like your clothes to fit?
-              </h2>
-              <p className="text-sm sm:text-base text-[#4B5563] font-medium max-w-xl">
-                We calibrate garment drape and bespoke tolerances according to your preferred comfort.
-              </p>
-            </div>
-
-            {/* 4 Silhouette Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {FIT_OPTIONS.map((fit) => {
-                const isSelected = formData.fitPreferences.includes(fit.id);
-                return (
-                  <div
-                    key={fit.id}
-                    onClick={() => setFormData({ ...formData, fitPreferences: [fit.id] })}
-                    className={`p-6 border transition-all duration-200 cursor-pointer flex flex-col justify-between min-h-[180px] ${
-                      isSelected
-                        ? "bg-black text-white border-black shadow-md scale-[1.02]"
-                        : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider opacity-60">
-                        DRAPE
-                      </span>
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                        isSelected ? "bg-white border-white text-black" : "border-[#CCD4CC]"
-                      }`}>
-                        {isSelected && <Check size={12} strokeWidth={3} />}
-                      </div>
-                    </div>
-
-                    <div className="space-y-2 mt-4">
-                      <h3 className="text-lg font-extrabold uppercase tracking-tight">{fit.label}</h3>
-                      <p className={`text-[11px] leading-relaxed font-medium ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
-                        {fit.desc}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Height & Standard Size Profile Strip */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-[#D2D8D2]">
-              {/* Height Selection */}
-              <div className="bg-white p-6 border border-[#D2D8D2] space-y-3">
-                <span className="text-xs font-bold uppercase text-[#111827] block">Approximate Height</span>
-                <div className="grid grid-cols-3 gap-2">
-                  {["Under 160 cm", "160–169 cm", "170–179 cm", "180–189 cm", "190+ cm"].map((h) => (
-                    <button
-                      key={h}
-                      onClick={() => setFormData({ ...formData, heightRange: h })}
-                      className={`py-2 px-3 text-[10px] font-bold uppercase tracking-wider transition-all border ${
-                        formData.heightRange === h
-                          ? "bg-black text-white border-black"
-                          : "bg-[#E5EAE5] text-[#111827] border-[#D2D8D2] hover:bg-white"
-                      }`}
-                    >
-                      {h}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Standard Clothing Size */}
-              <div className="bg-white p-6 border border-[#D2D8D2] space-y-3">
-                <span className="text-xs font-bold uppercase text-[#111827] block">Typical Size</span>
-                <div className="flex flex-wrap gap-2">
-                  {["XS", "S", "M", "L", "XL", "XXL", "BESPOKE"].map((sz) => (
-                    <button
-                      key={sz}
-                      onClick={() => setFormData({ ...formData, clothingSize: sz })}
-                      className={`w-12 h-10 text-xs font-bold uppercase transition-all border flex items-center justify-center ${
-                        formData.clothingSize === sz
-                          ? "bg-black text-white border-black"
-                          : "bg-[#E5EAE5] text-[#111827] border-[#D2D8D2] hover:bg-white"
-                      }`}
-                    >
-                      {sz}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ═══════════════════════════════════════════════════════════════════
-            STEP 3: FASHION PREFERENCES (Categories & Color Palettes)
-            ═══════════════════════════════════════════════════════════════════ */}
-        {step === 3 && (
-          <div className="max-w-5xl mx-auto w-full space-y-10">
-            <div className="space-y-3 text-center sm:text-left">
-              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#4B5563] bg-[#DCE2DC] px-3 py-1 inline-block">
-                03. WARDROBE PREFERENCES
-              </span>
-              <h2 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#111827]">
-                What do you love wearing?
-              </h2>
-              <p className="text-sm sm:text-base text-[#4B5563] font-medium max-w-xl">
-                Choose the pieces you wear most frequently, plus your signature color direction.
-              </p>
-            </div>
-
-            {/* Category Preferences */}
-            <div className="space-y-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#111827] block">
-                Favorite Categories (Select All That Apply)
-              </span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {CATEGORY_OPTIONS.map((cat) => {
-                  const isSelected = formData.preferredClothingTypes.includes(cat.id);
-                  return (
-                    <div
-                      key={cat.id}
-                      onClick={() => toggleArrayItem("preferredClothingTypes", cat.id)}
-                      className={`p-4 border transition-all cursor-pointer flex items-center justify-between ${
-                        isSelected
-                          ? "bg-black text-white border-black shadow-xs font-bold"
-                          : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC] font-medium"
-                      }`}
-                    >
-                      <span className="text-xs uppercase">{cat.label}</span>
-                      {isSelected && <Check size={14} />}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Color Palette Direction */}
-            <div className="space-y-4 pt-6 border-t border-[#D2D8D2]">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#111827] block">
-                Color Palette Direction
-              </span>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {PALETTE_OPTIONS.map((pal) => {
-                  const isSelected = formData.preferredPalette === pal.id;
-                  return (
-                    <div
-                      key={pal.id}
-                      onClick={() => setFormData({ ...formData, preferredPalette: pal.id })}
-                      className={`p-5 border transition-all cursor-pointer space-y-3 ${
-                        isSelected
-                          ? "bg-black text-white border-black shadow-md scale-[1.02]"
-                          : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-extrabold uppercase">{pal.label}</span>
-                        <div className="flex items-center gap-1.5">
-                          {pal.swatches.map((c, i) => (
-                            <span
-                              key={i}
-                              className="w-3.5 h-3.5 rounded-full border border-black/20"
-                              style={{ backgroundColor: c }}
-                            />
-                          ))}
+                          <div className="space-y-1 mt-3">
+                            <h3 className="text-base font-bold uppercase tracking-tight">{style.label}</h3>
+                            <p className={`text-[11px] leading-relaxed font-medium ${isSelected ? "text-[#DFE7ED]" : "text-[#5A7184]"}`}>
+                              {style.mood}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <p className={`text-[11px] leading-relaxed font-medium ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
-                        {pal.desc}
-                      </p>
+                      );
+                    })}
+                  </div>
+
+                  {/* Gender Expression Filter */}
+                  <div className="pt-5 border-t border-[#183B56]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <span className="text-xs font-bold uppercase text-[#183B56] block">Preferred Collection Filter</span>
+                      <span className="text-[11px] text-[#5A7184]">Tailors lookbook recommendations to your wardrobe.</span>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
+                    <div className="flex items-center gap-2">
+                      {["Women", "Men", "Unisex"].map((g) => (
+                        <button
+                          key={g}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, gender: g })}
+                          className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${
+                            formData.gender === g
+                              ? "bg-[#183B56] text-white border-[#183B56]"
+                              : "bg-white text-[#183B56] border-[#183B56]/30 hover:border-[#183B56]"
+                          }`}
+                        >
+                          {g}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Step>
 
-        {/* ═══════════════════════════════════════════════════════════════════
-            STEP 4: VISUAL STYLE DISCOVERY ("Which looks feel most like you?")
-            ═══════════════════════════════════════════════════════════════════ */}
-        {step === 4 && (
-          <div className="max-w-5xl mx-auto w-full space-y-10">
-            <div className="space-y-3 text-center sm:text-left">
-              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#4B5563] bg-[#DCE2DC] px-3 py-1 inline-block">
-                04. VISUAL STYLE DISCOVERY
-              </span>
-              <h2 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#111827]">
-                Which looks feel most like you?
-              </h2>
-              <p className="text-sm sm:text-base text-[#4B5563] font-medium max-w-xl">
-                Select visual style inspirations. Zyra uses these compositions to extract visual texture and aesthetic vector signals.
-              </p>
-            </div>
+              {/* ── STEP 2: SILHOUETTE & FIT ── */}
+              <Step>
+                <div className="space-y-8 p-1 sm:p-3">
+                  <div className="space-y-2 text-center sm:text-left">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#5A7184] bg-[#DFE7ED] px-2.5 py-1 inline-block border border-[#183B56]/20">
+                      02. SILHOUETTE &amp; FIT
+                    </span>
+                    <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
+                      How do you like your clothes to fit?
+                    </h2>
+                    <p className="text-xs sm:text-sm text-[#5A7184] font-medium max-w-xl">
+                      We calibrate garment drape and tolerances according to your preferred comfort.
+                    </p>
+                  </div>
 
-            {/* 6 Editorial Look Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {STYLE_DISCOVERY_LOOKS.map((look) => {
-                const isSelected = formData.selectedLooks.includes(look.id);
-                return (
-                  <div
-                    key={look.id}
-                    onClick={() => toggleArrayItem("selectedLooks", look.id)}
-                    className={`bg-white border transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between group ${
-                      isSelected
-                        ? "border-black shadow-lg ring-2 ring-black"
-                        : "border-[#D2D8D2] hover:border-black/50 shadow-xs"
-                    }`}
-                  >
-                    {/* Look Image with Status Badge */}
-                    <div className="relative aspect-[3/4] bg-[#DCE2DC] overflow-hidden">
-                      <img
-                        src={look.image}
-                        alt={look.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      />
-                      <div className="absolute top-3 left-3 flex flex-wrap gap-1">
-                        {look.tags.map((t) => (
-                          <span key={t} className="bg-black/80 text-white text-[9px] font-mono font-bold px-2 py-0.5 backdrop-blur-xs">
-                            {t}
-                          </span>
+                  {/* 4 Silhouette Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
+                    {FIT_OPTIONS.map((fit) => {
+                      const isSelected = formData.fitPreferences.includes(fit.id);
+                      return (
+                        <div
+                          key={fit.id}
+                          onClick={() => setFormData({ ...formData, fitPreferences: [fit.id] })}
+                          className={`p-5 border transition-all duration-200 cursor-pointer flex flex-col justify-between min-h-[160px] ${
+                            isSelected
+                              ? "bg-[#183B56] text-white border-[#183B56] shadow-sm scale-[1.01]"
+                              : "bg-[#F5EFEB]/50 text-[#183B56] border-[#183B56]/30 hover:border-[#183B56] hover:bg-white"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-mono font-bold uppercase tracking-wider opacity-70">
+                              DRAPE
+                            </span>
+                            <div className={`w-4.5 h-4.5 rounded-full border flex items-center justify-center ${
+                              isSelected ? "bg-white border-white text-[#183B56]" : "border-[#183B56]/40"
+                            }`}>
+                              {isSelected && <Check size={11} strokeWidth={3} />}
+                            </div>
+                          </div>
+
+                          <div className="space-y-1.5 mt-3">
+                            <h3 className="text-base font-bold uppercase tracking-tight">{fit.label}</h3>
+                            <p className={`text-[11px] leading-relaxed font-medium ${isSelected ? "text-[#DFE7ED]" : "text-[#5A7184]"}`}>
+                              {fit.desc}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Height & Standard Size Profile Strip */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-5 border-t border-[#183B56]/20">
+                    <div className="bg-[#F5EFEB]/40 p-5 border border-[#183B56]/30 space-y-3">
+                      <span className="text-xs font-bold uppercase text-[#183B56] block">Approximate Height</span>
+                      <div className="grid grid-cols-3 gap-2">
+                        {["Under 160 cm", "160–169 cm", "170–179 cm", "180–189 cm", "190+ cm"].map((h) => (
+                          <button
+                            key={h}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, heightRange: h })}
+                            className={`py-2 px-2 text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                              formData.heightRange === h
+                                ? "bg-[#183B56] text-white border-[#183B56]"
+                                : "bg-white text-[#183B56] border-[#183B56]/30 hover:border-[#183B56]"
+                            }`}
+                          >
+                            {h}
+                          </button>
                         ))}
                       </div>
-                      <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border flex items-center justify-center ${
-                        isSelected ? "bg-black text-white border-black" : "bg-white/90 text-black border-black/20"
-                      }`}>
-                        {isSelected && <Check size={14} strokeWidth={3} />}
-                      </div>
                     </div>
 
-                    {/* Description Strip */}
-                    <div className={`p-4 border-t transition-colors ${
-                      isSelected ? "bg-black text-white border-black" : "bg-white text-[#111827] border-[#D2D8D2]"
-                    }`}>
-                      <span className="text-[10px] font-mono font-bold uppercase opacity-60 block">
-                        {look.aesthetic}
-                      </span>
-                      <h4 className="text-sm font-extrabold uppercase tracking-tight mt-0.5">{look.title}</h4>
-                      <p className={`text-[11px] font-medium leading-relaxed mt-1 ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
-                        {look.desc}
-                      </p>
+                    <div className="bg-[#F5EFEB]/40 p-5 border border-[#183B56]/30 space-y-3">
+                      <span className="text-xs font-bold uppercase text-[#183B56] block">Typical Size</span>
+                      <div className="flex flex-wrap gap-2">
+                        {["XS", "S", "M", "L", "XL", "XXL", "BESPOKE"].map((sz) => (
+                          <button
+                            key={sz}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, clothingSize: sz })}
+                            className={`w-12 h-9 text-xs font-bold uppercase transition-all border flex items-center justify-center ${
+                              formData.clothingSize === sz
+                                ? "bg-[#183B56] text-white border-[#183B56]"
+                                : "bg-white text-[#183B56] border-[#183B56]/30 hover:border-[#183B56]"
+                            }`}
+                          >
+                            {sz}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              </Step>
+
+              {/* ── STEP 3: WARDROBE PREFERENCES ── */}
+              <Step>
+                <div className="space-y-8 p-1 sm:p-3">
+                  <div className="space-y-2 text-center sm:text-left">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#5A7184] bg-[#DFE7ED] px-2.5 py-1 inline-block border border-[#183B56]/20">
+                      03. WARDROBE PREFERENCES
+                    </span>
+                    <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
+                      What do you love wearing?
+                    </h2>
+                    <p className="text-xs sm:text-sm text-[#5A7184] font-medium max-w-xl">
+                      Choose the pieces you wear most frequently, plus your signature color direction.
+                    </p>
+                  </div>
+
+                  {/* Category Preferences */}
+                  <div className="space-y-3">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#183B56] block">
+                      Favorite Categories (Select All That Apply)
+                    </span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                      {CATEGORY_OPTIONS.map((cat) => {
+                        const isSelected = formData.preferredClothingTypes.includes(cat.id);
+                        return (
+                          <div
+                            key={cat.id}
+                            onClick={() => toggleArrayItem("preferredClothingTypes", cat.id)}
+                            className={`p-3.5 border transition-all cursor-pointer flex items-center justify-between ${
+                              isSelected
+                                ? "bg-[#183B56] text-white border-[#183B56] shadow-xs font-bold"
+                                : "bg-[#F5EFEB]/50 text-[#183B56] border-[#183B56]/30 hover:border-[#183B56] hover:bg-white font-medium"
+                            }`}
+                          >
+                            <span className="text-xs uppercase">{cat.label}</span>
+                            {isSelected && <Check size={13} />}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Color Palette Direction */}
+                  <div className="space-y-3 pt-5 border-t border-[#183B56]/20">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#183B56] block">
+                      Color Palette Direction
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+                      {PALETTE_OPTIONS.map((pal) => {
+                        const isSelected = formData.preferredPalette === pal.id;
+                        return (
+                          <div
+                            key={pal.id}
+                            onClick={() => setFormData({ ...formData, preferredPalette: pal.id })}
+                            className={`p-4 border transition-all cursor-pointer space-y-2.5 ${
+                              isSelected
+                                ? "bg-[#183B56] text-white border-[#183B56] shadow-sm scale-[1.01]"
+                                : "bg-[#F5EFEB]/50 text-[#183B56] border-[#183B56]/30 hover:border-[#183B56] hover:bg-white"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold uppercase">{pal.label}</span>
+                              <div className="flex items-center gap-1.5">
+                                {pal.swatches.map((c, i) => (
+                                  <span
+                                    key={i}
+                                    className="w-3.5 h-3.5 rounded-full border border-black/20"
+                                    style={{ backgroundColor: c }}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                            <p className={`text-[11px] leading-relaxed font-medium ${isSelected ? "text-[#DFE7ED]" : "text-[#5A7184]"}`}>
+                              {pal.desc}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </Step>
+
+              {/* ── STEP 4: VISUAL STYLE DISCOVERY ── */}
+              <Step>
+                <div className="space-y-8 p-1 sm:p-3">
+                  <div className="space-y-2 text-center sm:text-left">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#5A7184] bg-[#DFE7ED] px-2.5 py-1 inline-block border border-[#183B56]/20">
+                      04. VISUAL STYLE DISCOVERY
+                    </span>
+                    <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
+                      Which looks feel most like you?
+                    </h2>
+                    <p className="text-xs sm:text-sm text-[#5A7184] font-medium max-w-xl">
+                      Select visual inspirations. Zyra uses these compositions to extract silhouette and aesthetic vector signals.
+                    </p>
+                  </div>
+
+                  {/* 6 Editorial Look Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {STYLE_DISCOVERY_LOOKS.map((look) => {
+                      const isSelected = formData.selectedLooks.includes(look.id);
+                      return (
+                        <div
+                          key={look.id}
+                          onClick={() => toggleArrayItem("selectedLooks", look.id)}
+                          className={`bg-white border transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between group ${
+                            isSelected
+                              ? "border-[#183B56] shadow-md ring-2 ring-[#183B56]"
+                              : "border-[#183B56]/30 hover:border-[#183B56] shadow-xs"
+                          }`}
+                        >
+                          {/* Look Image with Status Badge */}
+                          <div className="relative aspect-[4/3] sm:aspect-[3/4] bg-[#DFE7ED] overflow-hidden">
+                            <img
+                              src={look.image}
+                              alt={look.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            />
+                            <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1">
+                              {look.tags.map((t) => (
+                                <span key={t} className="bg-[#183B56]/90 text-white text-[9px] font-mono font-bold px-2 py-0.5">
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                            <div className={`absolute top-2.5 right-2.5 w-5 h-5 rounded-full border flex items-center justify-center ${
+                              isSelected ? "bg-[#183B56] text-white border-[#183B56]" : "bg-white/95 text-[#183B56] border-[#183B56]/30"
+                            }`}>
+                              {isSelected && <Check size={12} strokeWidth={3} />}
+                            </div>
+                          </div>
+
+                          {/* Description Strip */}
+                          <div className={`p-3.5 border-t transition-colors ${
+                            isSelected ? "bg-[#183B56] text-white border-[#183B56]" : "bg-[#F5EFEB]/40 text-[#183B56] border-[#183B56]/20"
+                          }`}>
+                            <span className="text-[9px] font-mono font-bold uppercase opacity-70 block">
+                              {look.aesthetic}
+                            </span>
+                            <h4 className="text-xs font-bold uppercase tracking-tight mt-0.5">{look.title}</h4>
+                            <p className={`text-[11px] font-medium leading-relaxed mt-1 ${isSelected ? "text-[#DFE7ED]" : "text-[#5A7184]"}`}>
+                              {look.desc}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Step>
+            </Stepper>
           </div>
         )}
 
@@ -801,61 +821,55 @@ export default function OnboardingPage() {
             STEP 6: YOUR WEAVLY STYLE PROFILE (Calibrated Result Screen)
             ═══════════════════════════════════════════════════════════════════ */}
         {step === 6 && (
-          <div className="max-w-4xl mx-auto w-full space-y-10 py-6">
+          <div className="max-w-4xl mx-auto w-full space-y-12 py-6">
             
+            {/* Celebration Header */}
             <div className="text-center space-y-3">
-              <div className="inline-flex items-center gap-2 bg-black text-white px-4 py-1.5 text-[11px] font-mono font-bold uppercase tracking-[0.2em]">
-                <span>✓ CALIBRATION COMPLETE</span>
+              <div className="inline-flex items-center gap-2 bg-[#DCE2DC] border border-[#CCD4CC] px-3.5 py-1.5 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#111827]">
+                <Sparkles size={12} />
+                <span>CALIBRATION COMPLETE</span>
               </div>
               <h2 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#111827]">
-                Your Weavly Fashion Identity
+                Your Fashion Blueprint
               </h2>
               <p className="text-sm sm:text-base text-[#4B5563] font-medium max-w-lg mx-auto">
-                Weavly has generated your tailored profile. Every collection, drop, and made-to-measure commission will now adapt to you.
+                Zyra has calibrated your unique fashion profile. Here is your style signature:
               </p>
             </div>
 
-            {/* Profile Summary Card Matrix */}
+            {/* Profile Blueprint Card */}
             <div className="bg-white border border-[#D2D8D2] p-8 sm:p-12 shadow-sm space-y-8">
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-8 border-b border-[#D2D8D2]">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pb-8 border-b border-[#D2D8D2]">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#4B5563] block">
-                    STYLE IDENTITY
-                  </span>
-                  <div className="text-xl font-extrabold uppercase text-[#111827]">
-                    {formData.preferredStyles.join(" · ") || "Modern Minimalist"}
-                  </div>
+                  <span className="text-[10px] font-mono font-bold uppercase text-[#4B5563]">PRIMARY AESTHETIC</span>
+                  <p className="text-xl font-extrabold uppercase text-[#111827]">
+                    {formData.preferredStyles.join(" & ") || "Contemporary Minimal"}
+                  </p>
                 </div>
-
                 <div className="space-y-1">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#4B5563] block">
-                    FIT TOLERANCE
-                  </span>
-                  <div className="text-xl font-extrabold uppercase text-[#111827]">
-                    {formData.fitPreferences[0] || "Relaxed Fit"}
-                  </div>
+                  <span className="text-[10px] font-mono font-bold uppercase text-[#4B5563]">SILHOUETTE DRAPE</span>
+                  <p className="text-xl font-extrabold uppercase text-[#111827]">
+                    {formData.fitPreferences[0] || "Relaxed"} Fit
+                  </p>
                 </div>
-
                 <div className="space-y-1">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#4B5563] block">
-                    SIGNATURE PALETTE
-                  </span>
-                  <div className="text-xl font-extrabold uppercase text-[#111827]">
-                    {formData.preferredPalette || "Warm Neutrals"}
-                  </div>
+                  <span className="text-[10px] font-mono font-bold uppercase text-[#4B5563]">SIGNATURE PALETTE</span>
+                  <p className="text-xl font-extrabold uppercase text-[#111827]">
+                    {formData.preferredPalette}
+                  </p>
                 </div>
               </div>
 
-              {/* Secondary Metrics */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Personalized Guarantees */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-[#E5EAE5] p-5 border border-[#D2D8D2] space-y-2">
                   <span className="text-[10px] font-mono font-bold uppercase text-[#4B5563] block">
-                    PRIORITY CATEGORIES
+                    WARDROBE FOCUS
                   </span>
-                  <div className="text-xs font-bold uppercase text-[#111827]">
-                    {formData.preferredClothingTypes.join(" · ") || "Shirts · Trousers · Outerwear"}
-                  </div>
+                  <p className="text-xs font-bold uppercase text-[#111827]">
+                    {formData.preferredClothingTypes.slice(0, 3).join(" • ")}
+                  </p>
                 </div>
 
                 <div className="bg-[#E5EAE5] p-5 border border-[#D2D8D2] space-y-2">
@@ -893,30 +907,6 @@ export default function OnboardingPage() {
         )}
 
       </main>
-
-      {/* ─── BOTTOM NAVIGATION CONTROLS (Steps 1 to 4) ─── */}
-      {step > 0 && step < 5 && (
-        <footer className="w-full py-5 px-6 sm:px-12 bg-white border-t border-[#D2D8D2] sticky bottom-0 z-40">
-          <div className="max-w-5xl mx-auto flex items-center justify-between">
-            <button
-              onClick={prevStep}
-              className="flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#4B5563] hover:text-black transition-colors cursor-pointer bg-transparent border-none"
-            >
-              <ArrowLeft size={14} />
-              <span>Back</span>
-            </button>
-
-            <button
-              onClick={nextStep}
-              className="flex items-center gap-3 bg-black hover:bg-neutral-800 text-white px-8 py-3.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm"
-            >
-              <span>{step === 4 ? "Complete Profile" : "Continue"}</span>
-              <ArrowRight size={14} />
-            </button>
-          </div>
-        </footer>
-      )}
-
     </div>
   );
 }

@@ -1,0 +1,154 @@
+.stepper-outer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-circle-container {
+  width: 100%;
+  border-radius: 4px;
+  background-color: #ffffff;
+  border: 1px solid #183b56;
+  box-shadow: 0 2px 8px rgba(24, 59, 86, 0.06);
+  overflow: hidden;
+}
+
+.step-indicator-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid rgba(24, 59, 86, 0.2);
+  background-color: #f5efeb;
+}
+
+.step-content-default {
+  position: relative;
+  overflow: hidden;
+  min-height: 240px;
+}
+
+.step-default {
+  padding: 2rem;
+}
+
+.footer-container {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid rgba(24, 59, 86, 0.2);
+  background-color: #f5efeb;
+}
+
+.footer-nav {
+  display: flex;
+  align-items: center;
+}
+
+.footer-nav.spread {
+  justify-content: space-between;
+}
+
+.footer-nav.end {
+  justify-content: flex-end;
+}
+
+.back-button {
+  transition: all 180ms ease;
+  padding: 0.625rem 1.5rem;
+  color: #183b56;
+  border: 1px solid #183b56;
+  background: transparent;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: rgba(24, 59, 86, 0.08);
+}
+
+.back-button.inactive {
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.next-button {
+  transition: all 180ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #183b56;
+  color: #ffffff;
+  border: 1px solid #183b56;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0.625rem 1.75rem;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(24, 59, 86, 0.1);
+}
+
+.next-button:hover {
+  background-color: #102a43;
+}
+
+.next-button:active {
+  transform: scale(0.98);
+}
+
+.step-indicator {
+  position: relative;
+  cursor: pointer;
+  outline: none;
+}
+
+.step-indicator-inner {
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-weight: 700;
+  border: 1.5px solid #183b56;
+  transition: all 250ms ease;
+}
+
+.active-dot {
+  height: 0.625rem;
+  width: 0.625rem;
+  border-radius: 9999px;
+  background-color: #ffffff;
+}
+
+.step-number {
+  font-size: 0.8125rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.step-connector {
+  position: relative;
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  height: 2px;
+  flex: 1;
+  overflow: hidden;
+  background-color: rgba(24, 59, 86, 0.2);
+}
+
+.step-connector-inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+}
+
+.check-icon {
+  height: 1.125rem;
+  width: 1.125rem;
+  color: #ffffff;
+}

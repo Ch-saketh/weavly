@@ -15,3 +15,5 @@ export * from './WarpText.jsx';
 
 export { default as LineSidebar } from './LineSidebar.jsx';
 export * from './LineSidebar.jsx';
+
+export { default as Stepper, Step } from './Stepper.jsx';
