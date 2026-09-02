@@ -691,26 +691,101 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#183B56] bg-white">
             {[
-              { label: 'Sartorial Summer Edit', desc: '6 complete looks · Coastal Linen & Tailored Silk', pieces: '6 Items' },
-              { label: 'Architectural Office Mix', desc: '8 complete looks · Double-Breasted Flannel', pieces: '8 Items' },
-              { label: 'Weekend Relaxed Capsule', desc: '5 complete looks · Hand-Draped Raw Cottons', pieces: '5 Items' },
+              { 
+                label: 'Sartorial Summer Edit', 
+                desc: '6 complete looks · Coastal Linen & Tailored Silk', 
+                pieces: '6 Items',
+                themeTag: 'SUMMER DROP',
+                palette: ['#F5EFEB', '#E5D6C7', '#C2846B', '#183B56'],
+                images: [
+                  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80',
+                  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80'
+                ]
+              },
+              { 
+                label: 'Architectural Office Mix', 
+                desc: '8 complete looks · Double-Breasted Flannel', 
+                pieces: '8 Items',
+                themeTag: 'OFFICE EDIT',
+                palette: ['#DFE7ED', '#9AAEB9', '#486581', '#183B56'],
+                images: [
+                  'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=600&q=80',
+                  'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&q=80'
+                ]
+              },
+              { 
+                label: 'Weekend Relaxed Capsule', 
+                desc: '5 complete looks · Hand-Draped Raw Cottons', 
+                pieces: '5 Items',
+                themeTag: 'CASUAL CAPSULE',
+                palette: ['#F0EAE1', '#D4C7BD', '#8C9A8E', '#3E4E42'],
+                images: [
+                  'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&q=80',
+                  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80'
+                ]
+              },
             ].map((col, i) => (
-              <div key={i} className="p-8 flex flex-col justify-between min-h-[280px] bg-[#F5EFEB] hover:bg-white transition-colors space-y-8">
-                <div className="space-y-4">
+              <div key={i} className="group p-6 sm:p-7 flex flex-col justify-between bg-white hover:bg-[#F5EFEB]/30 transition-all duration-300 relative space-y-6">
+                
+                {/* Visual Capsule Showcase with frosted lookbook stack & color palette bar */}
+                <div className="relative aspect-[16/11] w-full bg-[#DFE7ED] border border-[#183B56] overflow-hidden rounded-xs">
+                  {/* Background lookbook image */}
+                  <img
+                    src={col.images[0]}
+                    alt={col.label}
+                    className="w-full h-full object-cover object-top filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                  />
+                  
+                  {/* Floating second mini card overlay */}
+                  <div className="absolute right-3 bottom-3 w-16 h-20 border border-[#183B56] bg-white shadow-sm overflow-hidden hidden sm:block transform group-hover:-translate-y-1 transition-transform">
+                    <img src={col.images[1]} alt="Preview" className="w-full h-full object-cover" />
+                  </div>
+
+                  {/* Frosted lock pill overlay */}
+                  <div className="absolute inset-0 bg-[#183B56]/20 backdrop-blur-[2px] flex items-center justify-center group-hover:bg-[#183B56]/10 transition-colors">
+                    <div className="bg-white/95 border border-[#183B56] px-3 py-1.5 shadow-sm flex items-center gap-2 transform group-hover:scale-110 transition-transform">
+                      <span className="text-xs">🔒</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#183B56]">
+                        LOCKED CAPSULE
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Color Palette Strip at bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1.5 flex">
+                    {col.palette.map((color, idx) => (
+                      <div key={idx} className="flex-1 h-full" style={{ backgroundColor: color }} />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Details */}
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] bg-white border border-[#183B56] px-2 py-0.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-2.5 py-0.5">
                       {col.pieces}
                     </span>
-                    <span className="text-xs font-bold text-[#183B56]">🔒 LOCKED</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-white px-2 py-0.5" style={{ backgroundColor: col.palette[2] }}>
+                      {col.themeTag}
+                    </span>
                   </div>
-                  <h3 className="text-xl font-bold uppercase text-[#183B56]">{col.label}</h3>
-                  <p className="text-xs text-[#5A7184] font-medium leading-relaxed">{col.desc}</p>
+                  
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold uppercase text-[#183B56] group-hover:text-[#102A43] transition-colors">
+                      {col.label}
+                    </h3>
+                    <p className="text-xs text-[#5A7184] font-medium leading-relaxed mt-1">
+                      {col.desc}
+                    </p>
+                  </div>
                 </div>
+
                 <button
                   onClick={() => triggerAuth("login")}
-                  className="w-full py-3 bg-white hover:bg-[#183B56] text-[#183B56] hover:text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer text-center"
+                  className="w-full py-3 bg-[#183B56] text-white hover:bg-[#102A43] border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer text-center flex items-center justify-center gap-2 shadow-xs group-hover:shadow-sm"
                 >
-                  Sign In to Unlock →
+                  <span>Unlock Capsule</span>
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </button>
               </div>
             ))}
