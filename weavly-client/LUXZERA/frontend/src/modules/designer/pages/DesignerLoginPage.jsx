@@ -36,10 +36,10 @@ export default function DesignerLoginPage() {
           <div className="w-12 h-12 border border-[#183B56] bg-white text-[#183B56] flex items-center justify-center mx-auto mb-2">
             <Scissors size={20} />
           </div>
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184]">
-            Atelier Portal
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#183B56]">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-2.5 py-0.5 inline-block">
+            Designer Portal
+          </span>
+          <h1 className="text-2xl font-bold uppercase tracking-tight text-[#183B56]">
             Designer Studio Sign In
           </h1>
           <p className="text-xs text-[#5A7184] leading-relaxed">
@@ -65,16 +65,25 @@ export default function DesignerLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="atelier@domain.com"
+                placeholder="designer@domain.com"
                 className="w-full pl-9 pr-3 py-2.5 bg-white border border-[#183B56] text-xs font-normal text-[#183B56] outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
-              Password
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-[#183B56]">
+                Password
+              </label>
+              <button
+                type="button"
+                onClick={() => router.push("/designer/forgot-password")}
+                className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] hover:text-[#183B56] hover:underline cursor-pointer bg-transparent border-none p-0"
+              >
+                Forgot Password?
+              </button>
+            </div>
             <div className="relative">
               <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5A7184]" />
               <input
@@ -91,7 +100,7 @@ export default function DesignerLoginPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-3 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.16em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all disabled:opacity-50 pt-2"
+            className="w-full py-3 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.16em] border border-[#183B56] cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all disabled:opacity-50 pt-2"
           >
             <span>{submitting ? "Signing in..." : "Enter Designer Studio"}</span>
             <ArrowRight size={13} />
@@ -104,7 +113,7 @@ export default function DesignerLoginPage() {
             onClick={() => router.push("/designer/register")}
             className="font-bold text-[#183B56] hover:underline cursor-pointer border-none bg-transparent p-0"
           >
-            Apply for Atelier Pass
+            Apply for Designer Pass
           </button>
         </div>
       </div>
