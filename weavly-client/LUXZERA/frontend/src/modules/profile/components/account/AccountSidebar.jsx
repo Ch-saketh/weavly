@@ -1,5 +1,6 @@
 import React from "react";
-import { User, Lock, MapPin, Sliders, Sparkles, CreditCard, Package, LifeBuoy, ChevronRight } from "lucide-react";
+import { User, Lock, MapPin, Sliders, Sparkles, CreditCard, Package, LifeBuoy } from "lucide-react";
+import LineSidebar from "@/shared/components/ui/LineSidebar";
 
 const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
   const sections = [
@@ -58,56 +59,43 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
         </div>
       </div>
 
-      {/* ── DESKTOP ARCHITECTURAL SIDEBAR BOX (>= md) ── */}
-      <nav className="hidden md:block w-full bg-[#F5EFEB] border border-[#183B56] p-4 shadow-xs">
-        <div className="space-y-4">
-          {sections.map((section, sIdx) => (
-            <div key={section.label}>
-              {/* Section Category Label */}
-              <p className="text-[10px] font-bold tracking-[0.2em] text-[#5A7184] uppercase mb-1.5 px-2">
-                {section.label}
-              </p>
-
-              {/* Section Items */}
-              <div className="space-y-1">
-                {section.items.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeTab === item.id;
-                  
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => onTabChange?.(item.id)}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 text-xs sm:text-[13px] font-bold transition-all text-left border cursor-pointer ${
-                        isActive
-                          ? "bg-[#183B56] text-white border-[#183B56] shadow-xs"
-                          : "bg-transparent text-[#183B56] border-transparent hover:border-[#183B56]/40 hover:bg-[#183B56]/5"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <Icon 
-                          size={15} 
-                          className={isActive ? "text-white" : "text-[#183B56]"}
-                        />
-                        <span className="truncate">{item.label}</span>
-                      </div>
-
-                      {isActive && (
-                        <span className="text-sm font-normal leading-none text-white">→</span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Blueprint Divider */}
-              {sIdx < sections.length - 1 && (
-                <div className="mt-3.5 mb-1 border-b border-[#183B56]/20" />
-              )}
-            </div>
-          ))}
+      {/* ── DESKTOP ARCHITECTURAL LINE SIDEBAR (>= md) ── */}
+      <nav className="hidden md:block w-full bg-[#F5EFEB] border border-[#183B56] p-5 shadow-xs">
+        <div className="mb-4 pb-3 border-b border-[#183B56]/20 flex items-center justify-between">
+          <div>
+            <span className="text-[9px] font-bold tracking-[0.25em] text-[#5A7184] uppercase block">
+              Menu Index
+            </span>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#183B56] mt-0.5">
+              Account Studio
+            </h3>
+          </div>
+          <span className="text-[10px] font-mono font-bold text-[#183B56] bg-white border border-[#183B56] px-2 py-0.5">
+            08 TABS
+          </span>
         </div>
+
+        <LineSidebar
+          items={allItems}
+          activeId={activeTab}
+          accentColor="#183B56"
+          textColor="#5A7184"
+          markerColor="#183B56"
+          showIndex={true}
+          showMarker={true}
+          scaleTick={true}
+          proximityRadius={90}
+          maxShift={18}
+          markerLength={34}
+          markerGap={6}
+          itemGap={14}
+          fontSize={0.8125}
+          smoothing={120}
+          onItemClick={(idx, label, item) => {
+            const targetId = item?.id || allItems[idx]?.id;
+            if (targetId) onTabChange?.(targetId);
+          }}
+        />
       </nav>
     </>
   );

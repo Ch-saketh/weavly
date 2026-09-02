@@ -317,7 +317,7 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184]">
-                Account Settings • Atelier Studio
+                Account Settings • Personal Studio
               </span>
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56] uppercase">
                 {currentTab.title}

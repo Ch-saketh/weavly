@@ -12,3 +12,6 @@ export * from './ZeraIcon.jsx';
 
 export { default as WarpText } from './WarpText.jsx';
 export * from './WarpText.jsx';
+
+export { default as LineSidebar } from './LineSidebar.jsx';
+export * from './LineSidebar.jsx';
