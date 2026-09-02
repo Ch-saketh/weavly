@@ -427,10 +427,6 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
           {/* Left 7 Columns: Headline, Summary & CTAs */}
           <div className="lg:col-span-7 p-8 sm:p-12 lg:p-16 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#183B56] bg-white space-y-10">
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 border border-[#183B56] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#183B56] bg-[#F5EFEB]">
-                <span className="w-2 h-2 rounded-full bg-[#183B56]" />
-                <span>Zyra Stylist &amp; Made-to-Measure</span>
-              </div>
 
               <h1 className="text-4xl sm:text-6xl lg:text-[68px] font-bold tracking-tight text-[#183B56] leading-[1.05] uppercase">
                 Find Less.<br />Wear Better.
