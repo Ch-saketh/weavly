@@ -531,19 +531,10 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
           {/* 2-Column Split: Compact Mascot Panel & Step Matrix */}
           <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
             
-            {/* Left 5 Cols: Mascot & Explainer */}
-            <div className="lg:col-span-5 p-5 sm:p-7 flex flex-col justify-between bg-[#F5EFEB] space-y-4">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-bold uppercase text-[#183B56] leading-tight mb-2">
-                  Curates Outfits.<br />Not Disconnected Items.
-                </h3>
-                <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed font-medium">
-                  Zyra analyzes your exact proportions, color palette, and lifestyle priorities to construct harmonious wardrobe collections from verified independent designers.
-                </p>
-              </div>
-
-              <div className="bg-white border border-[#183B56] p-2 rounded-xs flex items-center justify-center min-h-[160px] max-h-[180px] relative shadow-xs overflow-hidden">
-                <div className="scale-75 origin-center">
+            {/* Left 5 Cols: Zyra Mascot Taking Up Full Place */}
+            <div className="lg:col-span-5 p-4 sm:p-6 flex flex-col items-center justify-center bg-[#F5EFEB] relative overflow-hidden min-h-[300px]">
+              <div className="w-full h-full flex flex-col items-center justify-center relative">
+                <div className="scale-75 sm:scale-90 lg:scale-95 origin-center flex items-center justify-center">
                   <ZeraInteractiveEyesMascot />
                 </div>
               </div>
