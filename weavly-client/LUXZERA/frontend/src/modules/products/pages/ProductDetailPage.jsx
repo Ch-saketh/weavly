@@ -442,7 +442,7 @@ export default function ProductDetailPage() {
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 pt-16 border-t border-[#ECECEC] mt-16">
         <ZeraRecommendationsSection
           title="Pairs Well With"
-          subtitle="Zyra AI Curated Selections"
+          subtitle="Zyra Curated Selections"
         />
       </div>
 

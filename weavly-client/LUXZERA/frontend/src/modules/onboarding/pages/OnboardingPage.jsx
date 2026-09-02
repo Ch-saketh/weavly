@@ -393,7 +393,7 @@ export default function OnboardingPage() {
                 {/* Circular Rotating Fashion Badge (From Reference Inspiration) */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-black text-white border-2 border-[#E5EAE5] flex items-center justify-center shadow-lg z-20 pointer-events-none">
                   <div className="text-center font-mono text-[9px] font-extrabold uppercase tracking-widest leading-tight">
-                    ✦ WEAVLY ✦<br />ZYRA AI
+                    ✦ WEAVLY ✦<br />ZYRA STYLIST
                   </div>
                 </div>
 
@@ -750,7 +750,7 @@ export default function OnboardingPage() {
 
             <div className="space-y-3">
               <span className="text-[11px] font-mono font-bold uppercase tracking-[0.25em] text-[#4B5563] bg-[#DCE2DC] px-3 py-1 inline-block">
-                ZYRA AI VECTOR ENGINE
+                ZYRA STYLIST ENGINE
               </span>
               <h2 className="text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-[#111827]">
                 Synthesizing Your Style Identity

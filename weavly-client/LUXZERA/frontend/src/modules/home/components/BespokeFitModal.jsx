@@ -185,7 +185,7 @@ export default function BespokeFitModal({ isOpen, onClose, onGenerated }) {
                 <div className="flex items-center gap-2">
                   <Shirt size={16} className="text-[#183B56]" />
                   <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-[#183B56]">
-                    How Visual AI Chooses Clothes That Truly Flatter You
+                    How Visual Calibration Chooses Clothes That Truly Flatter You
                   </h3>
                 </div>
                 
@@ -221,7 +221,7 @@ export default function BespokeFitModal({ isOpen, onClose, onGenerated }) {
                     Click to select photo or drag and drop
                   </p>
                   <p className="text-[11px] text-[#5A7184] mt-1">
-                    Supports JPG, PNG, WEBP. Your photos are private and used solely for AI fit analysis.
+                    Supports JPG, PNG, WEBP. Your photos are private and used solely for custom fit analysis.
                   </p>
                 </div>
                 <input

@@ -228,7 +228,7 @@ export default function ZeraCollection({
             onClick={() => loadRecommendations(true)}
             className="px-6 py-2.5 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.2em] border-none cursor-pointer shadow-xs transition-colors"
           >
-            Retry Zyra AI
+            Retry Zyra Stylist
           </button>
         </div>
       )}

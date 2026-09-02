@@ -102,7 +102,7 @@ function ZeraInteractiveEyesMascot() {
       {/* Mascot Base Emblem */}
       <img
         src="/zera_clean.svg?v=2"
-        alt="Zyra AI"
+        alt="Zyra Stylist"
         style={{ width: 340, height: 340, objectFit: "contain", position: "relative", zIndex: 2, userSelect: "none" }}
         draggable={false}
       />
@@ -248,7 +248,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
           <div className="lg:col-span-4 text-center lg:text-left space-y-6">
             <div className="inline-flex items-center gap-2 bg-white border border-[#183B56]/20 px-3.5 py-1 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#183B56] shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#183B56] animate-pulse" />
-              <span>AI 3D STYLIST &amp; BESPOKE ATELIER</span>
+              <span>3D VIRTUAL STYLIST &amp; BESPOKE ATELIER</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl lg:text-[72px] font-extrabold uppercase tracking-tight text-[#183B56] leading-[0.92]">
@@ -302,7 +302,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             <div className="text-center font-mono text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest leading-tight">
               ✦ WEAVLY ✦<br />
               ATELIER<br />
-              ZYRA AI
+              ZYRA
             </div>
           </div>
         </div>
@@ -332,7 +332,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               already famous.
             </h2>
             <p className="text-sm sm:text-base text-[#DFE7ED] max-w-lg font-medium leading-relaxed">
-              Skip generic fast fashion. Zyra AI indexes your exact measurements, favorite fabrics, and aesthetic palette so every piece feels like bespoke haute couture.
+              Skip generic fast fashion. Zyra indexes your exact measurements, favorite fabrics, and aesthetic palette so every piece feels like bespoke haute couture.
             </p>
 
             <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4">
@@ -354,7 +354,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         </div>
       </section>
 
-      {/* ─── 4. MEET ZYRA AI (Pure White Box Container with Interactive Mascot) ─── */}
+      {/* ─── 4. MEET ZYRA (Pure White Box Container with Interactive Mascot) ─── */}
       <section id="meet-zyra" className="bg-[#F5EFEB] px-6 sm:px-12 md:px-16 py-20 border-b border-[#183B56]/15">
         <div className="max-w-6xl mx-auto bg-white border border-[#183B56]/15 p-8 sm:p-14 shadow-xs">
           
@@ -380,7 +380,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             <div className="lg:w-1/2 space-y-6">
               <div className="space-y-2">
                 <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56]/15 px-3 py-1 inline-block">
-                  WHAT IS ZYRA AI?
+                  WHAT IS ZYRA?
                 </span>
                 <h3 className="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#183B56]">
                   Curates Outfits.<br />Not Disconnected Clothes.
@@ -523,7 +523,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             Ready to Discover Fashion<br />That Truly Fits You?
           </h2>
           <p className="text-sm sm:text-base text-[#DFE7ED] font-medium">
-            Join the founding cohort of patrons and start your personal Zyra AI styling calibration.
+            Join the founding cohort of patrons and start your personal Zyra styling calibration.
           </p>
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button

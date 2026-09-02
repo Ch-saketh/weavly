@@ -255,7 +255,7 @@ export default function OnboardingModal({ isOpen, onClose }) {
                 Discover fashion<br />made for you.
               </h2>
               <p className="text-sm text-[#4B5563] font-medium leading-relaxed">
-                Zyra AI builds your 3D fashion identity and preferences so every collection and bespoke drop fits your personal aesthetic.
+                Zyra builds your 3D fashion identity and preferences so every collection and bespoke drop fits your personal aesthetic.
               </p>
               <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button

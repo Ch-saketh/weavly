@@ -43,7 +43,7 @@ export default function TermsPage() {
     { id: "accounts", label: "2. Account Registration & Security" },
     { id: "marketplace", label: "3. Drops & Luxury Purchases" },
     { id: "bespoke", label: "4. Bespoke Couture Commissions" },
-    { id: "zyra-terms", label: "5. Zyra AI Styling & Recommendations" },
+    { id: "zyra-terms", label: "5. Zyra Stylist & Recommendations" },
     { id: "shipping", label: "6. Shipping & Delivery Terms" },
     { id: "returns", label: "7. Returns, Refunds & Inspection" },
     { id: "ip-rights", label: "8. Intellectual Property & Designs" },
@@ -103,7 +103,7 @@ export default function TermsPage() {
                 <span className="font-serif italic font-normal lowercase text-[#183B56]/90">service &amp; standards.</span>
               </h1>
               <p className="text-[14px] sm:text-[15px] text-[#5A7184] leading-relaxed max-w-2xl font-medium pt-2">
-                These terms establish a binding legal agreement governing access to Weavly's curated marketplace drops, designer couture studios, and Zyra AI styling recommendations.
+                These terms establish a binding legal agreement governing access to Weavly's curated marketplace drops, designer couture studios, and Zyra stylist recommendations.
               </p>
             </div>
 
@@ -296,7 +296,7 @@ export default function TermsPage() {
               <span>Section 05</span>
             </div>
             <h2 className="text-2xl font-bold uppercase tracking-tight text-[#183B56]">
-              5. Zyra AI Styling &amp; Recommendation Service
+              5. Zyra Stylist &amp; Recommendation Service
             </h2>
             <p className="text-[13px] text-[#5A7184] leading-relaxed font-medium">
               Zyra provides algorithmic styling guidance, fit scoring, and occasion curation based on user inputs. While Zyra continuously optimizes sizing precision, recommendations serve as styling suggestions; final purchasing selections remain the patron's choice.
@@ -341,7 +341,7 @@ export default function TermsPage() {
               8. Intellectual Property &amp; Designer Copyright
             </h2>
             <p className="text-[13px] text-[#5A7184] leading-relaxed font-medium">
-              Designers retain exclusive intellectual property rights and design patents in their proprietary couture lookbooks and custom garment designs. Weavly retains all trademarks, platform code, and algorithmic models related to the Zyra AI engine and marketplace software.
+              Designers retain exclusive intellectual property rights and design patents in their proprietary couture lookbooks and custom garment designs. Weavly retains all trademarks, platform code, and algorithmic models related to the Zyra engine and marketplace software.
             </p>
           </section>
 

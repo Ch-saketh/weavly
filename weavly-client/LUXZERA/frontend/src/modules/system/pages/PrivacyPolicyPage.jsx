@@ -43,7 +43,7 @@ export default function PrivacyPolicyPage() {
   const sections = [
     { id: "overview", label: "1. Privacy Overview & Vow" },
     { id: "data-collection", label: "2. Information We Collect" },
-    { id: "zyra-ai", label: "3. Zyra AI & Biometric Data" },
+    { id: "zyra-fitting", label: "3. Zyra Fitting & Biometric Data" },
     { id: "data-usage", label: "4. How We Use Information" },
     { id: "zero-selling", label: "5. Zero Data Selling Guarantee" },
     { id: "designer-privacy", label: "6. Bespoke Couture & Atelier Privacy" },
@@ -239,7 +239,7 @@ export default function PrivacyPolicyPage() {
               1. Privacy Overview &amp; Patron Covenant
             </h2>
             <p className="text-[13px] text-[#5A7184] leading-relaxed font-medium">
-              Weavly operates an exclusive luxury digital fashion marketplace, custom couture atelier, and personal AI stylist engine (Zyra). Because our platform processes body measurements, fit profiles, and stylistic preferences, we maintain a human-first privacy standard.
+              Weavly operates an exclusive luxury digital fashion marketplace, custom couture atelier, and personal stylist engine (Zyra). Because our platform processes body measurements, fit profiles, and stylistic preferences, we maintain a human-first privacy standard.
             </p>
             <div className="bg-[#E2EAEF]/70 border border-[#183B56]/15 rounded-xl p-4 text-[12px] text-[#183B56] leading-relaxed font-medium space-y-1.5">
               <p className="font-bold uppercase tracking-wide text-[10px] text-[#183B56]">Plain English Translation:</p>
@@ -284,22 +284,22 @@ export default function PrivacyPolicyPage() {
             </div>
           </section>
 
-          {/* Section 3: Zyra AI & Biometric Data */}
-          <section id="zyra-ai" className="scroll-mt-28 space-y-4 bg-white border border-[#183B56]/20 rounded-2xl p-8 shadow-xs">
+          {/* Section 3: Zyra & Biometric Data */}
+          <section id="zyra-fitting" className="scroll-mt-28 space-y-4 bg-white border border-[#183B56]/20 rounded-2xl p-8 shadow-xs">
             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56]">
               <span className="w-2 h-2 rounded-full bg-[#183B56]" />
               <span>Section 03</span>
             </div>
             <h2 className="text-2xl font-bold uppercase tracking-tight text-[#183B56]">
-              3. Zyra AI &amp; Fitting Data Safeguards
+              3. Zyra Fitting &amp; Data Safeguards
             </h2>
             <p className="text-[13px] text-[#5A7184] leading-relaxed font-medium">
-              Our Zyra AI recommendation engine converts your style preferences and body measurements into a mathematical vector embedding (a sequence of encrypted numbers).
+              Our Zyra recommendation engine converts your style preferences and body measurements into a mathematical vector embedding (a sequence of encrypted numbers).
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="p-4 bg-[#F5EFEB] rounded-xl border border-[#183B56]/15 space-y-1.5">
                 <h5 className="text-[11px] font-bold uppercase tracking-wide text-[#183B56]">Local Vector Transformation</h5>
-                <p className="text-[11px] text-[#5A7184] leading-relaxed">Your uploaded fitting photos are processed in isolated memory to extract fit parameters and are never fed into publicly trained generative AI models.</p>
+                <p className="text-[11px] text-[#5A7184] leading-relaxed">Your uploaded fitting photos are processed in isolated memory to extract fit parameters and are never fed into publicly trained models.</p>
               </div>
               <div className="p-4 bg-[#F5EFEB] rounded-xl border border-[#183B56]/15 space-y-1.5">
                 <h5 className="text-[11px] font-bold uppercase tracking-wide text-[#183B56]">Private Cache Scoping</h5>
@@ -322,7 +322,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <ul className="space-y-2 text-[12px] text-[#5A7184] font-medium list-disc pl-5 leading-relaxed">
               <li>Fulfill and dispatch luxury boutique garment orders and custom commission requests.</li>
-              <li>Calibrate Zyra AI occasion recommendations across Wedding, Formal, Casual, College, and Party feeds.</li>
+              <li>Calibrate Zyra occasion recommendations across Wedding, Formal, Casual, College, and Party feeds.</li>
               <li>Enable secure multi-factor authentication (OTP verification and password encryption).</li>
               <li>Deliver essential transactional notifications, tracking updates, and concierge service notes.</li>
             </ul>

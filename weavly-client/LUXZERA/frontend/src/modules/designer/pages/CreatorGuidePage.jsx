@@ -65,7 +65,7 @@ export default function CreatorGuidePage({ initialTab = "become-creator" }) {
       details: [
         "Direct bank payout integration (automated multi-currency disbursements)",
         "Atelier profile customization with badges, lookbooks, and patron reviews",
-        "Access to bespoke commission queue and Zyra AI style mapping"
+        "Access to bespoke commission queue and Zyra style mapping"
       ],
       tip: "You retain 100% copyright ownership of all your lookbooks and proprietary garment designs.",
       icon: UserCheck
@@ -74,7 +74,7 @@ export default function CreatorGuidePage({ initialTab = "become-creator" }) {
       stepNumber: "04",
       title: "Launch & Receive Global Commissions",
       headline: "Reach high-intent luxury buyers worldwide",
-      description: "Your collections go live instantly on the Weavly Marketplace and are automatically integrated into Zyra's AI stylist recommendations for high-intent patrons across 100+ countries.",
+      description: "Your collections go live instantly on the Weavly Marketplace and are automatically integrated into Zyra's stylist recommendations for high-intent patrons across 100+ countries.",
       details: [
         "Featured on 'Discover Designers' and 'Curated Lookbooks'",
         "Live patron custom commission requests with full measurement specs",
@@ -96,7 +96,7 @@ export default function CreatorGuidePage({ initialTab = "become-creator" }) {
         "Write a compelling narrative: the inspiration, drape silhouette, and tailoring philosophy",
         "Select occasion affinity (Wedding, Formal, Party, College, Casual, Sport)"
       ],
-      tip: "Assigning accurate occasion affinities ensures Zyra AI recommends your garment to the right patrons.",
+      tip: "Assigning accurate occasion affinities ensures Zyra recommends your garment to the right patrons.",
       icon: Palette
     },
     {
@@ -135,7 +135,7 @@ export default function CreatorGuidePage({ initialTab = "become-creator" }) {
         "Enable 'Made-to-Measure' toggle to accept custom bust/waist/hip/shoulder specs",
         "Specify crafting timeline (e.g., 7–14 business days for bespoke tailoring)"
       ],
-      tip: "Offering custom measurement options allows Zyra AI to match your design to patrons seeking perfect fit.",
+      tip: "Offering custom measurement options allows Zyra to match your design to patrons seeking perfect fit.",
       icon: Ruler
     },
     {
@@ -372,7 +372,7 @@ export default function CreatorGuidePage({ initialTab = "become-creator" }) {
                 How to Publish Your Design in the Designer Studio
               </h2>
               <p className="text-[14px] text-[#5A7184] font-medium leading-relaxed">
-                Publishing garments on Weavly connects your bespoke pieces to high-intent luxury shoppers and integrates your lookbooks directly into Zyra AI's virtual styling engine.
+                Publishing garments on Weavly connects your bespoke pieces to high-intent luxury shoppers and integrates your lookbooks directly into Zyra's virtual styling engine.
               </p>
             </div>
 

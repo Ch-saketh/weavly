@@ -25,7 +25,7 @@ import {
 
 const FAQ_DATA = [
   {
-    category: "Zyra AI & Virtual Stylist",
+    category: "Zyra Virtual Stylist",
     icon: "Sparkles",
     items: [
       {
@@ -266,7 +266,7 @@ export default function FaqPage() {
               <span className="font-serif italic font-normal lowercase text-[#183B56]/90">questions &amp; answers.</span>
             </h1>
             <p className="text-[14px] sm:text-[15px] text-[#5A7184] leading-relaxed font-medium pt-2">
-              Explore guidelines on Zyra AI styling, custom couture commissions, insured shipping timelines, fit integrity guarantees, and our 30-day return policy.
+              Explore guidelines on Zyra styling, custom couture commissions, insured shipping timelines, fit integrity guarantees, and our 30-day return policy.
             </p>
           </div>
 
@@ -278,7 +278,7 @@ export default function FaqPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search topics (e.g., Zyra AI, returns, bespoke couture, measurements, fabrics)..."
+                placeholder="Search topics (e.g., Zyra styling, returns, bespoke couture, measurements, fabrics)..."
                 className="w-full py-3.5 pl-3 pr-4 text-xs font-medium text-[#183B56] placeholder-[#8E8E93] bg-transparent border-none outline-none"
               />
               {searchQuery && (

@@ -117,7 +117,7 @@ const CustomerCareView = ({ userId }) => {
         </div>
         <div className="flex items-center gap-1.5 text-[9px] font-semibold text-[#ABABAB] tracking-[0.1em] uppercase bg-[#F5F4F2] border border-[#E8E5E0] px-2.5 py-1 rounded-lg select-none">
           <Sparkles size={9} className="text-[#C8702A]" />
-          <span>Zyra AI</span>
+          <span>Zyra Stylist</span>
         </div>
       </div>
 

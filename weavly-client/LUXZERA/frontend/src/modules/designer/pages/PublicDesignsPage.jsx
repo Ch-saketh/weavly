@@ -119,7 +119,7 @@ export default function PublicDesignsPage() {
                 <div className="pt-2 flex flex-wrap items-center gap-4 text-xs font-semibold text-white/90">
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 size={14} className="text-emerald-400" />
-                    <span>Instant Zyra AI Style Indexing</span>
+                    <span>Instant Zyra Style Indexing</span>
                   </span>
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 size={14} className="text-emerald-400" />
