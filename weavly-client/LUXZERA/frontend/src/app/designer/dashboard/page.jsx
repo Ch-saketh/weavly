@@ -1,10 +1,10 @@
-import DesignerStudioPage from "@/modules/designer/pages/DesignerStudioPage";
+import DesignerDashboardPage from "@/modules/designer/pages/DesignerDashboardPage";
 
 export const metadata = {
-  title: "Designer Dashboard — Weavly",
-  description: "Private designer workspace and analytics.",
+  title: "Designer Studio Dashboard — Weavly",
+  description: "Private designer workspace, inventory management, and bespoke commission requests.",
 };
 
 export default function DesignerDashboardRoute() {
-  return <DesignerStudioPage />;
+  return <DesignerDashboardPage />;
 }

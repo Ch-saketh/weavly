@@ -29,7 +29,7 @@ export default function DesignerRegisterPage() {
 
     try {
       await register(formData);
-      router.push("/designer-studio");
+      router.push("/designer/dashboard");
     } catch (err) {
       setError(err.message || "Failed to register designer account");
     } finally {
@@ -39,15 +39,15 @@ export default function DesignerRegisterPage() {
 
   return (
     <div className="min-h-screen bg-[#F5EFEB] flex items-center justify-center p-6 text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white">
-      <div className="w-full max-w-lg border border-[#183B56] bg-[#F5EFEB] p-8 sm:p-10 shadow-xs space-y-6">
+      <div className="w-full max-w-lg border border-[#183B56] bg-white p-8 sm:p-10 shadow-xs space-y-6">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 border border-[#183B56] bg-white text-[#183B56] flex items-center justify-center mx-auto mb-2">
+          <div className="w-12 h-12 border border-[#183B56] bg-[#DFE7ED] text-[#183B56] flex items-center justify-center mx-auto mb-2">
             <Scissors size={20} />
           </div>
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184]">
-            Atelier Registration
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#183B56]">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-2.5 py-0.5 inline-block">
+            Designer Registration
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
             Register as a Verified Designer
           </h1>
           <p className="text-xs text-[#5A7184] leading-relaxed">
@@ -152,7 +152,7 @@ export default function DesignerRegisterPage() {
               disabled={submitting}
               className="w-full py-3.5 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.16em] border-none cursor-pointer shadow-xs flex items-center justify-center gap-2 transition-all disabled:opacity-50"
             >
-              <span>{submitting ? "Creating Atelier..." : "Create Designer Account"}</span>
+              <span>{submitting ? "Creating Studio Account..." : "Create Designer Account"}</span>
               <ArrowRight size={13} />
             </button>
           </div>

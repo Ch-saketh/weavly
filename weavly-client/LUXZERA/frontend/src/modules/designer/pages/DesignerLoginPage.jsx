@@ -21,7 +21,7 @@ export default function DesignerLoginPage() {
 
     try {
       await login({ email, password });
-      router.push("/designer-studio");
+      router.push("/designer/dashboard");
     } catch (err) {
       setError(err.message || "Invalid designer email or password");
     } finally {

@@ -174,7 +174,7 @@ export default function DesignerStudioPage() {
                     onClick={() => router.push("/designer/dashboard")}
                     className="py-3.5 px-6 bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] text-xs font-bold uppercase tracking-[0.16em] border border-[#183B56] cursor-pointer transition-all flex items-center gap-2"
                   >
-                    <span>Enter Atelier Management</span>
+                    <span>Enter Designer Dashboard</span>
                     <ArrowRight size={13} />
                   </button>
                 ) : (
