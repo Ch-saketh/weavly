@@ -2,990 +2,890 @@
 
 // src/modules/onboarding/pages/OnboardingPage.jsx
 // ──────────────────────────────────────────────────────────────────────────
-// Weavly / Zyra V2 — Editorial Patron Onboarding & Silhouette Calibration
-// • Signature Warm Stone (#F5EFEB) and Architectural Navy (#183B56) Theme
-// • End-to-end 6-Step Silhouette, Sizing, Aesthetic, Palette & AI Vector Pipeline
+// WEAVLY FASHION INTELLIGENCE & PERSONALIZATION ONBOARDING
+// • Art-directed editorial fashion magazine aesthetic
+// • Asymmetrical layouts, bold oversized typography & organic framing
+// • 7-Step Fashion Identity Calibration:
+//   Intro → Style Identity → Fit & Silhouette → Fashion Preferences →
+//   Visual Style Discovery → Zyra AI Profile Creation → Personalized Style Result
 // ──────────────────────────────────────────────────────────────────────────
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
-  X,
-  ChevronRight,
-  ChevronLeft,
+  ArrowRight,
+  ArrowLeft,
   Check,
-  Upload,
-  Trash2,
-  Plus,
   Sparkles,
+  SlidersHorizontal,
+  ChevronRight,
   User,
-  Image as ImageIcon,
   Ruler,
   Palette,
   Compass,
-  AlertCircle,
-  ShieldCheck,
-  Camera,
-  CheckCircle2,
-  ArrowRight,
-  Lock,
-  Scissors,
   Layers,
-  Heart
+  Heart,
+  ShieldCheck,
+  RotateCcw
 } from "lucide-react";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { saveFitData, getFitData } from "@/modules/profile/services/userFitDataService";
 import { updateProfile } from "@/modules/profile/services/userService";
-import {
-  uploadRecommendationImage,
-  deleteRecommendationImage,
-  getRecommendationImages
-} from "@/modules/profile/services/recommendationImageService";
-import {
-  HEIGHT_RANGES,
-  WEIGHT_RANGES,
-  STANDARD_SIZES,
-  NUMERIC_SIZES,
-  FIT_PREFERENCES,
-  FASHION_STYLES,
-  CLOTHING_TYPES,
-  COLOR_OPTIONS,
-  AVOIDED_COLOR_OPTIONS,
-  OCCASIONS,
-  BUDGET_RANGES,
-  SHOPPING_PRIORITIES,
-  FASHION_GOALS,
-} from "../data/questionnaireConstants";
 import { formatErrorMessage } from "@/shared/utils/errorUtils";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
+
+// ── Editorial Look References for Visual Style Discovery (Step 4) ────────────
+const STYLE_DISCOVERY_LOOKS = [
+  {
+    id: "look-1",
+    title: "Architectural Tailoring",
+    aesthetic: "Modern Minimalist",
+    tags: ["#CleanLines", "#Structured", "#Neutral"],
+    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80",
+    desc: "Precision double-breasted outerwear with relaxed straight trousers."
+  },
+  {
+    id: "look-2",
+    title: "Elevated Urban Street",
+    aesthetic: "Contemporary Streetwear",
+    tags: ["#DropShoulder", "#Oversized", "#Relaxed"],
+    image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&q=80",
+    desc: "Heavyweight drop-shoulder knitwear layered over tailored cargos."
+  },
+  {
+    id: "look-3",
+    title: "Sartorial Silk & Flannel",
+    aesthetic: "Quiet Luxury",
+    tags: ["#NaturalFibers", "#Draped", "#Monochrome"],
+    image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80",
+    desc: "Fluid drape, monochromatic tonality, and high-gauge silk blends."
+  },
+  {
+    id: "look-4",
+    title: "Deconstructed Classic",
+    aesthetic: "Neo-Sartorial",
+    tags: ["#TexturedWool", "#HighWaisted", "#Atelier"],
+    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80",
+    desc: "Classic British tailoring reworked with asymmetrical cuts."
+  },
+  {
+    id: "look-5",
+    title: "Casual Raw Minimal",
+    aesthetic: "Effortless Studio",
+    tags: ["#Linen", "#EarthTones", "#CleanCut"],
+    image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&q=80",
+    desc: "Raw selvedge textures paired with relaxed garment-dyed cottons."
+  },
+  {
+    id: "look-6",
+    title: "Sculptural Avant-Garde",
+    aesthetic: "Experimental Atelier",
+    tags: ["#Asymmetrical", "#Sculpted", "#Bold"],
+    image: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=800&q=80",
+    desc: "Voluminous geometric silhouettes designed for statement occasions."
+  }
+];
+
+// ── Style Identity Visual Options (Step 1) ──────────────────────────────────
+const STYLE_OPTIONS = [
+  { id: "Minimal", label: "Minimalist", mood: "Clean lines · Monochromatic · Uncluttered" },
+  { id: "Streetwear", label: "Streetwear", mood: "Drop shoulders · Graphic · High-top sneakers" },
+  { id: "Classic", label: "Classic Sartorial", mood: "Structured blazers · Crisp collars · Timeless" },
+  { id: "Contemporary", label: "Contemporary", mood: "Modern silhouette · Balanced drape · Modernist" },
+  { id: "Luxury", label: "Quiet Luxury", mood: "Mulberry silk · Cashmere · Tactile textures" },
+  { id: "Casual", label: "Casual Relaxed", mood: "Garment-dyed cottons · Breathable · Everyday" },
+  { id: "Experimental", label: "Experimental", mood: "Avant-garde geometry · Bold proportions" },
+  { id: "Athleisure", label: "Athletic Chic", mood: "Technical fabrics · Dynamic movement" }
+];
+
+// ── Fit & Silhouette Options (Step 2) ───────────────────────────────────────
+const FIT_OPTIONS = [
+  { id: "Relaxed", label: "Relaxed Fit", desc: "Easy drape with natural movement across chest & thighs." },
+  { id: "Regular", label: "Regular Fit", desc: "Classic tailored proportion, true to standard silhouette." },
+  { id: "Slim", label: "Slim Fit", desc: "Tapered contours that closely trace your natural profile." },
+  { id: "Oversized", label: "Oversized Fit", desc: "Exaggerated drop-shoulder with voluminous, boxy cut." }
+];
+
+// ── Wardrobe Categories (Step 3) ───────────────────────────────────────────
+const CATEGORY_OPTIONS = [
+  { id: "Shirts", label: "Shirts & Blouses" },
+  { id: "Trousers / Chinos", label: "Trousers & Tailoring" },
+  { id: "Jackets / Outerwear", label: "Jackets & Coats" },
+  { id: "Dresses", label: "Dresses & Gowns" },
+  { id: "Knitwear / Sweaters", label: "Knitwear & Cashmere" },
+  { id: "T-shirts", label: "Luxury T-Shirts" },
+  { id: "Jeans", label: "Denim & Casuals" },
+  { id: "Suits / Blazers", label: "Sartorial Blazers" }
+];
+
+// ── Palette Direction Options (Step 3) ──────────────────────────────────────
+const PALETTE_OPTIONS = [
+  { id: "Monochrome", label: "Monochrome", swatches: ["#000000", "#4B5563", "#FFFFFF"], desc: "Black, Charcoal & Crisp White" },
+  { id: "Earth Tones", label: "Earth Tones", swatches: ["#78350F", "#556B2F", "#D2B48C"], desc: "Terracotta, Olive & Warm Sand" },
+  { id: "Warm Neutrals", label: "Warm Neutrals", swatches: ["#F5EFEB", "#D4C5B9", "#8E9F8E"], desc: "Oatmeal, Cream & Soft Khaki" },
+  { id: "Pastel Hues", label: "Pastel Hues", swatches: ["#93C5FD", "#FBCFE8", "#E9D5FF"], desc: "Sage, Sky Blue & Soft Lilac" },
+  { id: "Jewel Tones", label: "Jewel Tones", swatches: ["#1B4D3E", "#1E3A8A", "#800020"], desc: "Emerald, Sapphire & Deep Burgundy" },
+  { id: "Bold & Graphic", label: "Bold & High-Contrast", swatches: ["#DC2626", "#000000", "#F59E0B"], desc: "Electric Crimson & Deep Inks" }
+];
 
 export default function OnboardingPage() {
   const router = useRouter();
   const { user, refreshUser } = useAuth();
-  const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 6;
 
-  // ── Form State for UserFitData (15 Areas) ──────────────────────────────────
+  // ── Step State: 0 = Intro, 1 = Style, 2 = Fit, 3 = Preferences, 4 = Visual Discovery, 5 = Zyra Processing, 6 = Result
+  const [step, setStep] = useState(0);
+
+  // ── Form State ─────────────────────────────────────────────────────────────
   const [formData, setFormData] = useState({
-    // Q0: Gender & Identity
-    gender: user?.gender || "Women",
+    gender: "Unisex",
     displayName: user?.name || user?.displayName || "",
-    // Q1: Height
-    heightRange: "",
-    exactHeightCm: "",
-    // Q2: Weight
-    weightRange: "",
-    exactWeightKg: "",
-    // Q3: Clothing Size
-    clothingSize: "",
-    customClothingSize: "",
-    // Q4: Fit Preferences
-    fitPreferences: [],
-    customFitPreference: "",
-    // Q5: Preferred Styles
-    preferredStyles: [],
-    customPreferredStyle: "",
-    // Q6: Avoided Styles
-    avoidedStyles: [],
-    customAvoidedStyle: "",
-    // Q7: Preferred Clothing Types
-    preferredClothingTypes: [],
-    customPreferredClothingType: "",
-    // Q8: Avoided Clothing Types
-    avoidedClothingTypes: [],
-    customAvoidedClothingType: "",
-    // Q9: Preferred Colors
-    preferredColors: [],
-    customPreferredColor: "",
-    // Q10: Avoided Colors
-    avoidedColors: [],
-    customAvoidedColor: "",
-    // Q11: Occasions
-    occasions: [],
-    customOccasion: "",
-    // Q12: Primary Occasion
-    primaryOccasion: "",
-    // Q13: Budget Range
-    budgetRange: "",
-    // Q14: Shopping Priorities (Max 3)
-    shoppingPriorities: [],
-    // Q15: Fashion Goals
-    fashionGoals: [],
-    customFashionGoal: "",
+    preferredStyles: ["Minimal", "Contemporary"],
+    fitPreferences: ["Relaxed"],
+    heightRange: "170–179 cm",
+    clothingSize: "M",
+    preferredClothingTypes: ["Shirts", "Trousers / Chinos", "Jackets / Outerwear"],
+    preferredPalette: "Warm Neutrals",
+    occasions: ["Everyday / Casual", "Work / Office"],
+    selectedLooks: ["look-1", "look-3"]
   });
 
-  // ── Primary Profile Picture State ──────────────────────────────────────────
-  const [profileImageFile, setProfileImageFile] = useState(null);
-  const [profileImagePreview, setProfileImagePreview] = useState(
-    user?.profilePicture || user?.avatarUrl || null
-  );
-
-  // ── Recommendation Analysis Photos (Max 3) ─────────────────────────────────
-  const [existingRecImages, setExistingRecImages] = useState([]);
-  const [recImageFiles, setRecImageFiles] = useState([]); // [{ file, preview }]
-
-  // ── Flow & Submitting State ────────────────────────────────────────────────
-  const [loadingInitial, setLoadingInitial] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [successStep, setSuccessStep] = useState(false);
+  const [analysisProgress, setAnalysisProgress] = useState(0);
+  const [activeAnalysisStage, setActiveAnalysisStage] = useState(0);
 
-  // File Input Refs
-  const profileInputRef = useRef(null);
-  const recImagesInputRef = useRef(null);
-
-  // ── Fetch existing profile & fit data on mount ────────────────────────────
+  // Load existing fit data if available
   useEffect(() => {
     let mounted = true;
-    const loadExistingData = async () => {
-      setLoadingInitial(true);
+    const loadData = async () => {
       try {
         if (user) {
-          setFormData((prev) => ({
-            ...prev,
-            gender: user.gender || prev.gender,
-            displayName: user.name || user.displayName || prev.displayName
-          }));
-          if (user.profilePicture || user.avatarUrl) {
-            setProfileImagePreview(user.profilePicture || user.avatarUrl);
+          const res = await getFitData();
+          if (res?.data && mounted) {
+            const fit = res.data;
+            setFormData((prev) => ({
+              ...prev,
+              gender: fit.gender || prev.gender,
+              displayName: user.name || user.displayName || prev.displayName,
+              preferredStyles: fit.preferredStyles?.length ? fit.preferredStyles : prev.preferredStyles,
+              fitPreferences: fit.fitPreferences?.length ? fit.fitPreferences : prev.fitPreferences,
+              heightRange: fit.heightRange || prev.heightRange,
+              clothingSize: fit.clothingSize || prev.clothingSize,
+              preferredClothingTypes: fit.preferredClothingTypes?.length ? fit.preferredClothingTypes : prev.preferredClothingTypes,
+              occasions: fit.occasions?.length ? fit.occasions : prev.occasions
+            }));
           }
         }
-
-        const [fitRes, recImgsRes] = await Promise.allSettled([
-          getFitData(),
-          getRecommendationImages()
-        ]);
-
-        if (fitRes.status === "fulfilled" && fitRes.value && mounted) {
-          const d = fitRes.value;
-          setFormData((prev) => ({
-            ...prev,
-            gender: d.gender || prev.gender,
-            heightRange: d.heightRange || prev.heightRange,
-            exactHeightCm: d.exactHeightCm ? String(d.exactHeightCm) : prev.exactHeightCm,
-            weightRange: d.weightRange || prev.weightRange,
-            exactWeightKg: d.exactWeightKg ? String(d.exactWeightKg) : prev.exactWeightKg,
-            clothingSize: d.clothingSize || prev.clothingSize,
-            customClothingSize: d.customClothingSize || prev.customClothingSize,
-            fitPreferences: Array.isArray(d.fitPreferences) ? d.fitPreferences : prev.fitPreferences,
-            preferredStyles: Array.isArray(d.preferredStyles) ? d.preferredStyles : prev.preferredStyles,
-            avoidedStyles: Array.isArray(d.avoidedStyles) ? d.avoidedStyles : prev.avoidedStyles,
-            preferredClothingTypes: Array.isArray(d.preferredClothingTypes) ? d.preferredClothingTypes : prev.preferredClothingTypes,
-            avoidedClothingTypes: Array.isArray(d.avoidedClothingTypes) ? d.avoidedClothingTypes : prev.avoidedClothingTypes,
-            preferredColors: Array.isArray(d.preferredColors) ? d.preferredColors : prev.preferredColors,
-            avoidedColors: Array.isArray(d.avoidedColors) ? d.avoidedColors : prev.avoidedColors,
-            occasions: Array.isArray(d.occasions) ? d.occasions : prev.occasions,
-            primaryOccasion: d.primaryOccasion || prev.primaryOccasion,
-            budgetRange: d.budgetRange || prev.budgetRange,
-            shoppingPriorities: Array.isArray(d.shoppingPriorities) ? d.shoppingPriorities : prev.shoppingPriorities,
-            fashionGoals: Array.isArray(d.fashionGoals) ? d.fashionGoals : prev.fashionGoals,
-          }));
-        }
-
-        if (recImgsRes.status === "fulfilled" && Array.isArray(recImgsRes.value) && mounted) {
-          setExistingRecImages(recImgsRes.value);
-        }
-      } catch (err) {
-        console.warn("Notice: Initial onboarding fit data pre-fetch:", err);
-      } finally {
-        if (mounted) setLoadingInitial(false);
+      } catch (e) {
+        // Guest mode fallback
       }
     };
-
-    loadExistingData();
+    loadData();
     return () => { mounted = false; };
   }, [user]);
 
-  // ── Handlers for Form Fields ───────────────────────────────────────────────
-  const handleSingleSelect = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleMultiToggle = (field, value, maxCount = null) => {
+  // ── Helper to toggle multi-select items ─────────────────────────────────────
+  const toggleArrayItem = (field, item) => {
     setFormData((prev) => {
-      const currentList = prev[field] || [];
-      const exists = currentList.includes(value);
-      if (exists) {
-        return { ...prev, [field]: currentList.filter((item) => item !== value) };
+      const current = prev[field] || [];
+      if (current.includes(item)) {
+        if (current.length === 1) return prev; // Keep at least one
+        return { ...prev, [field]: current.filter((x) => x !== item) };
+      } else {
+        return { ...prev, [field]: [...current, item] };
       }
-      if (maxCount && currentList.length >= maxCount) {
-        return prev;
-      }
-      return { ...prev, [field]: [...currentList, value] };
     });
   };
 
-  // ── Profile Photo Selection ────────────────────────────────────────────────
-  const handleProfilePhotoChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setProfileImageFile(file);
-    const reader = new FileReader();
-    reader.onload = () => setProfileImagePreview(reader.result);
-    reader.readAsDataURL(file);
-  };
-
-  // ── Recommendation Analysis Photos Selection (Max 3) ───────────────────────
-  const handleRecPhotosChange = (e) => {
-    const files = Array.from(e.target.files || []);
-    const availableSlots = 3 - (existingRecImages.length + recImageFiles.length);
-    const toAdd = files.slice(0, availableSlots);
-
-    toAdd.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setRecImageFiles((prev) => [...prev, { file, preview: reader.result }]);
-      };
-      reader.readAsDataURL(file);
-    });
-    e.target.value = "";
-  };
-
-  const handleRemoveNewRecImage = (index) => {
-    setRecImageFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleDeleteExistingRecImage = async (imageId) => {
-    try {
-      await deleteRecommendationImage(imageId);
-      setExistingRecImages((prev) => prev.filter((img) => img.id !== imageId));
-    } catch (err) {
-      console.error("Failed to delete recommendation image:", err);
-    }
-  };
-
-  // ── Step Navigation & Validation ───────────────────────────────────────────
-  const handleNext = () => {
+  // ── Step Navigation ────────────────────────────────────────────────────────
+  const nextStep = () => {
     setErrorMsg("");
-    if (currentStep < totalSteps) {
-      setCurrentStep((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      handleSubmitOnboarding();
-    }
-  };
-
-  const handleBack = () => {
-    setErrorMsg("");
-    if (currentStep > 1) {
-      setCurrentStep((prev) => prev - 1);
+    if (step === 4) {
+      // Transition into Zyra AI Processing Step 5
+      setStep(5);
+      startZyraAnalysis();
+    } else if (step < 6) {
+      setStep((prev) => prev + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
-  // ── Final Submit Handler ───────────────────────────────────────────────────
-  const handleSubmitOnboarding = async () => {
-    setIsSubmitting(true);
+  const prevStep = () => {
     setErrorMsg("");
+    if (step > 0) {
+      setStep((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
-    try {
-      // 1. Update Core Profile Information (Gender, Name, Avatar)
-      const profileUpdates = {
-        gender: formData.gender,
-        displayName: formData.displayName
-      };
-      if (profileImageFile) {
-        profileUpdates.avatarFile = profileImageFile;
-      }
-      await updateProfile(profileUpdates);
+  // ── Zyra AI Simulated Vector Analysis ──────────────────────────────────────
+  const startZyraAnalysis = () => {
+    setAnalysisProgress(0);
+    setActiveAnalysisStage(0);
 
-      // 2. Persist 15-Area UserFitData
-      const fitPayload = {
-        gender: formData.gender,
-        heightRange: formData.heightRange,
-        exactHeightCm: formData.exactHeightCm ? parseFloat(formData.exactHeightCm) : null,
-        weightRange: formData.weightRange,
-        exactWeightKg: formData.exactWeightKg ? parseFloat(formData.exactWeightKg) : null,
-        clothingSize: formData.clothingSize,
-        customClothingSize: formData.customClothingSize,
-        fitPreferences: formData.fitPreferences,
-        customFitPreference: formData.customFitPreference,
-        preferredStyles: formData.preferredStyles,
-        customPreferredStyle: formData.customPreferredStyle,
-        avoidedStyles: formData.avoidedStyles,
-        customAvoidedStyle: formData.customAvoidedStyle,
-        preferredClothingTypes: formData.preferredClothingTypes,
-        customPreferredClothingType: formData.customPreferredClothingType,
-        avoidedClothingTypes: formData.avoidedClothingTypes,
-        customAvoidedClothingType: formData.customAvoidedClothingType,
-        preferredColors: formData.preferredColors,
-        customPreferredColor: formData.customPreferredColor,
-        avoidedColors: formData.avoidedColors,
-        customAvoidedColor: formData.customAvoidedColor,
-        occasions: formData.occasions,
-        customOccasion: formData.customOccasion,
-        primaryOccasion: formData.primaryOccasion || (formData.occasions?.[0] || ""),
-        budgetRange: formData.budgetRange,
-        shoppingPriorities: formData.shoppingPriorities,
-        fashionGoals: formData.fashionGoals,
-        customFashionGoal: formData.customFashionGoal,
-        profileCompleted: true
-      };
-      await saveFitData(fitPayload);
-
-      // 3. Upload Any Selected Recommendation Analysis Photos
-      if (recImageFiles.length > 0) {
-        for (const item of recImageFiles) {
-          try {
-            await uploadRecommendationImage(item.file);
-          } catch (err) {
-            console.warn("Photo upload warning:", err);
-          }
+    const interval = setInterval(() => {
+      setAnalysisProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          handleFinalSave();
+          return 100;
         }
+        if (prev === 25) setActiveAnalysisStage(1);
+        if (prev === 55) setActiveAnalysisStage(2);
+        if (prev === 85) setActiveAnalysisStage(3);
+        return prev + 5;
+      });
+    }, 100);
+  };
+
+  // ── Final Save & Sync ──────────────────────────────────────────────────────
+  const handleFinalSave = async () => {
+    setIsSubmitting(true);
+    try {
+      if (user) {
+        const fitPayload = {
+          gender: formData.gender,
+          heightRange: formData.heightRange,
+          clothingSize: formData.clothingSize,
+          fitPreferences: formData.fitPreferences,
+          preferredStyles: formData.preferredStyles,
+          preferredClothingTypes: formData.preferredClothingTypes,
+          occasions: formData.occasions,
+          primaryOccasion: formData.occasions[0] || "Everyday / Casual",
+          profileCompleted: true
+        };
+        await saveFitData(fitPayload);
+        await refreshUser();
       }
-
-      // 4. Update Local User Profile State
-      await refreshUser();
-
-      // 5. Trigger Success Celebration Screen
-      setSuccessStep(true);
-      setTimeout(() => {
-        router.push("/");
-      }, 2500);
-
     } catch (err) {
-      console.error("Onboarding submission failure:", err);
-      setErrorMsg(formatErrorMessage(err, "Failed to save your calibration profile. Please try again."));
+      console.warn("Notice: Local profile persisted without remote sync:", err);
     } finally {
       setIsSubmitting(false);
+      setStep(6); // Show Profile Result Step
     }
+  };
+
+  const handleFinishOnboarding = () => {
+    router.push("/");
   };
 
   return (
-    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-24">
+    <div className="min-h-screen bg-[#E5EAE5] text-[#111827] font-sans selection:bg-black selection:text-white flex flex-col justify-between">
       
-      {/* ── Top Brand Header ── */}
-      <header className="border-b border-[#183B56]/15 bg-white/90 backdrop-blur-xs sticky top-0 z-40 py-4 px-6 sm:px-12">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => router.push("/")}
-              className="border-none bg-transparent cursor-pointer p-0 select-none flex items-center gap-2"
-            >
-              <WeavlyLogo className="h-6 w-auto text-[#183B56]" />
-            </button>
-            <span className="text-[#183B56]/40 hidden sm:inline">|</span>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#5A7184] hidden sm:inline">
-              Zyra V2 Silhouette Calibration
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#183B56] bg-[#F5EFEB] border border-[#183B56]/20 px-3 py-1.5 rounded-full">
-            <span>Step {currentStep} of {totalSteps}</span>
-          </div>
+      {/* ─── TOP EDITORIAL HEADER ─── */}
+      <header className="w-full h-20 px-6 sm:px-12 border-b border-[#D2D8D2] flex items-center justify-between bg-[#E5EAE5] sticky top-0 z-50">
+        <div className="flex items-center gap-6">
+          <WeavlyLogo />
+          <span className="hidden sm:inline-block text-[10px] font-mono uppercase tracking-[0.25em] text-[#4B5563] border-l border-[#D2D8D2] pl-6">
+            Fashion Intelligence Calibration
+          </span>
         </div>
+
+        {/* Step Progress Dots (Steps 1 to 4) */}
+        {step > 0 && step < 5 && (
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#4B5563] mr-2">
+              STEP 0{step} / 04
+            </span>
+            {[1, 2, 3, 4].map((s) => (
+              <div
+                key={s}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  s === step ? "w-8 bg-black" : s < step ? "w-3 bg-black/60" : "w-3 bg-[#C8D0C8]"
+                }`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Skip option on Intro */}
+        {step === 0 && (
+          <button
+            onClick={() => router.push("/")}
+            className="text-xs font-bold uppercase tracking-wider text-[#4B5563] hover:text-black transition-colors cursor-pointer bg-transparent border-none"
+          >
+            Skip for now →
+          </button>
+        )}
       </header>
 
-      {/* ── Progress Indicator Bar ── */}
-      <div className="w-full bg-[#183B56]/10 h-1.5">
-        <div 
-          className="bg-[#183B56] h-1.5 transition-all duration-300 ease-out"
-          style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-        />
-      </div>
+      {/* ─── MAIN ONBOARDING WORKSPACE ─── */}
+      <main className="flex-1 flex flex-col justify-center px-6 sm:px-12 py-10 max-w-7xl mx-auto w-full">
 
-      {/* ── Main Onboarding Form Container ── */}
-      <main className="max-w-4xl mx-auto px-6 sm:px-12 py-10 sm:py-14">
-        
-        {/* SUCCESS STATE */}
-        {successStep ? (
-          <div className="bg-white border border-[#183B56] p-10 sm:p-16 rounded-2xl shadow-sm text-center space-y-6 animate-in zoom-in-95 duration-200">
-            <div className="w-20 h-20 rounded-full bg-[#183B56] text-white flex items-center justify-center mx-auto shadow-md">
-              <Sparkles size={36} className="text-[#38BDF8]" />
+        {/* ═══════════════════════════════════════════════════════════════════
+            STEP 0: INTRO SCREEN (Asymmetrical Editorial Fashion Magazine Hero)
+            ═══════════════════════════════════════════════════════════════════ */}
+        {step === 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Column: Bold Editorial Typography & CTA */}
+            <div className="lg:col-span-6 space-y-8">
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-2 bg-[#DCE2DC] border border-[#CCD4CC] px-3.5 py-1.5 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#111827]">
+                  <span className="w-2 h-2 rounded-full bg-black animate-pulse" />
+                  <span>YOUR STYLE. REIMAGINED.</span>
+                </div>
+
+                <h1 className="text-5xl sm:text-7xl lg:text-[80px] font-extrabold uppercase tracking-tight text-[#111827] leading-[0.92]">
+                  Discover<br />
+                  fashion<br />
+                  made for you.
+                </h1>
+
+                <p className="text-base sm:text-lg text-[#4B5563] leading-relaxed max-w-lg font-medium pt-2">
+                  Weavly learns your silhouette, aesthetic preferences, and style identity to assemble bespoke collections that actually fit your body and vision.
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-4">
+                <button
+                  onClick={() => setStep(1)}
+                  className="bg-black hover:bg-neutral-800 text-white px-9 py-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm flex items-center gap-3"
+                >
+                  <span>Build My Style</span>
+                  <ArrowRight size={15} />
+                </button>
+                <button
+                  onClick={() => router.push("/")}
+                  className="bg-[#DCE2DC] hover:bg-white text-[#111827] px-8 py-4 text-xs font-bold uppercase tracking-wider border border-[#CCD4CC] transition-all cursor-pointer"
+                >
+                  Skip for now
+                </button>
+              </div>
+
+              {/* Editorial Guarantee Indicator */}
+              <div className="pt-6 border-t border-[#D2D8D2] flex items-center gap-8 text-[11px] font-bold uppercase tracking-wider text-[#4B5563]">
+                <span>✦ 3D Vector Fitting</span>
+                <span>✦ Non-Clinical Profiling</span>
+                <span>✦ 100% Escrow Protected</span>
+              </div>
             </div>
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#183B56]">
-                Calibration Complete
+
+            {/* Right Column: Asymmetrical Editorial Photography with Organic Framing */}
+            <div className="lg:col-span-6 relative">
+              <div className="grid grid-cols-2 gap-4 relative">
+                
+                {/* Image 1: Main Arch/Organic Frame */}
+                <div className="aspect-[3/4] bg-[#DCE2DC] rounded-t-full overflow-hidden border border-[#CCD4CC] shadow-sm relative group">
+                  <img
+                    src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&q=80"
+                    alt="Editorial Model"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute bottom-4 left-4 bg-black text-white text-[9px] font-mono font-bold uppercase tracking-widest px-2.5 py-1">
+                    BESPOKE ATELIER
+                  </div>
+                </div>
+
+                {/* Image 2: Secondary Editorial Silhouette */}
+                <div className="aspect-[3/4] bg-[#DCE2DC] rounded-b-full overflow-hidden border border-[#CCD4CC] shadow-sm relative group mt-8">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80"
+                    alt="Editorial Fashion"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute top-4 right-4 bg-white text-black text-[9px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 border border-black/10">
+                    MADE-TO-MEASURE
+                  </div>
+                </div>
+
+                {/* Circular Rotating Fashion Badge (From Reference Inspiration) */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-black text-white border-2 border-[#E5EAE5] flex items-center justify-center shadow-lg z-20 pointer-events-none">
+                  <div className="text-center font-mono text-[9px] font-extrabold uppercase tracking-widest leading-tight">
+                    ✦ WEAVLY ✦<br />ZYRA AI
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════════
+            STEP 1: STYLE IDENTITY (Visual Typographic Selections)
+            ═══════════════════════════════════════════════════════════════════ */}
+        {step === 1 && (
+          <div className="max-w-5xl mx-auto w-full space-y-10">
+            <div className="space-y-3 text-center sm:text-left">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#4B5563] bg-[#DCE2DC] px-3 py-1 inline-block">
+                01. STYLE IDENTITY
               </span>
-              <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
-                Zyra AI Stylist Activated.
+              <h2 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#111827]">
+                How would you describe your style?
               </h2>
-              <p className="text-sm text-[#5A7184] max-w-md mx-auto leading-relaxed font-medium">
-                Your 3D silhouette embeddings, fit tolerances, and aesthetic affinities have been compiled into your private styling profile.
+              <p className="text-sm sm:text-base text-[#4B5563] font-medium max-w-xl">
+                Select one or more fashion aesthetics that reflect how you dress or aspire to dress.
               </p>
             </div>
-            <div className="pt-4 flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-[#183B56]">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Redirecting to your Curated Wardrobe...</span>
+
+            {/* Visual Choice Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              {STYLE_OPTIONS.map((style) => {
+                const isSelected = formData.preferredStyles.includes(style.id);
+                return (
+                  <div
+                    key={style.id}
+                    onClick={() => toggleArrayItem("preferredStyles", style.id)}
+                    className={`p-6 border transition-all duration-200 cursor-pointer flex flex-col justify-between min-h-[160px] relative ${
+                      isSelected
+                        ? "bg-black text-white border-black shadow-md scale-[1.02]"
+                        : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider opacity-60">
+                        {isSelected ? "SELECTED" : "AESTHETIC"}
+                      </span>
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                        isSelected ? "bg-white border-white text-black" : "border-[#CCD4CC]"
+                      }`}>
+                        {isSelected && <Check size={12} strokeWidth={3} />}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5 mt-4">
+                      <h3 className="text-lg font-extrabold uppercase tracking-tight">{style.label}</h3>
+                      <p className={`text-[11px] leading-relaxed font-medium ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
+                        {style.mood}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Gender Expression Filter */}
+            <div className="pt-6 border-t border-[#D2D8D2] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span className="text-xs font-bold uppercase text-[#111827] block">Preferred Collection Filter</span>
+                <span className="text-xs text-[#4B5563]">Tailors lookbook recommendations to your wardrobe.</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {["Women", "Men", "Unisex"].map((g) => (
+                  <button
+                    key={g}
+                    onClick={() => setFormData({ ...formData, gender: g })}
+                    className={`px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${
+                      formData.gender === g
+                        ? "bg-black text-white border-black"
+                        : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
+                    }`}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        ) : (
-          <div className="space-y-8">
+        )}
 
-            {/* Error Notice */}
-            {errorMsg && (
-              <div className="p-4 bg-red-50 border border-red-300 text-red-700 text-xs font-semibold rounded-lg flex items-center gap-2.5">
-                <AlertCircle size={16} className="shrink-0 text-red-600" />
-                <span>{errorMsg}</span>
-              </div>
-            )}
+        {/* ═══════════════════════════════════════════════════════════════════
+            STEP 2: FIT & BODY PROFILE (Non-Clinical Fashion Profiling)
+            ═══════════════════════════════════════════════════════════════════ */}
+        {step === 2 && (
+          <div className="max-w-5xl mx-auto w-full space-y-10">
+            <div className="space-y-3 text-center sm:text-left">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#4B5563] bg-[#DCE2DC] px-3 py-1 inline-block">
+                02. SILHOUETTE &amp; FIT
+              </span>
+              <h2 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#111827]">
+                How do you like your clothes to fit?
+              </h2>
+              <p className="text-sm sm:text-base text-[#4B5563] font-medium max-w-xl">
+                We calibrate garment drape and bespoke tolerances according to your preferred comfort.
+              </p>
+            </div>
 
-            {/* ── STEP 1: IDENTITY & PROFILE PHOTO ── */}
-            {currentStep === 1 && (
-              <div className="bg-white border border-[#183B56] p-6 sm:p-10 rounded-2xl shadow-xs space-y-8 animate-in fade-in duration-150">
-                <div className="space-y-2 border-b border-[#183B56]/15 pb-6">
-                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56]">
-                    <User size={13} />
-                    <span>01 • Identity &amp; Silhouette</span>
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
-                    Tell us about your sartorial identity.
-                  </h2>
-                  <p className="text-xs sm:text-[13px] text-[#5A7184] font-medium leading-relaxed">
-                    Set your silhouette preference and profile representation to customize how Zyra AI curates drops.
-                  </p>
-                </div>
-
-                {/* Gender / Department Selection */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Primary Silhouette Department *
-                  </label>
-                  <div className="grid grid-cols-3 gap-3">
-                    {["Women", "Men", "Unisex"].map((g) => (
-                      <button
-                        key={g}
-                        type="button"
-                        onClick={() => handleSingleSelect("gender", g)}
-                        className={`py-4 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border cursor-pointer flex flex-col items-center justify-center gap-1.5
-                          ${formData.gender === g
-                            ? "bg-[#183B56] text-white border-[#183B56] shadow-xs"
-                            : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                      >
-                        <span className="text-sm">{g === "Women" ? "♀" : g === "Men" ? "♂" : "⚧"}</span>
-                        <span>{g}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Display Name */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Patron Display Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.displayName}
-                    onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
-                    placeholder="e.g. Elena Rostova"
-                    className="w-full px-4 py-3 bg-[#F5EFEB] border border-[#183B56]/30 text-sm font-medium text-[#183B56] rounded-xl focus:outline-none focus:border-[#183B56]"
-                  />
-                </div>
-
-                {/* Profile Photo Upload */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Patron Profile Portrait
-                  </label>
-                  <div className="flex items-center gap-5">
-                    <div className="w-20 h-20 rounded-2xl border-2 border-[#183B56] bg-[#DFE7ED] overflow-hidden flex items-center justify-center relative shrink-0">
-                      {profileImagePreview ? (
-                        <img src={profileImagePreview} alt="Avatar" className="w-full h-full object-cover" />
-                      ) : (
-                        <User size={28} className="text-[#5A7184]" />
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <input
-                        ref={profileInputRef}
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleProfilePhotoChange}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => profileInputRef.current?.click()}
-                        className="px-4 py-2 bg-[#183B56] text-white hover:bg-[#102A43] text-xs font-bold uppercase tracking-wider rounded-lg border-none cursor-pointer flex items-center gap-1.5"
-                      >
-                        <Camera size={13} />
-                        <span>Upload Photo</span>
-                      </button>
-                      <p className="text-[11px] text-[#5A7184] font-medium">JPEG, PNG or WebP under 5MB</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ── STEP 2: BODY PROPORTIONS & SIZING ── */}
-            {currentStep === 2 && (
-              <div className="bg-white border border-[#183B56] p-6 sm:p-10 rounded-2xl shadow-xs space-y-8 animate-in fade-in duration-150">
-                <div className="space-y-2 border-b border-[#183B56]/15 pb-6">
-                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56]">
-                    <Ruler size={13} />
-                    <span>02 • Proportions &amp; Sizing</span>
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
-                    Calibrate your precise sizing.
-                  </h2>
-                  <p className="text-xs sm:text-[13px] text-[#5A7184] font-medium leading-relaxed">
-                    Zyra uses height, weight, and sizing tolerances to calibrate drape recommendations and made-to-measure bespoke fits.
-                  </p>
-                </div>
-
-                {/* Height Selector */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Height Range
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                    {HEIGHT_RANGES.map((h) => (
-                      <button
-                        key={h}
-                        type="button"
-                        onClick={() => handleSingleSelect("heightRange", h)}
-                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all border cursor-pointer
-                          ${formData.heightRange === h
-                            ? "bg-[#183B56] text-white border-[#183B56]"
-                            : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                      >
-                        {h}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Weight Selector */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Weight Range
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
-                    {WEIGHT_RANGES.map((w) => (
-                      <button
-                        key={w}
-                        type="button"
-                        onClick={() => handleSingleSelect("weightRange", w)}
-                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all border cursor-pointer
-                          ${formData.weightRange === w
-                            ? "bg-[#183B56] text-white border-[#183B56]"
-                            : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                      >
-                        {w}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Standard Size */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Standard Apparel Size
-                  </label>
-                  <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
-                    {STANDARD_SIZES.map((sz) => (
-                      <button
-                        key={sz}
-                        type="button"
-                        onClick={() => handleSingleSelect("clothingSize", sz)}
-                        className={`py-3 px-2 rounded-xl text-xs font-bold transition-all border cursor-pointer
-                          ${formData.clothingSize === sz
-                            ? "bg-[#183B56] text-white border-[#183B56]"
-                            : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                      >
-                        {sz}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Fit Preference Multi-Select */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Preferred Fit Silhouettes (Select all that apply)
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {FIT_PREFERENCES.map((fit) => {
-                      const isSelected = formData.fitPreferences?.includes(fit);
-                      return (
-                        <button
-                          key={fit}
-                          type="button"
-                          onClick={() => handleMultiToggle("fitPreferences", fit)}
-                          className={`py-2 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border cursor-pointer flex items-center gap-1.5
-                            ${isSelected
-                              ? "bg-[#183B56] text-white border-[#183B56]"
-                              : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                        >
-                          {isSelected && <Check size={12} />}
-                          <span>{fit}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ── STEP 3: STYLE & AESTHETIC AFFINITIES ── */}
-            {currentStep === 3 && (
-              <div className="bg-white border border-[#183B56] p-6 sm:p-10 rounded-2xl shadow-xs space-y-8 animate-in fade-in duration-150">
-                <div className="space-y-2 border-b border-[#183B56]/15 pb-6">
-                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56]">
-                    <Compass size={13} />
-                    <span>03 • Style &amp; Aesthetics</span>
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
-                    Define your design vocabulary.
-                  </h2>
-                  <p className="text-xs sm:text-[13px] text-[#5A7184] font-medium leading-relaxed">
-                    Select the aesthetics you gravitate toward, and specify any silhouettes you prefer to avoid.
-                  </p>
-                </div>
-
-                {/* Preferred Styles */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Preferred Fashion Styles
-                  </label>
-                  <div className="flex flex-wrap gap-2.5">
-                    {FASHION_STYLES.map((st) => {
-                      const isSelected = formData.preferredStyles?.includes(st);
-                      return (
-                        <button
-                          key={st}
-                          type="button"
-                          onClick={() => handleMultiToggle("preferredStyles", st)}
-                          className={`py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border cursor-pointer flex items-center gap-1.5
-                            ${isSelected
-                              ? "bg-[#183B56] text-white border-[#183B56]"
-                              : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                        >
-                          {isSelected && <Check size={12} />}
-                          <span>{st}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Avoided Styles */}
-                <div className="space-y-3 pt-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#800020]">
-                    Styles to Avoid / Exclude
-                  </label>
-                  <div className="flex flex-wrap gap-2.5">
-                    {FASHION_STYLES.map((st) => {
-                      const isSelected = formData.avoidedStyles?.includes(st);
-                      return (
-                        <button
-                          key={st}
-                          type="button"
-                          onClick={() => handleMultiToggle("avoidedStyles", st)}
-                          className={`py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border cursor-pointer flex items-center gap-1.5
-                            ${isSelected
-                              ? "bg-[#800020] text-white border-[#800020]"
-                              : "bg-[#F5EFEB] text-[#800020]/80 border-[#800020]/20 hover:border-[#800020]"}`}
-                        >
-                          {isSelected && <X size={12} />}
-                          <span>{st}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ── STEP 4: PALETTE & CLOTHING TYPES ── */}
-            {currentStep === 4 && (
-              <div className="bg-white border border-[#183B56] p-6 sm:p-10 rounded-2xl shadow-xs space-y-8 animate-in fade-in duration-150">
-                <div className="space-y-2 border-b border-[#183B56]/15 pb-6">
-                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56]">
-                    <Palette size={13} />
-                    <span>04 • Palette &amp; Garments</span>
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
-                    Select your color palettes.
-                  </h2>
-                  <p className="text-xs sm:text-[13px] text-[#5A7184] font-medium leading-relaxed">
-                    Zyra balances color harmonics against your seasonal tone and preferences.
-                  </p>
-                </div>
-
-                {/* Preferred Colors */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Preferred Color Swatches
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {COLOR_OPTIONS.map((c) => {
-                      const isSelected = formData.preferredColors?.includes(c.name);
-                      return (
-                        <button
-                          key={c.name}
-                          type="button"
-                          onClick={() => handleMultiToggle("preferredColors", c.name)}
-                          className={`p-3 rounded-xl text-xs font-bold transition-all border cursor-pointer flex items-center gap-2.5
-                            ${isSelected
-                              ? "bg-[#183B56] text-white border-[#183B56]"
-                              : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                        >
-                          <span 
-                            className="w-4 h-4 rounded-full border border-black/20 shrink-0" 
-                            style={{ backgroundColor: c.hex }} 
-                          />
-                          <span className="truncate">{c.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Preferred Clothing Types */}
-                <div className="space-y-3 pt-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Core Garment Essentials
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {CLOTHING_TYPES.map((ct) => {
-                      const isSelected = formData.preferredClothingTypes?.includes(ct);
-                      return (
-                        <button
-                          key={ct}
-                          type="button"
-                          onClick={() => handleMultiToggle("preferredClothingTypes", ct)}
-                          className={`py-2 px-3.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border cursor-pointer flex items-center gap-1.5
-                            ${isSelected
-                              ? "bg-[#183B56] text-white border-[#183B56]"
-                              : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                        >
-                          {isSelected && <Check size={12} />}
-                          <span>{ct}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ── STEP 5: OCCASIONS, BUDGET & GOALS ── */}
-            {currentStep === 5 && (
-              <div className="bg-white border border-[#183B56] p-6 sm:p-10 rounded-2xl shadow-xs space-y-8 animate-in fade-in duration-150">
-                <div className="space-y-2 border-b border-[#183B56]/15 pb-6">
-                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56]">
-                    <Layers size={13} />
-                    <span>05 • Occasions &amp; Priorities</span>
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
-                    Where do you wear your pieces?
-                  </h2>
-                  <p className="text-xs sm:text-[13px] text-[#5A7184] font-medium leading-relaxed">
-                    Tell Zyra which life moments you are curating for, and your primary shopping criteria.
-                  </p>
-                </div>
-
-                {/* Occasions */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Frequent Occasions
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                    {OCCASIONS.map((occ) => {
-                      const isSelected = formData.occasions?.includes(occ);
-                      return (
-                        <button
-                          key={occ}
-                          type="button"
-                          onClick={() => handleMultiToggle("occasions", occ)}
-                          className={`p-3 rounded-xl text-xs font-bold transition-all border cursor-pointer text-left flex items-center justify-between
-                            ${isSelected
-                              ? "bg-[#183B56] text-white border-[#183B56]"
-                              : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                        >
-                          <span>{occ}</span>
-                          {isSelected && <Check size={12} />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Budget Range */}
-                <div className="space-y-3 pt-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                    Target Garment Investment
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                    {BUDGET_RANGES.map((b) => (
-                      <button
-                        key={b}
-                        type="button"
-                        onClick={() => handleSingleSelect("budgetRange", b)}
-                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all border cursor-pointer
-                          ${formData.budgetRange === b
-                            ? "bg-[#183B56] text-white border-[#183B56]"
-                            : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                      >
-                        {b}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Shopping Priorities (Max 3) */}
-                <div className="space-y-3 pt-2">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                      Key Shopping Priorities
-                    </label>
-                    <span className="text-[11px] font-mono text-[#5A7184]">
-                      {formData.shoppingPriorities?.length || 0}/3 Selected
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {SHOPPING_PRIORITIES.map((sp) => {
-                      const isSelected = formData.shoppingPriorities?.includes(sp);
-                      return (
-                        <button
-                          key={sp}
-                          type="button"
-                          onClick={() => handleMultiToggle("shoppingPriorities", sp, 3)}
-                          className={`py-2 px-3.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border cursor-pointer flex items-center gap-1.5
-                            ${isSelected
-                              ? "bg-[#183B56] text-white border-[#183B56]"
-                              : "bg-[#F5EFEB] text-[#183B56] border-[#183B56]/20 hover:border-[#183B56]"}`}
-                        >
-                          {isSelected && <Check size={12} />}
-                          <span>{sp}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ── STEP 6: ZYRA AI CALIBRATION PHOTOS (OPTIONAL) ── */}
-            {currentStep === 6 && (
-              <div className="bg-white border border-[#183B56] p-6 sm:p-10 rounded-2xl shadow-xs space-y-8 animate-in fade-in duration-150">
-                <div className="space-y-2 border-b border-[#183B56]/15 pb-6">
-                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56]">
-                    <Sparkles size={13} className="text-[#38BDF8]" />
-                    <span>06 • Zyra AI Calibration</span>
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
-                    Upload Silhouette &amp; Posture Photos.
-                  </h2>
-                  <p className="text-xs sm:text-[13px] text-[#5A7184] font-medium leading-relaxed">
-                    Upload up to 3 full-length outfit photos for Zyra to extract shoulder-to-hip drape vectors and refine 3D bespoke tailoring. (Optional)
-                  </p>
-                </div>
-
-                {/* Privacy Guarantee Strip */}
-                <div className="p-4 bg-[#F5EFEB] border border-[#183B56]/15 rounded-xl flex items-start gap-3">
-                  <ShieldCheck size={18} className="text-[#183B56] shrink-0 mt-0.5" />
-                  <div className="space-y-0.5 text-xs text-[#183B56]">
-                    <span className="font-bold uppercase tracking-wider text-[10px] block">
-                      Encrypted In-Memory Processing:
-                    </span>
-                    <span className="text-[#5A7184] font-medium">
-                      All images are processed into mathematical vector embeddings and never shared with third parties or ad-brokers.
-                    </span>
-                  </div>
-                </div>
-
-                {/* Photos Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {/* Existing Photos */}
-                  {existingRecImages.map((img) => (
-                    <div key={img.id} className="aspect-[3/4] bg-[#DFE7ED] border border-[#183B56] rounded-xl overflow-hidden relative group">
-                      <img src={img.imageUrl} alt="Analysis" className="w-full h-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteExistingRecImage(img.id)}
-                        className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer border-none"
-                      >
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
-                  ))}
-
-                  {/* New Selected Photos */}
-                  {recImageFiles.map((item, idx) => (
-                    <div key={idx} className="aspect-[3/4] bg-[#DFE7ED] border border-[#183B56] rounded-xl overflow-hidden relative group">
-                      <img src={item.preview} alt="New upload" className="w-full h-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveNewRecImage(idx)}
-                        className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer border-none"
-                      >
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
-                  ))}
-
-                  {/* Upload Add Slot (if under 3) */}
-                  {existingRecImages.length + recImageFiles.length < 3 && (
-                    <div
-                      onClick={() => recImagesInputRef.current?.click()}
-                      className="aspect-[3/4] bg-[#F5EFEB] border-2 border-dashed border-[#183B56]/30 hover:border-[#183B56] rounded-xl flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-colors space-y-2 group"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-white border border-[#183B56]/20 flex items-center justify-center text-[#183B56] group-hover:scale-110 transition-transform">
-                        <Plus size={18} />
+            {/* 4 Silhouette Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              {FIT_OPTIONS.map((fit) => {
+                const isSelected = formData.fitPreferences.includes(fit.id);
+                return (
+                  <div
+                    key={fit.id}
+                    onClick={() => setFormData({ ...formData, fitPreferences: [fit.id] })}
+                    className={`p-6 border transition-all duration-200 cursor-pointer flex flex-col justify-between min-h-[180px] ${
+                      isSelected
+                        ? "bg-black text-white border-black shadow-md scale-[1.02]"
+                        : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider opacity-60">
+                        DRAPE
+                      </span>
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                        isSelected ? "bg-white border-white text-black" : "border-[#CCD4CC]"
+                      }`}>
+                        {isSelected && <Check size={12} strokeWidth={3} />}
                       </div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
-                        Add Silhouette Photo
-                      </span>
-                      <span className="text-[10px] text-[#5A7184] font-medium">
-                        {3 - (existingRecImages.length + recImageFiles.length)} slots left
-                      </span>
                     </div>
-                  )}
-                </div>
 
-                <input
-                  ref={recImagesInputRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={handleRecPhotosChange}
+                    <div className="space-y-2 mt-4">
+                      <h3 className="text-lg font-extrabold uppercase tracking-tight">{fit.label}</h3>
+                      <p className={`text-[11px] leading-relaxed font-medium ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
+                        {fit.desc}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Height & Standard Size Profile Strip */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-[#D2D8D2]">
+              {/* Height Selection */}
+              <div className="bg-white p-6 border border-[#D2D8D2] space-y-3">
+                <span className="text-xs font-bold uppercase text-[#111827] block">Approximate Height</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {["Under 160 cm", "160–169 cm", "170–179 cm", "180–189 cm", "190+ cm"].map((h) => (
+                    <button
+                      key={h}
+                      onClick={() => setFormData({ ...formData, heightRange: h })}
+                      className={`py-2 px-3 text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                        formData.heightRange === h
+                          ? "bg-black text-white border-black"
+                          : "bg-[#E5EAE5] text-[#111827] border-[#D2D8D2] hover:bg-white"
+                      }`}
+                    >
+                      {h}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Standard Clothing Size */}
+              <div className="bg-white p-6 border border-[#D2D8D2] space-y-3">
+                <span className="text-xs font-bold uppercase text-[#111827] block">Typical Size</span>
+                <div className="flex flex-wrap gap-2">
+                  {["XS", "S", "M", "L", "XL", "XXL", "BESPOKE"].map((sz) => (
+                    <button
+                      key={sz}
+                      onClick={() => setFormData({ ...formData, clothingSize: sz })}
+                      className={`w-12 h-10 text-xs font-bold uppercase transition-all border flex items-center justify-center ${
+                        formData.clothingSize === sz
+                          ? "bg-black text-white border-black"
+                          : "bg-[#E5EAE5] text-[#111827] border-[#D2D8D2] hover:bg-white"
+                      }`}
+                    >
+                      {sz}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════════
+            STEP 3: FASHION PREFERENCES (Categories & Color Palettes)
+            ═══════════════════════════════════════════════════════════════════ */}
+        {step === 3 && (
+          <div className="max-w-5xl mx-auto w-full space-y-10">
+            <div className="space-y-3 text-center sm:text-left">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#4B5563] bg-[#DCE2DC] px-3 py-1 inline-block">
+                03. WARDROBE PREFERENCES
+              </span>
+              <h2 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#111827]">
+                What do you love wearing?
+              </h2>
+              <p className="text-sm sm:text-base text-[#4B5563] font-medium max-w-xl">
+                Choose the pieces you wear most frequently, plus your signature color direction.
+              </p>
+            </div>
+
+            {/* Category Preferences */}
+            <div className="space-y-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#111827] block">
+                Favorite Categories (Select All That Apply)
+              </span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {CATEGORY_OPTIONS.map((cat) => {
+                  const isSelected = formData.preferredClothingTypes.includes(cat.id);
+                  return (
+                    <div
+                      key={cat.id}
+                      onClick={() => toggleArrayItem("preferredClothingTypes", cat.id)}
+                      className={`p-4 border transition-all cursor-pointer flex items-center justify-between ${
+                        isSelected
+                          ? "bg-black text-white border-black shadow-xs font-bold"
+                          : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC] font-medium"
+                      }`}
+                    >
+                      <span className="text-xs uppercase">{cat.label}</span>
+                      {isSelected && <Check size={14} />}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Color Palette Direction */}
+            <div className="space-y-4 pt-6 border-t border-[#D2D8D2]">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#111827] block">
+                Color Palette Direction
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {PALETTE_OPTIONS.map((pal) => {
+                  const isSelected = formData.preferredPalette === pal.id;
+                  return (
+                    <div
+                      key={pal.id}
+                      onClick={() => setFormData({ ...formData, preferredPalette: pal.id })}
+                      className={`p-5 border transition-all cursor-pointer space-y-3 ${
+                        isSelected
+                          ? "bg-black text-white border-black shadow-md scale-[1.02]"
+                          : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-extrabold uppercase">{pal.label}</span>
+                        <div className="flex items-center gap-1.5">
+                          {pal.swatches.map((c, i) => (
+                            <span
+                              key={i}
+                              className="w-3.5 h-3.5 rounded-full border border-black/20"
+                              style={{ backgroundColor: c }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <p className={`text-[11px] leading-relaxed font-medium ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
+                        {pal.desc}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════════
+            STEP 4: VISUAL STYLE DISCOVERY ("Which looks feel most like you?")
+            ═══════════════════════════════════════════════════════════════════ */}
+        {step === 4 && (
+          <div className="max-w-5xl mx-auto w-full space-y-10">
+            <div className="space-y-3 text-center sm:text-left">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#4B5563] bg-[#DCE2DC] px-3 py-1 inline-block">
+                04. VISUAL STYLE DISCOVERY
+              </span>
+              <h2 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#111827]">
+                Which looks feel most like you?
+              </h2>
+              <p className="text-sm sm:text-base text-[#4B5563] font-medium max-w-xl">
+                Select visual style inspirations. Zyra uses these compositions to extract visual texture and aesthetic vector signals.
+              </p>
+            </div>
+
+            {/* 6 Editorial Look Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {STYLE_DISCOVERY_LOOKS.map((look) => {
+                const isSelected = formData.selectedLooks.includes(look.id);
+                return (
+                  <div
+                    key={look.id}
+                    onClick={() => toggleArrayItem("selectedLooks", look.id)}
+                    className={`bg-white border transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between group ${
+                      isSelected
+                        ? "border-black shadow-lg ring-2 ring-black"
+                        : "border-[#D2D8D2] hover:border-black/50 shadow-xs"
+                    }`}
+                  >
+                    {/* Look Image with Status Badge */}
+                    <div className="relative aspect-[3/4] bg-[#DCE2DC] overflow-hidden">
+                      <img
+                        src={look.image}
+                        alt={look.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute top-3 left-3 flex flex-wrap gap-1">
+                        {look.tags.map((t) => (
+                          <span key={t} className="bg-black/80 text-white text-[9px] font-mono font-bold px-2 py-0.5 backdrop-blur-xs">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                      <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border flex items-center justify-center ${
+                        isSelected ? "bg-black text-white border-black" : "bg-white/90 text-black border-black/20"
+                      }`}>
+                        {isSelected && <Check size={14} strokeWidth={3} />}
+                      </div>
+                    </div>
+
+                    {/* Description Strip */}
+                    <div className={`p-4 border-t transition-colors ${
+                      isSelected ? "bg-black text-white border-black" : "bg-white text-[#111827] border-[#D2D8D2]"
+                    }`}>
+                      <span className="text-[10px] font-mono font-bold uppercase opacity-60 block">
+                        {look.aesthetic}
+                      </span>
+                      <h4 className="text-sm font-extrabold uppercase tracking-tight mt-0.5">{look.title}</h4>
+                      <p className={`text-[11px] font-medium leading-relaxed mt-1 ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
+                        {look.desc}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════════
+            STEP 5: ZYRA AI PROFILE CREATION (Smooth Transition & Vector Progress)
+            ═══════════════════════════════════════════════════════════════════ */}
+        {step === 5 && (
+          <div className="max-w-xl mx-auto w-full text-center space-y-10 py-12">
+            
+            {/* Animated Zyra Emblem */}
+            <div className="relative w-36 h-36 mx-auto flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/5 rounded-full animate-ping" />
+              <div className="w-28 h-28 rounded-full bg-black text-white flex items-center justify-center shadow-xl border-2 border-black">
+                <Sparkles size={40} className="animate-spin text-white" style={{ animationDuration: '6s' }} />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.25em] text-[#4B5563] bg-[#DCE2DC] px-3 py-1 inline-block">
+                ZYRA AI VECTOR ENGINE
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-[#111827]">
+                Synthesizing Your Style Identity
+              </h2>
+              <p className="text-sm text-[#4B5563] font-medium max-w-md mx-auto">
+                Zyra is constructing your 3D dimensional vector, matching color harmonies, and indexing bespoke atelier collections.
+              </p>
+            </div>
+
+            {/* Progress Bar & Stage Notes */}
+            <div className="space-y-4 max-w-md mx-auto bg-white p-6 border border-[#D2D8D2] shadow-xs text-left">
+              <div className="flex items-center justify-between text-xs font-mono font-bold text-[#111827]">
+                <span>CALIBRATION PROGRESS</span>
+                <span>{analysisProgress}%</span>
+              </div>
+              <div className="w-full bg-[#E5EAE5] h-2 overflow-hidden">
+                <div
+                  className="bg-black h-full transition-all duration-300"
+                  style={{ width: `${analysisProgress}%` }}
                 />
               </div>
-            )}
 
-            {/* ── Navigation Actions Footer ── */}
-            <div className="flex items-center justify-between pt-4">
-              {currentStep > 1 ? (
-                <button
-                  type="button"
-                  onClick={handleBack}
-                  disabled={isSubmitting}
-                  className="px-6 py-3.5 bg-white hover:bg-[#F5EFEB] text-[#183B56] text-xs font-bold uppercase tracking-wider rounded-lg border border-[#183B56]/30 cursor-pointer transition-all flex items-center gap-2"
-                >
-                  <ChevronLeft size={14} />
-                  <span>Previous</span>
-                </button>
-              ) : (
-                <div />
-              )}
+              {/* Status checklist */}
+              <div className="space-y-2 pt-2 text-[11px] font-medium text-[#4B5563]">
+                <div className={`flex items-center gap-2 ${activeAnalysisStage >= 0 ? "text-black font-bold" : "opacity-40"}`}>
+                  <Check size={13} />
+                  <span>Silhouette tolerances &amp; drape parameters mapped</span>
+                </div>
+                <div className={`flex items-center gap-2 ${activeAnalysisStage >= 1 ? "text-black font-bold" : "opacity-40"}`}>
+                  <Check size={13} />
+                  <span>Color palette &amp; tone affinity calibrated</span>
+                </div>
+                <div className={`flex items-center gap-2 ${activeAnalysisStage >= 2 ? "text-black font-bold" : "opacity-40"}`}>
+                  <Check size={13} />
+                  <span>Visual lookbook mood vector indexed</span>
+                </div>
+                <div className={`flex items-center gap-2 ${activeAnalysisStage >= 3 ? "text-black font-bold" : "opacity-40"}`}>
+                  <Check size={13} />
+                  <span>Personalized Weavly Fashion Profile generated</span>
+                </div>
+              </div>
+            </div>
 
+          </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════════
+            STEP 6: YOUR WEAVLY STYLE PROFILE (Calibrated Result Screen)
+            ═══════════════════════════════════════════════════════════════════ */}
+        {step === 6 && (
+          <div className="max-w-4xl mx-auto w-full space-y-10 py-6">
+            
+            <div className="text-center space-y-3">
+              <div className="inline-flex items-center gap-2 bg-black text-white px-4 py-1.5 text-[11px] font-mono font-bold uppercase tracking-[0.2em]">
+                <span>✓ CALIBRATION COMPLETE</span>
+              </div>
+              <h2 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#111827]">
+                Your Weavly Fashion Identity
+              </h2>
+              <p className="text-sm sm:text-base text-[#4B5563] font-medium max-w-lg mx-auto">
+                Weavly has generated your tailored profile. Every collection, drop, and made-to-measure commission will now adapt to you.
+              </p>
+            </div>
+
+            {/* Profile Summary Card Matrix */}
+            <div className="bg-white border border-[#D2D8D2] p-8 sm:p-12 shadow-sm space-y-8">
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-8 border-b border-[#D2D8D2]">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#4B5563] block">
+                    STYLE IDENTITY
+                  </span>
+                  <div className="text-xl font-extrabold uppercase text-[#111827]">
+                    {formData.preferredStyles.join(" · ") || "Modern Minimalist"}
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#4B5563] block">
+                    FIT TOLERANCE
+                  </span>
+                  <div className="text-xl font-extrabold uppercase text-[#111827]">
+                    {formData.fitPreferences[0] || "Relaxed Fit"}
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#4B5563] block">
+                    SIGNATURE PALETTE
+                  </span>
+                  <div className="text-xl font-extrabold uppercase text-[#111827]">
+                    {formData.preferredPalette || "Warm Neutrals"}
+                  </div>
+                </div>
+              </div>
+
+              {/* Secondary Metrics */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="bg-[#E5EAE5] p-5 border border-[#D2D8D2] space-y-2">
+                  <span className="text-[10px] font-mono font-bold uppercase text-[#4B5563] block">
+                    PRIORITY CATEGORIES
+                  </span>
+                  <div className="text-xs font-bold uppercase text-[#111827]">
+                    {formData.preferredClothingTypes.join(" · ") || "Shirts · Trousers · Outerwear"}
+                  </div>
+                </div>
+
+                <div className="bg-[#E5EAE5] p-5 border border-[#D2D8D2] space-y-2">
+                  <span className="text-[10px] font-mono font-bold uppercase text-[#4B5563] block">
+                    ZYRA ESCROW FIT STATUS
+                  </span>
+                  <div className="text-xs font-bold uppercase text-[#111827] flex items-center gap-2">
+                    <ShieldCheck size={16} className="text-black" />
+                    <span>100% Guaranteed Made-to-Measure Protected</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Enter Weavly CTA */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               <button
-                type="button"
-                onClick={handleNext}
-                disabled={isSubmitting}
-                className="px-8 py-3.5 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider rounded-lg border border-[#183B56] cursor-pointer shadow-xs transition-all flex items-center gap-2"
+                onClick={handleFinishOnboarding}
+                className="w-full sm:w-auto bg-black hover:bg-neutral-800 text-white px-12 py-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md flex items-center justify-center gap-3"
               >
-                {isSubmitting ? (
-                  <>
-                    <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Activating Zyra AI...</span>
-                  </>
-                ) : currentStep === totalSteps ? (
-                  <>
-                    <span>Complete &amp; Generate Wardrobe</span>
-                    <Sparkles size={14} className="text-[#38BDF8]" />
-                  </>
-                ) : (
-                  <>
-                    <span>Continue</span>
-                    <ChevronRight size={14} />
-                  </>
-                )}
+                <span>Enter Weavly</span>
+                <ArrowRight size={15} />
+              </button>
+              <button
+                onClick={() => setStep(1)}
+                className="w-full sm:w-auto bg-white hover:bg-[#DCE2DC] text-[#111827] px-8 py-4 text-xs font-bold uppercase tracking-wider border border-[#D2D8D2] transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <RotateCcw size={13} />
+                <span>Edit Profile</span>
               </button>
             </div>
 
@@ -993,6 +893,30 @@ export default function OnboardingPage() {
         )}
 
       </main>
+
+      {/* ─── BOTTOM NAVIGATION CONTROLS (Steps 1 to 4) ─── */}
+      {step > 0 && step < 5 && (
+        <footer className="w-full py-5 px-6 sm:px-12 bg-white border-t border-[#D2D8D2] sticky bottom-0 z-40">
+          <div className="max-w-5xl mx-auto flex items-center justify-between">
+            <button
+              onClick={prevStep}
+              className="flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#4B5563] hover:text-black transition-colors cursor-pointer bg-transparent border-none"
+            >
+              <ArrowLeft size={14} />
+              <span>Back</span>
+            </button>
+
+            <button
+              onClick={nextStep}
+              className="flex items-center gap-3 bg-black hover:bg-neutral-800 text-white px-8 py-3.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm"
+            >
+              <span>{step === 4 ? "Complete Profile" : "Continue"}</span>
+              <ArrowRight size={14} />
+            </button>
+          </div>
+        </footer>
+      )}
+
     </div>
   );
 }
