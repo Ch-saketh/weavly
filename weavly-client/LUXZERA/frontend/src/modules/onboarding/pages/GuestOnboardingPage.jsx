@@ -18,17 +18,17 @@ import CardSwap, { Card } from "@/shared/components/ui/CardSwap";
 const CARD_NAV_ITEMS = [
   {
     label: "Explore Zyra",
-    bgColor: "#1D1D1F",
+    bgColor: "#183B56",
     textColor: "#FFFFFF",
     links: [
       { label: "What is Zyra", href: "#meet-zera", ariaLabel: "What is Zyra" },
       { label: "Curated Styles", href: "#curated-styles", ariaLabel: "Curated Styles" },
-      { label: "Buyer Protection", href: "#escrow-protection", ariaLabel: "Buyer Protection" }
+      { label: "Escrow Fit Guarantee", href: "#escrow-protection", ariaLabel: "Escrow Fit Guarantee" }
     ]
   },
   {
     label: "Collections",
-    bgColor: "#F07020",
+    bgColor: "#102A43",
     textColor: "#FFFFFF",
     links: [
       { label: "Zyra Edits", href: "#zera-collections", ariaLabel: "Zyra Edits" },
@@ -38,12 +38,12 @@ const CARD_NAV_ITEMS = [
   },
   {
     label: "For Creators",
-    bgColor: "#C6A15B",
+    bgColor: "#183B56",
     textColor: "#FFFFFF",
     links: [
-      { label: "Publish Designs", href: "#for-designers", ariaLabel: "Publish Designs" },
-      { label: "Designer Pass", href: "#for-designers", ariaLabel: "Designer Pass" },
-      { label: "Join Network", href: "#for-designers", ariaLabel: "Join Network" }
+      { label: "Publish Designs", href: "/how-to-publish", ariaLabel: "Publish Designs" },
+      { label: "Become a Creator", href: "/how-to-become-creator", ariaLabel: "Become a Creator" },
+      { label: "Creator Guide", href: "/creator-guide", ariaLabel: "Creator Guide" }
     ]
   }
 ];
@@ -549,18 +549,18 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
   };
 
   return (
-    <div className="min-h-screen bg-white font-sans text-[#1A1A1A] overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#F5EFEB] font-sans text-[#183B56] overflow-x-hidden relative selection:bg-[#183B56] selection:text-white">
 
       {/* 1. Dedicated Onboarding Header */}
-      <header className="relative z-50 w-full h-20 flex items-center justify-between px-4 sm:px-8 md:px-16 pt-4">
+      <header className="relative z-50 w-full h-20 flex items-center justify-between px-4 sm:px-8 md:px-16 pt-4 border-b border-[#183B56]/15 bg-white/70 backdrop-blur-xs">
         <WeavlyLogo />
 
         {/* Center Nav Links — desktop only */}
         <nav className="hidden md:flex items-center gap-8">
           {[
-            { label: 'What is Zera', target: 'meet-zera' },
-            { label: 'Collections', target: 'zera-collections' },
-            { label: 'Designers', target: 'for-designers' },
+            { label: 'Meet Zyra', target: 'meet-zera' },
+            { label: 'Zyra Collections', target: 'zera-collections' },
+            { label: 'Atelier Designers', target: 'for-designers' },
           ].map(({ label, target }) => (
             <button
               key={target}
@@ -568,7 +568,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                 const el = document.getElementById(target);
                 if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
-              className="text-[13px] font-semibold text-[#37352F]/70 hover:text-[#1D1D1F] transition-colors bg-transparent border-none cursor-pointer tracking-wide"
+              className="text-[12px] font-bold uppercase tracking-wider text-[#5A7184] hover:text-[#183B56] transition-colors bg-transparent border-none cursor-pointer"
             >
               {label}
             </button>
@@ -581,7 +581,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             e.stopPropagation();
             triggerAuth("login");
           }}
-          className="relative z-50 bg-black text-white px-5 sm:px-6 py-2.5 rounded-full text-[13px] font-semibold hover:bg-black/85 active:scale-[0.98] transition-all cursor-pointer shadow-sm touch-manipulation"
+          className="relative z-50 bg-[#183B56] text-white px-5 sm:px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-[#102A43] active:scale-[0.98] transition-all cursor-pointer shadow-xs border border-[#183B56] touch-manipulation"
         >
           Sign In
         </button>
@@ -589,35 +589,39 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
       {/* 2. Hero Section */}
       <section className="px-8 md:px-16 pt-16 pb-16 max-w-7xl mx-auto flex flex-col items-center text-center">
-        <h1 className="text-4xl md:text-6xl lg:text-[72px] font-semibold tracking-tight leading-[1.1] mb-6 max-w-4xl">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#183B56]/20 text-[10px] font-bold tracking-[0.2em] uppercase text-[#183B56] mb-4">
+          <span>AI Virtual Stylist &amp; Bespoke Atelier</span>
+        </div>
+        <h1 className="text-4xl md:text-6xl lg:text-[72px] font-bold tracking-tight leading-[1.05] mb-6 max-w-4xl text-[#183B56] uppercase">
           Find Less. Wear Better.
         </h1>
-        <p className="text-[#666666] text-[15px] max-w-2xl mb-16 leading-relaxed">
-          Weavly curates outfits you'll actually want to wear—bringing together clothing, footwear, and accessories into complete looks tailored to your style.
+        <p className="text-[#5A7184] text-[15px] max-w-2xl mb-16 leading-relaxed font-medium">
+          Weavly curates outfits you'll actually want to wear—bringing together luxury garments, bespoke footwear, and handcrafted designer silhouettes tailored to your exact 3D proportions.
         </p>
 
         {/* Staggered Images */}
         <div className="flex flex-col md:flex-row items-stretch justify-center gap-5 w-full h-auto md:h-[420px]">
           {/* Left Block */}
-          <div className="relative w-full md:w-[320px] h-[340px] md:h-[380px] bg-[#3B2925] text-white rounded-[32px] p-8 flex flex-col justify-between overflow-hidden self-end shadow-md">
+          <div className="relative w-full md:w-[320px] h-[340px] md:h-[380px] bg-[#183B56] text-white rounded-3xl p-8 flex flex-col justify-between overflow-hidden self-end shadow-md border border-[#183B56]">
             <div>
-              <div className="text-3xl font-semibold mb-3 tracking-tight">100+ collections</div>
-              <p className="text-[13px] leading-relaxed text-white/70 max-w-[220px] font-normal">
-                Fashion website is an online destination dedicated to showcasing the latest trends in fashion
+              <div className="text-3xl font-bold mb-3 tracking-tight uppercase leading-tight">100+ Designer Drops</div>
+              <p className="text-[13px] leading-relaxed text-white/80 max-w-[220px] font-normal">
+                Curated marketplace for verified couture ateliers and independent fashion creators.
               </p>
             </div>
 
             <div className="flex justify-between items-end">
-              <span className="text-[14px] font-medium tracking-wide text-white/90 cursor-pointer hover:underline" onClick={() => triggerAuth("login")}>
-                Shop now
+              <span className="text-xs font-bold uppercase tracking-wider text-white cursor-pointer hover:underline flex items-center gap-1.5" onClick={() => triggerAuth("login")}>
+                <span>Explore Drops</span>
+                <span>→</span>
               </span>
             </div>
 
             {/* Circular Rosette BEST COLLECTION Badge */}
-            <div className="absolute top-1/2 -right-6 transform -translate-y-1/2 w-24 h-24 rounded-full bg-[#5C4035] border-4 border-white flex flex-col items-center justify-center text-center p-2 shadow-lg z-10">
+            <div className="absolute top-1/2 -right-6 transform -translate-y-1/2 w-24 h-24 rounded-full bg-[#102A43] border-2 border-white flex flex-col items-center justify-center text-center p-2 shadow-lg z-10">
               <div className="w-full h-full rounded-full border border-dashed border-white/40 flex flex-col items-center justify-center p-1">
-                <span className="text-[9px] font-extrabold uppercase tracking-widest text-white leading-tight">
-                  BEST<br />COLLECTION
+                <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#38BDF8] leading-tight">
+                  ATELIER<br />CURATED
                 </span>
               </div>
             </div>
@@ -625,30 +629,29 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
           {/* Middle Main Image */}
           <div
-            className="relative w-full md:w-[480px] h-[360px] md:h-[420px] rounded-[32px] overflow-hidden self-start shadow-md group cursor-pointer"
-            style={{ clipPath: "polygon(0% 0%, 72% 0%, 100% 20%, 100% 100%, 0% 100%)" }}
+            className="relative w-full md:w-[480px] h-[360px] md:h-[420px] rounded-3xl overflow-hidden self-start shadow-md group cursor-pointer border border-[#183B56]"
           >
             <img src={HERO_IMG_MID} className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" alt="Main Hero" />
-            <div className="absolute inset-0 bg-black/25 flex flex-col items-center justify-center text-white text-center p-6">
+            <div className="absolute inset-0 bg-[#183B56]/35 flex flex-col items-center justify-center text-white text-center p-6">
               <span className="text-3xl md:text-4xl font-extrabold tracking-tight uppercase">Weavly</span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/90 mt-1">From Local Designers</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#38BDF8] mt-1">From Verified Ateliers</span>
             </div>
           </div>
 
           {/* Right Image */}
-          <div className="relative w-full md:w-[300px] h-[340px] md:h-[380px] rounded-[32px] overflow-hidden self-center mt-8 md:mt-0 shadow-md group cursor-pointer">
+          <div className="relative w-full md:w-[300px] h-[340px] md:h-[380px] rounded-3xl overflow-hidden self-center mt-8 md:mt-0 shadow-md group cursor-pointer border border-[#183B56]">
             <img src={HERO_IMG_RIGHT} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Right Hero" />
-            <div className="absolute inset-0 bg-black/25 flex flex-col items-center justify-center text-white text-center p-6">
+            <div className="absolute inset-0 bg-[#183B56]/35 flex flex-col items-center justify-center text-white text-center p-6">
               <span className="text-2xl md:text-3xl font-extrabold tracking-tight uppercase">Weavly</span>
-              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/90 mt-1">From Local Designers</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-[#38BDF8] mt-1">From Verified Ateliers</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* 3. Inline Text Section */}
-      <section className="py-20 px-8 md:px-16 text-center bg-white w-full overflow-hidden">
-        <div ref={inlineTextRef} className="max-w-5xl mx-auto text-2xl md:text-4xl lg:text-[42px] font-medium leading-[1.6] text-black relative">
+      <section className="py-20 px-8 md:px-16 text-center bg-[#F5EFEB] w-full overflow-hidden border-y border-[#183B56]/15">
+        <div ref={inlineTextRef} className="max-w-5xl mx-auto text-2xl md:text-4xl lg:text-[42px] font-medium leading-[1.6] text-[#183B56] relative">
           <VariableProximity
             label="Discover thoughtfully curated outfits that bring together"
             className="inline"
@@ -658,7 +661,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             radius={100}
             falloff="linear"
           />
-          <span className="inline-block w-[80px] md:w-[100px] h-[40px] md:h-[50px] mx-2 align-middle rounded-full overflow-hidden border border-black/10">
+          <span className="inline-block w-[80px] md:w-[100px] h-[40px] md:h-[50px] mx-2 align-middle rounded-full overflow-hidden border border-[#183B56]/30">
             <img src={PILL_1} className="w-full h-full object-cover" alt="Clothing" />
           </span>
           <VariableProximity
@@ -670,7 +673,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             radius={100}
             falloff="linear"
           />
-          <span className="inline-block w-[80px] md:w-[100px] h-[40px] md:h-[50px] mx-2 align-middle rounded-full overflow-hidden border border-black/10">
+          <span className="inline-block w-[80px] md:w-[100px] h-[40px] md:h-[50px] mx-2 align-middle rounded-full overflow-hidden border border-[#183B56]/30">
             <img src={PILL_2} className="w-full h-full object-cover" alt="Accessories" />
           </span>
           <VariableProximity
@@ -682,7 +685,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             radius={100}
             falloff="linear"
           />
-          <span className="inline-block w-[80px] md:w-[100px] h-[40px] md:h-[50px] mx-2 align-middle rounded-full overflow-hidden border border-black/10">
+          <span className="inline-block w-[80px] md:w-[100px] h-[40px] md:h-[50px] mx-2 align-middle rounded-full overflow-hidden border border-[#183B56]/30">
             <img src={PILL_3} className="w-full h-full object-cover" alt="Confidence" />
           </span>
           <VariableProximity
@@ -697,14 +700,12 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         </div>
       </section>
 
-
-
       {/* 5. Feature Banner */}
-      <section className="bg-white py-20 overflow-hidden">
+      <section className="bg-white py-20 overflow-hidden border-b border-[#183B56]/15">
         <div className="max-w-7xl mx-auto px-8 md:px-16 flex flex-col md:flex-row items-center gap-16">
           <div className="w-full md:w-1/2 relative">
             <div
-              className="w-full h-[500px] overflow-hidden relative shadow-md"
+              className="w-full h-[500px] overflow-hidden relative shadow-md border border-[#183B56]"
               style={{ borderRadius: "200px 200px 24px 24px" }}
             >
               <img src={FEAT_IMG} className="w-full h-full object-cover object-center" alt="Featured Woman" />
@@ -714,17 +715,17 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             {/* Scalloped Premium Leather Stamp Seal Badge */}
             <div className="absolute top-6 -right-8 md:-right-14 w-36 h-36 md:w-44 md:h-44 -rotate-12 filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.35)] z-20 pointer-events-none">
               <div className="relative w-full h-full flex items-center justify-center">
-                <svg viewBox="0 0 120 120" className="w-full h-full text-[#38231C]">
+                <svg viewBox="0 0 120 120" className="w-full h-full text-[#183B56]">
                   <defs>
                     <radialGradient id="stampGradient" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#4A2E24" />
-                      <stop offset="70%" stopColor="#331E17" />
-                      <stop offset="100%" stopColor="#24140F" />
+                      <stop offset="0%" stopColor="#183B56" />
+                      <stop offset="70%" stopColor="#102A43" />
+                      <stop offset="100%" stopColor="#0B1D30" />
                     </radialGradient>
                     <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#F5D089" />
-                      <stop offset="50%" stopColor="#C6A15B" />
-                      <stop offset="100%" stopColor="#E5B969" />
+                      <stop offset="0%" stopColor="#38BDF8" />
+                      <stop offset="50%" stopColor="#F5EFEB" />
+                      <stop offset="100%" stopColor="#38BDF8" />
                     </linearGradient>
                     <filter id="emboss">
                       <feDropShadow dx="0.5" dy="0.5" stdDeviation="0.5" floodColor="#000000" floodOpacity="0.4" />
@@ -735,7 +736,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                   <path
                     d="M 60,6 C 63,6 66,9 69,9 C 72,9 75,6 78,7 C 81,8 83,11 86,12 C 89,13 92,11 95,13 C 98,15 99,18 101,20 C 103,22 106,24 107,27 C 108,30 107,33 108,36 C 109,39 113,42 113,45 C 113,48 110,51 110,54 C 110,57 113,60 113,63 C 113,66 109,69 108,72 C 107,75 108,78 107,81 C 106,84 103,86 101,88 C 99,90 98,93 95,95 C 92,97 89,95 86,96 C 83,97 81,100 78,101 C 75,102 72,99 69,99 C 66,99 63,102 60,102 C 57,102 54,99 51,99 C 48,99 45,102 42,101 C 39,100 37,97 34,96 C 31,95 28,97 25,95 C 22,93 21,90 19,88 C 17,86 14,84 13,81 C 12,78 13,75 12,72 C 11,69 7,66 7,63 C 7,60 10,57 10,54 C 10,51 7,48 7,45 C 7,42 11,39 12,36 C 13,33 12,30 13,27 C 14,24 17,22 19,20 C 21,18 22,15 25,13 C 28,11 31,13 34,12 C 37,11 39,8 42,7 C 45,6 48,9 51,9 C 54,9 57,6 60,6 Z"
                     fill="url(#stampGradient)"
-                    stroke="#1E100B"
+                    stroke="#183B56"
                     strokeWidth="1.5"
                   />
 
@@ -747,7 +748,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
                   {/* Arc Text: Weavly ATELIER */}
                   <path id="stampTextArcTop" fill="transparent" d="M 22 60 A 38 38 0 1 1 98 60" />
-                  <text className="text-[8px] font-bold uppercase tracking-[0.25em]" fill="#F5D089" filter="url(#emboss)">
+                  <text className="text-[8px] font-bold uppercase tracking-[0.25em]" fill="#38BDF8" filter="url(#emboss)">
                     <textPath href="#stampTextArcTop" startOffset="50%" textAnchor="middle">
                       Weavly ATELIER
                     </textPath>
@@ -755,24 +756,24 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
                   {/* Arc Text: SARTORIAL EDIT */}
                   <path id="stampTextArcBottom" fill="transparent" d="M 98 60 A 38 38 0 0 1 22 60" />
-                  <text className="text-[7.5px] font-semibold uppercase tracking-[0.2em]" fill="#F5D089" opacity="0.9">
+                  <text className="text-[7.5px] font-semibold uppercase tracking-[0.2em]" fill="#38BDF8" opacity="0.9">
                     <textPath href="#stampTextArcBottom" startOffset="50%" textAnchor="middle">
                       SARTORIAL EDIT
                     </textPath>
                   </text>
 
                   {/* Decorative Stars */}
-                  <text x="28" y="62" textAnchor="middle" fill="#F5D089" fontSize="6">★</text>
-                  <text x="92" y="62" textAnchor="middle" fill="#F5D089" fontSize="6">★</text>
+                  <text x="28" y="62" textAnchor="middle" fill="#38BDF8" fontSize="6">★</text>
+                  <text x="92" y="62" textAnchor="middle" fill="#38BDF8" fontSize="6">★</text>
                 </svg>
 
                 {/* Inner Core Box with Refined Typography */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-3 z-10 pointer-events-none">
-                  <div className="border-t border-b border-[#F5D089]/60 py-1 px-2">
+                  <div className="border-t border-b border-[#38BDF8]/60 py-1 px-2">
                     <span className="text-[12px] md:text-[14px] font-black uppercase tracking-[0.15em] text-white leading-tight block drop-shadow-md font-sans">
                       BEST
                     </span>
-                    <span className="text-[9px] md:text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#F5D089] leading-none block mt-0.5">
+                    <span className="text-[9px] md:text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#38BDF8] leading-none block mt-0.5">
                       COLLECTION
                     </span>
                   </div>
@@ -781,30 +782,30 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 flex flex-col items-start max-w-md">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#8B8B8B] mb-4">Limited Edition</span>
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight mb-4 text-black">
-              Everyone deserves
+          <div className="w-full md:w-1/2 flex flex-col items-start max-w-md space-y-4">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-[#5A7184] bg-[#F5EFEB] border border-[#183B56]/20 px-3 py-1">Limited Edition</span>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight text-[#183B56] uppercase">
+              Heirloom Craftsmanship
             </h2>
-            <p className="text-[14px] text-[#4A4A4A] mb-2 font-medium">Top Quality Materials</p>
-            <p className="text-2xl font-bold text-black mb-8">₹2,289</p>
+            <p className="text-[14px] text-[#5A7184] font-medium">Bespoke Mulberry Silk &amp; Flannel Wool</p>
+            <p className="text-2xl font-bold text-[#183B56]">₹2,289</p>
 
-            <div className="flex gap-4 mb-6">
-              <span className="text-[12px] font-bold text-black">Description</span>
-              <span className="text-[12px] font-medium text-[#8B8B8B] cursor-pointer">Details</span>
-              <span className="text-[12px] font-medium text-[#8B8B8B] cursor-pointer">Sizing</span>
-              <span className="text-[12px] font-medium text-[#8B8B8B] cursor-pointer">Shipping</span>
+            <div className="flex gap-4 border-b border-[#183B56]/15 pb-3 w-full">
+              <span className="text-[12px] font-bold text-[#183B56] uppercase">Description</span>
+              <span className="text-[12px] font-medium text-[#5A7184] cursor-pointer hover:text-[#183B56] uppercase">Details</span>
+              <span className="text-[12px] font-medium text-[#5A7184] cursor-pointer hover:text-[#183B56] uppercase">Sizing</span>
+              <span className="text-[12px] font-medium text-[#5A7184] cursor-pointer hover:text-[#183B56] uppercase">Shipping</span>
             </div>
 
-            <p className="text-[#666666] text-[13px] leading-relaxed mb-8">
+            <p className="text-[#5A7184] text-[13px] leading-relaxed font-medium">
               Crafted from the finest blends of natural fibers, this piece offers an unparalleled softness against the skin. Its tailored fit ensures a flattering silhouette while maintaining absolute comfort throughout the day.
             </p>
 
             <button
               onClick={() => triggerAuth("login")}
-              className="w-full py-4 rounded-full border border-black text-black font-bold uppercase tracking-widest text-[12px] hover:bg-black hover:text-white transition-colors cursor-pointer"
+              className="w-full py-4 bg-[#183B56] text-white hover:bg-[#102A43] font-bold uppercase tracking-wider text-xs border border-[#183B56] transition-colors cursor-pointer shadow-xs"
             >
-              Explore Style
+              Explore Sartorial Style
             </button>
           </div>
         </div>
@@ -815,17 +816,16 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap');
         .zera-font { font-family: 'Inter Tight', 'SF Pro Display', Inter, system-ui, sans-serif; }
         .zera-cta-link { position: relative; display: inline-flex; align-items: center; gap: 8px; }
-        .zera-cta-link::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 100%; height: 2px; background: #2563EB; }
-        .zera-cta-link:hover::after { background: #1D4ED8; }
+        .zera-cta-link::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 100%; height: 2px; background: #183B56; }
+        .zera-cta-link:hover::after { background: #102A43; }
       `}</style>
 
-      <section id="meet-zera" className="zera-font bg-white py-[120px] px-[24px] md:px-[100px] relative overflow-hidden" style={{ maxWidth: '100%' }}>
-        {/* Interactive Dotted Net Background scoped to Meet Zera section */}
+      <section id="meet-zera" className="zera-font bg-[#F5EFEB] py-[100px] px-[24px] md:px-[100px] relative overflow-hidden" style={{ maxWidth: '100%' }}>
         <AnimatedDottedMeshBackground />
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
 
           {/* ── TWO COLUMN: Left 42% · Right 58% ── */}
-          <div className="flex flex-col lg:flex-row items-start gap-0 mb-[100px]">
+          <div className="flex flex-col lg:flex-row items-start gap-0 mb-[80px]">
 
             {/* ─── LEFT 42% ─── */}
             <div className="w-full lg:w-[42%] flex flex-col items-start pt-8">
@@ -833,241 +833,89 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               {/* Eyebrow */}
               <div className="mb-7">
                 <span style={{
-                  fontSize: 13,
-                  fontWeight: 600,
+                  fontSize: 12,
+                  fontWeight: 700,
                   letterSpacing: '0.28em',
                   textTransform: 'uppercase',
-                  color: '#3B82F6',
+                  color: '#183B56',
                   display: 'block',
                   marginBottom: 10,
-                }}>Meet Zyra</span>
-                <div style={{ width: 30, height: 2, background: '#3B82F6', borderRadius: 1 }} />
+                }}>Meet Zyra AI</span>
+                <div style={{ width: 30, height: 2, background: '#183B56', borderRadius: 1 }} />
               </div>
 
               {/* Main heading */}
               <h2 style={{
-                fontSize: 'clamp(52px, 5.5vw, 72px)',
+                fontSize: 'clamp(44px, 5vw, 64px)',
                 fontWeight: 700,
-                lineHeight: '78px',
-                letterSpacing: '-0.045em',
-                color: '#111111',
+                lineHeight: '1.08',
+                letterSpacing: '-0.03em',
+                color: '#183B56',
                 maxWidth: 520,
-                marginBottom: 40,
+                marginBottom: 24,
+                textTransform: 'uppercase'
               }}>
                 Meet Zyra.<br />
-                Your Personal<br />
-                Style Companion.
+                Your Virtual<br />
+                Stylist Companion.
               </h2>
 
               {/* Paragraph */}
               <p style={{
-                fontSize: 22,
-                fontWeight: 400,
-                lineHeight: '42px',
-                color: '#686868',
+                fontSize: 16,
+                fontWeight: 500,
+                lineHeight: '28px',
+                color: '#5A7184',
                 maxWidth: 460,
-                marginBottom: 48,
+                marginBottom: 36,
               }}>
-                Zyra understands your style, explores thousands of designers, and curates complete outfits—not individual products.
+                Zyra understands your precise 3D measurements, explores verified couture ateliers, and curates complete outfits—not disconnected products.
               </p>
 
-              {/* Inline CTA — not a button */}
+              {/* Inline CTA */}
               <button
                 onClick={() => triggerAuth("login")}
-                className="zera-cta-link cursor-pointer bg-transparent border-0 p-0"
-                style={{
-                  fontSize: 22,
-                  fontWeight: 600,
-                  color: '#2563EB',
-                  letterSpacing: '-0.01em',
-                }}
+                className="zera-cta-link cursor-pointer bg-transparent border-0 p-0 font-bold uppercase text-sm tracking-wider text-[#183B56]"
               >
-                Explore Zyra
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
+                Explore With Zyra →
               </button>
             </div>
 
             {/* ─── RIGHT 58% — Zera + floating doodles ─── */}
-            <div className="w-full lg:w-[58%] flex items-center justify-center relative" style={{ minHeight: 520 }}>
-
-              {/* Zera Dynamic Interactive Mascot — 404 Inspired Eyes & Expressions */}
+            <div className="w-full lg:w-[58%] flex items-center justify-center relative" style={{ minHeight: 480 }}>
               <ZeraInteractiveEyesMascot />
-
-              {/* ── Doodle: Search (top-center-left) ── */}
-              <div style={{ position: 'absolute', top: 40, left: '18%', opacity: 0.32, zIndex: 3 }}>
-                <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-                  <circle cx="22" cy="22" r="12" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" />
-                  <path d="M31 31L42 42" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" />
-                  {/* sparkle above */}
-                  <path d="M36 8l1 3M36 8l-1 3M36 8l3 1M36 8l-3 1" stroke="#2F6DFF" strokeWidth="1.4" strokeLinecap="round" />
-                </svg>
-              </div>
-
-              {/* ── Doodle: Shirt/Hanger (top-right) ── */}
-              <div style={{ position: 'absolute', top: 32, right: '10%', opacity: 0.30, zIndex: 3 }}>
-                <svg width="68" height="68" viewBox="0 0 68 68" fill="none">
-                  {/* hanger hook */}
-                  <path d="M34 10 C34 6 38 6 38 10 C38 14 34 14 34 18" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-                  {/* hanger bar */}
-                  <path d="M10 26 L34 18 L58 26" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" />
-                  {/* shirt body */}
-                  <path d="M10 26 L14 54 L54 54 L58 26" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  {/* sparkle */}
-                  <path d="M56 14l1 2.5M56 14l-1 2.5M56 14l2.5 1M56 14l-2.5 1" stroke="#2F6DFF" strokeWidth="1.4" strokeLinecap="round" />
-                  {/* light blue dot accent */}
-                  <circle cx="55" cy="18" r="6" fill="#EFF6FF" opacity="0.9" />
-                </svg>
-              </div>
-
-              {/* ── Doodle: Heart (bottom-left) ── */}
-              <div style={{ position: 'absolute', bottom: 64, left: '12%', opacity: 0.30, zIndex: 3 }}>
-                <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-                  <path d="M28 44 C28 44 8 32 8 20 C8 14 13 10 18 10 C22 10 25 12 28 16 C31 12 34 10 38 10 C43 10 48 14 48 20 C48 32 28 44 28 44Z" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="46" cy="16" r="5" fill="#EFF6FF" opacity="0.9" />
-                  <path d="M44 10l1 2M44 10l-1 2M44 10l2 1M44 10l-2 1" stroke="#2F6DFF" strokeWidth="1.3" strokeLinecap="round" />
-                </svg>
-              </div>
-
-              {/* ── Doodle: Sparkle (bottom-right) ── */}
-              <div style={{ position: 'absolute', bottom: 72, right: '12%', opacity: 0.28, zIndex: 3 }}>
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                  <path d="M24 4 L26 20 L42 24 L26 28 L24 44 L22 28 L6 24 L22 20 Z" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="38" cy="36" r="5" fill="#EFF6FF" opacity="0.9" />
-                </svg>
-              </div>
-
-              {/* ── Dashed curved path connecting doodles ── */}
-              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }} viewBox="0 0 600 520" fill="none">
-                <path
-                  d="M 130 80 Q 200 180 300 260 Q 380 320 460 400"
-                  stroke="#2F6DFF"
-                  strokeWidth="1.5"
-                  strokeDasharray="8 8"
-                  opacity="0.18"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M 460 90 Q 360 180 300 260 Q 200 330 140 400"
-                  stroke="#2F6DFF"
-                  strokeWidth="1.5"
-                  strokeDasharray="8 8"
-                  opacity="0.14"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
-
             </div>
           </div>
 
-          {/* ── PROCESS FLOW — horizontal 4-step with dashed connectors ── */}
-          <div id="how-zera-works">
-
-
-            <div className="flex flex-col md:flex-row items-start gap-0 w-full">
+          {/* ── PROCESS FLOW — horizontal 4-step ── */}
+          <div id="how-zera-works" className="border-t border-[#183B56]/15 pt-12">
+            <div className="flex flex-col md:flex-row items-start gap-6 w-full">
               {[
                 {
                   num: '01',
-                  icon: (
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-                      <circle cx="12" cy="13" r="3" />
-                    </svg>
-                  ),
-                  title: 'Show Yourself',
-                  desc: 'Upload 3 to 4 photos to begin your style journey.',
+                  title: 'Silhouette Scan',
+                  desc: 'Calibrate your exact height, size, and fit tolerances.',
                 },
                 {
                   num: '02',
-                  icon: (
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  ),
-                  title: 'Style, Understood',
-                  desc: 'Zyra studies your proportions, colors, and personal aesthetic.',
+                  title: 'Aesthetic Mapping',
+                  desc: 'Zyra compiles your preferred color tones and styles.',
                 },
                 {
                   num: '03',
-                  icon: (
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z" />
-                    </svg>
-                  ),
-                  title: 'Curated For You',
-                  desc: 'Complete outfits are assembled from designers that match your style—not random recommendations.',
+                  title: 'Curated Outfits',
+                  desc: 'Complete looks assembled from independent couturiers.',
                 },
                 {
                   num: '04',
-                  icon: (
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                  ),
-                  title: 'Wear With Confidence',
-                  desc: 'Save, refine, and shop looks designed specifically for you.',
+                  title: '100% Escrow Fit',
+                  desc: 'Made-to-measure bespoke guarantee on every garment.',
                 },
-              ].map((step, i) => (
-                <div key={step.num} className="flex flex-row md:flex-col items-start md:items-start flex-1">
-                  {/* Step column */}
-                  <div className="flex flex-col items-start" style={{ minWidth: 220 }}>
-                    {/* Number */}
-                    <span style={{
-                      fontSize: 13,
-                      fontWeight: 700,
-                      color: '#2563EB',
-                      letterSpacing: '0.04em',
-                      marginBottom: 16,
-                      fontFamily: 'monospace',
-                    }}>{step.num}</span>
-
-                    {/* Icon circle + dashed connector row */}
-                    <div className="flex flex-row items-center w-full mb-6">
-                      <div style={{
-                        width: 64,
-                        height: 64,
-                        borderRadius: '50%',
-                        background: '#EFECE6',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                      }}>
-                        {step.icon}
-                      </div>
-                      {/* Dashed connector — only between steps, not after last */}
-                      {i < 3 && (
-                        <div className="hidden md:flex flex-1 items-center" style={{ marginLeft: 8, marginRight: 8 }}>
-                          <svg width="100%" height="16" viewBox="0 0 120 16" fill="none" preserveAspectRatio="none">
-                            <line x1="4" y1="8" x2="108" y2="8" stroke="#2F6DFF" strokeWidth="1.5" strokeDasharray="8 6" opacity="0.28" strokeLinecap="round" />
-                            {/* Arrow */}
-                            <path d="M104 4 L112 8 L104 12" stroke="#2F6DFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Text */}
-                    <h4 style={{
-                      fontSize: 20,
-                      fontWeight: 600,
-                      color: '#111111',
-                      lineHeight: '28px',
-                      marginBottom: 8,
-                      maxWidth: 200,
-                    }}>{step.title}</h4>
-                    <p style={{
-                      fontSize: 16,
-                      fontWeight: 400,
-                      color: '#686868',
-                      lineHeight: '28px',
-                      maxWidth: 200,
-                    }}>{step.desc}</p>
-                  </div>
+              ].map((step) => (
+                <div key={step.num} className="border border-[#183B56]/20 bg-white p-6 rounded-2xl flex-1 shadow-2xs space-y-2">
+                  <span className="text-xs font-mono font-bold text-[#183B56] block">{step.num}</span>
+                  <h4 className="text-base font-bold uppercase tracking-tight text-[#183B56]">{step.title}</h4>
+                  <p className="text-xs text-[#5A7184] leading-relaxed font-medium">{step.desc}</p>
                 </div>
               ))}
             </div>
@@ -1076,265 +924,134 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         </div>
       </section>
 
-      {/* ═══ SHARED DOTTED BACKGROUND WRAPPER — spans CTA → Gallery ═══ */}
-      <div className="relative bg-white">
-        {/* Single canvas behind all sections below */}
+      {/* ═══ SHARED DOTTED BACKGROUND WRAPPER ═══ */}
+      <div className="relative bg-[#F5EFEB]">
         <AnimatedDottedMeshBackground />
 
       {/* ─── Explore With Zyra CTA Banner ─── */}
-      <section className="relative py-36 px-6 md:px-16 overflow-hidden flex items-center justify-center text-center w-full min-h-[460px]">
-
-
-        <div className="relative z-20 max-w-3xl flex flex-col items-center gap-8 py-6">
-          <h2 className="text-[32px] md:text-[52px] font-semibold tracking-tight text-[#1D1D1F] leading-[1.15]">
+      <section className="relative py-24 px-6 md:px-16 overflow-hidden flex items-center justify-center text-center w-full">
+        <div className="relative z-20 max-w-4xl bg-[#183B56] text-white rounded-3xl p-10 sm:p-16 border border-[#183B56] shadow-md space-y-6">
+          <h2 className="text-3xl sm:text-5xl font-bold uppercase tracking-tight leading-tight">
             Finding your next favourite outfit should feel effortless.
           </h2>
+          <p className="text-xs sm:text-sm text-white/80 max-w-xl mx-auto font-normal">
+            Experience bespoke fashion curation engineered to your body silhouette and style affinity.
+          </p>
           <button
-            onClick={() => triggerAuth("login")}
-            className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-9 py-4 rounded-full text-[15px] font-medium flex items-center gap-3 shadow-md hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-0.5"
+            onClick={() => triggerAuth("register")}
+            className="bg-white text-[#183B56] hover:bg-[#F5EFEB] px-8 py-3.5 text-xs font-bold uppercase tracking-wider rounded-xs border-none transition-all cursor-pointer shadow-xs inline-flex items-center gap-2"
           >
-            Explore With Zyra <span>→</span>
+            <span>Start Free Calibration</span>
+            <span>→</span>
           </button>
         </div>
       </section>
 
       {/* ─── ZYRA COLLECTIONS ─── */}
-
-      <section id="zera-collections" className="relative py-24 px-8 md:px-16">
-
+      <section id="zera-collections" className="relative py-20 px-8 md:px-16">
         <div className="max-w-7xl mx-auto relative z-20">
-
-          {/* Header */}
-          <div className="mb-16 text-center">
-            <h2 className="text-[52px] md:text-[72px] font-bold tracking-tighter text-[#1D1D1F] mb-8 leading-none flex flex-wrap justify-center items-center gap-4">
-              Zyra
-              <RotatingText
-                texts={['Collections', 'Edits', 'Looks', 'Styles']}
-                mainClassName="bg-[#1D1D1F] text-white overflow-hidden px-4 sm:px-5 md:px-6 py-1.5 sm:py-2 md:py-2.5 items-center justify-center rounded-2xl inline-flex leading-tight whitespace-nowrap text-3xl sm:text-4xl md:text-5xl"
-                staggerFrom={"last"}
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                exit={{ y: "-120%" }}
-                staggerDuration={0.025}
-                splitLevelClassName="overflow-hidden px-1.5 py-1"
-                elementLevelClassName="px-[0.5px]"
-                transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                rotationInterval={3000}
-              />
+          <div className="mb-14 text-center space-y-3">
+            <h2 className="text-3xl sm:text-5xl font-bold uppercase tracking-tight text-[#183B56]">
+              Zyra Curated Collections
             </h2>
-            <p className="text-[#37352F] text-[22px] md:text-[28px] leading-[1.55] max-w-3xl mx-auto font-normal">
-              Once you sign in, Zyra studies your taste and crafts personalised outfit combinations just for you — called <strong className="font-bold">Zyra Collections</strong>. Not products. Complete curated looks.
+            <p className="text-[#5A7184] text-xs sm:text-sm max-w-2xl mx-auto font-medium">
+              Once you sign in, Zyra crafts personalized outfit combinations tailored to your measurements. Complete curated looks from independent designers.
             </p>
           </div>
 
-          {/* 3 Mock Collection Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {[
-              {
-                label: 'Your Summer Edit',
-                desc: '6 looks · Casual & Coastal',
-                color: '#F0EDE8',
-                accent: '#C6A15B',
-                lock: true,
-              },
-              {
-                label: 'Office-Ready Mix',
-                desc: '8 looks · Smart-Casual',
-                color: '#EAE8F0',
-                accent: '#6B5CE7',
-                lock: true,
-              },
-              {
-                label: 'Weekend Capsule',
-                desc: '5 looks · Relaxed Luxury',
-                color: '#E8F0EA',
-                accent: '#2D7D46',
-                lock: true,
-              },
+              { label: 'Sartorial Summer Edit', desc: '6 looks · Coastal Linen & Tailored Silk' },
+              { label: 'Architectural Office Mix', desc: '8 looks · Double-Breasted Flannel' },
+              { label: 'Weekend Atelier Capsule', desc: '5 looks · Hand-Draped Raw Cottons' },
             ].map((col, i) => (
               <div
                 key={i}
-                className="relative rounded-3xl overflow-hidden"
-                style={{ background: col.color, minHeight: 260, padding: '32px 28px' }}
+                className="relative bg-white border border-[#183B56] rounded-2xl p-8 shadow-xs flex flex-col justify-between space-y-6"
               >
-                {/* Zera Z mark */}
-                <div className="absolute top-5 right-5 opacity-10">
-                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                    <text x="4" y="42" fontSize="48" fontWeight="900" fontFamily="system-ui" fill={col.accent}>Z</text>
-                  </svg>
+                <div>
+                  <div className="w-8 h-8 rounded-lg bg-[#DFE7ED] text-[#183B56] flex items-center justify-center text-xs font-bold mb-4 border border-[#183B56]/20">
+                    🔒
+                  </div>
+                  <h3 className="text-lg font-bold uppercase tracking-tight text-[#183B56] mb-1">{col.label}</h3>
+                  <p className="text-xs text-[#5A7184] font-medium">{col.desc}</p>
                 </div>
-
-                {/* Lock icon */}
-                <div className="w-10 h-10 rounded-full bg-white/60 flex items-center justify-center mb-5">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={col.accent} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
-                </div>
-
-                <h3 className="text-[18px] font-bold text-[#1D1D1F] mb-1">{col.label}</h3>
-                <p className="text-[13px]" style={{ color: col.accent }}>{col.desc}</p>
-
-                <div className="absolute bottom-5 left-7 right-7">
-                  <div className="h-px bg-black/10 mb-4" />
-                  <span className="text-[12px] font-semibold text-[#37352F]/50 uppercase tracking-widest">Unlocks on sign in</span>
+                <div className="pt-4 border-t border-[#183B56]/15 text-[11px] font-bold uppercase tracking-wider text-[#183B56]">
+                  Unlocks on sign in →
                 </div>
               </div>
             ))}
           </div>
 
-          {/* CTA */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4">
             <button
               onClick={() => triggerAuth('register')}
-              className="bg-black text-white px-8 py-3.5 rounded-full text-[13px] font-semibold hover:bg-black/85 transition-all cursor-pointer"
+              className="bg-[#183B56] text-white px-8 py-3.5 text-xs font-bold uppercase tracking-wider hover:bg-[#102A43] transition-all cursor-pointer border border-[#183B56] rounded-xs shadow-xs"
             >
               Sign up to unlock Collections
             </button>
-            <span className="text-[13px] text-[#9B9B9B]">
-              Already have an account?{' '}
-              <button onClick={() => triggerAuth('login')} className="text-[#F07020] font-semibold bg-transparent border-none cursor-pointer hover:underline">Sign in</button>
-            </span>
+            <button
+              onClick={() => triggerAuth('login')}
+              className="bg-white text-[#183B56] px-6 py-3.5 text-xs font-bold uppercase tracking-wider hover:bg-[#F5EFEB] transition-all cursor-pointer border border-[#183B56]/30 rounded-xs"
+            >
+              Sign In
+            </button>
           </div>
-        </div>
-      </section>
-
-      {/* Thin divider */}
-      <div className="w-full h-px bg-black/5 max-w-7xl mx-auto my-12" />
-
-      {/* ─── CURATED STYLES (MASONRY GALLERY) ─── */}
-      <section className="py-24 px-8 md:px-16 max-w-7xl mx-auto zera-font relative z-20">
-        <div className="mb-16 text-center">
-          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1D1D1F] mb-4">
-            Curated Styles
-          </h2>
-          <p className="text-[#666666] text-[15px] max-w-xl mx-auto">
-            A glimpse into the premium pieces waiting for you. 
-            Sign up to unlock thousands of items and get personalized outfits created just for you.
-          </p>
-        </div>
-        
-        <ChromaGrid 
-          items={CHROMA_ITEMS} 
-          radius={350}
-          onItemClick={() => triggerAuth('register')}
-        />
-        
-        <div className="mt-16 flex justify-center">
-          <button
-            onClick={() => triggerAuth('register')}
-            className="bg-[#1D1D1F] text-white px-10 py-4 rounded-full text-[14px] font-semibold hover:bg-black hover:shadow-lg transition-all cursor-pointer shadow-md flex items-center gap-2"
-          >
-            Sign up to shop the collection <ArrowRight size={16} />
-          </button>
         </div>
       </section>
 
       {/* ─── FOR DESIGNERS ─── */}
-      <section id="for-designers" className="relative py-24 px-8 md:px-16">
-
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center relative z-20">
-
-          {/* Left — Copy */}
-          <div>
-            <p className="text-[20px] font-black uppercase tracking-[0.15em] text-[#F07020] block mb-4">For Creators</p>
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1D1D1F] mb-6 leading-tight">
-              Publish your designs.
-              <br />Set your own price.
+      <section id="for-designers" className="relative py-20 px-8 md:px-16 border-t border-[#183B56]/15">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-20">
+          <div className="space-y-4">
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56] bg-white border border-[#183B56]/20 px-3 py-1 inline-block">
+              For Fashion Creators
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56] leading-tight">
+              Publish your lookbooks.<br />
+              Receive bespoke commissions.
             </h2>
-            <p className="text-[#666666] text-[15px] leading-relaxed mb-8 max-w-md">
-              Weavly is built for independent designers who want to reach a discerning audience without middlemen. Upload your collection, set your pricing, and let Zyra match your work to the customers who'll love it most.
+            <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed font-medium">
+              Weavly connects verified independent designers with discerning patrons worldwide. Upload your collection, configure made-to-measure sizing, and receive automated milestone escrow payouts.
             </p>
-
-            <div className="flex flex-col gap-4 mb-10">
-              {[
-                { icon: '✦', text: 'Upload your designs — photos, descriptions, sizing' },
-                { icon: '✦', text: 'Set your own price for every piece' },
-                { icon: '✦', text: 'Zyra surfaces your work to matched customers' },
-                { icon: '✦', text: 'Build your brand directly on Weavly' },
-              ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <span className="text-[#F07020] text-[12px] mt-1 font-bold">{item.icon}</span>
-                  <span className="text-[14px] text-[#37352F] leading-relaxed">{item.text}</span>
-                </div>
-              ))}
-            </div>
-
             <button
               onClick={() => triggerAuth('register')}
-              className="bg-[#1D1D1F] text-white px-8 py-3.5 rounded-full text-[13px] font-semibold hover:bg-[#1D1D1F]/85 transition-all cursor-pointer"
+              className="bg-[#183B56] text-white px-7 py-3 text-xs font-bold uppercase tracking-wider hover:bg-[#102A43] transition-all cursor-pointer border border-[#183B56] rounded-xs shadow-xs inline-flex items-center gap-2 mt-2"
             >
-              Apply as a Designer →
+              <span>Apply as a Designer</span>
+              <ArrowRight size={13} />
             </button>
           </div>
 
-          {/* Right — Animated CardSwap of independent designer cards */}
-          <div className="relative flex items-center justify-center w-full min-h-[420px]">
-            <CardSwap
-              width={280}
-              height={330}
-              cardDistance={35}
-              verticalDistance={35}
-              delay={4500}
-              pauseOnHover={true}
-            >
-              {[
-                {
-                  designer: 'Aria Chen',
-                  brand: '@chen_studio',
-                  location: 'Paris, France',
-                  img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80',
-                  piece: 'Plissé Atelier Dress',
-                },
-                {
-                  designer: 'Marcus Thorne',
-                  brand: '@thorne_sartorial',
-                  location: 'London, UK',
-                  img: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80',
-                  piece: 'Sculptural Wool Trench',
-                },
-                {
-                  designer: 'Elena Vance',
-                  brand: '@elena_atelier',
-                  location: 'Milan, Italy',
-                  img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-                  piece: 'Hand-Draped Silk Ensemble',
-                },
-              ].map((card, i) => (
-                <Card key={i} className="cursor-pointer hover:shadow-2xl transition-shadow">
-                  <div className="w-full h-44 rounded-2xl overflow-hidden mb-3 relative">
-                    <img src={card.img} alt={card.designer} className="w-full h-full object-cover" />
-                    <div className="absolute top-2.5 right-2.5 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-semibold text-white uppercase tracking-wider">
-                      Verified Creator
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[14px] font-bold text-[#1D1D1F]">{card.designer}</span>
-                    <span className="text-[12px] font-semibold text-[#F07020] font-mono">{card.brand}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#9B9B9B] font-medium">
-                    <span>{card.piece}</span>
-                    <span>{card.location}</span>
-                  </div>
-                </Card>
-              ))}
-            </CardSwap>
+          <div className="bg-white border border-[#183B56] p-8 rounded-2xl shadow-xs space-y-4">
+            <h3 className="text-base font-bold uppercase text-[#183B56]">Creator Privileges</h3>
+            <ul className="space-y-2.5 text-xs text-[#5A7184] font-medium p-0 m-0 list-none">
+              <li className="flex items-center gap-2">✦ 100% Upfront Milestone Escrow on all custom orders</li>
+              <li className="flex items-center gap-2">✦ Direct Zyra AI Recommendation Indexing across 100+ countries</li>
+              <li className="flex items-center gap-2">✦ Complimentary Weavly Luxury Atelier Packaging Supplies</li>
+              <li className="flex items-center gap-2">✦ Zero upfront listing or subscription fees</li>
+            </ul>
           </div>
         </div>
       </section>
 
+      </div>{/* end shared dotted background wrapper */}
+
       {/* Thin divider */}
 
       {/* ─── BUYER PROTECTION / ESCROW ─── */}
-      <section className="relative py-24 px-8 md:px-16">
+      <section id="escrow-protection" className="relative py-24 px-8 md:px-16 bg-white border-y border-[#183B56]/15">
         <div className="max-w-7xl mx-auto relative z-20">
 
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1D1D1F] mb-4">
-              Your money is safe. Always.
+          <div className="text-center mb-16 space-y-3">
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#183B56] bg-[#F5EFEB] border border-[#183B56]/20 px-3 py-1 inline-block">
+              Patron &amp; Creator Security
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-bold uppercase tracking-tight text-[#183B56]">
+              Your Investment Is Protected. Always.
             </h2>
-            <p className="text-[#666666] text-[15px] max-w-lg mx-auto leading-relaxed">
-              Weavly holds every payment in secure escrow. Designers only get paid after you receive your order and confirm satisfaction. No exceptions.
+            <p className="text-[#5A7184] text-xs sm:text-sm max-w-lg mx-auto leading-relaxed font-medium">
+              Weavly holds every custom milestone payment in smart escrow. Designers receive funds only after you confirm your bespoke fit and satisfaction.
             </p>
           </div>
 
@@ -1343,32 +1060,29 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             {[
               {
                 step: '01',
-                title: 'You Place the Order',
-                desc: 'Payment is captured and held securely by Weavly — the designer receives nothing yet.',
-                badgeBg: 'bg-[#F07020]/10 text-[#F07020] border-[#F07020]/20',
+                title: 'Order Commissioned',
+                desc: 'Payment is captured and held securely in Weavly Escrow vault. Atelier begins crafting.',
+                badgeBg: 'bg-[#183B56]/10 text-[#183B56] border-[#183B56]/20',
                 icon: (
-                  <div className="w-14 h-14 rounded-2xl bg-[#FFF7F2] border border-[#F07020]/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[#F07020] transition-all duration-300">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F07020" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-white transition-colors duration-300">
+                  <div className="w-12 h-12 rounded-xl bg-[#DFE7ED] border border-[#183B56]/30 flex items-center justify-center mb-4">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#183B56" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="2" y="5" width="20" height="14" rx="2" />
                       <line x1="2" y1="10" x2="22" y2="10" />
                       <path d="M6 15h4" />
-                      <rect x="15" y="13.5" width="5" height="4" rx="1" />
-                      <path d="M16.5 13.5v-1a1 1 0 0 1 2 0v1" />
                     </svg>
                   </div>
                 ),
               },
               {
                 step: '02',
-                title: 'Order Delivered',
-                desc: 'Your order arrives. You have a window to inspect it and confirm everything is as expected.',
-                badgeBg: 'bg-[#C6A15B]/10 text-[#C6A15B] border-[#C6A15B]/20',
+                title: 'Atelier Delivery & Inspection',
+                desc: 'Garment arrives in certified Weavly luxury casing. You have 72 hours for fitting and audit.',
+                badgeBg: 'bg-[#183B56]/10 text-[#183B56] border-[#183B56]/20',
                 icon: (
-                  <div className="w-14 h-14 rounded-2xl bg-[#FFFDF5] border border-[#C6A15B]/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[#C6A15B] transition-all duration-300">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C6A15B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-white transition-colors duration-300">
+                  <div className="w-12 h-12 rounded-xl bg-[#DFE7ED] border border-[#183B56]/30 flex items-center justify-center mb-4">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#183B56" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="m7.5 4.27 9 5.15" />
                       <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-                      <path d="m3.3 7 8.7 5 8.7-5" />
                       <path d="M12 22V12" />
                     </svg>
                   </div>
@@ -1376,12 +1090,12 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               },
               {
                 step: '03',
-                title: 'Designer Gets Paid',
-                desc: 'Only after your confirmation, funds are released to the designer. Dispute? We step in.',
-                badgeBg: 'bg-[#2D7D46]/10 text-[#2D7D46] border-[#2D7D46]/20',
+                title: 'Milestone Settlement',
+                desc: 'Upon your confirmation, escrow funds are released seamlessly to the artisan.',
+                badgeBg: 'bg-[#183B56]/10 text-[#183B56] border-[#183B56]/20',
                 icon: (
-                  <div className="w-14 h-14 rounded-2xl bg-[#F4FAF5] border border-[#2D7D46]/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[#2D7D46] transition-all duration-300">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2D7D46" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-white transition-colors duration-300">
+                  <div className="w-12 h-12 rounded-xl bg-[#DFE7ED] border border-[#183B56]/30 flex items-center justify-center mb-4">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#183B56" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                       <path d="m9 12 2 2 4-4" strokeWidth="2.2" />
                     </svg>
@@ -1391,28 +1105,23 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             ].map((item, i) => (
               <div 
                 key={i} 
-                className="group relative flex flex-col items-start text-left p-8 rounded-[28px] bg-white/80 backdrop-blur-md border border-[#EBE8E1] shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300"
+                className="relative flex flex-col items-start text-left p-8 rounded-2xl bg-[#F5EFEB] border border-[#183B56] shadow-xs"
               >
                 <div className="w-full flex items-center justify-between mb-4">
                   {item.icon}
-                  <span className={`text-[12px] font-extrabold font-mono px-3 py-1 rounded-full border ${item.badgeBg}`}>
+                  <span className={`text-[11px] font-bold font-mono px-3 py-1 rounded-sm border ${item.badgeBg}`}>
                     {item.step}
                   </span>
                 </div>
-                <h3 className="text-[20px] font-bold text-[#1D1D1F] mb-2 tracking-tight">{item.title}</h3>
-                <p className="text-[14px] text-[#666666] leading-relaxed font-normal">{item.desc}</p>
+                <h3 className="text-base font-bold uppercase text-[#183B56] mb-2 tracking-tight">{item.title}</h3>
+                <p className="text-xs text-[#5A7184] leading-relaxed font-medium">{item.desc}</p>
               </div>
             ))}
           </div>
 
-          {/* Bottom note */}
-          <div className="mt-16 flex items-center justify-center gap-3">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9B9B9B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            <span className="text-[13px] text-[#9B9B9B]">
-              Funds held by Weavly until order is confirmed satisfied — protecting both buyers and honest designers.
+          <div className="mt-12 flex items-center justify-center gap-2">
+            <span className="text-xs text-[#5A7184] font-medium text-center">
+              Funds protected under Weavly Escrow Vaults — safeguarding both discerning patrons and independent couture ateliers.
             </span>
           </div>
         </div>
@@ -1420,38 +1129,38 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
       {/* 6. Made To Raise Your Standards */}
       <section className="py-24 px-8 md:px-16 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-semibold mb-4">Made To Raise Your Standards</h2>
-          <p className="text-[#666666] text-[14px] max-w-lg mx-auto">
-            We strive to provide superior quality in every piece we make, using high-performance yarns woven to perfection for longevity and comfort.
+        <div className="text-center mb-16 space-y-2">
+          <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">Crafted Without Compromise</h2>
+          <p className="text-[#5A7184] text-xs sm:text-sm max-w-lg mx-auto font-medium">
+            Superior quality in every piece, using high-performance natural fibers woven to perfection for longevity and comfort.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-          <div className="flex flex-col gap-4">
-            <div className="w-full h-[360px] rounded-[32px] overflow-hidden bg-gray-100">
+          <div className="flex flex-col gap-3">
+            <div className="w-full h-[360px] rounded-2xl overflow-hidden bg-white border border-[#183B56]">
               <img src={KNIT_1} className="w-full h-full object-cover" alt="Top Knit Outside" />
             </div>
-            <div className="px-4">
-              <h3 className="font-bold text-[16px]">Top Knit Outside</h3>
-              <p className="text-[12px] text-[#666666]">Soft Cashmere Blend</p>
+            <div className="px-2">
+              <h3 className="font-bold uppercase text-xs text-[#183B56]">Mulberry Silk Knit</h3>
+              <p className="text-[11px] text-[#5A7184] font-medium">Soft Cashmere &amp; Silk Blend</p>
             </div>
           </div>
 
           <div className="flex flex-col">
-            <div className="w-full h-[440px] rounded-[32px] overflow-hidden relative shadow-lg">
+            <div className="w-full h-[420px] rounded-2xl overflow-hidden relative shadow-md border border-[#183B56]">
               <img src={KNIT_2} className="w-full h-full object-cover" alt="Middle Knit" />
-              <div className="absolute inset-0 bg-black/20" />
+              <div className="absolute inset-0 bg-[#183B56]/20" />
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            <div className="w-full h-[360px] rounded-[32px] overflow-hidden bg-gray-100">
+          <div className="flex flex-col gap-3">
+            <div className="w-full h-[360px] rounded-2xl overflow-hidden bg-white border border-[#183B56]">
               <img src={KNIT_3} className="w-full h-full object-cover" alt="Top Knit Pants" />
             </div>
-            <div className="px-4">
-              <h3 className="font-bold text-[16px]">Top Knit Pants</h3>
-              <p className="text-[12px] text-[#666666]">Comfortable Ribbed Fit</p>
+            <div className="px-2">
+              <h3 className="font-bold uppercase text-xs text-[#183B56]">Bespoke Sartorial Trousers</h3>
+              <p className="text-[11px] text-[#5A7184] font-medium">Comfortable Ribbed Flannel</p>
             </div>
           </div>
         </div>
@@ -1484,8 +1193,6 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
           />
         </div>
       </section>
-
-      </div>{/* end shared dotted background wrapper */}
 
       <Footer 
         requireAuth={true}
