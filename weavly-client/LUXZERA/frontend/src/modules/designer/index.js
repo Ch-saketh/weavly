@@ -6,3 +6,6 @@ export * from './pages/DesignerOnboardingPage.jsx';
 
 export { default as BecomeDesignerPage } from './pages/BecomeDesignerPage.jsx';
 export * from './pages/BecomeDesignerPage.jsx';
+
+export { default as CreatorGuidePage } from './pages/CreatorGuidePage.jsx';
+export * from './pages/CreatorGuidePage.jsx';

@@ -529,6 +529,21 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
               </h4>
               <ul className="space-y-2.5 font-normal p-0 m-0 list-none text-xs">
                 <li>
+                  <button onClick={() => handleLinkClick("/become-designer")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] block">
+                    Become a Designer
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handleLinkClick("/how-to-publish")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] block">
+                    How to Publish Design
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handleLinkClick("/creator-guide")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] block">
+                    Creator Handbook
+                  </button>
+                </li>
+                <li>
                   <button onClick={() => handleLinkClick("/designers")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] block">
                     Discover Designers
                   </button>
@@ -546,11 +561,6 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
                 <li>
                   <button onClick={() => handleLinkClick("/designer-studio")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] block">
                     Designer Studio
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => handleLinkClick("/become-designer")} className="hover:text-white transition-colors border-none bg-transparent cursor-pointer p-0 text-left text-[#CCCCCC] block">
-                    Become a Designer
                   </button>
                 </li>
               </ul>

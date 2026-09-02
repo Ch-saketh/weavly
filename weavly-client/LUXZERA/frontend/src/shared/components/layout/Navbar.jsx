@@ -314,52 +314,70 @@ export default function Navbar({
               </button>
 
               {/* CardNav-Style Dropdown Menu */}
-              <div className="absolute top-full -left-48 mt-3 w-[720px] bg-[#FFFFFF] border border-[#183B56] shadow-xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
+              <div className="absolute top-full -left-48 mt-3 w-[740px] bg-[#FFFFFF] border border-[#183B56] shadow-xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-left group-hover:translate-y-0 translate-y-2">
                 <div className="grid grid-cols-3 gap-3">
-                  {/* Card 1: Creators & Lookbooks */}
-                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
-                    <div className="text-[20px] font-bold uppercase tracking-tight">Creators</div>
+                  {/* Card 1: Creator Hub & Guides */}
+                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[240px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
+                    <div>
+                      <div className="text-[10px] font-mono text-[#38BDF8] uppercase tracking-wider font-bold">Guide &amp; Standards</div>
+                      <div className="text-[18px] font-bold uppercase tracking-tight mt-0.5">Creator Hub</div>
+                    </div>
                     <div className="flex flex-col gap-2 mt-auto">
+                      <button onClick={() => router.push("/how-to-become-creator")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> How to Become Creator
+                      </button>
+                      <button onClick={() => router.push("/how-to-publish")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> How to Publish Design
+                      </button>
+                      <button onClick={() => router.push("/creator-guide")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Creator Handbook
+                      </button>
                       <button onClick={() => router.push("/designer-studio")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Studio Overview
-                      </button>
-                      <button onClick={() => router.push("/designers")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Verified Creators
-                      </button>
-                      <button onClick={() => router.push("/designs")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Curated Lookbooks
+                        <span className="text-xs">↗</span> Designer Studio
                       </button>
                     </div>
                   </div>
 
-                  {/* Card 2: Bespoke Commissions */}
-                  <div className="bg-[#102A43] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#0B1D30] transition-colors border border-[#183B56]">
-                    <div className="text-[20px] font-bold uppercase tracking-tight">Atelier Pass</div>
+                  {/* Card 2: Atelier Pass & Couture */}
+                  <div className="bg-[#102A43] text-white p-5 flex flex-col justify-between h-[240px] select-none hover:bg-[#0B1D30] transition-colors border border-[#183B56]">
+                    <div>
+                      <div className="text-[10px] font-mono text-[#38BDF8] uppercase tracking-wider font-bold">Bespoke Atelier</div>
+                      <div className="text-[18px] font-bold uppercase tracking-tight mt-0.5">Atelier Pass</div>
+                    </div>
                     <div className="flex flex-col gap-2 mt-auto">
-                      <button onClick={() => router.push("/custom-design")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Commission Garment
-                      </button>
                       <button onClick={() => router.push("/become-designer")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-xs">↗</span> Apply as Designer
+                      </button>
+                      <button onClick={() => router.push("/custom-design")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Commission Garment
                       </button>
                       <button onClick={() => router.push("/designer/login")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-xs">↗</span> Designer Sign In
                       </button>
+                      <button onClick={() => router.push("/designers")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Discover Designers
+                      </button>
                     </div>
                   </div>
 
-                  {/* Card 3: Client Care */}
-                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[230px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
-                    <div className="text-[20px] font-bold uppercase tracking-tight">Client Care</div>
+                  {/* Card 3: Lookbooks & Care */}
+                  <div className="bg-[#183B56] text-white p-5 flex flex-col justify-between h-[240px] select-none hover:bg-[#102A43] transition-colors border border-[#183B56]">
+                    <div>
+                      <div className="text-[10px] font-mono text-[#38BDF8] uppercase tracking-wider font-bold">Curation &amp; Trust</div>
+                      <div className="text-[18px] font-bold uppercase tracking-tight mt-0.5">Lookbooks</div>
+                    </div>
                     <div className="flex flex-col gap-2 mt-auto">
+                      <button onClick={() => router.push("/designs")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Curated Lookbooks
+                      </button>
                       <button onClick={() => router.push("/orders")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Track Orders & Escrow
+                        <span className="text-xs">↗</span> Track Orders &amp; Escrow
+                      </button>
+                      <button onClick={() => router.push("/faqs")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
+                        <span className="text-xs">↗</span> Help &amp; FAQs
                       </button>
                       <button onClick={() => router.push("/about")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
                         <span className="text-xs">↗</span> About Weavly
-                      </button>
-                      <button onClick={() => router.push("/faqs")} className="text-left text-xs uppercase font-bold text-white/90 hover:text-white transition-colors border-none bg-transparent p-0 cursor-pointer flex items-center gap-1.5">
-                        <span className="text-xs">↗</span> Atelier FAQs
                       </button>
                     </div>
                   </div>
