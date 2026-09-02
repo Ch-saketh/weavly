@@ -5,10 +5,10 @@
   --marker-length: 36px;
   --marker-gap: 8px;
   --tick-scale: 0.45;
-  --max-shift: 16px;
-  --item-gap: 16px;
+  --max-shift: 18px;
+  --item-gap: 14px;
   --font-size: 0.8125rem;
-  --smoothing: 100ms;
+  --smoothing: 70ms;
 
   position: relative;
   display: flex;
@@ -21,6 +21,7 @@
 }
 
 .line-sidebar__list {
+  position: relative;
   list-style: none;
   margin: 0;
   padding: 0.5rem 0;
@@ -30,13 +31,12 @@
   width: 100%;
 }
 
-/* --effect (0..1) is driven per item by a rAF lerp in JS, so every derived
-   property below reads the same continuously-animating value and stays in
-   step, with no CSS transitions to stagger. */
+/* --effect (0..1) is driven per item by a rAF lerp in JS */
 .line-sidebar__item {
   position: relative;
   cursor: pointer;
   width: 100%;
+  user-select: none;
 }
 
 /* Widen the pointer target so items react a touch before the cursor arrives */
@@ -57,6 +57,7 @@
   transform: translateX(calc(var(--effect, 0) * var(--max-shift)));
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  will-change: transform;
 }
 
 .line-sidebar__index {
@@ -76,6 +77,7 @@
   background-color: color-mix(in srgb, var(--accent-color) calc(var(--effect, 0) * 100%), var(--marker-color));
   transform-origin: left center;
   transform: translateY(-50%) scaleX(calc(0.7 + var(--effect, 0) * 0.5));
+  will-change: transform;
 }
 
 /* Short static tick centered in the gap between two menu items */
@@ -95,4 +97,5 @@
 .line-sidebar--scale-tick .line-sidebar__item:not(:last-child)::after {
   transform-origin: left center;
   transform: translateY(-50%) scaleX(calc(0.7 + var(--effect, 0) * 0.6));
+  will-change: transform;
 }

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import { User, Lock, MapPin, Sliders, Sparkles, CreditCard, Package, LifeBuoy } from "lucide-react";
 import LineSidebar from "@/shared/components/ui/LineSidebar";
 
 const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
-  const sections = [
+  const sections = useMemo(() => [
     {
       label: "Profile",
       items: [
@@ -27,9 +27,14 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
         { id: 'support', label: 'Customer Care', icon: LifeBuoy },
       ]
     }
-  ];
+  ], []);
 
-  const allItems = sections.flatMap(s => s.items);
+  const allItems = useMemo(() => sections.flatMap(s => s.items), [sections]);
+
+  const handleTabClick = useCallback((idx, label, item) => {
+    const targetId = item?.id || allItems[idx]?.id;
+    if (targetId) onTabChange?.(targetId);
+  }, [allItems, onTabChange]);
 
   return (
     <>
@@ -84,17 +89,14 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
           showIndex={true}
           showMarker={true}
           scaleTick={true}
-          proximityRadius={90}
+          proximityRadius={100}
           maxShift={18}
           markerLength={34}
           markerGap={6}
           itemGap={14}
           fontSize={0.8125}
-          smoothing={120}
-          onItemClick={(idx, label, item) => {
-            const targetId = item?.id || allItems[idx]?.id;
-            if (targetId) onTabChange?.(targetId);
-          }}
+          smoothing={70}
+          onItemClick={handleTabClick}
         />
       </nav>
     </>

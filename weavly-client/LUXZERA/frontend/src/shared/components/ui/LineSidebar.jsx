@@ -23,15 +23,15 @@ const LineSidebar = ({
   showIndex = true,
   showMarker = true,
   proximityRadius = 100,
-  maxShift = 20,
+  maxShift = 18,
   falloff = 'smooth',
   markerLength = 36,
   markerGap = 8,
   tickScale = 0.45,
   scaleTick = true,
-  itemGap = 16,
+  itemGap = 14,
   fontSize = 0.8125,
-  smoothing = 100,
+  smoothing = 70,
   defaultActive = null,
   activeId = null,
   onItemClick,
@@ -43,8 +43,10 @@ const LineSidebar = ({
   const currentRef = useRef([]);
   const rafRef = useRef(null);
   const lastRef = useRef(0);
+  const itemsRef = useRef(items);
+  itemsRef.current = items;
 
-  // Derive initial active index from defaultActive or activeId
+  // Derive initial active index
   const getInitialIndex = () => {
     if (activeId != null) {
       const idx = items.findIndex(it => (typeof it === 'object' ? it.id === activeId : it === activeId));
@@ -56,52 +58,75 @@ const LineSidebar = ({
   const [activeIndex, setActiveIndex] = useState(getInitialIndex);
   const activeRef = useRef(activeIndex);
   const smoothingRef = useRef(smoothing);
-
-  // Sync with activeId prop changes
-  useEffect(() => {
-    if (activeId != null) {
-      const idx = items.findIndex(it => (typeof it === 'object' ? it.id === activeId : it === activeId));
-      if (idx !== -1) setActiveIndex(idx);
-    }
-  }, [activeId, items]);
-
   activeRef.current = activeIndex;
   smoothingRef.current = smoothing;
 
-  // Single rAF loop that eases every item's --effect toward its target using
-  // frame-rate independent exponential smoothing
+  // Single rAF loop that eases every item's --effect toward its target
   const runFrame = useCallback(now => {
+    // If first frame or long pause, bound dt
+    if (!lastRef.current) lastRef.current = now;
     const dt = Math.min((now - lastRef.current) / 1000, 0.05);
     lastRef.current = now;
-    const tau = Math.max(smoothingRef.current, 1) / 1000;
+    const tau = Math.max(smoothingRef.current, 10) / 1000;
     const k = 1 - Math.exp(-dt / tau);
 
     let moving = false;
     const itemElements = itemRefs.current;
-    for (let i = 0; i < itemElements.length; i++) {
+    const len = itemsRef.current.length;
+
+    for (let i = 0; i < len; i++) {
       const el = itemElements[i];
       if (!el) continue;
-      const target = Math.max(targetsRef.current[i] || 0, activeRef.current === i ? 1 : 0);
+      const isItemActive = activeRef.current === i;
+      const target = Math.max(targetsRef.current[i] || 0, isItemActive ? 1 : 0);
       const cur = currentRef.current[i] || 0;
       const next = cur + (target - cur) * k;
-      const settled = Math.abs(target - next) < 0.0015;
+      const settled = Math.abs(target - next) < 0.001;
       const value = settled ? target : next;
       currentRef.current[i] = value;
       el.style.setProperty('--effect', value.toFixed(4));
       if (!settled) moving = true;
     }
 
-    rafRef.current = moving ? requestAnimationFrame(runFrame) : null;
+    if (moving) {
+      rafRef.current = requestAnimationFrame(runFrame);
+    } else {
+      rafRef.current = null;
+      lastRef.current = 0;
+    }
   }, []);
 
+  // startLoop does NOT cancel an already running frame; it lets it run fluidly
   const startLoop = useCallback(() => {
-    if (rafRef.current != null) {
-      cancelAnimationFrame(rafRef.current);
-    }
-
+    if (rafRef.current != null) return;
     lastRef.current = performance.now();
     rafRef.current = requestAnimationFrame(runFrame);
   }, [runFrame]);
+
+  // Sync with activeId prop changes
+  useEffect(() => {
+    if (activeId != null) {
+      const idx = items.findIndex(it => (typeof it === 'object' ? it.id === activeId : it === activeId));
+      if (idx !== -1 && idx !== activeRef.current) {
+        setActiveIndex(idx);
+        activeRef.current = idx;
+        startLoop();
+      }
+    }
+  }, [activeId, items, startLoop]);
+
+  // Initialize targets and current array refs
+  useEffect(() => {
+    const len = items.length;
+    targetsRef.current = new Array(len).fill(0);
+    currentRef.current = new Array(len).fill(0);
+    if (activeRef.current != null && activeRef.current >= 0 && activeRef.current < len) {
+      currentRef.current[activeRef.current] = 1;
+      const el = itemRefs.current[activeRef.current];
+      if (el) el.style.setProperty('--effect', '1.0000');
+    }
+    startLoop();
+  }, [items.length, startLoop]);
 
   const handlePointerMove = useCallback(
     e => {
@@ -109,9 +134,11 @@ const LineSidebar = ({
       if (!list) return;
       const rect = list.getBoundingClientRect();
       const pointerY = e.clientY - rect.top;
-      const ease = FALLOFF_CURVES[falloff] ?? FALLOFF_CURVES.linear;
+      const ease = FALLOFF_CURVES[falloff] ?? FALLOFF_CURVES.smooth;
       const itemElements = itemRefs.current;
-      for (let i = 0; i < itemElements.length; i++) {
+      const len = itemsRef.current.length;
+
+      for (let i = 0; i < len; i++) {
         const el = itemElements[i];
         if (!el) continue;
         const center = el.offsetTop + el.offsetHeight / 2;
@@ -124,22 +151,23 @@ const LineSidebar = ({
   );
 
   const handlePointerLeave = useCallback(() => {
-    targetsRef.current = targetsRef.current.map(() => 0);
+    const len = itemsRef.current.length;
+    for (let i = 0; i < len; i++) {
+      targetsRef.current[i] = 0;
+    }
     startLoop();
   }, [startLoop]);
 
   const handleClick = useCallback(
     (index, item) => {
       setActiveIndex(index);
+      activeRef.current = index;
+      startLoop();
       const label = typeof item === 'object' ? item.label : item;
       onItemClick?.(index, label, item);
     },
-    [onItemClick]
+    [onItemClick, startLoop]
   );
-
-  useEffect(() => {
-    startLoop();
-  }, [activeIndex, startLoop]);
 
   useEffect(
     () => () => {
@@ -165,7 +193,13 @@ const LineSidebar = ({
         '--smoothing': `${smoothing}ms`
       }}
     >
-      <ul ref={listRef} className="line-sidebar__list" onPointerMove={handlePointerMove} onPointerLeave={handlePointerLeave}>
+      <ul
+        ref={listRef}
+        className="line-sidebar__list"
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+        onPointerEnter={startLoop}
+      >
         {items.map((item, index) => {
           const label = typeof item === 'object' ? item.label : item;
           const Icon = typeof item === 'object' && item.icon ? item.icon : null;
