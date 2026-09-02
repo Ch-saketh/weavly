@@ -88,12 +88,12 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
           markerColor="#183B56"
           showIndex={true}
           showMarker={true}
-          scaleTick={true}
-          proximityRadius={100}
-          maxShift={18}
-          markerLength={34}
+          scaleTick={false}
+          proximityRadius={90}
+          maxShift={12}
+          markerLength={30}
           markerGap={6}
-          itemGap={14}
+          itemGap={15}
           fontSize={0.8125}
           smoothing={70}
           onItemClick={handleTabClick}

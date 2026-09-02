@@ -75,10 +75,10 @@ const CustomerCareView = () => {
   };
 
   return (
-    <div className="space-y-8">
-      {/* ── Main Header ── */}
-      <div className="border border-[#183B56] bg-white p-6 sm:p-8 shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-6 border-b border-[#183B56]/20">
+    <div className="border border-[#183B56] bg-white shadow-xs overflow-hidden text-[#183B56] font-sans">
+      {/* ── Top Header & Tab Switcher Bar ── */}
+      <div className="p-6 sm:p-8 bg-white border-b border-[#183B56] space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 bg-[#DFE7ED] border border-[#183B56] flex items-center justify-center shrink-0">
               <LifeBuoy size={18} className="text-[#183B56]" />
@@ -113,7 +113,7 @@ const CustomerCareView = () => {
             }`}
           >
             <MessageSquare size={14} />
-            <span>01 Common Inquiries (Instant Answers)</span>
+            <span>01 Common Inquiries (5 Cases)</span>
           </button>
 
           <button
@@ -133,14 +133,14 @@ const CustomerCareView = () => {
 
       {/* ── TAB 1: PRE-PREPARED INSTANT FAQ ANSWERS ── */}
       {activeTab === "faq" && (
-        <div className="space-y-6">
-          <div className="border border-[#183B56] bg-white p-6 sm:p-8 shadow-xs">
-            <div className="flex items-center justify-between pb-3 mb-6 border-b border-[#183B56]/20">
-              <h3 className="text-sm font-bold uppercase text-[#183B56]">
+        <>
+          <div className="p-6 sm:p-8 bg-white space-y-4">
+            <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#183B56]/15">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#183B56]">
                 Frequently Answered Scenarios
               </h3>
               <span className="text-[10px] font-mono text-[#5A7184] uppercase">
-                5 Topics Prepared
+                5 TOPICS PREPARED
               </span>
             </div>
 
@@ -157,26 +157,26 @@ const CustomerCareView = () => {
                     <button
                       type="button"
                       onClick={() => setExpandedFaq(isExpanded ? null : faq.id)}
-                      className="w-full text-left p-4.5 flex items-center justify-between gap-4 cursor-pointer"
+                      className="w-full text-left p-4 sm:p-5 flex items-start justify-between gap-4 cursor-pointer bg-transparent border-none"
                     >
-                      <div className="space-y-1">
-                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#5A7184] bg-[#DFE7ED] px-2 py-0.5 inline-block">
+                      <div className="space-y-1.5 min-w-0 flex-1">
+                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#5A7184] bg-[#DFE7ED] border border-[#183B56]/20 px-2 py-0.5 inline-block">
                           {faq.category}
                         </span>
-                        <h4 className="text-sm font-bold text-[#183B56] uppercase">
+                        <h4 className="text-xs sm:text-sm font-bold text-[#183B56] uppercase tracking-tight leading-snug">
                           {faq.question}
                         </h4>
                       </div>
                       <ChevronDown
                         size={16}
-                        className={`text-[#183B56] shrink-0 transition-transform duration-200 ${
+                        className={`text-[#183B56] shrink-0 mt-1 transition-transform duration-200 ${
                           isExpanded ? "rotate-180" : ""
                         }`}
                       />
                     </button>
 
                     {isExpanded && (
-                      <div className="p-4.5 pt-0 text-xs text-[#5A7184] font-medium leading-relaxed border-t border-[#183B56]/15 mt-2 bg-white/70">
+                      <div className="px-4 sm:px-5 pb-5 pt-0 text-xs text-[#5A7184] font-medium leading-relaxed border-t border-[#183B56]/15 bg-white/70">
                         <p className="pt-3">{faq.answer}</p>
                       </div>
                     )}
@@ -186,16 +186,16 @@ const CustomerCareView = () => {
             </div>
           </div>
 
-          {/* Need Further Help Prompt */}
-          <div className="border border-[#183B56] bg-[#F5EFEB] p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
-            <div>
+          {/* Bottom Direct Contact Footer Strip */}
+          <div className="p-6 sm:p-8 bg-[#F5EFEB] border-t border-[#183B56] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
               <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
                 Still have a worry or unique inquiry?
               </span>
-              <h4 className="text-sm font-bold uppercase text-[#183B56] mt-0.5">
+              <h4 className="text-xs sm:text-sm font-bold uppercase text-[#183B56]">
                 Send a direct message to our founder concierge.
               </h4>
-              <p className="text-xs text-[#5A7184] font-medium mt-1">
+              <p className="text-xs text-[#5A7184] font-medium">
                 Direct email: <span className="font-mono font-bold text-[#183B56]">{SUPPORT_EMAIL}</span>
               </p>
             </div>
@@ -203,122 +203,120 @@ const CustomerCareView = () => {
             <button
               type="button"
               onClick={() => setActiveTab("email")}
-              className="px-6 py-3 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shrink-0 shadow-xs"
+              className="px-6 py-3 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0 shadow-xs"
             >
               <span>Write a Message</span>
               <Mail size={14} />
             </button>
           </div>
-        </div>
+        </>
       )}
 
       {/* ── TAB 2: DIRECT CONCIERGE EMAIL DISPATCHER ── */}
       {activeTab === "email" && (
-        <div className="space-y-6">
-          <div className="border border-[#183B56] bg-white p-6 sm:p-8 shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-6 border-b border-[#183B56]/20">
-              <div>
-                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
-                  Direct Inquiries
-                </span>
-                <h3 className="text-base font-bold uppercase text-[#183B56]">
-                  Message the Founder &amp; Concierge Desk
-                </h3>
-              </div>
-
-              {/* Direct Mail Pill */}
-              <div className="flex items-center gap-2 bg-[#F5EFEB] border border-[#183B56] px-3 py-1.5 self-start sm:self-auto">
-                <Mail size={13} className="text-[#183B56]" />
-                <span className="text-xs font-mono font-bold text-[#183B56]">
-                  {SUPPORT_EMAIL}
-                </span>
-                <button
-                  type="button"
-                  onClick={handleCopyEmail}
-                  className="ml-2 text-[10px] uppercase font-bold text-[#183B56] hover:underline cursor-pointer flex items-center gap-1"
-                >
-                  {copiedEmail ? <Check size={11} className="text-emerald-600" /> : <Copy size={11} />}
-                  <span>{copiedEmail ? "Copied" : "Copy"}</span>
-                </button>
-              </div>
+        <div className="p-6 sm:p-8 bg-white space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#183B56]/20">
+            <div>
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
+                Direct Inquiries
+              </span>
+              <h3 className="text-sm font-bold uppercase text-[#183B56]">
+                Message the Founder &amp; Concierge Desk
+              </h3>
             </div>
 
-            {sentSuccess && (
-              <div className="px-4 py-3 mb-6 bg-[#F5EFEB] border border-[#183B56] text-xs font-bold text-[#183B56] flex items-center gap-2">
-                <Check size={15} strokeWidth={2.5} />
-                <span>Your email draft has been generated and opened in your email client. We reply within 2–4 hours!</span>
-              </div>
-            )}
+            {/* Direct Mail Pill */}
+            <div className="flex items-center gap-2 bg-[#F5EFEB] border border-[#183B56] px-3 py-1.5 self-start sm:self-auto">
+              <Mail size={13} className="text-[#183B56]" />
+              <span className="text-xs font-mono font-bold text-[#183B56]">
+                {SUPPORT_EMAIL}
+              </span>
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                className="ml-2 text-[10px] uppercase font-bold text-[#183B56] hover:underline cursor-pointer flex items-center gap-1"
+              >
+                {copiedEmail ? <Check size={11} className="text-emerald-600" /> : <Copy size={11} />}
+                <span>{copiedEmail ? "Copied" : "Copy"}</span>
+              </button>
+            </div>
+          </div>
 
-            <form onSubmit={handleSendEmail} className="space-y-4 max-w-2xl">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-[0.14em] text-[#5A7184] mb-1.5">
-                    Inquiry Topic
-                  </label>
-                  <select
-                    value={formState.subject}
-                    onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
-                    className="w-full h-[44px] px-3 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] outline-none"
-                  >
-                    <option value="Order & Sizing Assistance">Order &amp; Sizing Assistance</option>
-                    <option value="Custom Alteration Request">Custom Alteration Request</option>
-                    <option value="Bespoke Commission Inquiry">Bespoke Commission Inquiry</option>
-                    <option value="Escrow Settlement & Payout">Escrow Settlement &amp; Payout</option>
-                    <option value="General Patrons Question">General Patrons Question</option>
-                  </select>
-                </div>
+          {sentSuccess && (
+            <div className="px-4 py-3 bg-[#F5EFEB] border border-[#183B56] text-xs font-bold text-[#183B56] flex items-center gap-2">
+              <Check size={15} strokeWidth={2.5} />
+              <span>Your email draft has been generated and opened in your email client. We reply within 2–4 hours!</span>
+            </div>
+          )}
 
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-[0.14em] text-[#5A7184] mb-1.5">
-                    Order Reference # (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. LZ-94827"
-                    value={formState.orderId}
-                    onChange={(e) => setFormState({ ...formState, orderId: e.target.value })}
-                    className="w-full h-[44px] px-4 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] placeholder-[#5A7184]/50 outline-none focus:ring-1 focus:ring-[#183B56]"
-                  />
-                </div>
+          <form onSubmit={handleSendEmail} className="space-y-4 max-w-2xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-[0.14em] text-[#5A7184] mb-1.5">
+                  Inquiry Topic
+                </label>
+                <select
+                  value={formState.subject}
+                  onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
+                  className="w-full h-11 px-3 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] outline-none"
+                >
+                  <option value="Order & Sizing Assistance">Order &amp; Sizing Assistance</option>
+                  <option value="Custom Alteration Request">Custom Alteration Request</option>
+                  <option value="Bespoke Commission Inquiry">Bespoke Commission Inquiry</option>
+                  <option value="Escrow Settlement & Payout">Escrow Settlement &amp; Payout</option>
+                  <option value="General Patrons Question">General Patrons Question</option>
+                </select>
               </div>
 
               <div>
                 <label className="block text-[10px] font-bold uppercase tracking-[0.14em] text-[#5A7184] mb-1.5">
-                  Your Message or Concern
+                  Order Reference # (Optional)
                 </label>
-                <textarea
-                  rows={5}
-                  required
-                  placeholder="Describe your question or worry in detail. We will inspect your sizing and account records to provide a complete solution."
-                  value={formState.message}
-                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                  className="w-full p-4 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] placeholder-[#5A7184]/50 outline-none focus:ring-1 focus:ring-[#183B56] leading-relaxed resize-none"
+                <input
+                  type="text"
+                  placeholder="e.g. LZ-94827"
+                  value={formState.orderId}
+                  onChange={(e) => setFormState({ ...formState, orderId: e.target.value })}
+                  className="w-full h-11 px-4 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] placeholder-[#5A7184]/50 outline-none focus:ring-1 focus:ring-[#183B56]"
                 />
               </div>
+            </div>
 
-              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <button
-                  type="submit"
-                  className="px-7 py-3.5 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shadow-xs"
-                >
-                  <Send size={13} />
-                  <span>Send to chokkapusaketh@gmail.com</span>
-                </button>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-[0.14em] text-[#5A7184] mb-1.5">
+                Your Message or Concern
+              </label>
+              <textarea
+                rows={5}
+                required
+                placeholder="Describe your question or worry in detail. We will inspect your sizing and account records to provide a complete solution."
+                value={formState.message}
+                onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                className="w-full p-4 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] placeholder-[#5A7184]/50 outline-none focus:ring-1 focus:ring-[#183B56] leading-relaxed resize-none"
+              />
+            </div>
 
-                <a
-                  href={`mailto:${SUPPORT_EMAIL}?subject=Weavly%20Concierge%20Inquiry`}
-                  className="text-xs font-bold uppercase tracking-wider text-[#183B56] hover:underline flex items-center gap-1.5"
-                >
-                  <span>Open Mail App Directly</span>
-                  <ExternalLink size={12} />
-                </a>
-              </div>
-            </form>
-          </div>
+            <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <button
+                type="submit"
+                className="px-7 py-3.5 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shadow-xs"
+              >
+                <Send size={13} />
+                <span>Send to chokkapusaketh@gmail.com</span>
+              </button>
+
+              <a
+                href={`mailto:${SUPPORT_EMAIL}?subject=Weavly%20Concierge%20Inquiry`}
+                className="text-xs font-bold uppercase tracking-wider text-[#183B56] hover:underline flex items-center gap-1.5 no-underline"
+              >
+                <span>Open Mail App Directly</span>
+                <ExternalLink size={12} />
+              </a>
+            </div>
+          </form>
 
           {/* Concierge Guarantee Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-[#183B56]/15">
             {[
               { icon: Clock, title: '2–4h Response Window', desc: 'Direct assistance directly from founder & head stylist.' },
               { icon: ShieldCheck, title: '100% Escrow Protection', desc: 'All issues handled with full patron financial security.' },
@@ -326,7 +324,7 @@ const CustomerCareView = () => {
             ].map((box, i) => {
               const Icon = box.icon;
               return (
-                <div key={i} className="border border-[#183B56] bg-[#F5EFEB] p-5 space-y-1.5">
+                <div key={i} className="border border-[#183B56] bg-[#F5EFEB] p-4 space-y-1">
                   <div className="flex items-center gap-2">
                     <Icon size={14} className="text-[#183B56]" />
                     <span className="text-xs font-bold uppercase text-[#183B56]">{box.title}</span>
