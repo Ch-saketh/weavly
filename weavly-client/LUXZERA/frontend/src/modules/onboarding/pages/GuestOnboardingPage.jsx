@@ -454,7 +454,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             </div>
 
             {/* Metrics Strip */}
-            <div className="grid grid-cols-3 border-t border-[#183B56] pt-8 divide-x divide-[#183B56]">
+            <div className="grid grid-cols-3 pt-8 divide-x divide-[#183B56]">
               <div className="pr-4">
                 <div className="text-2xl sm:text-3xl font-bold text-[#183B56]">100+</div>
                 <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#5A7184] mt-1">Verified Drops</div>
