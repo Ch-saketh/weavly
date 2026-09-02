@@ -327,18 +327,20 @@ export default function Navbar({
                     </div>
 
                     <div className="space-y-1.5">
-                      <button
-                        onClick={() => router.push("/designer/dashboard")}
+                      <a
+                        href="/designer/dashboard"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="w-full text-left p-2.5 hover:bg-[#F5EFEB] border border-transparent hover:border-[#183B56] transition-all cursor-pointer group/item block"
                       >
                         <div className="text-xs font-bold uppercase text-[#183B56] flex items-center justify-between">
                           <span>Designer Dashboard</span>
-                          <span className="text-[10px] opacity-0 group-hover/item:opacity-100 transition-opacity">→</span>
+                          <span className="text-[10px] opacity-0 group-hover/item:opacity-100 transition-opacity">↗</span>
                         </div>
                         <p className="text-[11px] text-[#5A7184] font-medium mt-0.5 leading-snug">
                           Manage live orders, lookbooks &amp; payouts
                         </p>
-                      </button>
+                      </a>
 
                       <button
                         onClick={() => router.push("/creator-guide")}

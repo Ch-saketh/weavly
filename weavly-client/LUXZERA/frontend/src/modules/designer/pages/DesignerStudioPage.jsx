@@ -171,7 +171,7 @@ export default function DesignerStudioPage() {
 
                 {isDesignerAuthenticated ? (
                   <button
-                    onClick={() => router.push("/designer/dashboard")}
+                    onClick={() => window.open("/designer/dashboard", "_blank")}
                     className="py-3.5 px-6 bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] text-xs font-bold uppercase tracking-[0.16em] border border-[#183B56] cursor-pointer transition-all flex items-center gap-2"
                   >
                     <span>Enter Designer Dashboard</span>

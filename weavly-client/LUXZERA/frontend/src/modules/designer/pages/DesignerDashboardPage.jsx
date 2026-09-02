@@ -45,6 +45,7 @@ import {
   updateDesignerProfile
 } from "../services/designerService";
 import DesignerSidebar from "../components/DesignerSidebar";
+import PublishGarmentModal from "../components/PublishGarmentModal";
 
 export default function DesignerDashboardPage() {
   const router = useRouter();
@@ -66,19 +67,9 @@ export default function DesignerDashboardPage() {
   const [requests, setRequests] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
 
-  // New Design Modal State
+  // New Design Modal & Leave Confirmation States
   const [isNewDesignOpen, setIsNewDesignOpen] = useState(false);
-  const [creating, setCreating] = useState(false);
-  const [newDesignForm, setNewDesignForm] = useState({
-    title: "",
-    category: "Eveningwear",
-    targetAudience: "Women",
-    price: "",
-    fabricComposition: "100% Silk Faille",
-    primaryImageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80",
-    description: "",
-    customizationAvailable: true
-  });
+  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
 
   // Profile Edit State
   const [profileForm, setProfileForm] = useState({
@@ -140,6 +131,23 @@ export default function DesignerDashboardPage() {
       isMounted = false;
     };
   }, [router]);
+
+  // ── BACK BUTTON & POPSTATE NAVIGATION GUARD ──
+  useEffect(() => {
+    if (!authVerified) return;
+
+    window.history.pushState(null, "", window.location.href);
+
+    const handlePopState = () => {
+      setIsLeaveModalOpen(true);
+      window.history.pushState(null, "", window.location.href);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [authVerified]);
 
   // Load Dashboard Data
   const loadDashboardData = useCallback(async () => {
@@ -224,34 +232,10 @@ export default function DesignerDashboardPage() {
     }
   };
 
-  // Handle Create Design
-  const handleCreateDesign = async (e) => {
-    e.preventDefault();
-    if (!newDesignForm.title.trim() || !newDesignForm.price) return;
-    setCreating(true);
-
-    try {
-      await createDesignerDesign({
-        ...newDesignForm,
-        price: parseFloat(newDesignForm.price) || 0
-      });
-      setIsNewDesignOpen(false);
-      setNewDesignForm({
-        title: "",
-        category: "Eveningwear",
-        targetAudience: "Women",
-        price: "",
-        fabricComposition: "100% Silk Faille",
-        primaryImageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80",
-        description: "",
-        customizationAvailable: true
-      });
-      loadDashboardData();
-    } catch (err) {
-      alert("Failed to create design: " + err.message);
-    } finally {
-      setCreating(false);
-    }
+  // Handle Publish Created from Modal
+  const handlePublishCreated = async (payload) => {
+    await createDesignerDesign(payload);
+    loadDashboardData();
   };
 
   // Handle Save Profile
@@ -364,6 +348,13 @@ export default function DesignerDashboardPage() {
         <div className="border border-[#183B56] bg-[#F5EFEB] p-6 sm:p-8 shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
+              <button
+                type="button"
+                onClick={() => setIsLeaveModalOpen(true)}
+                className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#5A7184] hover:text-[#183B56] flex items-center gap-1 transition-colors cursor-pointer bg-transparent border-none p-0 mb-1"
+              >
+                <span>← Return to Main Store</span>
+              </button>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A7184]">
                 Designer Studio • Workspace &amp; Operations
               </span>
@@ -882,156 +873,67 @@ export default function DesignerDashboardPage() {
         </div>
       </div>
 
-      {/* ── MODAL: PUBLISH NEW DESIGN LOOKBOOK ── */}
-      {isNewDesignOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-[#183B56] w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-[#183B56]/20">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 border border-[#183B56] bg-[#DFE7ED] flex items-center justify-center text-[#183B56]">
-                  <Palette size={16} />
-                </div>
-                <div>
-                  <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
-                    Catalog Addition
-                  </span>
-                  <h3 className="text-base font-bold uppercase text-[#183B56]">
-                    Publish Lookbook Garment
-                  </h3>
-                </div>
-              </div>
+      {/* ── PUBLISH FASHION GARMENT MODAL (CLOTHING ONLY) ── */}
+      <PublishGarmentModal
+        isOpen={isNewDesignOpen}
+        onClose={() => setIsNewDesignOpen(false)}
+        onCreated={handlePublishCreated}
+      />
 
-              <button
-                onClick={() => setIsNewDesignOpen(false)}
-                className="p-1.5 border border-[#183B56]/30 hover:bg-[#F5EFEB] cursor-pointer"
-              >
-                <X size={16} />
-              </button>
+      {/* ── LEAVE / SIGN OUT CONFIRMATION MODAL ── */}
+      {isLeaveModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-[#183B56] w-full max-w-md p-6 sm:p-8 shadow-2xl space-y-5 text-[#183B56] font-sans">
+            <div className="flex items-center gap-3 border-b border-[#183B56]/20 pb-4">
+              <div className="w-10 h-10 border border-[#183B56] bg-[#DFE7ED] flex items-center justify-center text-[#183B56] shrink-0">
+                <Lock size={18} />
+              </div>
+              <div>
+                <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
+                  SECURITY AUDIT GATEWAY
+                </span>
+                <h3 className="text-base font-bold uppercase tracking-tight text-[#183B56]">
+                  Leave Designer Studio?
+                </h3>
+              </div>
             </div>
 
-            <form onSubmit={handleCreateDesign} className="space-y-3.5 text-xs font-medium">
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
-                  Garment Title
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Sculpted Silk Evening Gown"
-                  value={newDesignForm.title}
-                  onChange={(e) => setNewDesignForm({ ...newDesignForm, title: e.target.value })}
-                  className="w-full h-10 px-3 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] outline-none"
-                />
-              </div>
+            <p className="text-xs text-[#5A7184] leading-relaxed">
+              You are navigating away from your authenticated Creator Workspace. For your security, would you like to terminate your active session on this device or keep it active?
+            </p>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
-                    Category
-                  </label>
-                  <select
-                    value={newDesignForm.category}
-                    onChange={(e) => setNewDesignForm({ ...newDesignForm, category: e.target.value })}
-                    className="w-full h-10 px-3 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] outline-none"
-                  >
-                    <option value="Eveningwear">Eveningwear</option>
-                    <option value="Bespoke Suiting">Bespoke Suiting</option>
-                    <option value="Outerwear & Coats">Outerwear &amp; Coats</option>
-                    <option value="Festive & Ceremonial">Festive &amp; Ceremonial</option>
-                    <option value="Artisanal Streetwear">Artisanal Streetwear</option>
-                  </select>
-                </div>
+            <div className="space-y-2 pt-2 border-t border-[#183B56]/15">
+              <button
+                type="button"
+                onClick={() => {
+                  logout();
+                  router.replace("/");
+                }}
+                className="w-full py-2.5 px-4 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs flex items-center justify-center gap-2"
+              >
+                <LogOut size={13} />
+                <span>Sign Out Securely &amp; Leave</span>
+              </button>
 
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
-                    Retail Price (₹)
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    placeholder="e.g. 18500"
-                    value={newDesignForm.price}
-                    onChange={(e) => setNewDesignForm({ ...newDesignForm, price: e.target.value })}
-                    className="w-full h-10 px-3 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] outline-none"
-                  />
-                </div>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsLeaveModalOpen(false);
+                  router.replace("/");
+                }}
+                className="w-full py-2.5 px-4 bg-white hover:bg-[#F5EFEB] text-[#183B56] border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-2xs"
+              >
+                Leave Without Signing Out
+              </button>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
-                    Audience
-                  </label>
-                  <select
-                    value={newDesignForm.targetAudience}
-                    onChange={(e) => setNewDesignForm({ ...newDesignForm, targetAudience: e.target.value })}
-                    className="w-full h-10 px-3 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] outline-none"
-                  >
-                    <option value="Women">Women</option>
-                    <option value="Men">Men</option>
-                    <option value="Unisex">Unisex</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
-                    Fabric Composition
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 100% Silk Faille"
-                    value={newDesignForm.fabricComposition}
-                    onChange={(e) => setNewDesignForm({ ...newDesignForm, fabricComposition: e.target.value })}
-                    className="w-full h-10 px-3 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
-                  Photo URL
-                </label>
-                <input
-                  type="url"
-                  required
-                  placeholder="https://images.unsplash.com/..."
-                  value={newDesignForm.primaryImageUrl}
-                  onChange={(e) => setNewDesignForm({ ...newDesignForm, primaryImageUrl: e.target.value })}
-                  className="w-full h-10 px-3 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#183B56] mb-1">
-                  Description
-                </label>
-                <textarea
-                  rows={2}
-                  placeholder="Describe the silhouette cut and tailoring details..."
-                  value={newDesignForm.description}
-                  onChange={(e) => setNewDesignForm({ ...newDesignForm, description: e.target.value })}
-                  className="w-full p-2.5 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] outline-none resize-none leading-relaxed"
-                />
-              </div>
-
-              <div className="pt-2 flex items-center justify-end gap-3 border-t border-[#183B56]/20">
-                <button
-                  type="button"
-                  onClick={() => setIsNewDesignOpen(false)}
-                  className="px-4 py-2 bg-white border border-[#183B56]/40 text-[#5A7184] hover:text-[#183B56] text-xs font-bold uppercase cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={creating}
-                  className="px-5 py-2 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs flex items-center gap-1.5"
-                >
-                  {creating ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />}
-                  <span>{creating ? "Publishing..." : "Publish Lookbook"}</span>
-                </button>
-              </div>
-            </form>
+              <button
+                type="button"
+                onClick={() => setIsLeaveModalOpen(false)}
+                className="w-full py-2 text-xs font-semibold text-[#5A7184] hover:text-[#183B56] border-none bg-transparent cursor-pointer"
+              >
+                Stay on Designer Studio
+              </button>
+            </div>
           </div>
         </div>
       )}
