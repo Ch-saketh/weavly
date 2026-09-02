@@ -370,11 +370,11 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
     <div className="min-h-screen bg-[#F5EFEB] font-sans text-[#183B56] selection:bg-[#183B56] selection:text-white">
 
       {/* ─── 1. ARCHITECTURAL HEADER ─── */}
-      <header className="w-full h-20 flex items-center justify-between px-4 sm:px-8 md:px-12 border-b border-[#183B56] bg-white sticky top-0 z-50">
+      <header className="w-full h-20 flex items-center justify-between px-6 sm:px-12 md:px-16 border-b border-[#183B56] bg-white sticky top-0 z-50">
         <WeavlyLogo />
 
         {/* Center Nav Links */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-10">
           {[
             { label: 'Meet Zyra', target: 'meet-zera' },
             { label: 'Collections', target: 'zera-collections' },
@@ -387,21 +387,21 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                 const el = document.getElementById(target);
                 if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
-              className="text-xs font-bold uppercase tracking-wider text-[#5A7184] hover:text-[#183B56] transition-colors bg-transparent border-none cursor-pointer p-0"
+              className="text-xs font-bold uppercase tracking-[0.15em] text-[#5A7184] hover:text-[#183B56] transition-colors bg-transparent border-none cursor-pointer p-0"
             >
               {label}
             </button>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               triggerAuth("login");
             }}
-            className="bg-[#F5EFEB] text-[#183B56] px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-white active:scale-95 transition-all cursor-pointer border border-[#183B56]"
+            className="bg-[#F5EFEB] text-[#183B56] px-5 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-white active:scale-95 transition-all cursor-pointer border border-[#183B56]"
           >
             Sign In
           </button>
@@ -411,149 +411,158 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               e.stopPropagation();
               triggerAuth("register");
             }}
-            className="bg-[#183B56] text-white px-5 sm:px-6 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-[#102A43] active:scale-95 transition-all cursor-pointer border border-[#183B56] shadow-xs"
+            className="bg-[#183B56] text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-[#102A43] active:scale-95 transition-all cursor-pointer border border-[#183B56] shadow-xs"
           >
             Join Atelier
           </button>
         </div>
       </header>
 
-      {/* ─── 2. MAIN HERO SECTION (MODULAR BOX MATRIX) ─── */}
-      <section className="border-b border-[#183B56] bg-[#F5EFEB]">
-        <div className="max-w-7xl mx-auto border-x border-[#183B56] grid grid-cols-1 lg:grid-cols-12">
+      {/* ─── 2. EXPANSIVE HERO SECTION ─── */}
+      <section className="py-20 sm:py-28 px-6 sm:px-12 border-b border-[#183B56] bg-[#F5EFEB]">
+        <div className="max-w-6xl mx-auto flex flex-col items-center text-center space-y-8">
           
-          {/* Left 7 Columns: Headline, Summary & CTAs */}
-          <div className="lg:col-span-7 p-8 sm:p-12 lg:p-16 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#183B56] bg-white space-y-10">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 border border-[#183B56] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#183B56] bg-[#F5EFEB]">
-                <span className="w-2 h-2 rounded-full bg-[#183B56]" />
-                <span>AI Style Engine &amp; Made-to-Measure</span>
-              </div>
-
-              <h1 className="text-4xl sm:text-6xl lg:text-[68px] font-bold tracking-tight text-[#183B56] leading-[1.05] uppercase">
-                Find Less.<br />Wear Better.
-              </h1>
-
-              <p className="text-sm sm:text-base text-[#5A7184] leading-relaxed max-w-xl font-medium">
-                Weavly curates outfits you will actually wear—bringing together luxury garments, bespoke footwear, and handcrafted silhouettes tailored to your exact 3D proportions.
-              </p>
-
-              <div className="flex flex-wrap items-center gap-4 pt-2">
-                <button
-                  onClick={() => triggerAuth("register")}
-                  className="bg-[#183B56] text-white hover:bg-[#102A43] px-8 py-4 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer shadow-xs flex items-center gap-2"
-                >
-                  <span>Start Free Calibration</span>
-                  <ArrowRight size={14} />
-                </button>
-                <button
-                  onClick={() => triggerAuth("login")}
-                  className="bg-[#F5EFEB] text-[#183B56] hover:bg-white px-8 py-4 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer"
-                >
-                  Explore Drops
-                </button>
-              </div>
-            </div>
-
-            {/* Metrics Strip */}
-            <div className="grid grid-cols-3 border-t border-[#183B56] pt-8 divide-x divide-[#183B56]">
-              <div className="pr-4">
-                <div className="text-2xl sm:text-3xl font-bold text-[#183B56]">100+</div>
-                <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#5A7184] mt-1">Verified Drops</div>
-              </div>
-              <div className="px-4">
-                <div className="text-2xl sm:text-3xl font-bold text-[#183B56]">3D</div>
-                <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#5A7184] mt-1">Vector Fitting</div>
-              </div>
-              <div className="pl-4">
-                <div className="text-2xl sm:text-3xl font-bold text-[#183B56]">100%</div>
-                <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#5A7184] mt-1">Escrow Fit</div>
-              </div>
-            </div>
+          <div className="inline-flex items-center gap-2 border border-[#183B56] px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-[#183B56] bg-white shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-[#183B56] animate-pulse" />
+            <span>AI Virtual Stylist &amp; Bespoke Atelier</span>
           </div>
 
-          {/* Right 5 Columns: Featured Atelier Card */}
-          <div className="lg:col-span-5 bg-[#DFE7ED] flex flex-col justify-between relative overflow-hidden">
-            <div className="relative aspect-[3/4] w-full overflow-hidden">
-              <img
-                src={HERO_IMG_MID}
-                alt="Atelier Showcase"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-4 left-4 bg-white/95 border border-[#183B56] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#183B56]">
-                Lookbook Edit #01
+          <h1 className="text-4xl sm:text-6xl lg:text-[76px] font-bold tracking-tight text-[#183B56] leading-[1.05] uppercase max-w-4xl">
+            Find Less.<br />Wear Better.
+          </h1>
+
+          <p className="text-base sm:text-lg text-[#5A7184] leading-relaxed max-w-2xl font-medium">
+            Weavly curates complete outfits you will actually wear—bringing together luxury garments, bespoke footwear, and handcrafted silhouettes tailored to your exact 3D proportions.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <button
+              onClick={() => triggerAuth("register")}
+              className="bg-[#183B56] text-white hover:bg-[#102A43] px-9 py-4 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer shadow-xs flex items-center gap-2"
+            >
+              <span>Start Free Calibration</span>
+              <ArrowRight size={14} />
+            </button>
+            <button
+              onClick={() => triggerAuth("login")}
+              className="bg-white text-[#183B56] hover:bg-[#F5EFEB] px-9 py-4 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer"
+            >
+              Explore Drops
+            </button>
+          </div>
+
+          {/* 3 Floating Showcase Boxes with Generous Gaps */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full pt-12 text-left">
+            
+            {/* Box 1: Verified Drops */}
+            <div className="bg-white border border-[#183B56] p-8 shadow-xs flex flex-col justify-between min-h-[340px] space-y-6">
+              <div className="space-y-3">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-2.5 py-1 inline-block">
+                  Atelier Curation
+                </span>
+                <div className="text-3xl font-bold text-[#183B56] uppercase">100+ Drops</div>
+                <p className="text-xs text-[#5A7184] leading-relaxed font-medium">
+                  Verified independent designers and couture fashion houses curated directly for your aesthetic.
+                </p>
+              </div>
+              <div className="pt-4 border-t border-[#183B56]/15 flex items-center justify-between">
+                <span className="text-xs font-bold uppercase text-[#183B56]">Couture Drops</span>
+                <span className="text-xs font-bold text-[#183B56]">→</span>
               </div>
             </div>
-            <div className="p-6 bg-[#F5EFEB] border-t border-[#183B56] flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] block">Featured Sartorial Ensemble</span>
-                <span className="text-sm font-bold uppercase text-[#183B56]">Hand-Draped Silk &amp; Flannel Wool</span>
+
+            {/* Box 2: Center Feature Image */}
+            <div className="bg-[#DFE7ED] border border-[#183B56] shadow-xs overflow-hidden flex flex-col justify-between min-h-[340px] relative group cursor-pointer" onClick={() => triggerAuth("register")}>
+              <div className="relative aspect-[3/3.8] w-full overflow-hidden">
+                <img
+                  src={HERO_IMG_MID}
+                  alt="Main Lookbook"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute top-4 left-4 bg-white/95 border border-[#183B56] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#183B56]">
+                  Lookbook Edit #01
+                </div>
               </div>
-              <button
-                onClick={() => triggerAuth("register")}
-                className="text-xs font-bold uppercase tracking-wider text-[#183B56] hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
-              >
-                <span>View</span>
-                <span>→</span>
-              </button>
+              <div className="p-4 bg-white border-t border-[#183B56] flex items-center justify-between text-xs font-bold uppercase text-[#183B56]">
+                <span>Mulberry Silk Ensemble</span>
+                <span>Explore →</span>
+              </div>
             </div>
+
+            {/* Box 3: 100% Escrow Guarantee */}
+            <div className="bg-white border border-[#183B56] p-8 shadow-xs flex flex-col justify-between min-h-[340px] space-y-6">
+              <div className="space-y-3">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-2.5 py-1 inline-block">
+                  Bespoke Fit
+                </span>
+                <div className="text-3xl font-bold text-[#183B56] uppercase">100% Escrow</div>
+                <p className="text-xs text-[#5A7184] leading-relaxed font-medium">
+                  Your funds remain locked in secure escrow vaults until your made-to-measure piece arrives and fits flawlessly.
+                </p>
+              </div>
+              <div className="pt-4 border-t border-[#183B56]/15 flex items-center justify-between">
+                <span className="text-xs font-bold uppercase text-[#183B56]">Fit Protected</span>
+                <span className="text-xs font-bold text-[#183B56]">✓</span>
+              </div>
+            </div>
+
           </div>
 
         </div>
       </section>
 
-      {/* ─── 3. MEET ZYRA AI INTELLIGENCE (2X2 BOX MATRIX) ─── */}
-      <section id="meet-zera" className="border-b border-[#183B56] bg-white">
-        <div className="max-w-7xl mx-auto border-x border-[#183B56]">
+      {/* ─── 3. MEET ZYRA AI INTELLIGENCE ─── */}
+      <section id="meet-zera" className="py-24 sm:py-32 px-6 sm:px-12 border-b border-[#183B56] bg-white">
+        <div className="max-w-6xl mx-auto space-y-12">
           
           {/* Header Bar */}
-          <div className="p-6 sm:p-8 border-b border-[#183B56] bg-[#F5EFEB] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block mb-1">Zyra Virtual Engine</span>
-              <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-[#183B56] pb-8">
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block">
+                Zyra Virtual Engine
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
                 Personalized Style Intelligence
               </h2>
             </div>
-            <div className="inline-flex items-center gap-2 border border-[#183B56] bg-white px-3.5 py-1.5 text-xs font-bold text-[#183B56]">
+            <div className="inline-flex items-center gap-2 border border-[#183B56] bg-[#F5EFEB] px-4 py-2 text-xs font-bold text-[#183B56] self-start sm:self-auto">
               <span className="w-2 h-2 rounded-full bg-[#183B56] animate-pulse" />
-              <span>Vector AI Calibration</span>
+              <span>Real-Time Vector Engine</span>
             </div>
           </div>
 
-          {/* 2-Column Split: Mascot Panel & Step Matrix */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
+          {/* 2-Column Split with Generous Spacing */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
             
-            {/* Left 5 Cols: Mascot & Explainer */}
-            <div className="lg:col-span-5 p-8 sm:p-12 flex flex-col justify-between bg-[#F5EFEB] space-y-8">
-              <div>
-                <h3 className="text-3xl sm:text-4xl font-bold uppercase text-[#183B56] leading-tight mb-4">
-                  Curates Outfits.<br />Not Disconnected Items.
+            {/* Left 5 Cols: Explainer + Mascot */}
+            <div className="lg:col-span-5 bg-[#F5EFEB] border border-[#183B56] p-8 sm:p-10 flex flex-col justify-between space-y-8">
+              <div className="space-y-4">
+                <h3 className="text-2xl sm:text-3xl font-bold uppercase text-[#183B56] leading-tight">
+                  Curates Outfits.<br />Not Disconnected Products.
                 </h3>
                 <p className="text-sm text-[#5A7184] leading-relaxed font-medium">
-                  Zyra analyzes your exact proportions, color palette, and lifestyle priorities to construct harmonious wardrobe collections from verified couturiers.
+                  Zyra analyzes your exact proportions, favorite color tones, and wardrobe priorities to assemble tailored collections from independent ateliers.
                 </p>
               </div>
 
-              <div className="bg-white border border-[#183B56] p-6 rounded-xs flex items-center justify-center min-h-[260px] relative shadow-xs">
+              <div className="bg-white border border-[#183B56] p-8 flex items-center justify-center min-h-[260px] relative shadow-2xs">
                 <ZeraInteractiveEyesMascot />
               </div>
             </div>
 
-            {/* Right 7 Cols: 4-Step Connected Box Matrix */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x sm:divide-y divide-[#183B56] bg-white">
+            {/* Right 7 Cols: 4-Step Grid with Generous Gaps */}
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
               {[
                 { num: '01', title: 'Silhouette Scan', desc: 'Calibrate your exact height, size, and fit tolerances in under 2 minutes.' },
-                { num: '02', title: 'Aesthetic Vectoring', desc: 'Zyra maps your favorite color tones, fabrics, and wardrobe priorities.' },
+                { num: '02', title: 'Aesthetic Vectoring', desc: 'Zyra maps your preferred color tones, fabrics, and wardrobe priorities.' },
                 { num: '03', title: 'Look Synthesis', desc: 'Complete bespoke outfits assembled from independent couture ateliers.' },
                 { num: '04', title: '100% Escrow Guarantee', desc: 'Made-to-measure orders held in escrow until you confirm satisfaction.' },
-              ].map((step, idx) => (
+              ].map((step) => (
                 <div
                   key={step.num}
-                  className={`p-8 flex flex-col justify-between min-h-[220px] bg-white hover:bg-[#F5EFEB]/50 transition-colors ${
-                    idx >= 2 ? 'border-t border-[#183B56]' : ''
-                  }`}
+                  className="p-8 bg-[#F5EFEB] border border-[#183B56] flex flex-col justify-between min-h-[220px] hover:bg-white transition-colors shadow-2xs"
                 >
-                  <span className="text-xs font-mono font-bold text-[#183B56] bg-[#DFE7ED] border border-[#183B56] px-2.5 py-0.5 self-start">
+                  <span className="text-xs font-mono font-bold text-[#183B56] bg-white border border-[#183B56] px-2.5 py-1 self-start">
                     STEP {step.num}
                   </span>
                   <div className="mt-6 space-y-2">
@@ -568,35 +577,37 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         </div>
       </section>
 
-      {/* ─── 4. ZYRA CURATED COLLECTIONS (3-COLUMN BOX MATRIX) ─── */}
-      <section id="zera-collections" className="border-b border-[#183B56] bg-[#F5EFEB]">
-        <div className="max-w-7xl mx-auto border-x border-[#183B56]">
+      {/* ─── 4. ZYRA CURATED COLLECTIONS ─── */}
+      <section id="zera-collections" className="py-24 sm:py-32 px-6 sm:px-12 border-b border-[#183B56] bg-[#F5EFEB]">
+        <div className="max-w-6xl mx-auto space-y-12">
           
-          <div className="p-6 sm:p-8 border-b border-[#183B56] bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block mb-1">Locked Patron Capsules</span>
-              <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-[#183B56] pb-8">
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block">
+                Locked Patron Capsules
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
                 Curated Zyra Collections
               </h2>
             </div>
             <button
               onClick={() => triggerAuth("register")}
-              className="bg-[#183B56] text-white hover:bg-[#102A43] px-6 py-2.5 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer self-start sm:self-auto"
+              className="bg-[#183B56] text-white hover:bg-[#102A43] px-7 py-3 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer self-start sm:self-auto shadow-xs"
             >
               Sign Up To Unlock All
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#183B56] bg-white">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { label: 'Sartorial Summer Edit', desc: '6 complete looks · Coastal Linen & Tailored Silk', pieces: '6 Items' },
               { label: 'Architectural Office Mix', desc: '8 complete looks · Double-Breasted Flannel', pieces: '8 Items' },
               { label: 'Weekend Atelier Capsule', desc: '5 complete looks · Hand-Draped Raw Cottons', pieces: '5 Items' },
             ].map((col, i) => (
-              <div key={i} className="p-8 flex flex-col justify-between min-h-[300px] bg-[#F5EFEB] hover:bg-white transition-colors space-y-8">
+              <div key={i} className="p-8 bg-white border border-[#183B56] shadow-xs flex flex-col justify-between min-h-[320px] space-y-8">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] bg-white border border-[#183B56] px-2 py-0.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-2.5 py-1">
                       {col.pieces}
                     </span>
                     <span className="text-xs font-bold text-[#183B56]">🔒 LOCKED</span>
@@ -606,7 +617,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                 </div>
                 <button
                   onClick={() => triggerAuth("login")}
-                  className="w-full py-3 bg-white hover:bg-[#183B56] text-[#183B56] hover:text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer text-center"
+                  className="w-full py-3.5 bg-[#F5EFEB] hover:bg-[#183B56] text-[#183B56] hover:text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer text-center"
                 >
                   Sign In to Unlock →
                 </button>
@@ -617,35 +628,35 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         </div>
       </section>
 
-      {/* ─── 5. FOR CREATORS & ATELIERS (12-COL BOX MATRIX) ─── */}
-      <section id="for-designers" className="border-b border-[#183B56] bg-white">
-        <div className="max-w-7xl mx-auto border-x border-[#183B56] grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
+      {/* ─── 5. FOR CREATORS & ATELIERS ─── */}
+      <section id="for-designers" className="py-24 sm:py-32 px-6 sm:px-12 border-b border-[#183B56] bg-white">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
-          <div className="lg:col-span-6 p-8 sm:p-14 bg-white flex flex-col justify-between space-y-8">
+          <div className="lg:col-span-6 space-y-8">
             <div className="space-y-4">
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-3 py-1 inline-block">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-3.5 py-1.5 inline-block">
                 For Fashion Creators &amp; Ateliers
               </span>
-              <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56] leading-tight">
+              <h2 className="text-3xl sm:text-5xl font-bold uppercase tracking-tight text-[#183B56] leading-tight">
                 Publish Your Lookbooks.<br />
                 Receive Bespoke Commissions.
               </h2>
-              <p className="text-sm text-[#5A7184] font-medium leading-relaxed">
-                Weavly connects independent designers directly with patrons worldwide. Set your pricing, configure custom made-to-measure options, and receive guaranteed milestone escrow payouts.
+              <p className="text-sm sm:text-base text-[#5A7184] font-medium leading-relaxed max-w-lg">
+                Weavly connects independent designers directly with patrons worldwide. Set your pricing, configure custom made-to-measure sizing, and receive guaranteed milestone escrow payouts.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 pt-2">
               <button
                 onClick={() => triggerAuth("register")}
-                className="bg-[#183B56] text-white hover:bg-[#102A43] px-7 py-3.5 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer flex items-center gap-2"
+                className="bg-[#183B56] text-white hover:bg-[#102A43] px-8 py-4 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all cursor-pointer flex items-center gap-2 shadow-xs"
               >
                 <span>Apply as a Creator</span>
                 <ArrowRight size={14} />
               </button>
               <a
                 href="/creator-guide"
-                className="bg-[#F5EFEB] text-[#183B56] hover:bg-white px-7 py-3.5 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all flex items-center gap-2 no-underline"
+                className="bg-[#F5EFEB] text-[#183B56] hover:bg-white px-8 py-4 text-xs font-bold uppercase tracking-wider border border-[#183B56] transition-all flex items-center gap-2 no-underline"
               >
                 <span>Creator Handbook</span>
                 <span>→</span>
@@ -653,24 +664,22 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             </div>
           </div>
 
-          <div className="lg:col-span-6 p-8 sm:p-14 bg-[#F5EFEB] flex flex-col justify-between space-y-6">
-            <div className="space-y-4">
-              <h3 className="text-base font-bold uppercase text-[#183B56] border-b border-[#183B56] pb-3">
-                Creator Program Privileges
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  { title: '100% Milestone Escrow', desc: 'Funds secured upfront before custom tailoring begins.' },
-                  { title: 'Zero Listing Fees', desc: 'No upfront subscriptions or listing charges.' },
-                  { title: 'Zyra AI Indexing', desc: 'Direct matching with patrons actively searching your aesthetic.' },
-                  { title: 'Atelier Packaging', desc: 'Complimentary luxury bespoke packaging boxes.' },
-                ].map((item, idx) => (
-                  <div key={idx} className="border border-[#183B56] bg-white p-5 space-y-1">
-                    <span className="text-xs font-bold text-[#183B56] uppercase block">{item.title}</span>
-                    <p className="text-[11px] text-[#5A7184] font-medium leading-relaxed">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
+          <div className="lg:col-span-6 bg-[#F5EFEB] border border-[#183B56] p-8 sm:p-12 space-y-8 shadow-xs">
+            <h3 className="text-base font-bold uppercase text-[#183B56] border-b border-[#183B56] pb-4">
+              Creator Program Privileges
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {[
+                { title: '100% Milestone Escrow', desc: 'Funds secured upfront before custom tailoring begins.' },
+                { title: 'Zero Listing Fees', desc: 'No upfront subscriptions or listing charges.' },
+                { title: 'Zyra AI Indexing', desc: 'Direct matching with patrons actively searching your aesthetic.' },
+                { title: 'Atelier Packaging', desc: 'Complimentary luxury bespoke packaging boxes.' },
+              ].map((item, idx) => (
+                <div key={idx} className="border border-[#183B56] bg-white p-5 space-y-1.5 shadow-2xs">
+                  <span className="text-xs font-bold text-[#183B56] uppercase block">{item.title}</span>
+                  <p className="text-[11px] text-[#5A7184] font-medium leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
             </div>
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#5A7184] pt-4 border-t border-[#183B56]">
               Curation audit completed within 48 hours of submission.
@@ -680,29 +689,29 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         </div>
       </section>
 
-      {/* ─── 6. ESCROW FIT & SECURITY VAULT (3-COLUMN BOX MATRIX) ─── */}
-      <section id="escrow-protection" className="border-b border-[#183B56] bg-[#F5EFEB]">
-        <div className="max-w-7xl mx-auto border-x border-[#183B56]">
+      {/* ─── 6. ESCROW FIT & SECURITY ─── */}
+      <section id="escrow-protection" className="py-24 sm:py-32 px-6 sm:px-12 border-b border-[#183B56] bg-[#F5EFEB]">
+        <div className="max-w-6xl mx-auto space-y-12">
           
-          <div className="p-6 sm:p-8 border-b border-[#183B56] bg-white text-center space-y-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184]">
+          <div className="text-center space-y-3 max-w-2xl mx-auto border-b border-[#183B56] pb-8">
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] bg-white border border-[#183B56] px-3.5 py-1 inline-block">
               Dual Patron &amp; Designer Protection
             </span>
-            <h2 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
+            <h2 className="text-3xl sm:text-5xl font-bold uppercase tracking-tight text-[#183B56]">
               100% Escrow Fit Guarantee
             </h2>
-            <p className="text-xs sm:text-sm text-[#5A7184] max-w-xl mx-auto font-medium">
+            <p className="text-xs sm:text-sm text-[#5A7184] font-medium leading-relaxed">
               Funds remain safely locked in Weavly Escrow Vaults. Artisans only receive payout after you receive the garment and confirm fit.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#183B56] bg-white">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { step: '01', title: 'Order Commissioned', desc: 'Payment captured into Weavly Escrow Vault. Artisan starts tailoring.' },
               { step: '02', title: 'Delivery & Fitting Audit', desc: 'Garment arrives in Weavly luxury casing. 72h window for fit inspection.' },
               { step: '03', title: 'Guaranteed Settlement', desc: 'Upon your fit confirmation, escrow funds are released to the designer.' },
             ].map((item, idx) => (
-              <div key={idx} className="p-8 bg-[#F5EFEB] hover:bg-white transition-colors flex flex-col justify-between min-h-[220px]">
+              <div key={idx} className="p-8 bg-white border border-[#183B56] shadow-xs flex flex-col justify-between min-h-[220px]">
                 <span className="text-xs font-mono font-bold text-[#183B56] bg-[#DFE7ED] border border-[#183B56] px-2.5 py-1 self-start">
                   PHASE {item.step}
                 </span>
@@ -718,21 +727,25 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
       </section>
 
       {/* ─── 7. CRAFTSMANSHIP & ATELIER STANDARDS ─── */}
-      <section className="border-b border-[#183B56] bg-white">
-        <div className="max-w-7xl mx-auto border-x border-[#183B56]">
+      <section className="py-24 sm:py-32 px-6 sm:px-12 border-b border-[#183B56] bg-white">
+        <div className="max-w-6xl mx-auto space-y-12">
           
-          <div className="p-6 sm:p-8 border-b border-[#183B56] bg-[#F5EFEB] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block mb-1">Couture Specifications</span>
-              <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-[#183B56] pb-8">
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block">
+                Couture Specifications
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
                 Crafted Without Compromise
               </h2>
             </div>
-            <span className="text-xs font-bold uppercase text-[#183B56]">Mulberry Silk &amp; Flannel Wool</span>
+            <span className="text-xs font-bold uppercase text-[#183B56] bg-[#F5EFEB] border border-[#183B56] px-3.5 py-1.5 self-start sm:self-auto">
+              Mulberry Silk &amp; Flannel Wool
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#183B56] bg-white">
-            <div className="p-6 flex flex-col justify-between space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-6 bg-[#F5EFEB] border border-[#183B56] shadow-xs flex flex-col justify-between space-y-4">
               <div className="aspect-[4/5] bg-[#DFE7ED] border border-[#183B56] overflow-hidden">
                 <img src={KNIT_1} alt="Mulberry Knit" className="w-full h-full object-cover" />
               </div>
@@ -742,7 +755,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               </div>
             </div>
 
-            <div className="p-6 flex flex-col justify-between space-y-4">
+            <div className="p-6 bg-[#F5EFEB] border border-[#183B56] shadow-xs flex flex-col justify-between space-y-4">
               <div className="aspect-[4/5] bg-[#DFE7ED] border border-[#183B56] overflow-hidden">
                 <img src={KNIT_2} alt="Atelier Ensemble" className="w-full h-full object-cover" />
               </div>
@@ -752,7 +765,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               </div>
             </div>
 
-            <div className="p-6 flex flex-col justify-between space-y-4">
+            <div className="p-6 bg-[#F5EFEB] border border-[#183B56] shadow-xs flex flex-col justify-between space-y-4">
               <div className="aspect-[4/5] bg-[#DFE7ED] border border-[#183B56] overflow-hidden">
                 <img src={KNIT_3} alt="Sartorial Trousers" className="w-full h-full object-cover" />
               </div>
@@ -767,11 +780,13 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
       </section>
 
       {/* ─── 8. INTERACTIVE CIRCULAR GALLERY BOX ─── */}
-      <section className="border-b border-[#183B56] bg-[#F5EFEB] py-16 px-4 sm:px-8">
-        <div className="max-w-7xl mx-auto border border-[#183B56] bg-white p-8 sm:p-12 text-center space-y-8 shadow-xs">
-          <div className="space-y-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184]">Atelier Showcase</span>
-            <h2 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
+      <section className="py-20 sm:py-28 px-6 sm:px-12 border-b border-[#183B56] bg-[#F5EFEB]">
+        <div className="max-w-6xl mx-auto border border-[#183B56] bg-white p-8 sm:p-14 text-center space-y-10 shadow-xs">
+          <div className="space-y-3">
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] bg-[#F5EFEB] border border-[#183B56] px-3.5 py-1 inline-block">
+              Atelier Showcase
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#183B56]">
               Styles That Welcome Sunshine's Return
             </h2>
             <p className="text-xs sm:text-sm text-[#5A7184] max-w-xl mx-auto font-medium">
