@@ -9,6 +9,9 @@ import {
   Save,
   Trash2,
   X,
+  Map,
+  Navigation,
+  Check
 } from "lucide-react";
 import {
   getAddresses,
@@ -18,6 +21,7 @@ import {
   setDefaultAddress,
 } from "@/modules/profile/services/userService";
 import Loader from "@/shared/components/ui/Loader";
+import AddressMapPicker from "./AddressMapPicker";
 
 export default function AddressManagementView({ userId }) {
   const [addresses, setAddresses] = useState([]);
@@ -30,6 +34,7 @@ export default function AddressManagementView({ userId }) {
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [editForm, setEditForm] = useState({});
   const [menuOpenId, setMenuOpenId] = useState(null);
+  const [showMapModal, setShowMapModal] = useState(false);
 
   const loadAddresses = async () => {
     if (!userId || String(userId).startsWith("customer_dev_")) {
@@ -79,6 +84,47 @@ export default function AddressManagementView({ userId }) {
     setEditForm({});
   };
 
+  const startAddingNew = () => {
+    setIsAddingNew(true);
+    setEditingId(null);
+    setEditForm({
+      name: "",
+      street: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "India",
+      phone: "",
+      type: "home",
+      isDefault: addresses.length === 0,
+    });
+  };
+
+  const cancelAddingNew = () => {
+    setIsAddingNew(false);
+    setEditForm({});
+  };
+
+  // When location is selected on the interactive map
+  const handleMapLocationSelected = (locationData) => {
+    setEditForm((prev) => ({
+      ...prev,
+      street: locationData.street || prev.street || "",
+      city: locationData.city || prev.city || "",
+      state: locationData.state || prev.state || "",
+      zip: locationData.zip || prev.zip || "",
+      country: locationData.country || prev.country || "India",
+    }));
+
+    if (!isAddingNew && !editingId) {
+      setIsAddingNew(true);
+    }
+
+    setShowMapModal(false);
+    setSuccessMsg("Precise location & postal details applied from map!");
+    setTimeout(() => setSuccessMsg(""), 4000);
+  };
+
   const saveEdit = async (addressId) => {
     if (
       !editForm.name ||
@@ -122,26 +168,6 @@ export default function AddressManagementView({ userId }) {
       console.error(err);
       setErrorMsg(err.message || "Failed to update address.");
     }
-  };
-
-  const startAddingNew = () => {
-    setIsAddingNew(true);
-    setEditForm({
-      name: "",
-      street: "",
-      city: "",
-      state: "",
-      zip: "",
-      country: "India",
-      phone: "",
-      type: "home",
-      isDefault: addresses.length === 0,
-    });
-  };
-
-  const cancelAddingNew = () => {
-    setIsAddingNew(false);
-    setEditForm({});
   };
 
   const saveNewAddress = async () => {
@@ -195,7 +221,7 @@ export default function AddressManagementView({ userId }) {
       setSelectedId(newAddress.id);
       setIsAddingNew(false);
       setEditForm({});
-      setSuccessMsg("New address saved!");
+      setSuccessMsg("New address saved successfully!");
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
       console.error(err);
@@ -248,63 +274,123 @@ export default function AddressManagementView({ userId }) {
     return (
       <div className="py-12 text-center flex flex-col items-center justify-center">
         <Loader size="w-8 h-8" className="mb-4" />
-        <p className="text-xs font-semibold text-[#8C8C8C]">Loading your address book...</p>
+        <p className="text-xs font-semibold text-[#5A7184]">Loading your address book...</p>
       </div>
     );
   }
 
+  const inputClasses =
+    "w-full h-11 border border-[#183B56] bg-white px-3 text-xs font-semibold text-[#183B56] placeholder-[#5A7184]/50 outline-none focus:ring-1 focus:ring-[#183B56]";
+
   return (
-    <section className="py-4 font-sans text-[#1A1A1A]">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-[#1A1A1A] sm:text-2xl">
-              My Addresses
-            </h1>
-            <p className="mt-1 text-xs text-[#8C8C8C]">
-              Manage your shipping addresses and set default delivery options
-            </p>
+    <div className="space-y-6 text-[#183B56] font-sans">
+      {/* ── Main Header Card ── */}
+      <div className="border border-[#183B56] bg-white p-6 sm:p-8 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-4 border-b border-[#183B56]/20">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 bg-[#DFE7ED] border border-[#183B56] flex items-center justify-center shrink-0">
+              <MapPin size={18} className="text-[#183B56]" />
+            </div>
+            <div>
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
+                Shipping &amp; Logistics
+              </span>
+              <h2 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-[#183B56]">
+                Delivery Address Book
+              </h2>
+            </div>
           </div>
-          {!isAddingNew && (
+
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            {/* Pick On Map Action */}
             <button
-              onClick={startAddingNew}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1A1A1A] hover:bg-[#C8702A] text-white text-xs font-semibold transition-all shadow-sm cursor-pointer border-none"
+              type="button"
+              onClick={() => setShowMapModal(true)}
+              className="px-4 py-2.5 bg-[#F5EFEB] hover:bg-[#183B56] hover:text-white text-[#183B56] border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer shadow-xs"
             >
-              <Plus className="size-4" />
-              Add New
+              <Map size={13} />
+              <span>Pin on Map</span>
             </button>
-          )}
+
+            {!isAddingNew && (
+              <button
+                type="button"
+                onClick={startAddingNew}
+                className="px-5 py-2.5 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+              >
+                <Plus size={14} />
+                <span>Add New</span>
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Alerts */}
+        <p className="text-xs text-[#5A7184] font-medium leading-relaxed">
+          Manage your verified delivery locations. Use our precision interactive map to drop a pin at your exact doorstep for guaranteed bespoke courier delivery.
+        </p>
+
+        {/* Status Alerts */}
         {errorMsg && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-semibold text-red-600">
+          <div className="mt-4 p-3.5 bg-red-50 border border-red-300 text-xs font-bold text-red-700">
             {errorMsg}
           </div>
         )}
         {successMsg && (
-          <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-semibold text-emerald-700">
-            {successMsg}
+          <div className="mt-4 p-3.5 bg-[#F5EFEB] border border-[#183B56] text-xs font-bold text-[#183B56] flex items-center gap-2">
+            <Check size={14} strokeWidth={2.5} />
+            <span>{successMsg}</span>
           </div>
         )}
+      </div>
 
-        {/* Address Cards List */}
-        <div className="space-y-4">
-          {addresses.map((address) => (
+      {/* ── INTERACTIVE MAP MODAL / EMBEDDED PICKER ── */}
+      {showMapModal && (
+        <div className="animate-fadeIn">
+          <AddressMapPicker
+            initialAddress={editForm.street || ""}
+            onLocationSelect={handleMapLocationSelected}
+            onClose={() => setShowMapModal(false)}
+          />
+        </div>
+      )}
+
+      {/* ── ADDRESS CARDS LIST ── */}
+      <div className="space-y-4">
+        {addresses.map((address) => {
+          const isSelected = selectedId === address.id;
+          const isEditing = editingId === address.id;
+
+          return (
             <div
               key={address.id}
-              className={`rounded-2xl border bg-white p-5 transition-all cursor-pointer relative shadow-sm ${
-                selectedId === address.id
-                  ? "border-[#C8702A] ring-1 ring-[#C8702A]/20"
-                  : "border-[#E4E4E7] hover:border-[#D4D4D8]"
-              }`}
-              onClick={() => editingId !== address.id && handleSelectDefault(address.id)}
+              onClick={() => !isEditing && handleSelectDefault(address.id)}
+              className={`border p-6 transition-all relative ${
+                isSelected
+                  ? "border-[#183B56] bg-[#F5EFEB] shadow-xs"
+                  : "border-[#183B56]/30 bg-white hover:border-[#183B56]"
+              } ${!isEditing ? "cursor-pointer" : ""}`}
             >
-              {editingId === address.id ? (
+              {isEditing ? (
+                /* EDIT FORM */
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between pb-2 border-b border-[#E4E4E7]">
-                    <h3 className="text-sm font-bold text-[#1A1A1A]">Edit Address</h3>
+                  <div className="flex items-center justify-between pb-3 border-b border-[#183B56]/20">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xs font-bold uppercase text-[#183B56]">
+                        Edit Address Details
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowMapModal(true);
+                        }}
+                        className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-white border border-[#183B56] text-[#183B56] hover:bg-[#183B56] hover:text-white transition-all flex items-center gap-1 cursor-pointer"
+                      >
+                        <Map size={11} />
+                        <span>Update Pin on Map</span>
+                      </button>
+                    </div>
+
                     <div className="flex gap-2">
                       <button
                         type="button"
@@ -312,9 +398,9 @@ export default function AddressManagementView({ userId }) {
                           e.stopPropagation();
                           cancelEditing();
                         }}
-                        className="px-3 py-1.5 rounded-lg border border-[#E4E4E7] bg-white text-xs font-semibold text-[#8C8C8C] hover:bg-slate-50 cursor-pointer"
+                        className="p-2 bg-white border border-[#183B56] text-[#5A7184] hover:bg-red-50 hover:text-red-700 cursor-pointer"
                       >
-                        <X className="size-4" />
+                        <X size={14} />
                       </button>
                       <button
                         type="button"
@@ -322,17 +408,17 @@ export default function AddressManagementView({ userId }) {
                           e.stopPropagation();
                           saveEdit(address.id);
                         }}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#C8702A] hover:bg-[#e05f0f] text-white text-xs font-semibold cursor-pointer border-none shadow-sm"
+                        className="px-4 py-2 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-xs"
                       >
-                        <Save className="size-3.5" />
-                        Save
+                        <Save size={13} />
+                        <span>Save</span>
                       </button>
                     </div>
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
                         Full Name *
                       </label>
                       <input
@@ -340,11 +426,11 @@ export default function AddressManagementView({ userId }) {
                         value={editForm.name || ""}
                         onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
+                        className={inputClasses}
                       />
                     </div>
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
                         Phone Number *
                       </label>
                       <input
@@ -352,11 +438,11 @@ export default function AddressManagementView({ userId }) {
                         value={editForm.phone || ""}
                         onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
+                        className={inputClasses}
                       />
                     </div>
-                    <div className="space-y-1 sm:col-span-2">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
+                    <div className="sm:col-span-2">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
                         Street Address *
                       </label>
                       <input
@@ -364,11 +450,11 @@ export default function AddressManagementView({ userId }) {
                         value={editForm.street || ""}
                         onChange={(e) => setEditForm({ ...editForm, street: e.target.value })}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
+                        className={inputClasses}
                       />
                     </div>
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
                         City *
                       </label>
                       <input
@@ -376,11 +462,11 @@ export default function AddressManagementView({ userId }) {
                         value={editForm.city || ""}
                         onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
+                        className={inputClasses}
                       />
                     </div>
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
                         State *
                       </label>
                       <input
@@ -388,11 +474,11 @@ export default function AddressManagementView({ userId }) {
                         value={editForm.state || ""}
                         onChange={(e) => setEditForm({ ...editForm, state: e.target.value })}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
+                        className={inputClasses}
                       />
                     </div>
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
                         Postal / ZIP Code *
                       </label>
                       <input
@@ -400,11 +486,11 @@ export default function AddressManagementView({ userId }) {
                         value={editForm.zip || ""}
                         onChange={(e) => setEditForm({ ...editForm, zip: e.target.value })}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
+                        className={inputClasses}
                       />
                     </div>
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
                         Country *
                       </label>
                       <input
@@ -412,56 +498,57 @@ export default function AddressManagementView({ userId }) {
                         value={editForm.country || "India"}
                         onChange={(e) => setEditForm({ ...editForm, country: e.target.value })}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
+                        className={inputClasses}
                       />
                     </div>
-                    <div className="space-y-1 sm:col-span-2">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
-                        Address Tag / Type
+                    <div className="sm:col-span-2">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
+                        Address Tag
                       </label>
                       <select
                         value={editForm.type || "home"}
                         onChange={(e) => setEditForm({ ...editForm, type: e.target.value })}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A] cursor-pointer"
+                        className={inputClasses}
                       >
-                        <option value="home">Home</option>
-                        <option value="work">Work</option>
-                        <option value="other">Other</option>
+                        <option value="home">Home (Primary Residence)</option>
+                        <option value="work">Office / Studio</option>
+                        <option value="other">Bespoke Fitting Location</option>
                       </select>
                     </div>
                   </div>
                 </div>
               ) : (
+                /* DISPLAY VIEW */
                 <div className="flex gap-4 items-start">
-                  {/* Radio Indicator */}
+                  {/* Radio Selection Indicator */}
                   <div
-                    className={`mt-1 size-4 rounded-full border flex items-center justify-center transition-all ${
-                      selectedId === address.id
-                        ? "border-[#C8702A] bg-[#C8702A]"
-                        : "border-[#D4D4D8] bg-white"
+                    className={`mt-1 w-4 h-4 border flex items-center justify-center shrink-0 transition-all ${
+                      isSelected
+                        ? "border-[#183B56] bg-[#183B56]"
+                        : "border-[#183B56]/40 bg-white"
                     }`}
                   >
-                    {selectedId === address.id && (
-                      <div className="size-1.5 rounded-full bg-white" />
-                    )}
+                    {isSelected && <div className="w-1.5 h-1.5 bg-white" />}
                   </div>
 
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-sm text-[#1A1A1A]">{address.name}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-2.5 flex-wrap">
+                        <span className="font-bold text-sm uppercase text-[#183B56] tracking-tight">
+                          {address.name}
+                        </span>
                         {address.isDefault && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider bg-[#C8702A]/10 text-[#C8702A] border border-[#C8702A]/20 px-2 py-0.5 rounded-full">
-                            Default
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-wider bg-[#183B56] text-white px-2 py-0.5">
+                            Default Address
                           </span>
                         )}
-                        <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-[#8C8C8C] px-2 py-0.5 rounded-full border border-slate-200">
+                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider bg-white text-[#5A7184] border border-[#183B56]/30 px-2 py-0.5">
                           {address.type}
                         </span>
                       </div>
 
-                      {/* Options Dropdown / Actions */}
+                      {/* Dropdown / Actions */}
                       <div className="relative">
                         <button
                           type="button"
@@ -469,23 +556,23 @@ export default function AddressManagementView({ userId }) {
                             e.stopPropagation();
                             setMenuOpenId(menuOpenId === address.id ? null : address.id);
                           }}
-                          className="size-8 rounded-lg border border-transparent hover:border-[#E4E4E7] hover:bg-slate-50 flex items-center justify-center text-[#8C8C8C] transition-colors cursor-pointer bg-transparent"
+                          className="w-8 h-8 border border-transparent hover:border-[#183B56] hover:bg-white flex items-center justify-center text-[#5A7184] transition-colors cursor-pointer bg-transparent"
                         >
-                          <MoreVertical className="size-4" />
+                          <MoreVertical size={14} />
                         </button>
 
                         {menuOpenId === address.id && (
-                          <div className="absolute right-0 top-9 w-32 rounded-xl bg-white border border-[#E4E4E7] shadow-lg py-1 z-20">
+                          <div className="absolute right-0 top-9 w-32 bg-white border border-[#183B56] shadow-md py-1 z-20">
                             <button
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 startEditing(address);
                               }}
-                              className="w-full text-left px-3 py-2 text-xs font-semibold text-[#1A1A1A] hover:bg-slate-50 flex items-center gap-2 cursor-pointer border-none bg-transparent"
+                              className="w-full text-left px-3 py-2 text-xs font-bold uppercase text-[#183B56] hover:bg-[#F5EFEB] flex items-center gap-2 cursor-pointer border-none bg-transparent"
                             >
-                              <Pencil className="size-3.5" />
-                              Edit
+                              <Pencil size={12} />
+                              <span>Edit</span>
                             </button>
                             <button
                               type="button"
@@ -493,23 +580,23 @@ export default function AddressManagementView({ userId }) {
                                 e.stopPropagation();
                                 handleDelete(address.id);
                               }}
-                              className="w-full text-left px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer border-none bg-transparent"
+                              className="w-full text-left px-3 py-2 text-xs font-bold uppercase text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer border-none bg-transparent"
                             >
-                              <Trash2 className="size-3.5" />
-                              Delete
+                              <Trash2 size={12} />
+                              <span>Delete</span>
                             </button>
                           </div>
                         )}
                       </div>
                     </div>
 
-                    <div className="mt-2 text-xs text-[#8C8C8C] space-y-0.5 leading-relaxed">
-                      <p>{address.street}</p>
+                    <div className="mt-2.5 text-xs text-[#5A7184] space-y-1 font-medium leading-relaxed">
+                      <p className="font-semibold text-[#183B56]">{address.street}</p>
                       <p>
-                        {address.city}, {address.state} — <span className="font-semibold text-[#1A1A1A]">{address.zip}</span>
+                        {address.city}, {address.state} — <span className="font-mono font-bold text-[#183B56]">{address.zip}</span>
                       </p>
-                      <p>{address.country}</p>
-                      <p className="mt-2 text-[11px] font-semibold text-[#1A1A1A]">
+                      <p className="uppercase text-[11px]">{address.country}</p>
+                      <p className="pt-1 text-[11px] font-mono text-[#183B56]">
                         Phone: {address.phone}
                       </p>
                     </div>
@@ -517,153 +604,199 @@ export default function AddressManagementView({ userId }) {
                 </div>
               )}
             </div>
-          ))}
+          );
+        })}
 
-          {/* Add New Address Form Card */}
-          {isAddingNew && (
-            <div className="rounded-2xl border border-[#C8702A] bg-white p-5 shadow-sm space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[#E4E4E7]">
-                <h3 className="text-sm font-bold text-[#1A1A1A]">Add New Address</h3>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={cancelAddingNew}
-                    className="px-3 py-1.5 rounded-lg border border-[#E4E4E7] bg-white text-xs font-semibold text-[#8C8C8C] hover:bg-slate-50 cursor-pointer"
-                  >
-                    <X className="size-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={saveNewAddress}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#C8702A] hover:bg-[#e05f0f] text-white text-xs font-semibold cursor-pointer border-none shadow-sm"
-                  >
-                    <Save className="size-3.5" />
-                    Save
-                  </button>
-                </div>
+        {/* ── ADD NEW ADDRESS FORM CARD ── */}
+        {isAddingNew && (
+          <div className="border border-[#183B56] bg-white p-6 shadow-sm space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#183B56]/20">
+              <div className="flex items-center gap-3">
+                <h3 className="text-xs font-bold uppercase text-[#183B56]">
+                  Add New Delivery Location
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowMapModal(true)}
+                  className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-[#F5EFEB] hover:bg-[#183B56] hover:text-white border border-[#183B56] text-[#183B56] transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                >
+                  <Map size={11} />
+                  <span>Select on Map</span>
+                </button>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={editForm.name || ""}
-                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                    className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
-                    placeholder="John Doe"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="text"
-                    value={editForm.phone || ""}
-                    onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                    className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
-                    placeholder="+91 98765 43210"
-                  />
-                </div>
-                <div className="space-y-1 sm:col-span-2">
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
-                    Street Address *
-                  </label>
-                  <input
-                    type="text"
-                    value={editForm.street || ""}
-                    onChange={(e) => setEditForm({ ...editForm, street: e.target.value })}
-                    className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
-                    placeholder="123 Main Street, Apt 4B"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
-                    City *
-                  </label>
-                  <input
-                    type="text"
-                    value={editForm.city || ""}
-                    onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
-                    className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
-                    placeholder="Mumbai"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
-                    State *
-                  </label>
-                  <input
-                    type="text"
-                    value={editForm.state || ""}
-                    onChange={(e) => setEditForm({ ...editForm, state: e.target.value })}
-                    className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
-                    placeholder="Maharashtra"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
-                    Postal / ZIP Code *
-                  </label>
-                  <input
-                    type="text"
-                    value={editForm.zip || ""}
-                    onChange={(e) => setEditForm({ ...editForm, zip: e.target.value })}
-                    className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
-                    placeholder="400001"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
-                    Country *
-                  </label>
-                  <input
-                    type="text"
-                    value={editForm.country || "India"}
-                    onChange={(e) => setEditForm({ ...editForm, country: e.target.value })}
-                    className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A]"
-                  />
-                </div>
-                <div className="space-y-1 sm:col-span-2">
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C8C8C]">
-                    Type / Tag
-                  </label>
-                  <select
-                    value={editForm.type || "home"}
-                    onChange={(e) => setEditForm({ ...editForm, type: e.target.value })}
-                    className="w-full h-10 rounded-lg border border-[#E4E4E7] bg-white px-3 text-xs outline-none focus:border-[#C8702A] cursor-pointer"
-                  >
-                    <option value="home">Home</option>
-                    <option value="work">Work</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={cancelAddingNew}
+                  className="p-2 bg-white border border-[#183B56] text-[#5A7184] hover:bg-red-50 hover:text-red-700 cursor-pointer"
+                >
+                  <X size={14} />
+                </button>
+                <button
+                  type="button"
+                  onClick={saveNewAddress}
+                  className="px-4 py-2 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-xs"
+                >
+                  <Save size={13} />
+                  <span>Save</span>
+                </button>
               </div>
             </div>
-          )}
-        </div>
 
-        {/* Empty State */}
-        {addresses.length === 0 && !isAddingNew && (
-          <div className="rounded-2xl border border-dashed border-[#E4E4E7] bg-slate-50 p-10 text-center flex flex-col items-center justify-center">
-            <MapPin className="mb-3 size-10 text-[#8C8C8C]" />
-            <h2 className="text-base font-bold text-[#1A1A1A]">No addresses saved</h2>
-            <p className="mt-1 text-xs text-[#8C8C8C]">
-              Add a shipping address to enable fast checkout
-            </p>
-            <button
-              className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#C8702A] hover:bg-[#e05f0f] text-white text-xs font-semibold transition-all shadow-sm cursor-pointer border-none"
-              onClick={startAddingNew}
-            >
-              <Plus className="size-4" />
-              Add Address
-            </button>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  value={editForm.name || ""}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className={inputClasses}
+                  placeholder="Saketh Chokkapu"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
+                  Phone Number *
+                </label>
+                <input
+                  type="text"
+                  value={editForm.phone || ""}
+                  onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                  className={inputClasses}
+                  placeholder="+91 98765 43210"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184]">
+                    Street Address / Doorstep *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowMapModal(true)}
+                    className="text-[10px] font-bold uppercase text-[#183B56] hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <Navigation size={10} />
+                    <span>Autofill from Pin Drop</span>
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  value={editForm.street || ""}
+                  onChange={(e) => setEditForm({ ...editForm, street: e.target.value })}
+                  className={inputClasses}
+                  placeholder="123 Jubilee Hills, Road No. 36"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
+                  City *
+                </label>
+                <input
+                  type="text"
+                  value={editForm.city || ""}
+                  onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
+                  className={inputClasses}
+                  placeholder="Hyderabad"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
+                  State *
+                </label>
+                <input
+                  type="text"
+                  value={editForm.state || ""}
+                  onChange={(e) => setEditForm({ ...editForm, state: e.target.value })}
+                  className={inputClasses}
+                  placeholder="Telangana"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
+                  Postal / ZIP Code *
+                </label>
+                <input
+                  type="text"
+                  value={editForm.zip || ""}
+                  onChange={(e) => setEditForm({ ...editForm, zip: e.target.value })}
+                  className={inputClasses}
+                  placeholder="500033"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
+                  Country *
+                </label>
+                <input
+                  type="text"
+                  value={editForm.country || "India"}
+                  onChange={(e) => setEditForm({ ...editForm, country: e.target.value })}
+                  className={inputClasses}
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#5A7184] mb-1.5">
+                  Location Type
+                </label>
+                <select
+                  value={editForm.type || "home"}
+                  onChange={(e) => setEditForm({ ...editForm, type: e.target.value })}
+                  className={inputClasses}
+                >
+                  <option value="home">Home (Primary Residence)</option>
+                  <option value="work">Office / Studio</option>
+                  <option value="other">Bespoke Fitting Location</option>
+                </select>
+              </div>
+            </div>
           </div>
         )}
       </div>
-    </section>
+
+      {/* ── Empty State ── */}
+      {addresses.length === 0 && !isAddingNew && (
+        <div className="border border-dashed border-[#183B56] bg-white p-10 text-center flex flex-col items-center justify-center space-y-4">
+          <div className="w-12 h-12 bg-[#DFE7ED] border border-[#183B56] flex items-center justify-center">
+            <MapPin size={22} className="text-[#183B56]" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold uppercase text-[#183B56]">No Delivery Addresses Saved</h3>
+            <p className="mt-1 text-xs text-[#5A7184] max-w-sm">
+              Add your delivery address or drop a pin on our interactive map to receive made-to-measure garments.
+            </p>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setShowMapModal(true)}
+              className="px-5 py-2.5 bg-[#F5EFEB] hover:bg-[#183B56] hover:text-white text-[#183B56] border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+            >
+              <Map size={13} />
+              <span>Pin on Map</span>
+            </button>
+            <button
+              type="button"
+              onClick={startAddingNew}
+              className="px-5 py-2.5 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+            >
+              <Plus size={14} />
+              <span>Add Address Manually</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
