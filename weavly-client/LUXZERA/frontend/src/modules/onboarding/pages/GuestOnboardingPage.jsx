@@ -514,40 +514,42 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
         {/* ─── 3. MEET ZYRA INTELLIGENCE ─── */}
         <section id="meet-zera" className="border border-[#183B56] bg-white shadow-xs overflow-hidden">
           
-          {/* Header Bar */}
-          <div className="p-6 sm:p-8 border-b border-[#183B56] bg-[#F5EFEB] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          {/* Compact Header Bar */}
+          <div className="py-3.5 px-5 sm:px-8 border-b border-[#183B56] bg-[#F5EFEB] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block mb-1">Zyra Virtual Engine</span>
-              <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#183B56]">
+              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block">Zyra Virtual Engine</span>
+              <h2 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-[#183B56]">
                 Personalized Style Intelligence
               </h2>
             </div>
-            <div className="inline-flex items-center gap-2 border border-[#183B56] bg-white px-3.5 py-1.5 text-xs font-bold text-[#183B56]">
-              <span className="w-2 h-2 rounded-full bg-[#183B56] animate-pulse" />
+            <div className="inline-flex items-center gap-2 border border-[#183B56] bg-white px-3 py-1 text-[11px] font-bold text-[#183B56]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#183B56] animate-pulse" />
               <span>Vector Silhouette Calibration</span>
             </div>
           </div>
 
-          {/* 2-Column Split: Mascot Panel & Step Matrix */}
+          {/* 2-Column Split: Compact Mascot Panel & Step Matrix */}
           <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
             
             {/* Left 5 Cols: Mascot & Explainer */}
-            <div className="lg:col-span-5 p-8 sm:p-12 flex flex-col justify-between bg-[#F5EFEB] space-y-8">
+            <div className="lg:col-span-5 p-5 sm:p-7 flex flex-col justify-between bg-[#F5EFEB] space-y-4">
               <div>
-                <h3 className="text-3xl sm:text-4xl font-bold uppercase text-[#183B56] leading-tight mb-4">
+                <h3 className="text-xl sm:text-2xl font-bold uppercase text-[#183B56] leading-tight mb-2">
                   Curates Outfits.<br />Not Disconnected Items.
                 </h3>
-                <p className="text-sm text-[#5A7184] leading-relaxed font-medium">
+                <p className="text-xs sm:text-sm text-[#5A7184] leading-relaxed font-medium">
                   Zyra analyzes your exact proportions, color palette, and lifestyle priorities to construct harmonious wardrobe collections from verified independent designers.
                 </p>
               </div>
 
-              <div className="bg-white border border-[#183B56] p-6 rounded-xs flex items-center justify-center min-h-[260px] relative shadow-xs">
-                <ZeraInteractiveEyesMascot />
+              <div className="bg-white border border-[#183B56] p-2 rounded-xs flex items-center justify-center min-h-[160px] max-h-[180px] relative shadow-xs overflow-hidden">
+                <div className="scale-75 origin-center">
+                  <ZeraInteractiveEyesMascot />
+                </div>
               </div>
             </div>
 
-            {/* Right 7 Cols: 4-Step Connected Box Matrix with Explanatory Doodles */}
+            {/* Right 7 Cols: 4-Step Connected Box Matrix with Compact Doodles */}
             <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x sm:divide-y divide-[#183B56] bg-white">
               {[
                 { 
@@ -555,19 +557,16 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                   title: 'Silhouette Scan', 
                   desc: 'Calibrate your exact height, size, and fit tolerances in under 2 minutes.',
                   doodle: (
-                    <div className="w-full h-28 my-3 flex items-center justify-center bg-[#F5EFEB]/60 border border-[#183B56]/15 rounded-xs p-2">
-                      <svg viewBox="0 0 200 90" className="w-full h-full max-h-24" fill="none" stroke="#183B56">
-                        <circle cx="100" cy="18" r="8" strokeWidth="1.5" fill="#DFE7ED" />
-                        <path d="M86 36 L100 30 L114 36 L110 58 L106 82 L94 82 L90 58 Z" strokeWidth="1.5" fill="#DFE7ED" />
-                        <line x1="30" y1="36" x2="84" y2="36" strokeDasharray="3 3" strokeWidth="1" stroke="#5A7184" />
-                        <circle cx="86" cy="36" r="2" fill="#183B56" />
-                        <text x="8" y="39" fill="#5A7184" fontSize="8" fontWeight="700" fontFamily="sans-serif">SHOULDERS</text>
-                        <line x1="114" y1="52" x2="168" y2="52" strokeDasharray="3 3" strokeWidth="1" stroke="#5A7184" />
-                        <circle cx="112" cy="52" r="2" fill="#183B56" />
-                        <text x="172" y="55" fill="#5A7184" fontSize="8" fontWeight="700" fontFamily="sans-serif">WAIST</text>
-                        <line x1="30" y1="74" x2="92" y2="74" strokeDasharray="3 3" strokeWidth="1" stroke="#5A7184" />
-                        <circle cx="94" cy="74" r="2" fill="#183B56" />
-                        <text x="10" y="77" fill="#5A7184" fontSize="8" fontWeight="700" fontFamily="sans-serif">INSEAM</text>
+                    <div className="w-full h-16 my-1.5 flex items-center justify-center bg-[#F5EFEB]/60 border border-[#183B56]/15 rounded-xs p-1">
+                      <svg viewBox="0 0 200 70" className="w-full h-full max-h-14" fill="none" stroke="#183B56">
+                        <circle cx="100" cy="14" r="6" strokeWidth="1.5" fill="#DFE7ED" />
+                        <path d="M88 28 L100 24 L112 28 L108 46 L105 64 L95 64 L92 46 Z" strokeWidth="1.5" fill="#DFE7ED" />
+                        <line x1="32" y1="28" x2="86" y2="28" strokeDasharray="3 3" strokeWidth="1" stroke="#5A7184" />
+                        <circle cx="88" cy="28" r="2" fill="#183B56" />
+                        <text x="6" y="31" fill="#5A7184" fontSize="7.5" fontWeight="700" fontFamily="sans-serif">SHOULDERS</text>
+                        <line x1="112" y1="42" x2="164" y2="42" strokeDasharray="3 3" strokeWidth="1" stroke="#5A7184" />
+                        <circle cx="110" cy="42" r="2" fill="#183B56" />
+                        <text x="168" y="45" fill="#5A7184" fontSize="7.5" fontWeight="700" fontFamily="sans-serif">WAIST</text>
                       </svg>
                     </div>
                   )
@@ -577,24 +576,24 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                   title: 'Aesthetic Vectoring', 
                   desc: 'Zyra maps your favorite color tones, fabrics, and wardrobe priorities.',
                   doodle: (
-                    <div className="w-full h-28 my-3 flex items-center justify-around bg-[#F5EFEB]/60 border border-[#183B56]/15 rounded-xs p-2">
-                      <div className="flex flex-col items-center gap-1">
-                        <div className="w-10 h-12 bg-[#183B56] border border-[#183B56] shadow-xs flex items-end p-1">
-                          <span className="text-[7px] font-mono text-white font-bold">NAVY</span>
+                    <div className="w-full h-16 my-1.5 flex items-center justify-around bg-[#F5EFEB]/60 border border-[#183B56]/15 rounded-xs p-1">
+                      <div className="flex flex-col items-center">
+                        <div className="w-8 h-8 bg-[#183B56] border border-[#183B56] shadow-xs flex items-end p-0.5">
+                          <span className="text-[6px] font-mono text-white font-bold">NAVY</span>
                         </div>
-                        <span className="text-[8px] font-bold text-[#5A7184]">PRIMARY</span>
+                        <span className="text-[7.5px] font-bold text-[#5A7184] mt-0.5">PRIMARY</span>
                       </div>
-                      <div className="flex flex-col items-center gap-1">
-                        <div className="w-10 h-12 bg-[#DFE7ED] border border-[#183B56] shadow-xs flex items-end p-1">
-                          <span className="text-[7px] font-mono text-[#183B56] font-bold">STONE</span>
+                      <div className="flex flex-col items-center">
+                        <div className="w-8 h-8 bg-[#DFE7ED] border border-[#183B56] shadow-xs flex items-end p-0.5">
+                          <span className="text-[6px] font-mono text-[#183B56] font-bold">STONE</span>
                         </div>
-                        <span className="text-[8px] font-bold text-[#5A7184]">NEUTRAL</span>
+                        <span className="text-[7.5px] font-bold text-[#5A7184] mt-0.5">NEUTRAL</span>
                       </div>
-                      <div className="flex flex-col items-center gap-1">
-                        <div className="w-10 h-12 bg-[#8C9A8E] border border-[#183B56] shadow-xs flex items-end p-1">
-                          <span className="text-[7px] font-mono text-white font-bold">SAGE</span>
+                      <div className="flex flex-col items-center">
+                        <div className="w-8 h-8 bg-[#8C9A8E] border border-[#183B56] shadow-xs flex items-end p-0.5">
+                          <span className="text-[6px] font-mono text-white font-bold">SAGE</span>
                         </div>
-                        <span className="text-[8px] font-bold text-[#5A7184]">ACCENT</span>
+                        <span className="text-[7.5px] font-bold text-[#5A7184] mt-0.5">ACCENT</span>
                       </div>
                     </div>
                   )
@@ -604,20 +603,20 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                   title: 'Look Synthesis', 
                   desc: 'Complete bespoke outfits assembled from independent fashion designers.',
                   doodle: (
-                    <div className="w-full h-28 my-3 flex items-center justify-center gap-2 bg-[#F5EFEB]/60 border border-[#183B56]/15 rounded-xs p-2">
-                      <div className="border border-[#183B56] bg-white px-2 py-1.5 text-center shadow-xs">
-                        <span className="text-[8px] font-bold uppercase text-[#183B56] block">OVERSHIRT</span>
-                        <span className="text-[7px] font-mono text-[#5A7184]">Wool Blend</span>
+                    <div className="w-full h-16 my-1.5 flex items-center justify-center gap-1.5 bg-[#F5EFEB]/60 border border-[#183B56]/15 rounded-xs p-1">
+                      <div className="border border-[#183B56] bg-white px-2 py-1 text-center shadow-xs">
+                        <span className="text-[7px] font-bold uppercase text-[#183B56] block">OVERSHIRT</span>
+                        <span className="text-[6px] font-mono text-[#5A7184]">Wool Blend</span>
                       </div>
-                      <span className="text-xs font-bold text-[#183B56]">+</span>
-                      <div className="border border-[#183B56] bg-white px-2 py-1.5 text-center shadow-xs">
-                        <span className="text-[8px] font-bold uppercase text-[#183B56] block">TROUSER</span>
-                        <span className="text-[7px] font-mono text-[#5A7184]">Silk Linen</span>
+                      <span className="text-[10px] font-bold text-[#183B56]">+</span>
+                      <div className="border border-[#183B56] bg-white px-2 py-1 text-center shadow-xs">
+                        <span className="text-[7px] font-bold uppercase text-[#183B56] block">TROUSER</span>
+                        <span className="text-[6px] font-mono text-[#5A7184]">Silk Linen</span>
                       </div>
-                      <span className="text-xs font-bold text-[#183B56]">+</span>
-                      <div className="border border-[#183B56] bg-white px-2 py-1.5 text-center shadow-xs">
-                        <span className="text-[8px] font-bold uppercase text-[#183B56] block">FOOTWEAR</span>
-                        <span className="text-[7px] font-mono text-[#5A7184]">Derby Shoe</span>
+                      <span className="text-[10px] font-bold text-[#183B56]">+</span>
+                      <div className="border border-[#183B56] bg-white px-2 py-1 text-center shadow-xs">
+                        <span className="text-[7px] font-bold uppercase text-[#183B56] block">FOOTWEAR</span>
+                        <span className="text-[6px] font-mono text-[#5A7184]">Derby Shoe</span>
                       </div>
                     </div>
                   )
@@ -627,26 +626,26 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                   title: '100% Escrow Guarantee', 
                   desc: 'Made-to-measure orders held in escrow until you confirm satisfaction.',
                   doodle: (
-                    <div className="w-full h-28 my-3 flex items-center justify-around bg-[#F5EFEB]/60 border border-[#183B56]/15 rounded-xs p-2 text-center">
+                    <div className="w-full h-16 my-1.5 flex items-center justify-around bg-[#F5EFEB]/60 border border-[#183B56]/15 rounded-xs p-1 text-center">
                       <div className="flex flex-col items-center">
-                        <div className="w-7 h-7 rounded-full border border-[#183B56] bg-[#183B56] text-white flex items-center justify-center text-[10px] font-bold mb-1">
+                        <div className="w-6 h-6 rounded-full border border-[#183B56] bg-[#183B56] text-white flex items-center justify-center text-[9px] font-bold mb-0.5">
                           ✓
                         </div>
-                        <span className="text-[8px] font-bold text-[#183B56] uppercase">Vaulted</span>
+                        <span className="text-[7px] font-bold text-[#183B56] uppercase">Vaulted</span>
                       </div>
-                      <div className="h-0.5 w-6 bg-[#183B56]/30" />
+                      <div className="h-0.5 w-5 bg-[#183B56]/30" />
                       <div className="flex flex-col items-center">
-                        <div className="w-7 h-7 rounded-full border border-[#183B56] bg-white text-[#183B56] flex items-center justify-center text-[10px] font-bold mb-1">
+                        <div className="w-6 h-6 rounded-full border border-[#183B56] bg-white text-[#183B56] flex items-center justify-center text-[9px] font-bold mb-0.5">
                           72h
                         </div>
-                        <span className="text-[8px] font-bold text-[#183B56] uppercase">Fitting</span>
+                        <span className="text-[7px] font-bold text-[#183B56] uppercase">Fitting</span>
                       </div>
-                      <div className="h-0.5 w-6 bg-[#183B56]/30" />
+                      <div className="h-0.5 w-5 bg-[#183B56]/30" />
                       <div className="flex flex-col items-center">
-                        <div className="w-7 h-7 rounded-full border border-[#183B56] bg-[#DFE7ED] text-[#183B56] flex items-center justify-center text-[10px] font-bold mb-1">
+                        <div className="w-6 h-6 rounded-full border border-[#183B56] bg-[#DFE7ED] text-[#183B56] flex items-center justify-center text-[9px] font-bold mb-0.5">
                           ★
                         </div>
-                        <span className="text-[8px] font-bold text-[#183B56] uppercase">Release</span>
+                        <span className="text-[7px] font-bold text-[#183B56] uppercase">Release</span>
                       </div>
                     </div>
                   )
@@ -654,25 +653,25 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               ].map((step, idx) => (
                 <div
                   key={step.num}
-                  className={`p-6 sm:p-8 flex flex-col justify-between bg-white hover:bg-[#F5EFEB]/40 transition-colors ${
+                  className={`p-4 sm:p-5 flex flex-col justify-between bg-white hover:bg-[#F5EFEB]/40 transition-colors ${
                     idx >= 2 ? 'border-t border-[#183B56]' : ''
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-[#183B56] bg-[#DFE7ED] border border-[#183B56] px-2.5 py-0.5">
+                    <span className="text-[11px] font-mono font-bold text-[#183B56] bg-[#DFE7ED] border border-[#183B56] px-2 py-0.5">
                       STEP {step.num}
                     </span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184]">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#5A7184]">
                       {step.title}
                     </span>
                   </div>
 
-                  {/* Visual Doodle Illustration */}
+                  {/* Compact Visual Doodle Illustration */}
                   {step.doodle}
 
-                  <div className="space-y-1 pt-1">
-                    <h4 className="text-sm sm:text-base font-bold uppercase tracking-tight text-[#183B56]">{step.title}</h4>
-                    <p className="text-xs text-[#5A7184] leading-relaxed font-medium">{step.desc}</p>
+                  <div className="space-y-0.5 pt-0.5">
+                    <h4 className="text-xs sm:text-sm font-bold uppercase tracking-tight text-[#183B56]">{step.title}</h4>
+                    <p className="text-[11px] text-[#5A7184] leading-snug font-medium">{step.desc}</p>
                   </div>
                 </div>
               ))}
