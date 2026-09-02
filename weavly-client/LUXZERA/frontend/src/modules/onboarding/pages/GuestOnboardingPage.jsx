@@ -589,39 +589,35 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
       {/* 2. Hero Section */}
       <section className="px-8 md:px-16 pt-16 pb-16 max-w-7xl mx-auto flex flex-col items-center text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#183B56]/20 text-[10px] font-bold tracking-[0.2em] uppercase text-[#183B56] mb-4">
-          <span>AI Virtual Stylist &amp; Bespoke Atelier</span>
-        </div>
-        <h1 className="text-4xl md:text-6xl lg:text-[72px] font-bold tracking-tight leading-[1.05] mb-6 max-w-4xl text-[#183B56] uppercase">
+        <h1 className="text-4xl md:text-6xl lg:text-[72px] font-semibold tracking-tight leading-[1.1] mb-6 max-w-4xl text-[#183B56]">
           Find Less. Wear Better.
         </h1>
-        <p className="text-[#5A7184] text-[15px] max-w-2xl mb-16 leading-relaxed font-medium">
-          Weavly curates outfits you'll actually want to wear—bringing together luxury garments, bespoke footwear, and handcrafted designer silhouettes tailored to your exact 3D proportions.
+        <p className="text-[#5A7184] text-[15px] max-w-2xl mb-16 leading-relaxed">
+          Weavly curates outfits you'll actually want to wear—bringing together clothing, footwear, and accessories into complete looks tailored to your style.
         </p>
 
         {/* Staggered Images */}
         <div className="flex flex-col md:flex-row items-stretch justify-center gap-5 w-full h-auto md:h-[420px]">
           {/* Left Block */}
-          <div className="relative w-full md:w-[320px] h-[340px] md:h-[380px] bg-[#183B56] text-white rounded-3xl p-8 flex flex-col justify-between overflow-hidden self-end shadow-md border border-[#183B56]">
+          <div className="relative w-full md:w-[320px] h-[340px] md:h-[380px] bg-[#183B56] text-white rounded-[32px] p-8 flex flex-col justify-between overflow-hidden self-end shadow-md">
             <div>
-              <div className="text-3xl font-bold mb-3 tracking-tight uppercase leading-tight">100+ Designer Drops</div>
-              <p className="text-[13px] leading-relaxed text-white/80 max-w-[220px] font-normal">
-                Curated marketplace for verified couture ateliers and independent fashion creators.
+              <div className="text-3xl font-semibold mb-3 tracking-tight">100+ collections</div>
+              <p className="text-[13px] leading-relaxed text-white/70 max-w-[220px] font-normal">
+                Curated atelier drops and independent fashion creators tailored to your aesthetic.
               </p>
             </div>
 
             <div className="flex justify-between items-end">
-              <span className="text-xs font-bold uppercase tracking-wider text-white cursor-pointer hover:underline flex items-center gap-1.5" onClick={() => triggerAuth("login")}>
-                <span>Explore Drops</span>
-                <span>→</span>
+              <span className="text-[14px] font-medium tracking-wide text-white/90 cursor-pointer hover:underline" onClick={() => triggerAuth("login")}>
+                Shop now
               </span>
             </div>
 
             {/* Circular Rosette BEST COLLECTION Badge */}
-            <div className="absolute top-1/2 -right-6 transform -translate-y-1/2 w-24 h-24 rounded-full bg-[#102A43] border-2 border-white flex flex-col items-center justify-center text-center p-2 shadow-lg z-10">
+            <div className="absolute top-1/2 -right-6 transform -translate-y-1/2 w-24 h-24 rounded-full bg-[#102A43] border-4 border-[#F5EFEB] flex flex-col items-center justify-center text-center p-2 shadow-lg z-10">
               <div className="w-full h-full rounded-full border border-dashed border-white/40 flex flex-col items-center justify-center p-1">
-                <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#38BDF8] leading-tight">
-                  ATELIER<br />CURATED
+                <span className="text-[9px] font-extrabold uppercase tracking-widest text-white leading-tight">
+                  BEST<br />COLLECTION
                 </span>
               </div>
             </div>
@@ -629,21 +625,22 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
           {/* Middle Main Image */}
           <div
-            className="relative w-full md:w-[480px] h-[360px] md:h-[420px] rounded-3xl overflow-hidden self-start shadow-md group cursor-pointer border border-[#183B56]"
+            className="relative w-full md:w-[480px] h-[360px] md:h-[420px] rounded-[32px] overflow-hidden self-start shadow-md group cursor-pointer"
+            style={{ clipPath: "polygon(0% 0%, 72% 0%, 100% 20%, 100% 100%, 0% 100%)" }}
           >
             <img src={HERO_IMG_MID} className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" alt="Main Hero" />
-            <div className="absolute inset-0 bg-[#183B56]/35 flex flex-col items-center justify-center text-white text-center p-6">
+            <div className="absolute inset-0 bg-[#183B56]/25 flex flex-col items-center justify-center text-white text-center p-6">
               <span className="text-3xl md:text-4xl font-extrabold tracking-tight uppercase">Weavly</span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#38BDF8] mt-1">From Verified Ateliers</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/90 mt-1">From Local Designers</span>
             </div>
           </div>
 
           {/* Right Image */}
-          <div className="relative w-full md:w-[300px] h-[340px] md:h-[380px] rounded-3xl overflow-hidden self-center mt-8 md:mt-0 shadow-md group cursor-pointer border border-[#183B56]">
+          <div className="relative w-full md:w-[300px] h-[340px] md:h-[380px] rounded-[32px] overflow-hidden self-center mt-8 md:mt-0 shadow-md group cursor-pointer">
             <img src={HERO_IMG_RIGHT} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Right Hero" />
-            <div className="absolute inset-0 bg-[#183B56]/35 flex flex-col items-center justify-center text-white text-center p-6">
+            <div className="absolute inset-0 bg-[#183B56]/25 flex flex-col items-center justify-center text-white text-center p-6">
               <span className="text-2xl md:text-3xl font-extrabold tracking-tight uppercase">Weavly</span>
-              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-[#38BDF8] mt-1">From Verified Ateliers</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/90 mt-1">From Local Designers</span>
             </div>
           </div>
         </div>
