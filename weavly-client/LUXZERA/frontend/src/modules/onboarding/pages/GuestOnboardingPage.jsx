@@ -498,9 +498,9 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
                 variance={0.4}
                 parallax={0.3}
                 lift={50}
-                fade={0.55}
-                dim={0.65}
-                overlayColor="#F5EFEB"
+                fade={0.35}
+                dim={0.88}
+                overlayColor="transparent"
               />
             </div>
           </div>
