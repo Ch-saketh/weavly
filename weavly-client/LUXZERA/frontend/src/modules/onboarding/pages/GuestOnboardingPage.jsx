@@ -372,7 +372,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
 
 
       {/* ─── 1. ARCHITECTURAL HEADER ─── */}
-      <header className="w-full h-20 flex items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 bg-white sticky top-0 z-50 border-b border-[#183B56]/20">
+      <header className="w-full h-20 flex items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 bg-[#F5EFEB]/90 backdrop-blur-md sticky top-0 z-50">
         <WeavlyLogo />
 
         {/* Center Nav Links */}
@@ -403,7 +403,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
               e.stopPropagation();
               triggerAuth("login");
             }}
-            className="bg-[#F5EFEB] text-[#183B56] px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-white active:scale-95 transition-all cursor-pointer border border-[#183B56]"
+            className="bg-transparent text-[#183B56] px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-white active:scale-95 transition-all cursor-pointer border border-[#183B56]"
           >
             Sign In
           </button>
