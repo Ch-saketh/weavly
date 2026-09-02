@@ -309,7 +309,7 @@ export default function DesignerDashboardPage() {
   const TAB_METADATA = {
     designs: {
       title: "Lookbooks & Garments",
-      subtitle: "Manage catalog collections, ready-to-wear pieces, and bespokeMade-to-Measure pricing."
+      subtitle: "Manage catalog collections, ready-to-wear pieces, and bespoke Made-to-Measure pricing."
     },
     commissions: {
       title: "Bespoke Commission Queue",
@@ -444,8 +444,8 @@ export default function DesignerDashboardPage() {
                 </div>
 
                 {designs.length === 0 ? (
-                  <div className="border border-[#183B56] bg-[#F5EFEB]/40 p-12 text-center space-y-3">
-                    <div className="w-12 h-12 border border-[#183B56] bg-white flex items-center justify-center mx-auto text-[#183B56]">
+                  <div className="py-14 text-center space-y-3.5">
+                    <div className="w-12 h-12 border border-[#183B56] bg-[#DFE7ED] flex items-center justify-center mx-auto text-[#183B56]">
                       <Palette size={20} />
                     </div>
                     <h4 className="text-sm font-bold uppercase text-[#183B56]">
@@ -456,7 +456,7 @@ export default function DesignerDashboardPage() {
                     </p>
                     <button
                       onClick={() => setIsNewDesignOpen(true)}
-                      className="px-6 py-3 bg-[#183B56] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider hover:bg-[#102A43] cursor-pointer shadow-xs inline-flex items-center gap-2"
+                      className="px-6 py-2.5 bg-[#183B56] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider hover:bg-[#102A43] cursor-pointer shadow-xs inline-flex items-center gap-2 mt-2"
                     >
                       <Plus size={13} />
                       <span>Publish First Garment</span>
@@ -555,8 +555,8 @@ export default function DesignerDashboardPage() {
                 </div>
 
                 {requests.length === 0 ? (
-                  <div className="border border-[#183B56] bg-[#F5EFEB]/40 p-12 text-center space-y-3">
-                    <div className="w-12 h-12 border border-[#183B56] bg-white flex items-center justify-center mx-auto text-[#183B56]">
+                  <div className="py-14 text-center space-y-3.5">
+                    <div className="w-12 h-12 border border-[#183B56] bg-[#DFE7ED] flex items-center justify-center mx-auto text-[#183B56]">
                       <Scissors size={20} />
                     </div>
                     <h4 className="text-sm font-bold uppercase text-[#183B56]">
