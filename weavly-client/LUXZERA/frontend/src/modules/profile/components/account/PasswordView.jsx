@@ -116,50 +116,56 @@ const PasswordView = () => {
 
   const getDeviceIcon = (deviceName = "") => {
     const dn = deviceName.toLowerCase();
-    if (dn.contains("iphone") || dn.contains("android") || dn.contains("phone")) {
-      return <Smartphone size={18} className="text-[#A66A2C]" />;
+    if (dn.includes("iphone") || dn.includes("android") || dn.includes("phone")) {
+      return <Smartphone size={18} className="text-[#183B56]" />;
     }
-    if (dn.contains("macbook") || dn.contains("laptop") || dn.contains("mac os") || dn.contains("windows")) {
-      return <Laptop size={18} className="text-[#A66A2C]" />;
+    if (dn.includes("macbook") || dn.includes("laptop") || dn.includes("mac os") || dn.includes("windows")) {
+      return <Laptop size={18} className="text-[#183B56]" />;
     }
-    return <Monitor size={18} className="text-[#A66A2C]" />;
+    return <Monitor size={18} className="text-[#183B56]" />;
   };
 
   const inputClasses =
-    "w-full h-[46px] px-4 rounded-xl border border-[#E8E5E0] bg-[#FAFAF9] text-[13.5px] font-medium text-[#1A1A1A] placeholder-[#BFBFBF] outline-none transition-all duration-200 hover:border-[#D0CCC6] hover:bg-white focus:border-[#A66A2C] focus:bg-white focus:ring-1 focus:ring-[#A66A2C]/20";
+    "w-full h-[44px] px-4 border border-[#183B56] bg-white text-xs font-semibold text-[#183B56] placeholder-[#5A7184]/50 outline-none transition-all focus:ring-1 focus:ring-[#183B56]";
 
   return (
-    <div className="relative font-['Plus_Jakarta_Sans',sans-serif] space-y-12">
+    <div className="relative space-y-8">
       {loading && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center bg-white/70 backdrop-blur-[1px] rounded-2xl">
+        <div className="absolute inset-0 z-30 flex items-center justify-center bg-white/80 backdrop-blur-[1px]">
           <Loader />
         </div>
       )}
 
       {/* ── Section 1: Password Change ──────────────────────── */}
-      <div>
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-8 h-8 rounded-lg bg-[#F5EDE4] flex items-center justify-center">
-              <Shield size={16} className="text-[#A66A2C]" />
-            </div>
-            <h2 className="text-[20px] font-bold text-[#1A1A1A] tracking-[-0.02em]">Password & Credential Security</h2>
+      <div className="border border-[#183B56] bg-white p-6 sm:p-8 shadow-xs">
+        <div className="flex items-center gap-3.5 pb-4 mb-6 border-b border-[#183B56]/20">
+          <div className="w-10 h-10 bg-[#DFE7ED] border border-[#183B56] flex items-center justify-center shrink-0">
+            <Shield size={18} className="text-[#183B56]" />
           </div>
-          <p className="text-[13px] text-[#8C8C8C] mt-1 ml-11">
-            Update your account password. Changing your password will automatically sign out all other devices for your security.
-          </p>
+          <div>
+            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
+              Security Credentials
+            </span>
+            <h2 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-[#183B56]">
+              Password &amp; Credential Security
+            </h2>
+          </div>
         </div>
+
+        <p className="text-xs text-[#5A7184] font-medium mb-6 leading-relaxed">
+          Update your account password. Changing your password will automatically sign out all other devices for your security.
+        </p>
 
         {/* Status Messages */}
         {errorMsg && (
-          <div className="px-5 py-3 mb-6 bg-red-50 border border-red-100 rounded-xl text-[12.5px] font-medium text-red-600 flex items-center gap-2">
+          <div className="px-4 py-3 mb-6 bg-red-50 border border-red-300 text-xs font-bold text-red-700 flex items-center gap-2">
             <AlertCircle size={15} />
             {errorMsg}
           </div>
         )}
 
         {successMsg && (
-          <div className="px-5 py-3 mb-6 bg-emerald-50 border border-emerald-100 rounded-xl text-[12.5px] font-semibold text-emerald-700 flex items-center gap-2">
+          <div className="px-4 py-3 mb-6 bg-[#F5EFEB] border border-[#183B56] text-xs font-bold text-[#183B56] flex items-center gap-2">
             <Check size={15} strokeWidth={2.5} />
             {successMsg}
           </div>
@@ -167,7 +173,7 @@ const PasswordView = () => {
 
         <form onSubmit={handlePasswordSubmit} className="space-y-4 max-w-xl">
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B7280] mb-1.5">
+            <label className="block text-[10px] font-bold uppercase tracking-[0.14em] text-[#5A7184] mb-1.5">
               Current Password
             </label>
             <input
@@ -183,7 +189,7 @@ const PasswordView = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B7280] mb-1.5">
+              <label className="block text-[10px] font-bold uppercase tracking-[0.14em] text-[#5A7184] mb-1.5">
                 New Password
               </label>
               <input
@@ -197,7 +203,7 @@ const PasswordView = () => {
               />
             </div>
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B7280] mb-1.5">
+              <label className="block text-[10px] font-bold uppercase tracking-[0.14em] text-[#5A7184] mb-1.5">
                 Confirm New Password
               </label>
               <input
@@ -216,56 +222,62 @@ const PasswordView = () => {
             <button
               type="submit"
               disabled={loading}
-              className="h-[46px] px-7 rounded-xl bg-[#111111] text-white text-[13px] font-bold tracking-[0.04em] uppercase hover:bg-black transition-all flex items-center gap-2 shadow-sm active:scale-[0.99]"
+              className="px-7 py-3 bg-[#183B56] hover:bg-[#102A43] text-white border border-[#183B56] text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 shadow-xs cursor-pointer active:scale-[0.99]"
             >
-              <KeyRound size={15} />
-              {loading ? "Updating..." : "Update Password"}
+              <KeyRound size={14} />
+              <span>{loading ? "Updating..." : "Update Password"}</span>
             </button>
           </div>
         </form>
       </div>
 
       {/* ── Section 2: Active Sessions & Device Control ────────── */}
-      <div className="pt-8 border-t border-[#ECEBE8]">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <div className="w-8 h-8 rounded-lg bg-[#F5EDE4] flex items-center justify-center">
-                <Laptop size={16} className="text-[#A66A2C]" />
-              </div>
-              <h3 className="text-[18px] font-bold text-[#1A1A1A] tracking-[-0.02em]">Active Devices & Sessions</h3>
+      <div className="border border-[#183B56] bg-white p-6 sm:p-8 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-6 border-b border-[#183B56]/20">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 bg-[#DFE7ED] border border-[#183B56] flex items-center justify-center shrink-0">
+              <Laptop size={18} className="text-[#183B56]" />
             </div>
-            <p className="text-[13px] text-[#8C8C8C] mt-1 ml-11">
-              These devices are currently signed in to your Weavly account. You can revoke individual sessions or sign out everywhere.
-            </p>
+            <div>
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#5A7184] block">
+                Session Control
+              </span>
+              <h3 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-[#183B56]">
+                Active Devices &amp; Sessions
+              </h3>
+            </div>
           </div>
 
           {sessions.filter(s => !s.current).length > 0 && (
             <button
               type="button"
               onClick={handleRevokeAllOtherSessions}
-              className="self-start sm:self-auto h-[38px] px-4 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 text-[12px] font-bold tracking-[0.02em] transition-all flex items-center gap-2"
+              className="self-start sm:self-auto px-4 py-2 border border-red-500 bg-red-50 hover:bg-red-600 hover:text-white text-red-700 text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer shadow-xs"
             >
-              <LogOut size={14} />
-              Sign Out Other Devices
+              <LogOut size={13} />
+              <span>Sign Out Other Devices</span>
             </button>
           )}
         </div>
 
+        <p className="text-xs text-[#5A7184] font-medium mb-6 leading-relaxed">
+          These devices are currently signed in to your Weavly account. You can revoke individual sessions or sign out everywhere.
+        </p>
+
         {sessionMsg && (
-          <div className="px-5 py-3 mb-6 bg-emerald-50 border border-emerald-100 rounded-xl text-[12.5px] font-semibold text-emerald-700 flex items-center gap-2">
+          <div className="px-4 py-3 mb-6 bg-[#F5EFEB] border border-[#183B56] text-xs font-bold text-[#183B56] flex items-center gap-2">
             <Check size={15} strokeWidth={2.5} />
             {sessionMsg}
           </div>
         )}
 
         {sessionsLoading && sessions.length === 0 ? (
-          <div className="py-8 flex items-center justify-center text-[#8C8C8C] text-[13px] gap-2">
-            <RefreshCw size={16} className="animate-spin text-[#A66A2C]" />
-            Loading active sessions...
+          <div className="py-8 flex items-center justify-center text-[#5A7184] text-xs gap-2">
+            <RefreshCw size={15} className="animate-spin text-[#183B56]" />
+            <span>Loading active sessions...</span>
           </div>
         ) : sessions.length === 0 ? (
-          <div className="p-6 rounded-2xl border border-dashed border-[#E5E5E0] bg-[#FAFAF9] text-center text-[13px] text-[#8C8C8C]">
+          <div className="p-6 border border-[#183B56]/30 bg-[#F5EFEB] text-center text-xs font-medium text-[#5A7184]">
             No other active sessions detected.
           </div>
         ) : (
@@ -273,28 +285,28 @@ const PasswordView = () => {
             {sessions.map((sess) => (
               <div
                 key={sess.id}
-                className={`p-4 rounded-2xl border transition-all flex items-center justify-between gap-4 ${
+                className={`p-4 border border-[#183B56] transition-all flex items-center justify-between gap-4 ${
                   sess.current
-                    ? "bg-[#FAFAF9] border-[#E8E5E0] shadow-sm"
-                    : "bg-white border-[#ECEBE8] hover:border-[#D0CCC6]"
+                    ? "bg-[#F5EFEB] shadow-xs"
+                    : "bg-white hover:bg-[#F5EFEB]/50"
                 }`}
               >
                 <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="w-10 h-10 rounded-xl bg-[#F5EDE4] flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#DFE7ED] border border-[#183B56] flex items-center justify-center shrink-0">
                     {getDeviceIcon(sess.deviceName)}
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[14px] font-bold text-[#1A1A1A] truncate">
+                      <span className="text-sm font-bold uppercase text-[#183B56] truncate">
                         {sess.deviceName || "Web Browser"}
                       </span>
                       {sess.current && (
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10.5px] font-bold uppercase tracking-wider">
+                        <span className="px-2 py-0.5 bg-[#183B56] text-white text-[9px] font-mono font-bold uppercase tracking-wider">
                           Current Device
                         </span>
                       )}
                     </div>
-                    <div className="text-[12px] text-[#8C8C8C] flex items-center gap-2 mt-0.5">
+                    <div className="text-[11px] font-mono text-[#5A7184] flex items-center gap-2 mt-0.5">
                       <span>IP: {sess.ipAddress}</span>
                       <span>•</span>
                       <span>Last active {formatActivityTime(sess.lastActivityAt)}</span>
@@ -306,7 +318,7 @@ const PasswordView = () => {
                   <button
                     type="button"
                     onClick={() => handleRevokeSession(sess.id)}
-                    className="px-3.5 py-1.5 rounded-lg border border-[#E5E5E0] bg-white hover:bg-red-50 hover:border-red-200 hover:text-red-700 text-[#4B5563] text-[12px] font-semibold transition-all flex-shrink-0"
+                    className="px-3.5 py-1.5 border border-[#183B56] bg-white hover:bg-[#183B56] hover:text-white text-[#183B56] text-xs font-bold uppercase tracking-wider transition-all shrink-0 cursor-pointer"
                   >
                     Revoke
                   </button>
