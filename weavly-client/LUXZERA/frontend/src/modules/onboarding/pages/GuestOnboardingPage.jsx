@@ -6,6 +6,7 @@ import AuthModal from "@/modules/auth/components/AuthModal";
 import CircularGallery from "@/shared/components/ui/CircularGallery";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import Footer from "@/shared/components/layout/Footer";
+import DriftWall from "@/shared/components/ui/DriftWall";
 
 // Helper Images
 const HERO_IMG_MID = "https://images.unsplash.com/photo-1550639525-c97d455acf70?w=800&q=80";
@@ -473,38 +474,46 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
             </div>
           </div>
 
-          {/* Right 5 Columns: Featured Atelier Card */}
-          <div className="lg:col-span-5 bg-[#DFE7ED] flex flex-col justify-between relative overflow-hidden">
-            <div className="relative aspect-[3/4] w-full overflow-hidden">
-              <img
-                src={HERO_IMG_MID}
-                alt="Atelier Showcase"
-                className="w-full h-full object-cover"
+          {/* Right 5 Columns: DriftWall */}
+          <div className="lg:col-span-5 bg-[#183B56] flex flex-col relative overflow-hidden" style={{ minHeight: '520px' }}>
+            <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '520px' }}>
+              <DriftWall
+                items={[
+                  { image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80', title: 'Elegance Gown' },
+                  { image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=600&q=80', title: 'Tailored Blazer' },
+                  { image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=80', title: 'Silk Ensemble' },
+                  { image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80', title: 'Trench Coat' },
+                  { image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&q=80', title: 'Statement Dress' },
+                  { image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600&q=80', title: 'Winter Knit' },
+                  { image: 'https://images.unsplash.com/photo-1550639525-c97d455acf70?w=600&q=80', title: 'Atelier Edit' },
+                  { image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&q=80', title: 'Street Style' },
+                  { image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80', title: 'Runway Look' },
+                  { image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&q=80', title: 'Summer Edit' },
+                ]}
+                columns={3}
+                tileWidth={170}
+                tileHeight={120}
+                gap={10}
+                radius={4}
+                tilt={8}
+                turn={0}
+                speed={36}
+                direction="up"
+                variance={0.4}
+                parallax={0.3}
+                lift={50}
+                fade={0.55}
+                dim={0.65}
+                overlayColor="#183B56"
               />
-              <div className="absolute top-4 left-4 bg-white/95 border border-[#183B56] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#183B56]">
-                Lookbook Edit #01
-              </div>
-            </div>
-            <div className="p-6 bg-[#F5EFEB] border-t border-[#183B56] flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A7184] block">Featured Sartorial Ensemble</span>
-                <span className="text-sm font-bold uppercase text-[#183B56]">Hand-Draped Silk &amp; Flannel Wool</span>
-              </div>
-              <button
-                onClick={() => triggerAuth("register")}
-                className="text-xs font-bold uppercase tracking-wider text-[#183B56] hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
-              >
-                <span>View</span>
-                <span>→</span>
-              </button>
             </div>
           </div>
 
         </div>
       </section>
 
-      {/* ─── 3. MEET ZYRA AI INTELLIGENCE (2X2 BOX MATRIX) ─── */}
-      <section id="meet-zera" className="border-b border-[#183B56] bg-white">
+      {/* ─── 3. MEET ZYRA INTELLIGENCE (2X2 BOX MATRIX) ─── */}
+      <section id="meet-zera" className="border-b border-[#183B56] bg-white mt-16 sm:mt-24">
         <div className="max-w-7xl mx-auto border-x border-[#183B56]">
           
           {/* Header Bar */}
@@ -619,7 +628,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
       </section>
 
       {/* ─── 5. FOR CREATORS & ATELIERS (12-COL BOX MATRIX) ─── */}
-      <section id="for-designers" className="border-b border-[#183B56] bg-white">
+      <section id="for-designers" className="border-b border-[#183B56] bg-white mt-16 sm:mt-24">
         <div className="max-w-7xl mx-auto border-x border-[#183B56] grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#183B56]">
           
           <div className="lg:col-span-6 p-8 sm:p-14 bg-white flex flex-col justify-between space-y-8">
@@ -682,7 +691,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
       </section>
 
       {/* ─── 6. ESCROW FIT & SECURITY VAULT (3-COLUMN BOX MATRIX) ─── */}
-      <section id="escrow-protection" className="border-b border-[#183B56] bg-[#F5EFEB]">
+      <section id="escrow-protection" className="border-b border-[#183B56] bg-[#F5EFEB] mt-16 sm:mt-24">
         <div className="max-w-7xl mx-auto border-x border-[#183B56]">
           
           <div className="p-6 sm:p-8 border-b border-[#183B56] bg-white text-center space-y-2">
@@ -719,7 +728,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
       </section>
 
       {/* ─── 7. CRAFTSMANSHIP & ATELIER STANDARDS ─── */}
-      <section className="border-b border-[#183B56] bg-white">
+      <section className="border-b border-[#183B56] bg-white mt-16 sm:mt-24">
         <div className="max-w-7xl mx-auto border-x border-[#183B56]">
           
           <div className="p-6 sm:p-8 border-b border-[#183B56] bg-[#F5EFEB] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -768,7 +777,7 @@ export default function GuestOnboardingPage({ onOpenAuth }) {
       </section>
 
       {/* ─── 8. INTERACTIVE CIRCULAR GALLERY BOX ─── */}
-      <section className="border-b border-[#183B56] bg-[#F5EFEB] py-16 px-4 sm:px-8">
+      <section className="border-b border-[#183B56] bg-[#F5EFEB] py-20 sm:py-28 px-4 sm:px-8 mt-16 sm:mt-24">
         <div className="max-w-7xl mx-auto border border-[#183B56] bg-white p-8 sm:p-12 text-center space-y-8 shadow-xs">
           <div className="space-y-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184]">Atelier Showcase</span>
