@@ -623,42 +623,11 @@ export default function Footer({ onShopNow, onBetaClick, requireAuth, onRequireA
                     Help &amp; FAQs
                   </button>
                 </li>
-                <li>
-                  <span className="text-[#71717A] text-[11px] flex items-center gap-1.5 pt-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
-                    <span>Zero-Tracker Architecture</span>
-                  </span>
-                </li>
               </ul>
             </div>
 
           </div>
 
-        </div>
-      </div>
-
-      {/* ═══ PRIVACY & TRUST STRIP ═══ */}
-      <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-16 mb-8">
-        <div className="border border-white/10 bg-white/[0.03] backdrop-blur-xs rounded-xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[#38BDF8]/10 border border-[#38BDF8]/20 flex items-center justify-center shrink-0">
-              <ShieldCheck size={16} className="text-[#38BDF8]" />
-            </div>
-            <div>
-              <p className="text-white font-medium text-[12px] leading-tight">
-                Patron Confidentiality &amp; Data Security Guarantee
-              </p>
-              <p className="text-[#8E8E93] text-[11px] leading-normal mt-0.5">
-                Zero third-party trackers. End-to-end encrypted biometric fitting data and style vectors.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => handleLinkClick("/privacy")}
-            className="shrink-0 text-[11px] font-semibold text-[#38BDF8] hover:text-white underline underline-offset-4 transition-colors cursor-pointer border-none bg-transparent p-0"
-          >
-            Read Our Privacy Vow →
-          </button>
         </div>
       </div>
 
