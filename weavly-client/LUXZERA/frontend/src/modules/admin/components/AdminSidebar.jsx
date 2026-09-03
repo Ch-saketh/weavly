@@ -95,7 +95,7 @@ export default function AdminSidebar({ activeTab = "overview" }) {
       label: "Product Catalog",
       icon: BarChart3,
       href: "/admin/products",
-      active: pathname === "/admin/products" || activeTab === "products",
+      active: pathname.startsWith("/admin/products") || activeTab === "products",
       visible: hasPermission("products.read"),
     },
     {

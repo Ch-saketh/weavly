@@ -214,7 +214,88 @@ export const exportUsers = async (params = {}) => {
 };
 
 /**
- * 5. Admin Invitations & Onboarding Lifecycle (Super Admin)
+ * 5. Product Catalog Command, Inventory & Media
+ */
+
+export const getProducts = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/products', { params });
+  return response.data;
+};
+
+export const getProductDetail = async (id) => {
+  const response = await apiClient.get(`/api/admin/products/${id}`);
+  return response.data;
+};
+
+export const createProduct = async (payload) => {
+  const response = await apiClient.post('/api/admin/products', payload);
+  return response.data;
+};
+
+export const updateProduct = async (id, payload) => {
+  const response = await apiClient.patch(`/api/admin/products/${id}`, payload);
+  return response.data;
+};
+
+export const deleteProduct = async (id) => {
+  const response = await apiClient.delete(`/api/admin/products/${id}`);
+  return response.data;
+};
+
+export const publishProduct = async (id) => {
+  const response = await apiClient.post(`/api/admin/products/${id}/publish`);
+  return response.data;
+};
+
+export const archiveProduct = async (id) => {
+  const response = await apiClient.post(`/api/admin/products/${id}/archive`);
+  return response.data;
+};
+
+export const getProductInventory = async (id) => {
+  const response = await apiClient.get(`/api/admin/products/${id}/inventory`);
+  return response.data;
+};
+
+export const updateProductInventory = async (id, payload) => {
+  const response = await apiClient.patch(`/api/admin/products/${id}/inventory`, payload);
+  return response.data;
+};
+
+export const getProductMedia = async (id) => {
+  const response = await apiClient.get(`/api/admin/products/${id}/media`);
+  return response.data;
+};
+
+export const addProductMedia = async (id, file, setPrimary = false) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await apiClient.post(`/api/admin/products/${id}/media?setPrimary=${setPrimary}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+  return response.data;
+};
+
+export const deleteProductMedia = async (id, mediaUrl) => {
+  const response = await apiClient.delete(`/api/admin/products/${id}/media?mediaUrl=${encodeURIComponent(mediaUrl)}`);
+  return response.data;
+};
+
+export const importProducts = async () => {
+  const response = await apiClient.post('/api/admin/products/import');
+  return response.data;
+};
+
+export const exportProducts = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/products/export', {
+    params,
+    responseType: 'blob'
+  });
+  return response.data;
+};
+
+/**
+ * 6. Admin Invitations & Onboarding Lifecycle (Super Admin)
  */
 
 // Super Admin sends invitation to email with assigned role

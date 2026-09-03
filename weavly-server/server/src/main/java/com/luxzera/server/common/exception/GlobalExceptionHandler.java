@@ -24,6 +24,15 @@ public class GlobalExceptionHandler {
                 .body(Map.of("message", ex.getMessage()));
     }
 
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<Map<String, String>> handleConflictException(
+            ConflictException ex
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(Map.of("message", ex.getMessage(), "error", "Conflict"));
+    }
+
     @ExceptionHandler({ZyraProductNotFoundException.class, ZyraGenerationNotFoundException.class})
     public ResponseEntity<Map<String, String>> handleZyraNotFoundException(
             RuntimeException ex

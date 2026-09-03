@@ -41,6 +41,10 @@ public class ProductVariant {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

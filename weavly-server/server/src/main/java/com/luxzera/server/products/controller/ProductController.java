@@ -82,6 +82,7 @@ public class ProductController {
      * POST /api/products/import-catalog
      */
     @PostMapping("/import-catalog")
+    @PreAuthorize("@adminSecurityEvaluator.hasPermission(authentication, 'products.create')")
     public ResponseEntity<Map<String, Object>> importCatalog() {
         int count = productCatalogImportService.importCatalogFromCsv();
         return ResponseEntity.ok(Map.of(

@@ -1,6 +1,7 @@
 package com.luxzera.server.products.entity;
 
 import com.luxzera.server.products.enums.Audience;
+import com.luxzera.server.products.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,7 +18,9 @@ import java.util.UUID;
         @Index(name = "idx_products_product_id", columnList = "product_id"),
         @Index(name = "idx_products_audience", columnList = "audience"),
         @Index(name = "idx_products_category_name", columnList = "category_name"),
-        @Index(name = "idx_products_brand_name", columnList = "brand_name")
+        @Index(name = "idx_products_brand_name", columnList = "brand_name"),
+        @Index(name = "idx_products_status", columnList = "status"),
+        @Index(name = "idx_products_created_at", columnList = "created_at")
 })
 @Getter
 @Setter
@@ -38,6 +41,11 @@ public class Product {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    @Builder.Default
+    private ProductStatus status = ProductStatus.ACTIVE;
 
     @Column(name = "base_price", nullable = false)
     private BigDecimal basePrice;
