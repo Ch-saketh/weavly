@@ -72,8 +72,8 @@ export default function AdminWaitingPage() {
             </span>
           </div>
           <div className="flex items-center justify-between text-white/70">
-            <span>Dev Emergency Bypass:</span>
-            <span className="font-mono text-[#F07020] font-bold">123456 OTP</span>
+            <span>Identity Provisioning:</span>
+            <span className="text-white/90 font-medium">Invited / Verification Required</span>
           </div>
         </div>
 

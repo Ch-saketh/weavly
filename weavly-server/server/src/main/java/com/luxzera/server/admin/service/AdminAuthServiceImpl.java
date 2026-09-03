@@ -17,7 +17,7 @@ import java.security.SecureRandom;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
+@Deprecated
 @RequiredArgsConstructor
 public class AdminAuthServiceImpl {
 

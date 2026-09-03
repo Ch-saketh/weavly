@@ -54,8 +54,7 @@ export default function AdminLoginPage() {
         setStep(2);
       }
     } catch (err) {
-      setSuccessMsg("Development Mode: 2FA OTP requested. Enter 123456 dev code to verify!");
-      setStep(2);
+      setErrorMsg(formatErrorMessage(err, "Invalid administrator credentials."));
     } finally {
       setLoading(false);
     }
@@ -92,25 +91,6 @@ export default function AdminLoginPage() {
         throw new Error("Missing access token in response");
       }
     } catch (err) {
-      if (otpCode.trim() === "123456") {
-        const mockToken = "dev_admin_token_" + Date.now();
-        setToken(mockToken);
-        if (typeof window !== "undefined") {
-          localStorage.setItem("Weavly_admin_token", mockToken);
-        }
-        setUser({
-          id: "super_admin_1",
-          email: email || "saketh@admin.Weavly",
-          firstName: "Saketh",
-          lastName: "Super Admin",
-          role: "ROLE_SUPER_ADMIN",
-          isAdmin: true,
-          status: "APPROVED"
-        });
-        setSuccessMsg("Development 2FA verified! Accessing Super Admin Dashboard...");
-        setTimeout(() => router.push("/admin/dashboard"), 800);
-        return;
-      }
       setErrorMsg(formatErrorMessage(err, "Invalid or expired OTP code. Please check your email."));
     } finally {
       setLoading(false);
@@ -232,11 +212,11 @@ export default function AdminLoginPage() {
                     maxLength={6}
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                    placeholder="123456"
+                    placeholder="••••••"
                     className="flex h-12 w-full rounded-md border border-[#E4E4E7] bg-white px-3 py-2 text-lg font-bold tracking-[0.3em] text-center placeholder:text-[#A1A1AA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F07020] focus-visible:ring-offset-2 transition-all"
                   />
                   <p className="text-[11px] text-[#71717A] mt-1">
-                    * Testing Mode: Enter dev code <span className="font-bold text-[#F07020]">123456</span> to verify.
+                    Enter the single-use 6-digit verification code sent to your administrator email.
                   </p>
                 </div>
 

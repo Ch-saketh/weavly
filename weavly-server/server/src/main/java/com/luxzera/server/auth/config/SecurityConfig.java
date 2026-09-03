@@ -30,6 +30,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final com.luxzera.server.admin.config.AdminJwtAuthenticationFilter adminJwtAuthenticationFilter;
 
     @Value("${cors.allowed-origin-patterns:http://localhost:*,https://*.vercel.app,https://weavly.store,https://www.weavly.store,https://*.weavly.store,https://luxzera.store,https://www.luxzera.store,https://*.onrender.com}")
     private String corsAllowedOriginPatterns;
@@ -108,6 +109,15 @@ public class SecurityConfig {
                         // 🚀 ── Image Upload Testing (Temporary Public Access) ──
                         .requestMatchers("/api/v1/test/images/**").permitAll()
 
+                        // ── Public Admin Auth & Invitation Endpoints ──
+                        .requestMatchers(
+                                "/api/admin/auth/login",
+                                "/api/admin/auth/verify-otp",
+                                "/api/admin/invitations/validate",
+                                "/api/admin/invitations/accept",
+                                "/api/admin/invitations/verify-otp"
+                        ).permitAll()
+
                         // ── Designer Studio Management (requires Designer JWT) ──
                         .requestMatchers("/api/designer/me/**").hasRole("DESIGNER")
 
@@ -115,6 +125,10 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 // ── Restored Filter Chain Wireup ─────────────────────────────
+                .addFilterBefore(
+                        adminJwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                )
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class

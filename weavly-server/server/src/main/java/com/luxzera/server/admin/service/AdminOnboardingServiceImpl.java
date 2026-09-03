@@ -31,6 +31,8 @@ public class AdminOnboardingServiceImpl implements AdminOnboardingService {
 
     private final AdminApplicationRepository adminApplicationRepository;
     private final UserRepository userRepository;
+    private final com.luxzera.server.admin.repository.AdminUserRepository adminUserRepository;
+    private final AdminInvitationService adminInvitationService;
     private final ImageStorageService imageStorageService;
     private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -91,15 +93,28 @@ public class AdminOnboardingServiceImpl implements AdminOnboardingService {
             throw new BadRequestException("Only pending admin applications can be approved.");
         }
 
-        User user = userRepository.findByEmail(application.getEmail())
-                .orElseGet(() -> createAdminUser(application));
+        // Safely find the approving Super Admin identity
+        com.luxzera.server.admin.entity.AdminUser superAdmin = adminUserRepository.findByEmailIgnoreCase(reviewerEmail)
+                .or(() -> adminUserRepository.findAll().stream()
+                        .filter(u -> u.getRole() == com.luxzera.server.admin.enums.AdminRole.SUPER_ADMIN)
+                        .findFirst())
+                .orElse(null);
 
-        user.setFirstName(firstName(application.getName()));
-        user.setLastName(lastName(application.getName()));
-        user.setProfilePicture(application.getProfilePhotoUrl());
-        user.setRole(Role.ADMIN);
-        user.setStatus(UserStatus.ACTIVE);
-        userRepository.save(user);
+        if (superAdmin != null) {
+            try {
+                adminInvitationService.createInvitation(
+                        com.luxzera.server.admin.dto.request.AdminInviteRequest.builder()
+                                .email(application.getEmail())
+                                .role(com.luxzera.server.admin.enums.AdminRole.PLATFORM_ADMIN)
+                                .build(),
+                        superAdmin,
+                        "127.0.0.1",
+                        "ONBOARDING_APPROVAL"
+                );
+            } catch (Exception e) {
+                // Log and continue if invitation already pending or exists
+            }
+        }
 
         application.setStatus(AdminApplicationStatus.APPROVED);
         application.setReviewedAt(LocalDateTime.now());
