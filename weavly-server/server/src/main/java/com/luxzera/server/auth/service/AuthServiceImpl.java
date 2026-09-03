@@ -145,8 +145,12 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Please verify your email address before logging in.");
         }
 
-        if (user.getStatus() == UserStatus.BLOCKED) {
+        if (user.getStatus() == UserStatus.BLOCKED || user.getStatus() == UserStatus.SUSPENDED) {
             throw new BadRequestException("Your account is currently suspended. Please contact support.");
+        }
+
+        if (user.getStatus() == UserStatus.DELETED) {
+            throw new BadRequestException("This account has been deactivated.");
         }
 
         if (user.getPassword() == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {

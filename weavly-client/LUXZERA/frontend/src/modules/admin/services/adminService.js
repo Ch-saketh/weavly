@@ -115,7 +115,106 @@ export const deleteAdmin = async (id) => {
 };
 
 /**
- * 2. Admin Invitations & Onboarding Lifecycle (Super Admin)
+ * 3. Audit Logs, Security Telemetry & Activity Intelligence
+ */
+
+export const getAuditSummary = async () => {
+  const response = await apiClient.get('/api/admin/audit/summary');
+  return response.data;
+};
+
+export const getAuditLogs = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/audit/logs', { params });
+  return response.data;
+};
+
+export const getAuditLogDetail = async (id) => {
+  const response = await apiClient.get(`/api/admin/audit/logs/${id}`);
+  return response.data;
+};
+
+export const getSecurityEvents = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/audit/security-events', { params });
+  return response.data;
+};
+
+export const getSecurityEventDetail = async (id) => {
+  const response = await apiClient.get(`/api/admin/audit/security-events/${id}`);
+  return response.data;
+};
+
+export const getAdminActivity = async (adminId, params = {}) => {
+  const response = await apiClient.get(`/api/admin/audit/activity/${adminId}`, { params });
+  return response.data;
+};
+
+export const exportAuditLogs = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/audit/export', {
+    params,
+    responseType: 'blob'
+  });
+  return response.data;
+};
+
+/**
+ * 4. Customer Governance & User Administration
+ */
+
+export const getUsers = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/users', { params });
+  return response.data;
+};
+
+export const getUserDetail = async (id) => {
+  const response = await apiClient.get(`/api/admin/users/${id}`);
+  return response.data;
+};
+
+export const updateUser = async (id, payload) => {
+  const response = await apiClient.patch(`/api/admin/users/${id}`, payload);
+  return response.data;
+};
+
+export const suspendUser = async (id, reason) => {
+  const response = await apiClient.patch(`/api/admin/users/${id}/suspend`, { reason });
+  return response.data;
+};
+
+export const restoreUser = async (id) => {
+  const response = await apiClient.patch(`/api/admin/users/${id}/restore`);
+  return response.data;
+};
+
+export const deleteUser = async (id) => {
+  const response = await apiClient.delete(`/api/admin/users/${id}`);
+  return response.data;
+};
+
+export const revokeUserSessions = async (id) => {
+  const response = await apiClient.post(`/api/admin/users/${id}/revoke-sessions`);
+  return response.data;
+};
+
+export const getUserUploads = async (userId) => {
+  const response = await apiClient.get(`/api/admin/users/${userId}/uploads`);
+  return response.data;
+};
+
+export const deleteUserUpload = async (userId, uploadId) => {
+  const response = await apiClient.delete(`/api/admin/users/${userId}/uploads/${uploadId}`);
+  return response.data;
+};
+
+export const exportUsers = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/users/export', {
+    params,
+    responseType: 'blob'
+  });
+  return response.data;
+};
+
+/**
+ * 5. Admin Invitations & Onboarding Lifecycle (Super Admin)
  */
 
 // Super Admin sends invitation to email with assigned role

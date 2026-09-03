@@ -13,6 +13,8 @@ import {
   LogOut,
   ShieldCheck,
   ChevronRight,
+  Activity,
+  UserCheck,
 } from "lucide-react";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import { getCurrentAdmin, adminLogout } from "@/modules/admin/services/adminService";
@@ -63,6 +65,22 @@ export default function AdminSidebar({ activeTab = "overview" }) {
       href: "/admin/dashboard",
       active: pathname === "/admin/dashboard" && activeTab === "overview",
       visible: true,
+    },
+    {
+      id: "audit",
+      label: "Audit & Security",
+      icon: Activity,
+      href: "/admin/audit",
+      active: pathname.startsWith("/admin/audit") || activeTab === "audit",
+      visible: hasPermission("audit_logs.read"),
+    },
+    {
+      id: "users",
+      label: "Customer Governance",
+      icon: UserCheck,
+      href: "/admin/users",
+      active: pathname.startsWith("/admin/users") || activeTab === "users",
+      visible: hasPermission("users.read"),
     },
     {
       id: "admins",

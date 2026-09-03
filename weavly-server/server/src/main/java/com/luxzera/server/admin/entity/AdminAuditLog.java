@@ -12,6 +12,7 @@ import java.util.UUID;
         @Index(name = "idx_admin_audit_admin_id", columnList = "admin_id"),
         @Index(name = "idx_admin_audit_action", columnList = "action"),
         @Index(name = "idx_admin_audit_target", columnList = "target_type, target_id"),
+        @Index(name = "idx_admin_audit_result", columnList = "result"),
         @Index(name = "idx_admin_audit_created_at", columnList = "created_at")
 })
 @Getter

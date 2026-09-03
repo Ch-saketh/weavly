@@ -11,7 +11,12 @@ import com.luxzera.server.user.enums.Role;
 import java.time.LocalDateTime;
 import java.util.UUID;
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_users_email", columnList = "email"),
+        @Index(name = "idx_users_username", columnList = "username"),
+        @Index(name = "idx_users_status", columnList = "status"),
+        @Index(name = "idx_users_created_at", columnList = "createdAt")
+})
 @Getter
 @Setter
 @ToString
@@ -58,4 +63,7 @@ public class User {
     private LocalDateTime createdAt; // created at time
     @UpdateTimestamp
     private LocalDateTime updatedAt; // update dtime
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }
