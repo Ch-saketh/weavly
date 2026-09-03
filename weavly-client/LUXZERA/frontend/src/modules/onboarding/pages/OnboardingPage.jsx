@@ -26,7 +26,9 @@ import {
   Layers,
   Heart,
   ShieldCheck,
-  RotateCcw
+  RotateCcw,
+  Code2,
+  Scissors
 } from "lucide-react";
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { saveFitData, getFitData } from "@/modules/profile/services/userFitDataService";
@@ -34,6 +36,7 @@ import { updateProfile } from "@/modules/profile/services/userService";
 import { formatErrorMessage } from "@/shared/utils/errorUtils";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import Stepper, { Step } from "@/shared/components/ui/Stepper";
+import DeveloperJoinModal from "../components/DeveloperJoinModal";
 
 // ── Editorial Look References for Visual Style Discovery (Step 4) ────────────
 const STYLE_DISCOVERY_LOOKS = [
@@ -135,6 +138,7 @@ export default function OnboardingPage() {
 
   // ── Step State: 0 = Intro, 1 = Style, 2 = Fit, 3 = Preferences, 4 = Visual Discovery, 5 = Zyra Processing, 6 = Result
   const [step, setStep] = useState(0);
+  const [isDevModalOpen, setIsDevModalOpen] = useState(false);
 
   // ── Form State ─────────────────────────────────────────────────────────────
   const [formData, setFormData] = useState({
@@ -299,14 +303,24 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* Skip option on Intro */}
+        {/* Skip & Developer options on Intro */}
         {step === 0 && (
-          <button
-            onClick={() => router.push("/")}
-            className="text-xs font-bold uppercase tracking-wider text-[#4B5563] hover:text-black transition-colors cursor-pointer bg-transparent border-none"
-          >
-            Skip for now →
-          </button>
+          <div className="flex items-center gap-5">
+            <button
+              type="button"
+              onClick={() => setIsDevModalOpen(true)}
+              className="text-xs font-bold uppercase tracking-wider text-[#111827] hover:underline flex items-center gap-1.5 cursor-pointer bg-transparent border-none p-0"
+            >
+              <Code2 size={13} />
+              <span>Join as Developer</span>
+            </button>
+            <button
+              onClick={() => router.push("/")}
+              className="text-xs font-bold uppercase tracking-wider text-[#4B5563] hover:text-black transition-colors cursor-pointer bg-transparent border-none p-0"
+            >
+              Skip for now →
+            </button>
+          </div>
         )}
       </header>
 
@@ -339,17 +353,36 @@ export default function OnboardingPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-4">
+              <div className="flex flex-wrap items-center gap-3 pt-4">
                 <button
                   onClick={() => setStep(1)}
-                  className="bg-black hover:bg-neutral-800 text-white px-9 py-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm flex items-center gap-3"
+                  className="bg-black hover:bg-neutral-800 text-white px-8 py-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm flex items-center gap-2.5"
                 >
                   <span>Build My Style</span>
                   <ArrowRight size={15} />
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsDevModalOpen(true)}
+                  className="bg-white hover:bg-[#111827] hover:text-white text-[#111827] px-6 py-4 text-xs font-bold uppercase tracking-wider border border-[#111827] transition-all cursor-pointer shadow-2xs flex items-center gap-2"
+                >
+                  <Code2 size={14} />
+                  <span>Join as Developer</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => router.push("/become-designer")}
+                  className="bg-[#DCE2DC] hover:bg-white text-[#111827] px-6 py-4 text-xs font-bold uppercase tracking-wider border border-[#CCD4CC] transition-all cursor-pointer flex items-center gap-2"
+                >
+                  <Scissors size={14} />
+                  <span>Join as Designer</span>
+                </button>
+
                 <button
                   onClick={() => router.push("/")}
-                  className="bg-[#DCE2DC] hover:bg-white text-[#111827] px-8 py-4 text-xs font-bold uppercase tracking-wider border border-[#CCD4CC] transition-all cursor-pointer"
+                  className="text-xs font-bold uppercase tracking-wider text-[#4B5563] hover:text-[#111827] px-3 py-4 transition-colors cursor-pointer bg-transparent border-none"
                 >
                   Skip for now
                 </button>
@@ -907,6 +940,12 @@ export default function OnboardingPage() {
         )}
 
       </main>
+
+      {/* ── DEVELOPER PLATFORM JOIN MODAL ── */}
+      <DeveloperJoinModal
+        isOpen={isDevModalOpen}
+        onClose={() => setIsDevModalOpen(false)}
+      />
     </div>
   );
 }
