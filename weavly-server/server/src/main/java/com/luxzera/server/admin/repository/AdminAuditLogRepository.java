@@ -15,6 +15,7 @@ import java.util.UUID;
 public interface AdminAuditLogRepository extends JpaRepository<AdminAuditLog, UUID>, JpaSpecificationExecutor<AdminAuditLog> {
     List<AdminAuditLog> findTop50ByOrderByCreatedAtDesc();
     Page<AdminAuditLog> findAllByAdminId(UUID adminId, Pageable pageable);
+    List<AdminAuditLog> findByTargetTypeAndTargetIdOrderByCreatedAtDesc(String targetType, String targetId);
     long countByCreatedAtAfter(LocalDateTime date);
     long countByResult(String result);
     long countByResultAndCreatedAtAfter(String result, LocalDateTime date);

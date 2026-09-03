@@ -95,7 +95,16 @@ class UserZyraRepresentationService:
 
         # 4. Map and Persist Structured Representation to PostgreSQL JSONB
         entity = UserZyraRepresentationMapper.to_entity(unified_rep, embedding_ref)
-        saved_entity = await self.rep_repo.save_or_update(entity)
+        try:
+            saved_entity = await self.rep_repo.save_or_update(entity)
+        except Exception as exc:
+            logger.warning(
+                "PostgreSQL persistence unavailable for user %s; returning offline representation response: %s",
+                unified_rep.userId,
+                exc,
+            )
+            entity.synchronizationStatus = "POSTGRES_UNAVAILABLE"
+            saved_entity = entity
 
         logger.info(
             f"Successfully persisted Zyra representations for user {unified_rep.userId}: "

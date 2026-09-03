@@ -1,0 +1,31 @@
+{
+  "include": [
+    ".",
+    "zyra_fashion_research/repos/outfit-transformer"
+  ],
+  "extraPaths": [
+    ".",
+    "zyra_fashion_research/repos/outfit-transformer",
+    "zyra_fashion_research/repos/outfit-transformer/src"
+  ],
+  "venvPath": ".",
+  "venv": ".venv",
+  "executionEnvironments": [
+    {
+      "root": "zyra_fashion_research/repos/outfit-transformer",
+      "extraPaths": [
+        "zyra_fashion_research/repos/outfit-transformer",
+        "zyra_fashion_research/repos/outfit-transformer/src"
+      ]
+    },
+    {
+      "root": ".",
+      "extraPaths": [
+        ".",
+        "zyra_fashion_research/repos/outfit-transformer",
+        "zyra_fashion_research/repos/outfit-transformer/src"
+      ]
+    }
+  ],
+  "reportMissingImports": "warning"
+}

@@ -29,12 +29,17 @@ htmlcov/
 .DS_Store
 
 # Local Model Weights and Cache (Phase U3 Image Encoder)
-models/
+/models/
 zyra/user_encoder/models/
+zyra/product_encoder/models/cache/
 *.task
 *.pt
 *.bin
 *.safetensors
 *.onnx
 *.pth
+*.zip
 huggingface/
+zyra_fashion_research/models/
+zyra/product_encoder/models/
+zyra/zyra_model/models/

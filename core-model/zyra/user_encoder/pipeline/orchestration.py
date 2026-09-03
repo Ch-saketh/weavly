@@ -374,8 +374,23 @@ class UserEncoderPipeline:
                 message=f"Persistence failed: {exc}",
             )
 
-        # 10. Phase U7: User representation persisted successfully (Live Zyra Engine handles recommendations on demand)
-        saved_recs = []
+        # 10. Phase U7: Generate Beta recommendations; store them when PostgreSQL is available.
+        generated_recs = self.persistence_service.generate_beta_recommendations(
+            user_id=user_id,
+            representation=fusion_output.unifiedUserRepresentation,
+        )
+        try:
+            saved_recs = await self.persistence_service.save_user_recommendations(
+                user_id=user_id,
+                recommendations=generated_recs,
+            )
+        except Exception as exc:
+            logger.warning(
+                "Recommendation persistence unavailable for user %s; returning generated recommendations: %s",
+                user_id,
+                exc,
+            )
+            saved_recs = generated_recs
 
         # 11. Complete Phase U7 Pipeline Checkpoint
         return PipelineExecutionResult(
