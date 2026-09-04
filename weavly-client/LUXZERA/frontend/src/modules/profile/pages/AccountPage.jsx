@@ -334,12 +334,12 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
         <div className="grid grid-cols-12 gap-6 lg:gap-8 items-start">
           
           {/* Sticky Sidebar */}
-          <div className="col-span-12 md:col-span-4 lg:col-span-3 md:sticky md:top-24 md:self-start z-10">
+          <div className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3 md:sticky md:top-24 md:self-start z-10">
             <AccountSidebar activeTab={activeTab} onTabChange={(tab) => { setActiveTab(tab); }} />
           </div>
 
           {/* Content Panel */}
-          <div className="col-span-12 md:col-span-8 lg:col-span-9 min-w-0">
+          <div className="col-span-12 md:col-span-7 lg:col-span-8 xl:col-span-9 min-w-0">
             <div className="animate-acct-view-in" key={activeTab}>
               {/* Conditional view rendering depending on active tab */}
               {activeTab === "profile" && (

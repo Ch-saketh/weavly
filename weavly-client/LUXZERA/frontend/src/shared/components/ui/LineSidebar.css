@@ -58,14 +58,14 @@
   color: color-mix(in srgb, var(--accent-color) calc(var(--effect, 0) * 100%), var(--text-color));
   transform: translateX(calc(var(--effect, 0) * var(--max-shift)));
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   white-space: nowrap;
   will-change: transform;
 }
 
 .line-sidebar__index {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  margin-right: 0.6rem;
+  margin-right: 0.45rem;
   font-size: 0.85em;
   font-weight: 800;
   opacity: calc(0.55 + var(--effect, 0) * 0.45);

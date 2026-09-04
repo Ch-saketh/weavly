@@ -22,6 +22,8 @@ import com.luxzera.server.user.entity.UserFitData;
 import com.luxzera.server.user.entity.UserMetadata;
 import com.luxzera.server.user.repository.UserFitDataRepository;
 import com.luxzera.server.user.repository.UserMetadataRepository;
+import com.luxzera.server.user.entity.UserRecommendationImage;
+import com.luxzera.server.user.repository.UserRecommendationImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,7 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     private final UserMetadataRepository userMetadataRepository;
     private final UserFitDataRepository userFitDataRepository;
     private final ProductRepository productRepository;
+    private final UserRecommendationImageRepository userRecommendationImageRepository;
 
     private void enrichRecommendationItemImages(List<ZyraRecommendationItem> items) {
         if (items == null || items.isEmpty()) return;
@@ -105,21 +108,23 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             throw new ZyraValidationException("Authenticated user context is required for recommendation generation");
         }
 
-        // 1. Resolve target gender: prioritize explicit section gender, fallback to UserProfile
-        String userGender = (gender != null && !gender.trim().isEmpty()) ? gender.trim() : null;
-        if (userGender == null) {
-            Optional<UserProfile> profileOpt = userProfileRepository.findByUserId(user.getId());
-            if (profileOpt.isPresent() && profileOpt.get().getGender() != null) {
-                Gender g = profileOpt.get().getGender();
-                if (g == Gender.MALE) {
-                    userGender = "Men";
-                } else if (g == Gender.FEMALE) {
-                    userGender = "Women";
-                } else {
-                    userGender = "Unisex";
-                }
+        // 1. Resolve user profile gender strictly (user's biological/identity profile)
+        String userProfileGender = null;
+        Optional<UserProfile> profileOpt = userProfileRepository.findByUserId(user.getId());
+        if (profileOpt.isPresent() && profileOpt.get().getGender() != null) {
+            Gender g = profileOpt.get().getGender();
+            if (g == Gender.MALE) {
+                userProfileGender = "Men";
+            } else if (g == Gender.FEMALE) {
+                userProfileGender = "Women";
+            } else {
+                userProfileGender = "Unisex";
             }
         }
+
+        // Section gender context from browsing surface (e.g. browsing Men's or Women's section)
+        String sectionGender = (gender != null && !gender.trim().isEmpty()) ? gender.trim() : null;
+        String effectiveCatalogGender = (sectionGender != null) ? sectionGender : userProfileGender;
 
         // 2. Resolve user fit data & rich preferences
         List<String> userOccasions = null;
@@ -149,17 +154,36 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             }
         }
 
+        // 3. Resolve user recommendation and profile images for visual encoder
+        List<String> userImageUrls = new java.util.ArrayList<>();
+        if (profileOpt.isPresent() && profileOpt.get().getAvatarUrl() != null && !profileOpt.get().getAvatarUrl().isBlank()) {
+            userImageUrls.add(profileOpt.get().getAvatarUrl());
+        }
+        try {
+            List<UserRecommendationImage> storedImages = userRecommendationImageRepository.findByUserMetadataUserId(user.getId());
+            if (storedImages != null) {
+                for (UserRecommendationImage img : storedImages) {
+                    if (img.getImageUrl() != null && !img.getImageUrl().isBlank()) {
+                        userImageUrls.add(img.getImageUrl());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Image retrieval notice for userId={}: {}", user.getId(), e.getMessage());
+        }
+
         String targetOccasion = (occasion != null && !occasion.trim().isEmpty()) ? occasion.trim() : primaryOccasion;
 
-        log.info("Generating and persisting personalized recommendations for userId={}, gender={}, occasion={}, prefCats={}, prefStyles={}",
-                user.getId(), userGender, targetOccasion, preferredClothingTypes, preferredStyles);
+        log.info("[ZYRA_RECOMMENDATION] Generating personalized recommendations: userId={}, userProfileGender={}, sectionGender={}, occasion={}, prefCats={}, prefStyles={}, imagesCount={}",
+                user.getId(), userProfileGender, sectionGender, targetOccasion, preferredClothingTypes, preferredStyles, userImageUrls.size());
 
-        // 3. Build rich personalized request payload
+        // 4. Build rich personalized request payload
         com.luxzera.server.zyra.dto.request.ZyraRecommendationRequest requestPayload =
                 com.luxzera.server.zyra.dto.request.ZyraRecommendationRequest.builder()
                         .productId(productId)
                         .topK(topK != null ? topK : 50)
-                        .userGender(userGender)
+                        .userGender(userProfileGender != null ? userProfileGender : effectiveCatalogGender)
+                        .sectionGender(sectionGender)
                         .occasion(targetOccasion)
                         .userOccasions(userOccasions)
                         .preferredCategories(preferredClothingTypes)
@@ -170,6 +194,7 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
                         .avoidedColors(avoidedColors)
                         .budgetRange(budgetRange)
                         .userId(user.getId().toString())
+                        .imageUrls(userImageUrls.isEmpty() ? null : userImageUrls)
                         .build();
 
         // 4. Call inference engine
@@ -188,12 +213,16 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
         enrichRecommendationItemImages(zyraResponse.getRecommendations());
 
         // 5. Map response and user to persistent entity with defensive gender constraint
-        UserRecommendationGeneration generation = ZyraRecommendationMapper.toEntity(user, zyraResponse, targetOccasion, userGender);
+        UserRecommendationGeneration generation = ZyraRecommendationMapper.toEntity(user, zyraResponse, targetOccasion, effectiveCatalogGender);
 
         // 6. Atomically persist generation + items
         UserRecommendationGeneration savedGeneration = generationRepository.save(generation);
-        log.info("Successfully persisted recommendation generation id={} with {} items for user={}",
-                savedGeneration.getId(), savedGeneration.getItems().size(), user.getId());
+        List<String> top10ProductIds = savedGeneration.getItems().stream()
+                .limit(10)
+                .map(item -> item.getProductId())
+                .collect(java.util.stream.Collectors.toList());
+        log.info("[ZYRA_RECOMMENDATION] Successfully persisted recommendation generation: id={}, userId={}, sectionGender={}, occasion={}, itemCount={}, top10ProductIds={}",
+                savedGeneration.getId(), user.getId(), sectionGender, targetOccasion, savedGeneration.getItems().size(), top10ProductIds);
 
         // 7. Return user DTO
         ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(savedGeneration);
@@ -243,13 +272,16 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             Optional<UserRecommendationGeneration> occGen = generationRepository
                     .findLatestByUserIdAndOccasionWithItems(user.getId(), normOcc);
             if (occGen.isPresent() && isGenerationValidAndWearable(occGen.get(), effectiveGender, normOcc)) {
+                log.info("[ZYRA_CACHE] Cache HIT for userId={}, occasion={}, sectionGender={}, generationId={}, itemCount={}",
+                        user.getId(), normOcc, effectiveGender, occGen.get().getId(), occGen.get().getItems().size());
                 ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(occGen.get());
                 filterResponseByGender(responseDto, effectiveGender);
                 enrichRecommendationItemImages(responseDto.getRecommendations());
                 return responseDto;
             }
             // Generate fresh occasion recommendations on demand
-            log.info("No prior or invalid recommendation cache for user={} and occasion={}, generating on demand with gender={}", user.getId(), normOcc, effectiveGender);
+            log.info("[ZYRA_CACHE] Cache MISS for userId={}, occasion={}, sectionGender={}. Generating fresh occasion recommendations.",
+                    user.getId(), normOcc, effectiveGender);
             return generateAndSaveUserRecommendations(user, null, 50, normOcc, effectiveGender);
         }
 

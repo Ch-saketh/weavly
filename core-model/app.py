@@ -98,6 +98,7 @@ def recommend() -> Tuple[Any, int]:
         product_id_str = None
 
     user_gender = data.get("userGender")
+    section_gender = data.get("sectionGender") or data.get("section_gender")
     occasion = data.get("occasion")
     user_occasions = data.get("userOccasions")
     preferred_categories = data.get("preferredCategories") or data.get("preferred_categories")
@@ -109,9 +110,11 @@ def recommend() -> Tuple[Any, int]:
     budget_range = data.get("budgetRange") or data.get("budget_range")
     user_embedding = data.get("userEmbedding") or data.get("user_embedding")
     user_id = data.get("userId") or data.get("user_id")
+    image_urls = data.get("imageUrls") or data.get("image_urls")
+    sizing = data.get("sizing")
 
     # If no product_id, no occasion, and no user profile context provided, error
-    has_user_context = bool(user_gender or occasion or user_occasions or preferred_categories or preferred_styles or user_embedding)
+    has_user_context = bool(user_gender or section_gender or occasion or user_occasions or preferred_categories or preferred_styles or user_embedding or image_urls)
     if product_id_str is None and not has_user_context:
         return jsonify({"error": "productId or user profile context (gender/occasion/preferences) is required"}), 400
 
@@ -158,6 +161,7 @@ def recommend() -> Tuple[Any, int]:
             product_id=product_id_str,
             top_k=top_k,
             user_gender=user_gender,
+            section_gender=section_gender,
             occasion=occasion,
             user_occasions=user_occasions,
             preferred_categories=preferred_categories,
@@ -169,6 +173,8 @@ def recommend() -> Tuple[Any, int]:
             budget_range=budget_range,
             user_embedding=user_embedding,
             user_id=user_id,
+            sizing=sizing,
+            image_urls=image_urls,
         )
     except ValueError as exc:
         return jsonify({"error": str(exc), "productId": product_id_str}), 400
@@ -178,10 +184,11 @@ def recommend() -> Tuple[Any, int]:
 
     latency_ms = round((time.perf_counter() - t_start) * 1000.0, 2)
     logger.info(
-        "[ZYRA] productId=%s occasion=%s userGender=%s prefCats=%s topK=%d latency=%.2fms",
+        "[ZYRA] productId=%s occasion=%s userGender=%s sectionGender=%s prefCats=%s topK=%d latency=%.2fms",
         product_id_str,
         occasion,
         user_gender,
+        section_gender,
         preferred_categories,
         top_k,
         latency_ms,

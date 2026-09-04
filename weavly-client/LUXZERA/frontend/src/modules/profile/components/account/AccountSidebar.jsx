@@ -65,7 +65,7 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
       </div>
 
       {/* ── DESKTOP ARCHITECTURAL LINE SIDEBAR (>= md) ── */}
-      <nav className="hidden md:block w-full bg-[#F5EFEB] border border-[#183B56] p-5 shadow-xs">
+      <nav className="hidden md:block w-full bg-[#F5EFEB] border border-[#183B56] p-4 sm:p-4.5 shadow-xs">
         <div className="mb-4 pb-3 border-b border-[#183B56]/20 flex items-center justify-between">
           <div>
             <span className="text-[9px] font-bold tracking-[0.25em] text-[#5A7184] uppercase block">
@@ -90,11 +90,11 @@ const AccountSidebar = ({ activeTab = 'profile', onTabChange }) => {
           showMarker={true}
           scaleTick={false}
           proximityRadius={90}
-          maxShift={12}
-          markerLength={30}
+          maxShift={8}
+          markerLength={22}
           markerGap={6}
-          itemGap={15}
-          fontSize={0.8125}
+          itemGap={14}
+          fontSize={0.78}
           smoothing={70}
           onItemClick={handleTabClick}
         />

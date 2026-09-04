@@ -59,4 +59,10 @@ public class ZyraRecommendationRequest {
 
     @JsonProperty("userEmbedding")
     private List<Float> userEmbedding;
+
+    @JsonProperty("imageUrls")
+    private List<String> imageUrls;
+
+    @JsonProperty("sectionGender")
+    private String sectionGender;
 }

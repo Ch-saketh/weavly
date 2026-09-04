@@ -33,7 +33,9 @@ export const normalizeRecommendationItem = (item, index = 0) => {
   const gender = item.gender || "Unisex";
   const category = item.category || "Tops";
   const price = Number(item.price || 999);
-  const similarity = Number(item.similarity || item.suitabilityScore || 0.0);
+  const similarity = Number(item.matchScore || item.similarity || item.suitabilityScore || 0.0);
+  const matchScore = Number(item.matchScore || item.similarity || item.suitabilityScore || 0.0);
+  const occasionScore = Number(item.occasionScore || 0.0);
   const rawImg = item.imageUrl || item.image || (item.images && item.images[0]) || null;
   const imageUrl = ensureHttps(rawImg);
   const productUrl = item.productUrl || (productId ? `/product/${productId}` : "#");
@@ -53,6 +55,8 @@ export const normalizeRecommendationItem = (item, index = 0) => {
     basePrice: price,
     similarity,
     suitabilityScore: item.suitabilityScore || similarity,
+    matchScore: matchScore || similarity,
+    occasionScore: occasionScore,
     slot: item.slot || null,
     imageUrl,
     image: imageUrl,

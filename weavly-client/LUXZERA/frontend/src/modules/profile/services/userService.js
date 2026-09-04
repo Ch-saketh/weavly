@@ -83,7 +83,14 @@ export const updateProfile = async (arg1, arg2, arg3) => {
     formData.append("phoneNumber", String(profileData.phoneNumber).trim());
   }
   if (profileData.gender && String(profileData.gender).trim() !== "") {
-    formData.append("gender", String(profileData.gender).trim());
+    const rawG = String(profileData.gender).trim().toUpperCase();
+    let normG = "OTHER";
+    if (rawG === "MEN" || rawG === "MALE" || rawG === "MAN") {
+      normG = "MALE";
+    } else if (rawG === "WOMEN" || rawG === "FEMALE" || rawG === "WOMAN") {
+      normG = "FEMALE";
+    }
+    formData.append("gender", normG);
   }
   if (profileData.dateOfBirth && String(profileData.dateOfBirth).trim() !== "") {
     formData.append("dateOfBirth", String(profileData.dateOfBirth).trim());

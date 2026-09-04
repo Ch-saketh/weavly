@@ -142,7 +142,7 @@ export default function OnboardingPage() {
 
   // ── Form State ─────────────────────────────────────────────────────────────
   const [formData, setFormData] = useState({
-    gender: "Unisex",
+    gender: "FEMALE",
     displayName: user?.name || user?.displayName || "",
     preferredStyles: ["Minimal", "Contemporary"],
     fitPreferences: ["Relaxed"],
@@ -248,8 +248,21 @@ export default function OnboardingPage() {
     setIsSubmitting(true);
     try {
       if (user) {
+        const canonicalGender = formData.gender === "MALE" || formData.gender === "Men"
+          ? "MALE"
+          : formData.gender === "FEMALE" || formData.gender === "Women"
+            ? "FEMALE"
+            : "OTHER";
+
+        // 1. Explicitly persist gender to UserProfile
+        try {
+          await updateProfile({ gender: canonicalGender });
+        } catch (profErr) {
+          console.warn("Profile gender update notice:", profErr);
+        }
+
         const fitPayload = {
-          gender: formData.gender,
+          gender: canonicalGender,
           heightRange: formData.heightRange,
           clothingSize: formData.clothingSize,
           fitPreferences: formData.fitPreferences,
@@ -261,6 +274,12 @@ export default function OnboardingPage() {
         };
         await saveFitData(fitPayload);
         await refreshUser();
+
+        // 3. Emit notification for active UI listeners
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("weavly:profileUpdated"));
+          window.dispatchEvent(new CustomEvent("weavly:fitDataUpdated"));
+        }
       }
     } catch (err) {
       console.warn("Notice: Local profile persisted without remote sync:", err);
@@ -514,22 +533,26 @@ export default function OnboardingPage() {
                   {/* Gender Expression Filter */}
                   <div className="pt-5 border-t border-[#183B56]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <span className="text-xs font-bold uppercase text-[#183B56] block">Preferred Collection Filter</span>
-                      <span className="text-[11px] text-[#5A7184]">Tailors lookbook recommendations to your wardrobe.</span>
+                      <span className="text-xs font-bold uppercase text-[#183B56] block">Primary Collection</span>
+                      <span className="text-[11px] text-[#5A7184]">Explicitly conditions Zyra catalog and sizing intelligence.</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {["Women", "Men", "Unisex"].map((g) => (
+                      {[
+                        { id: "FEMALE", label: "Women" },
+                        { id: "MALE", label: "Men" },
+                        { id: "OTHER", label: "Unisex / All" }
+                      ].map((g) => (
                         <button
-                          key={g}
+                          key={g.id}
                           type="button"
-                          onClick={() => setFormData({ ...formData, gender: g })}
+                          onClick={() => setFormData({ ...formData, gender: g.id })}
                           className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${
-                            formData.gender === g
+                            formData.gender === g.id
                               ? "bg-[#183B56] text-white border-[#183B56]"
                               : "bg-white text-[#183B56] border-[#183B56]/30 hover:border-[#183B56]"
                           }`}
                         >
-                          {g}
+                          {g.label}
                         </button>
                       ))}
                     </div>

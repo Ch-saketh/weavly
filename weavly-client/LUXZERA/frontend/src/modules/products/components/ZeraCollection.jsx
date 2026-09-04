@@ -32,6 +32,7 @@ const ensureHttps = (url) => {
 
 export default function ZeraCollection({
   initialOccasion = "casual",
+  gender = null,
   onProductClick,
 }) {
   const router = useRouter();
@@ -46,7 +47,12 @@ export default function ZeraCollection({
   const [error, setError] = useState(null);
   const [addedProductIds, setAddedProductIds] = useState({});
 
-  const userGender = (() => {
+  const effectiveGender = (() => {
+    if (gender && typeof gender === "string" && gender.trim()) {
+      const g = gender.toLowerCase().trim();
+      if (["male", "men", "man", "boy"].includes(g)) return "Men";
+      if (["female", "women", "woman", "girl"].includes(g)) return "Women";
+    }
     const g = (user?.gender || user?.fitData?.gender || "").toLowerCase().trim();
     if (["male", "men", "man", "boy"].includes(g)) return "Men";
     if (["female", "women", "woman", "girl"].includes(g)) return "Women";
@@ -66,7 +72,7 @@ export default function ZeraCollection({
             try {
               const generated = await generateUserRecommendations({
                 occasion: occParam,
-                gender: userGender,
+                gender: effectiveGender,
                 topK: 50,
               }, 50);
               if (generated?.recommendations?.length > 0) {
@@ -80,7 +86,7 @@ export default function ZeraCollection({
           }
 
           // Fetch latest cached/persisted recommendations
-          const data = await getMyRecommendations({ occasion: occParam, gender: userGender });
+          const data = await getMyRecommendations({ occasion: occParam, gender: effectiveGender });
           if (data?.recommendations?.length > 0) {
             setRecommendations(data.recommendations);
             setMetadata(data.metadata);
@@ -91,7 +97,7 @@ export default function ZeraCollection({
           try {
             const initialGen = await generateUserRecommendations({
               occasion: occParam,
-              gender: userGender,
+              gender: effectiveGender,
               topK: 50,
             }, 50);
             if (initialGen?.recommendations?.length > 0) {
@@ -105,7 +111,7 @@ export default function ZeraCollection({
         }
 
         // 2. Guest or public curation: fetch live occasion recommendations from Zyra V2 via proxy
-        const occasionRecs = await getOccasionRecommendations(occParam, userGender, 50);
+        const occasionRecs = await getOccasionRecommendations(occParam, effectiveGender, 50);
         if (occasionRecs && occasionRecs.length > 0) {
           setRecommendations(occasionRecs);
           setMetadata({ engineVersion: "zyra-v2-beta", count: occasionRecs.length });
@@ -124,7 +130,7 @@ export default function ZeraCollection({
         setLoading(false);
       }
     },
-    [user, selectedOccasion, userGender]
+    [user, selectedOccasion, effectiveGender]
   );
 
   useEffect(() => {

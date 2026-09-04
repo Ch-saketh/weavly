@@ -154,3 +154,7 @@ Zyra V2 is now the active recommendation intelligence engine driving Weavly. The
 - **Hard Budget Enforcement**: All returned items strictly adhere to user budget limits when specified.
 - **Sub-Second Performance**: Average live inference latency of ~800–1,200ms on Apple Silicon MPS with full semantic suitability and OutfitCLIPTransformer scoring.
 - **Zero Mock Degradation**: Fully grounded in real Weavly catalog embeddings and live Zyra V2 service responses.
+- **Real Cross-User Personalization**: Driven by canonical `DataFeatureExtractor` (86D) and `DeterministicProjectionLayer` (150D Structured + 512D Semantic), completely eliminating synthetic/random embeddings.
+- **Onboarding Dual-Persistence**: Gender is explicitly collected and saved to `UserProfile.gender` (enum: `MALE`, `FEMALE`, `OTHER`) and `UserFitData` simultaneously.
+- **Visual Inspiration Ingestion**: User-uploaded inspiration images are embedded via `FashionClipEmbedder` and passed seamlessly from Spring Boot to Zyra V2.
+

@@ -112,12 +112,18 @@ const PALETTE_OPTIONS = [
   { id: "Bold & Graphic", label: "Bold & Graphic", swatches: ["#DC2626", "#000000", "#F59E0B"], desc: "Electric Crimson & Inks" }
 ];
 
+const GENDER_OPTIONS = [
+  { id: "FEMALE", label: "Women's Collection", desc: "Dresses, tops, kurtas, skirts & tailoring" },
+  { id: "MALE", label: "Men's Collection", desc: "Shirts, trousers, blazers, sneakers & streetwear" },
+  { id: "OTHER", label: "Gender-Neutral / All", desc: "Curated unisex, statement pieces & accessories" }
+];
+
 export default function OnboardingModal({ isOpen, onClose }) {
   const { user, refreshUser } = useAuth();
   const [step, setStep] = useState(0);
 
   const [formData, setFormData] = useState({
-    gender: "Unisex",
+    gender: "FEMALE",
     preferredStyles: ["Minimal", "Contemporary"],
     fitPreferences: ["Relaxed"],
     heightRange: "170–179 cm",
@@ -183,8 +189,17 @@ export default function OnboardingModal({ isOpen, onClose }) {
     setIsSubmitting(true);
     try {
       if (user) {
+        const canonicalGender = formData.gender || "FEMALE";
+        // 1. Explicitly persist gender to UserProfile
+        try {
+          await updateProfile({ gender: canonicalGender });
+        } catch (profErr) {
+          console.warn("Profile gender update notice:", profErr);
+        }
+
+        // 2. Persist comprehensive fit data
         const fitPayload = {
-          gender: formData.gender,
+          gender: canonicalGender,
           heightRange: formData.heightRange,
           clothingSize: formData.clothingSize,
           fitPreferences: formData.fitPreferences,
@@ -196,6 +211,12 @@ export default function OnboardingModal({ isOpen, onClose }) {
         };
         await saveFitData(fitPayload);
         await refreshUser();
+
+        // 3. Emit notification for active UI listeners
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("weavly:profileUpdated"));
+          window.dispatchEvent(new CustomEvent("weavly:fitDataUpdated"));
+        }
       }
     } catch (err) {
       console.warn("Notice: Local profile persisted:", err);
@@ -275,33 +296,72 @@ export default function OnboardingModal({ isOpen, onClose }) {
             </div>
           )}
 
-          {/* STEP 1: STYLE IDENTITY */}
+          {/* STEP 1: GENDER & STYLE IDENTITY */}
           {step === 1 && (
             <div className="space-y-6">
-              <div className="space-y-1">
-                <h3 className="text-2xl font-extrabold uppercase text-[#111827]">
-                  What best describes your style?
-                </h3>
-                <p className="text-xs text-[#4B5563]">Select one or more aesthetic directions.</p>
+              {/* Primary Collection Selection */}
+              <div className="space-y-2 pb-5 border-b border-[#D2D8D2]">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-extrabold uppercase text-[#111827]">
+                    Select Primary Collection
+                  </h3>
+                  <p className="text-xs text-[#4B5563]">
+                    Explicitly calibrates Zyra catalog constraints to your preferred wardrobe collection.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                  {GENDER_OPTIONS.map((g) => {
+                    const isSelected = formData.gender === g.id;
+                    return (
+                      <div
+                        key={g.id}
+                        onClick={() => setFormData((prev) => ({ ...prev, gender: g.id }))}
+                        className={`p-4 border cursor-pointer transition-all ${
+                          isSelected
+                            ? "bg-black text-white border-black ring-2 ring-black"
+                            : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-xs font-extrabold uppercase">{g.label}</h4>
+                          {isSelected && <Check size={14} className="text-white" />}
+                        </div>
+                        <p className={`text-[10px] mt-1 ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
+                          {g.desc}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {STYLE_OPTIONS.map((style) => {
-                  const isSelected = formData.preferredStyles.includes(style.id);
-                  return (
-                    <div
-                      key={style.id}
-                      onClick={() => toggleArrayItem("preferredStyles", style.id)}
-                      className={`p-4 border cursor-pointer transition-all ${
-                        isSelected ? "bg-black text-white border-black" : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
-                      }`}
-                    >
-                      <h4 className="text-xs font-extrabold uppercase">{style.label}</h4>
-                      <p className={`text-[10px] mt-1 ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
-                        {style.mood}
-                      </p>
-                    </div>
-                  );
-                })}
+
+              {/* Aesthetic Directions */}
+              <div className="space-y-2">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-extrabold uppercase text-[#111827]">
+                    What best describes your style?
+                  </h3>
+                  <p className="text-xs text-[#4B5563]">Select one or more aesthetic directions.</p>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                  {STYLE_OPTIONS.map((style) => {
+                    const isSelected = formData.preferredStyles.includes(style.id);
+                    return (
+                      <div
+                        key={style.id}
+                        onClick={() => toggleArrayItem("preferredStyles", style.id)}
+                        className={`p-4 border cursor-pointer transition-all ${
+                          isSelected ? "bg-black text-white border-black" : "bg-white text-[#111827] border-[#D2D8D2] hover:bg-[#DCE2DC]"
+                        }`}
+                      >
+                        <h4 className="text-xs font-extrabold uppercase">{style.label}</h4>
+                        <p className={`text-[10px] mt-1 ${isSelected ? "text-neutral-300" : "text-[#4B5563]"}`}>
+                          {style.mood}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}

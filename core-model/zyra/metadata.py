@@ -165,7 +165,7 @@ def extract_user_max_budget(user_profile_or_budget: Any) -> Optional[float]:
     # Dict / profile object
     if isinstance(user_profile_or_budget, dict):
         # 1. Direct explicit maximum fields (top priority)
-        for k in ["user_max_budget", "max_budget", "maxBudget", "budget_max", "budget_ceiling"]:
+        for k in ["user_max_budget", "max_budget", "maxBudget", "budget_max", "budget_ceiling", "max", "max_price", "maxPrice"]:
             if k in user_profile_or_budget and user_profile_or_budget[k] is not None:
                 val = user_profile_or_budget[k]
                 if isinstance(val, (int, float)) and val > 0:
