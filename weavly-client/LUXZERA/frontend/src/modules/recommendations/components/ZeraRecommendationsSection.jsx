@@ -20,42 +20,78 @@ export default function ZeraRecommendationsSection({
   title = "Zyra Recommendations",
   subtitle = "Curated For You",
   genderFilter = null,
+  occasion = null,
   maxItems = 50,
   className = "",
 }) {
   const router = useRouter();
-  const { recommendations, loading, isEmpty } = useZeraRecommendations();
+  const { recommendations, loading, error, isEmpty, refetch } = useZeraRecommendations({
+    gender: genderFilter,
+    occasion,
+  });
   const { toggleWardrobe, isSaved } = useWardrobe();
   const { addToCart } = useCart();
   const scrollContainerRef = useRef(null);
   const [addedProductIds, setAddedProductIds] = useState({});
 
   if (loading) {
-    return <RecommendationCarouselSkeleton />;
+    return (
+      <section className={`w-full bg-[#F5EFEB] ${className}`}>
+        <div className="py-4 px-6 border-b border-[#183B56] flex justify-between items-center">
+          <div>
+            <div className="text-sm sm:text-base font-bold text-[#183B56] flex items-center gap-2">
+              <Sparkles size={14} className="text-[#183B56] animate-spin" />
+              <span>{title}</span>
+            </div>
+            <p className="text-xs text-[#5A7184] pt-0.5 animate-pulse">
+              Generating your personalized looks with Zyra V2 Fashion Intelligence...
+            </p>
+          </div>
+        </div>
+        <RecommendationCarouselSkeleton />
+      </section>
+    );
+  }
+
+  if (error && (!recommendations || recommendations.length === 0)) {
+    return (
+      <section className={`w-full bg-[#F5EFEB] p-8 text-center border-b border-[#183B56] ${className}`}>
+        <div className="max-w-md mx-auto space-y-3">
+          <p className="text-sm font-bold text-[#183B56]">Zyra V2 Recommendation Engine Note</p>
+          <p className="text-xs text-[#5A7184]">{error}</p>
+          <button
+            onClick={() => refetch(true)}
+            className="px-4 py-2 bg-[#183B56] text-white text-xs font-bold uppercase tracking-wider border-none cursor-pointer hover:bg-[#102A43] transition-colors"
+          >
+            Retry Zyra Engine
+          </button>
+        </div>
+      </section>
+    );
   }
 
   if (isEmpty) {
     return null;
   }
 
-  // Defensive gender filtering
+  // Defensive gender verification (backend request already carries gender context)
   let filtered = recommendations;
   if (genderFilter) {
     const gNorm = genderFilter.trim().toLowerCase();
     if (gNorm.startsWith("men") || gNorm.startsWith("male") || gNorm.startsWith("man")) {
       filtered = recommendations.filter((item) => {
         const g = (item.gender || item.department || "").toLowerCase();
-        return g === "men" || g === "unisex" || g === "male";
+        const n = (item.name || "").toLowerCase();
+        return g !== "women" && g !== "female" && !n.includes("women") && !n.includes("dress") && !n.includes("saree") && !n.includes("kurti");
       });
     } else if (gNorm.startsWith("wom") || gNorm.startsWith("female")) {
       filtered = recommendations.filter((item) => {
         const g = (item.gender || item.department || "").toLowerCase();
-        return g === "women" || g === "unisex" || g === "female";
-      });
-    } else if (gNorm.startsWith("kid")) {
-      filtered = recommendations.filter((item) => {
-        const g = (item.gender || item.department || "").toLowerCase();
-        return g === "kids" || g === "boy" || g === "girl";
+        const n = (item.name || "").toLowerCase();
+        const cleanName = n.replace(/women/g, "").replace(/woman/g, "");
+        const words = cleanName.split(/\s+/);
+        const hasMenWord = words.includes("men") || words.includes("male") || words.includes("boy") || words.includes("boys") || cleanName.includes("men's");
+        return g !== "men" && g !== "male" && !hasMenWord;
       });
     }
   }

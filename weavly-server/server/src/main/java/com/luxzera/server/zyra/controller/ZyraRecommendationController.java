@@ -76,12 +76,14 @@ public class ZyraRecommendationController {
         String productId = request != null ? request.getProductId() : null;
         Integer topK = request != null ? request.getTopK() : 50;
         String occasion = request != null ? request.getOccasion() : null;
+        String gender = request != null ? request.getGender() : null;
 
-        log.info("Received recommendation generation request for user={}, productId={}, topK={}, occasion={}",
-                user.getId(), productId, topK, occasion);
+        log.info("Received recommendation generation request for user={}, productId={}, topK={}, occasion={}, gender={}",
+                user.getId(), productId, topK, occasion, gender);
 
-        ZyraUserRecommendationGenerationResponse response = zyraRecommendationService
-                .generateAndSaveUserRecommendations(user, productId, topK, occasion);
+        ZyraUserRecommendationGenerationResponse response = (gender != null && !gender.trim().isEmpty())
+                ? zyraRecommendationService.generateAndSaveUserRecommendations(user, productId, topK, occasion, gender)
+                : zyraRecommendationService.generateAndSaveUserRecommendations(user, productId, topK, occasion);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -93,13 +95,15 @@ public class ZyraRecommendationController {
     @GetMapping({"/my", "/my/latest"})
     public ResponseEntity<ZyraUserRecommendationGenerationResponse> getLatestUserRecommendations(
             @RequestParam(value = "occasion", required = false) String occasion,
+            @RequestParam(value = "gender", required = false) String gender,
             Principal principal
     ) {
         User user = getAuthenticatedUser(principal);
-        log.info("Fetching latest Zera recommendations for user={}, occasion={}", user.getId(), occasion);
+        log.info("Fetching latest Zera recommendations for user={}, occasion={}, gender={}", user.getId(), occasion, gender);
 
-        ZyraUserRecommendationGenerationResponse response = zyraRecommendationService
-                .getLatestUserRecommendations(user, occasion);
+        ZyraUserRecommendationGenerationResponse response = (gender != null && !gender.trim().isEmpty())
+                ? zyraRecommendationService.getLatestUserRecommendations(user, occasion, gender)
+                : zyraRecommendationService.getLatestUserRecommendations(user, occasion);
 
         return ResponseEntity.ok(response);
     }

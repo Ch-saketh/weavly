@@ -10,6 +10,7 @@ import {
   isStrictlyWomenProduct,
   isStrictlyFootwearProduct,
 } from "@/modules/home/components/FamilyStudioHome";
+import ZeraRecommendationsSection from "@/modules/recommendations/components/ZeraRecommendationsSection";
 
 const NEUTRAL_FALLBACK_IMAGE =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800' fill='none'%3E%3Crect width='600' height='800' fill='%23DFE7ED'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='16' font-weight='700' fill='%23183B56' text-anchor='middle' letter-spacing='2'%3EWEAVLY%3C/text%3E%3C/svg%3E";
@@ -241,6 +242,7 @@ export default function WomenPage() {
   const [footwearAndBags, setFootwearAndBags] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const zyraRef = useRef(null);
   const dressesRef = useRef(null);
   const topsRef = useRef(null);
   const bottomsRef = useRef(null);
@@ -341,6 +343,16 @@ export default function WomenPage() {
               </div>
               <div className="space-y-2">
                 <button
+                  onClick={() => scrollToSection(zyraRef)}
+                  className="w-full text-left py-3 px-4 border border-[#183B56] bg-[#183B56] text-white hover:bg-[#102A43] font-bold text-xs sm:text-sm flex items-center justify-between transition-colors cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Sparkles size={12} />
+                    <span>Zyra Personalized Picks</span>
+                  </span>
+                  <span>↓</span>
+                </button>
+                <button
                   onClick={() => scrollToSection(dressesRef)}
                   className="w-full text-left py-3 px-4 border border-[#183B56] bg-transparent hover:bg-[#183B56] hover:text-white text-[#183B56] font-bold text-xs sm:text-sm flex items-center justify-between transition-colors cursor-pointer"
                 >
@@ -417,6 +429,15 @@ export default function WomenPage() {
 
           </div>
         </section>
+
+        {/* ── ZYRA PERSONALIZED RECOMMENDATIONS (100% WOMEN'S PIECES) ── */}
+        <div ref={zyraRef} className="border border-[#183B56] shadow-xs">
+          <ZeraRecommendationsSection
+            title="Zyra Atelier Picks for Women"
+            subtitle="Personalized Women's Curation Powered by Zyra V2"
+            genderFilter="Women"
+          />
+        </div>
 
         {/* ── SHELF 1: DRESSES & GOWNS ── */}
         <div ref={dressesRef}>

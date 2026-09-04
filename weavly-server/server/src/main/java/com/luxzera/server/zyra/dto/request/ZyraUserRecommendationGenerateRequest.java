@@ -22,6 +22,9 @@ public class ZyraUserRecommendationGenerateRequest {
     @JsonProperty("occasion")
     private String occasion;
 
+    @JsonProperty("gender")
+    private String gender;
+
     @Min(value = 1, message = "topK must be at least 1")
     @Max(value = 50, message = "topK cannot exceed 50")
     @JsonProperty("topK")

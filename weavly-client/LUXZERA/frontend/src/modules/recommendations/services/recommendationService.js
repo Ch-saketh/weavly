@@ -29,11 +29,11 @@ export const normalizeRecommendationItem = (item, index = 0) => {
   const rank = item.rank || index + 1;
   const productId = String(item.productId || item.id || "");
   const name = item.name || "Curated Fashion Item";
-  const brand = item.brand || "Luxzera Studio";
+  const brand = item.brand || "Weavly";
   const gender = item.gender || "Unisex";
   const category = item.category || "Tops";
   const price = Number(item.price || 999);
-  const similarity = Number(item.similarity || 0.0);
+  const similarity = Number(item.similarity || item.suitabilityScore || 0.0);
   const rawImg = item.imageUrl || item.image || (item.images && item.images[0]) || null;
   const imageUrl = ensureHttps(rawImg);
   const productUrl = item.productUrl || (productId ? `/product/${productId}` : "#");
@@ -52,6 +52,8 @@ export const normalizeRecommendationItem = (item, index = 0) => {
     salePrice: price,
     basePrice: price,
     similarity,
+    suitabilityScore: item.suitabilityScore || similarity,
+    slot: item.slot || null,
     imageUrl,
     image: imageUrl,
     productUrl,
@@ -80,9 +82,10 @@ export const normalizeRecommendationCollection = (data) => {
     return {
       generationId: null,
       productId: null,
-      modelVersion: "zyra-v1-p9",
+      modelVersion: "zyra-v2-beta",
       count: 0,
       generatedAt: null,
+      metadata: null,
       recommendations: [],
     };
   }
@@ -93,9 +96,10 @@ export const normalizeRecommendationCollection = (data) => {
   return {
     generationId: data.generationId || null,
     productId: data.productId || null,
-    modelVersion: data.modelVersion || "zyra-v1-p9",
+    modelVersion: data.modelVersion || "zyra-v2-beta",
     count: recommendations.length,
     generatedAt: data.generatedAt || null,
+    metadata: data.metadata || null,
     recommendations,
   };
 };
@@ -104,15 +108,31 @@ export const normalizeRecommendationCollection = (data) => {
  * Fetch the authenticated user's latest persisted Zera recommendations.
  * GET /api/recommendations/my
  */
-export const getMyRecommendations = async (occasion = null) => {
+export const getMyRecommendations = async (options = null) => {
   if (!isLoggedIn()) {
     return normalizeRecommendationCollection(null);
   }
 
+  let occasion = null;
+  let gender = null;
+  if (typeof options === "string") {
+    occasion = options;
+  } else if (options && typeof options === "object") {
+    occasion = options.occasion || null;
+    gender = options.gender || null;
+  }
+
   const token = getToken();
   let url = `${getBaseUrl()}/recommendations/my`;
+  const queryParams = [];
   if (occasion) {
-    url += `?occasion=${encodeURIComponent(occasion)}`;
+    queryParams.push(`occasion=${encodeURIComponent(occasion)}`);
+  }
+  if (gender) {
+    queryParams.push(`gender=${encodeURIComponent(gender)}`);
+  }
+  if (queryParams.length > 0) {
+    url += `?${queryParams.join("&")}`;
   }
 
   const res = await fetch(url, {
@@ -159,6 +179,9 @@ export const generateUserRecommendations = async (params = {}, fallbackTopK = 50
     }
     if (params.occasion && String(params.occasion).trim()) {
       payload.occasion = String(params.occasion).trim();
+    }
+    if (params.gender && String(params.gender).trim()) {
+      payload.gender = String(params.gender).trim();
     }
     payload.topK = typeof params.topK === "number" && params.topK >= 1 && params.topK <= 50 ? params.topK : (fallbackTopK || 50);
   }

@@ -89,21 +89,35 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             Integer topK,
             String occasion
     ) {
+        return generateAndSaveUserRecommendations(user, productId, topK, occasion, null);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ZyraUserRecommendationGenerationResponse generateAndSaveUserRecommendations(
+            User user,
+            String productId,
+            Integer topK,
+            String occasion,
+            String gender
+    ) {
         if (user == null || user.getId() == null) {
             throw new ZyraValidationException("Authenticated user context is required for recommendation generation");
         }
 
-        // 1. Resolve user profile gender from authenticated Principal / User context
-        String userGender = null;
-        Optional<UserProfile> profileOpt = userProfileRepository.findByUserId(user.getId());
-        if (profileOpt.isPresent() && profileOpt.get().getGender() != null) {
-            Gender g = profileOpt.get().getGender();
-            if (g == Gender.MALE) {
-                userGender = "Men";
-            } else if (g == Gender.FEMALE) {
-                userGender = "Women";
-            } else {
-                userGender = "Unisex";
+        // 1. Resolve target gender: prioritize explicit section gender, fallback to UserProfile
+        String userGender = (gender != null && !gender.trim().isEmpty()) ? gender.trim() : null;
+        if (userGender == null) {
+            Optional<UserProfile> profileOpt = userProfileRepository.findByUserId(user.getId());
+            if (profileOpt.isPresent() && profileOpt.get().getGender() != null) {
+                Gender g = profileOpt.get().getGender();
+                if (g == Gender.MALE) {
+                    userGender = "Men";
+                } else if (g == Gender.FEMALE) {
+                    userGender = "Women";
+                } else {
+                    userGender = "Unisex";
+                }
             }
         }
 
@@ -196,23 +210,31 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     @Override
     @Transactional
     public ZyraUserRecommendationGenerationResponse getLatestUserRecommendations(User user, String occasion) {
+        return getLatestUserRecommendations(user, occasion, null);
+    }
+
+    @Override
+    @Transactional
+    public ZyraUserRecommendationGenerationResponse getLatestUserRecommendations(User user, String occasion, String gender) {
         if (user == null || user.getId() == null) {
             throw new ZyraValidationException("Authenticated user context is required");
         }
 
-        log.debug("Retrieving latest Zera recommendations for userId={}, occasion={}", user.getId(), occasion);
+        log.debug("Retrieving latest Zera recommendations for userId={}, occasion={}, gender={}", user.getId(), occasion, gender);
 
-        // 1. Resolve current user profile gender
-        String currentUserGender = null;
-        Optional<UserProfile> profileOpt = userProfileRepository.findByUserId(user.getId());
-        if (profileOpt.isPresent() && profileOpt.get().getGender() != null) {
-            Gender g = profileOpt.get().getGender();
-            if (g == Gender.MALE) {
-                currentUserGender = "Men";
-            } else if (g == Gender.FEMALE) {
-                currentUserGender = "Women";
-            } else {
-                currentUserGender = "Unisex";
+        // 1. Resolve effective gender: prioritize explicit section gender, fallback to user profile
+        String effectiveGender = (gender != null && !gender.trim().isEmpty()) ? gender.trim() : null;
+        if (effectiveGender == null) {
+            Optional<UserProfile> profileOpt = userProfileRepository.findByUserId(user.getId());
+            if (profileOpt.isPresent() && profileOpt.get().getGender() != null) {
+                Gender g = profileOpt.get().getGender();
+                if (g == Gender.MALE) {
+                    effectiveGender = "Men";
+                } else if (g == Gender.FEMALE) {
+                    effectiveGender = "Women";
+                } else {
+                    effectiveGender = "Unisex";
+                }
             }
         }
 
@@ -220,28 +242,28 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
             String normOcc = occasion.trim().toLowerCase();
             Optional<UserRecommendationGeneration> occGen = generationRepository
                     .findLatestByUserIdAndOccasionWithItems(user.getId(), normOcc);
-            if (occGen.isPresent() && isGenerationValidAndWearable(occGen.get(), currentUserGender, normOcc)) {
+            if (occGen.isPresent() && isGenerationValidAndWearable(occGen.get(), effectiveGender, normOcc)) {
                 ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(occGen.get());
-                filterResponseByGender(responseDto, currentUserGender);
+                filterResponseByGender(responseDto, effectiveGender);
                 enrichRecommendationItemImages(responseDto.getRecommendations());
                 return responseDto;
             }
             // Generate fresh occasion recommendations on demand
-            log.info("No prior or invalid recommendation cache for user={} and occasion={}, generating on demand", user.getId(), normOcc);
-            return generateAndSaveUserRecommendations(user, null, 50, normOcc);
+            log.info("No prior or invalid recommendation cache for user={} and occasion={}, generating on demand with gender={}", user.getId(), normOcc, effectiveGender);
+            return generateAndSaveUserRecommendations(user, null, 50, normOcc, effectiveGender);
         }
 
         UserRecommendationGeneration generation = generationRepository.findLatestByUserIdWithItems(user.getId())
                 .or(() -> generationRepository.findFirstByUserIdOrderByGeneratedAtDesc(user.getId()))
                 .orElse(null);
 
-        if (generation == null || !isGenerationValidAndWearable(generation, currentUserGender, null)) {
-            log.info("Generating fresh recommendations for user={} matching gender={}", user.getId(), currentUserGender);
-            return generateAndSaveUserRecommendations(user, null, 50, null);
+        if (generation == null || !isGenerationValidAndWearable(generation, effectiveGender, null)) {
+            log.info("Generating fresh recommendations for user={} matching gender={}", user.getId(), effectiveGender);
+            return generateAndSaveUserRecommendations(user, null, 50, null, effectiveGender);
         }
 
         ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(generation);
-        filterResponseByGender(responseDto, currentUserGender);
+        filterResponseByGender(responseDto, effectiveGender);
         enrichRecommendationItemImages(responseDto.getRecommendations());
         return responseDto;
     }

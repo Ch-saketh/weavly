@@ -54,7 +54,7 @@ public final class ZyraRecommendationMapper {
                 .user(user)
                 .queryProductId(qPid)
                 .occasion(occasion != null ? occasion.toLowerCase() : null)
-                .modelVersion(zyraResponse.getModelVersion() != null ? zyraResponse.getModelVersion() : "zyra-v1-p9")
+                .modelVersion(zyraResponse.getModelVersion() != null ? zyraResponse.getModelVersion() : "zyra-v2-beta")
                 .itemCount(0)
                 .candidateK(meta != null ? meta.getCandidateK() : null)
                 .finalK(meta != null ? meta.getFinalK() : null)

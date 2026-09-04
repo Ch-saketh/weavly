@@ -443,6 +443,7 @@ export default function ProductDetailPage() {
         <ZeraRecommendationsSection
           title="Pairs Well With"
           subtitle="Zyra Curated Selections"
+          genderFilter={product?.gender}
         />
       </div>
 

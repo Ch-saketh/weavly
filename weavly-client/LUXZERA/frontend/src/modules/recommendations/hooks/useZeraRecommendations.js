@@ -6,71 +6,131 @@ import { isLoggedIn } from "@/shared/utils/token";
 import {
   getMyRecommendations,
   generateUserRecommendations,
+  getOccasionRecommendations,
 } from "@/modules/recommendations/services/recommendationService";
 
 /**
- * Hook to retrieve and manage the user's latest Zera recommendation collection.
+ * Hook to retrieve and manage Zyra V2 recommendation collections across discovery surfaces.
  * 
- * Rules:
- * - When unauthenticated: sets isEmpty=true, loading=false, DOES NOT make protected API calls.
- * - When authenticated: fetches GET /api/recommendations/my (read-only, does not trigger inference).
- * - Avoids duplicate calls on component re-renders.
+ * Supports:
+ * - Homepage personalization (inheriting user profile gender)
+ * - Section-specific context (e.g. Women section -> gender: "Women", Men section -> gender: "Men")
+ * - Occasion conditioning
+ * - Pure Zyra V2 intelligence without mock data or random fallbacks
+ *
+ * @param {Object} [options]
+ * @param {string} [options.gender] - Explicit section gender constraint ('Men' or 'Women')
+ * @param {string} [options.occasion] - Target occasion ('casual', 'formal', 'festive', etc.)
+ * @param {boolean} [options.autoFetch=true] - Whether to fetch automatically on mount/context change
  */
-export function useZeraRecommendations() {
+export function useZeraRecommendations(options = {}) {
+  const { gender: explicitGender = null, occasion = null, autoFetch = true } = options || {};
   const { user } = useAuth();
+
   const [collection, setCollection] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const fetchedRef = useRef(false);
 
-  const fetchRecommendations = useCallback(async (occasion = null) => {
-    setLoading(true);
-    setError(null);
-    try {
-      if (isLoggedIn() || user) {
-        const data = await getMyRecommendations(occasion);
-        if (data && data.recommendations && data.recommendations.length > 0) {
-          setCollection(data);
-          setRecommendations(data.recommendations);
-          return;
+  // Determine effective gender context
+  const effectiveGender = (() => {
+    if (explicitGender && typeof explicitGender === "string") {
+      const g = explicitGender.trim().toLowerCase();
+      if (g.startsWith("men") || g.startsWith("male")) return "Men";
+      if (g.startsWith("wom") || g.startsWith("female")) return "Women";
+    }
+    const userGender = (user?.gender || user?.fitData?.gender || "").trim().toLowerCase();
+    if (userGender.startsWith("men") || userGender.startsWith("male")) return "Men";
+    if (userGender.startsWith("wom") || userGender.startsWith("female")) return "Women";
+    return "Women";
+  })();
+
+  const fetchRecommendations = useCallback(
+    async (forceRefresh = false) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const targetOccasion = occasion || "casual";
+
+        if (isLoggedIn() || user) {
+          // If forceRefresh is requested, generate fresh personalized recommendations directly
+          if (forceRefresh) {
+            try {
+              const freshData = await generateUserRecommendations(
+                { occasion: targetOccasion, gender: effectiveGender, topK: 50 },
+                50
+              );
+              if (freshData?.recommendations?.length > 0) {
+                setCollection(freshData);
+                setRecommendations(freshData.recommendations);
+                return;
+              }
+            } catch (genErr) {
+              console.warn("Personalized generation on refresh note:", genErr.message);
+            }
+          }
+
+          // 1. Retrieve latest user recommendations for this gender/occasion context
+          const data = await getMyRecommendations({ occasion: targetOccasion, gender: effectiveGender });
+          if (data?.recommendations?.length > 0) {
+            setCollection(data);
+            setRecommendations(data.recommendations);
+            return;
+          }
+
+          // 2. If no persisted recommendations yet, trigger initial generation
+          try {
+            const initialGen = await generateUserRecommendations(
+              { occasion: targetOccasion, gender: effectiveGender, topK: 50 },
+              50
+            );
+            if (initialGen?.recommendations?.length > 0) {
+              setCollection(initialGen);
+              setRecommendations(initialGen.recommendations);
+              return;
+            }
+          } catch (initErr) {
+            console.warn("Initial user recommendation generation notice:", initErr.message);
+          }
         }
-      }
-      // Guest or first-time user fallback: fetch curated benchmark Zyra recommendations
-      const { getProductRecommendations } = await import("@/modules/recommendations/services/recommendationService");
-      const publicRecs = await getProductRecommendations("10009781", 50);
-      if (publicRecs && publicRecs.length > 0) {
-        setCollection({
-          generationId: "public-curated",
-          productId: "10009781",
-          modelVersion: "zyra-v1-p9",
-          count: publicRecs.length,
-          recommendations: publicRecs,
-        });
-        setRecommendations(publicRecs);
-      } else {
-        setCollection(null);
+
+        // 3. Guest or public curation: fetch live occasion recommendations from Zyra V2 via proxy
+        const publicRecs = await getOccasionRecommendations(targetOccasion, effectiveGender, 50);
+        if (publicRecs && publicRecs.length > 0) {
+          setCollection({
+            generationId: `zyra-v2-${effectiveGender.toLowerCase()}-${targetOccasion}`,
+            productId: null,
+            modelVersion: "zyra-v2-beta",
+            count: publicRecs.length,
+            recommendations: publicRecs,
+          });
+          setRecommendations(publicRecs);
+        } else {
+          setCollection(null);
+          setRecommendations([]);
+        }
+      } catch (err) {
+        console.warn("Zyra V2 recommendation hook notice:", err.message);
+        setError(err.message);
         setRecommendations([]);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.warn("Zera recommendation retrieval note:", err.message);
-      setError(err.message);
-      setRecommendations([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);
+    },
+    [user, effectiveGender, occasion]
+  );
 
+  // Trigger fetch when context changes (prevents cross-section/cross-user stale state)
   useEffect(() => {
-    if (!fetchedRef.current) {
-      fetchedRef.current = true;
-      fetchRecommendations();
+    if (autoFetch) {
+      fetchRecommendations(false);
     }
-  }, [fetchRecommendations]);
+  }, [autoFetch, fetchRecommendations]);
 
+  // Listen for profile or fitData updates to refresh recommendations
   useEffect(() => {
     const handleProfileUpdate = () => {
-      fetchRecommendations();
+      fetchRecommendations(true);
     };
     window.addEventListener("weavly:profileUpdated", handleProfileUpdate);
     window.addEventListener("weavly:fitDataUpdated", handleProfileUpdate);
@@ -82,11 +142,15 @@ export function useZeraRecommendations() {
 
   const triggerGeneration = useCallback(
     async (params = {}, topK = 50) => {
-      if (!isLoggedIn() && !user) return null;
       setLoading(true);
       setError(null);
       try {
-        const data = await generateUserRecommendations(params, topK);
+        const generationParams = {
+          gender: effectiveGender,
+          occasion: occasion || "casual",
+          ...params,
+        };
+        const data = await generateUserRecommendations(generationParams, topK);
         setCollection(data);
         setRecommendations(data.recommendations || []);
         return data;
@@ -97,7 +161,7 @@ export function useZeraRecommendations() {
         setLoading(false);
       }
     },
-    [user]
+    [effectiveGender, occasion]
   );
 
   const isEmpty = !loading && (!recommendations || recommendations.length === 0);
@@ -108,7 +172,8 @@ export function useZeraRecommendations() {
     loading,
     error,
     isEmpty,
-    refetch: () => fetchRecommendations(true),
+    refetch: (force = true) => fetchRecommendations(force),
     triggerGeneration,
   };
 }
+

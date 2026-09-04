@@ -6,7 +6,6 @@ import { Sparkles, RefreshCw, ShoppingBag, AlertCircle, Bookmark, Loader2 } from
 import { useAuth } from "@/modules/auth/store/useAuth";
 import { useWardrobe } from "@/modules/wishlist/store/WardrobeContext";
 import { useCart } from "@/modules/cart/store/CartContext";
-import { getProducts } from "@/modules/products/services/productService";
 import {
   getMyRecommendations,
   generateUserRecommendations,
@@ -32,7 +31,7 @@ const ensureHttps = (url) => {
 };
 
 export default function ZeraCollection({
-  initialOccasion = "college",
+  initialOccasion = "casual",
   onProductClick,
 }) {
   const router = useRouter();
@@ -42,13 +41,13 @@ export default function ZeraCollection({
 
   const [selectedOccasion, setSelectedOccasion] = useState(initialOccasion);
   const [recommendations, setRecommendations] = useState([]);
+  const [metadata, setMetadata] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [addedProductIds, setAddedProductIds] = useState({});
 
-  const userId = user?.id || user?.userId || user?.email || "anonymous_user";
   const userGender = (() => {
-    const g = (user?.gender || "").toLowerCase();
+    const g = (user?.gender || user?.fitData?.gender || "").toLowerCase().trim();
     if (["male", "men", "man", "boy"].includes(g)) return "Men";
     if (["female", "women", "woman", "girl"].includes(g)) return "Women";
     return "Women";
@@ -59,49 +58,68 @@ export default function ZeraCollection({
       setLoading(true);
       setError(null);
       try {
-        const occParam = selectedOccasion && selectedOccasion.toLowerCase() !== "all" ? selectedOccasion : "college";
+        const occParam = selectedOccasion && selectedOccasion.toLowerCase() !== "all" ? selectedOccasion : "casual";
 
-        // 1. Fetch live occasion-specific recommendations from Zyra Engine
-        const occasionRecs = await getOccasionRecommendations(occParam, userGender, 50);
-        if (occasionRecs && occasionRecs.length > 0) {
-          setRecommendations(occasionRecs);
-          return;
-        }
-
-        // 2. If user is authenticated, check personal recommendation profile
+        // 1. If user is authenticated, use their personalized profile (budget, styles, occasions)
         if (user) {
           if (forceRefresh) {
             try {
               const generated = await generateUserRecommendations({
                 occasion: occParam,
+                gender: userGender,
                 topK: 50,
-              });
-              if (generated.recommendations && generated.recommendations.length > 0) {
+              }, 50);
+              if (generated?.recommendations?.length > 0) {
                 setRecommendations(generated.recommendations);
+                setMetadata(generated.metadata);
                 return;
               }
             } catch (genErr) {
-              console.warn("Recommendation generation notice:", genErr);
+              console.warn("Personalized generation on refresh note:", genErr.message);
             }
           }
 
-          const data = await getMyRecommendations(occParam);
-          if (data.recommendations && data.recommendations.length > 0) {
+          // Fetch latest cached/persisted recommendations
+          const data = await getMyRecommendations({ occasion: occParam, gender: userGender });
+          if (data?.recommendations?.length > 0) {
             setRecommendations(data.recommendations);
+            setMetadata(data.metadata);
             return;
+          }
+
+          // If no persisted recommendations yet, generate fresh ones
+          try {
+            const initialGen = await generateUserRecommendations({
+              occasion: occParam,
+              gender: userGender,
+              topK: 50,
+            }, 50);
+            if (initialGen?.recommendations?.length > 0) {
+              setRecommendations(initialGen.recommendations);
+              setMetadata(initialGen.metadata);
+              return;
+            }
+          } catch (initErr) {
+            console.warn("Initial user recommendation generation notice:", initErr.message);
           }
         }
 
-        const fallback = await getProducts({ limit: 16, gender: userGender });
-        setRecommendations(fallback || []);
-      } catch (err) {
-        console.warn("Zera recommendation retrieval note:", err.message);
-        try {
-          const fallback = await getProducts({ limit: 16, gender: userGender });
-          setRecommendations(fallback || []);
-        } catch (catErr) {
-          setRecommendations([]);
+        // 2. Guest or public curation: fetch live occasion recommendations from Zyra V2 via proxy
+        const occasionRecs = await getOccasionRecommendations(occParam, userGender, 50);
+        if (occasionRecs && occasionRecs.length > 0) {
+          setRecommendations(occasionRecs);
+          setMetadata({ engineVersion: "zyra-v2-beta", count: occasionRecs.length });
+          return;
         }
+
+        // No mock data or random catalog fallback - keep state empty to let user know
+        setRecommendations([]);
+        setMetadata(null);
+      } catch (err) {
+        console.warn("Zyra V2 recommendation retrieval note:", err.message);
+        setError(err.message);
+        setRecommendations([]);
+        setMetadata(null);
       } finally {
         setLoading(false);
       }
@@ -158,11 +176,18 @@ export default function ZeraCollection({
       {/* ── HEADER & OCCASION SELECTOR ── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-4 px-6 border-b border-[#183B56]">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
-            Curated For You
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#183B56]">
+              Curated For You
+            </h2>
+            <span className="px-2 py-0.5 bg-[#183B56] text-white text-[10px] font-bold uppercase tracking-wider rounded-xs">
+              {metadata?.engineVersion || "zyra-v2-beta"}
+            </span>
+          </div>
           <p className="text-xs text-[#5A7184] pt-0.5">
             {recommendations.length} selections matched for &ldquo;{selectedOccasion}&rdquo;
+            {metadata?.budgetCeiling ? ` • Budget Max: ₹${Math.round(metadata.budgetCeiling).toLocaleString("en-IN")}` : ""}
+            {metadata?.genderConstraint ? ` • ${metadata.genderConstraint}` : ""}
           </p>
         </div>
 
@@ -235,15 +260,18 @@ export default function ZeraCollection({
 
       {/* ── EMPTY STATE ── */}
       {!loading && !error && recommendations.length === 0 && (
-        <div className="text-center py-16 space-y-3">
-          <p className="text-sm font-semibold text-[#5A7184]">
-            No recommendations found for &quot;{selectedOccasion}&quot;.
+        <div className="text-center py-16 space-y-3 max-w-md mx-auto">
+          <p className="text-sm font-semibold text-[#183B56]">
+            No personalized recommendations match &quot;{selectedOccasion}&quot; under your current budget and style profile.
+          </p>
+          <p className="text-xs text-[#5A7184]">
+            Zyra V2 enforces hard constraints for gender and budget ceilings without relaxed fallbacks.
           </p>
           <button
             onClick={() => loadRecommendations(true)}
-            className="px-6 py-2.5 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.2em] border-none cursor-pointer"
+            className="px-6 py-2.5 bg-[#183B56] hover:bg-[#102A43] text-white text-xs font-bold uppercase tracking-[0.2em] border-none cursor-pointer shadow-xs transition-colors"
           >
-            Generate Recommendations
+            Regenerate with Zyra
           </button>
         </div>
       )}

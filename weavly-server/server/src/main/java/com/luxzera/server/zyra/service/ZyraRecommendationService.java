@@ -40,6 +40,18 @@ public interface ZyraRecommendationService {
     ZyraUserRecommendationGenerationResponse generateAndSaveUserRecommendations(User user, String productId, Integer topK, String occasion);
 
     /**
+     * Generate Zyra occasion- and gender-conditioned recommendations for an authenticated user.
+     *
+     * @param user      Authenticated user entity
+     * @param productId Canonical product ID to base recommendations on (optional)
+     * @param topK      Requested recommendation count (1..50)
+     * @param occasion  Target occasion filter
+     * @param gender    Target gender context ('Men', 'Women', etc.)
+     * @return Full persisted user recommendation response
+     */
+    ZyraUserRecommendationGenerationResponse generateAndSaveUserRecommendations(User user, String productId, Integer topK, String occasion, String gender);
+
+    /**
      * Retrieve the authenticated user's latest persisted Zera recommendation collection.
      *
      * @param user Authenticated user entity
@@ -55,6 +67,16 @@ public interface ZyraRecommendationService {
      * @return Latest recommendation generation with all items
      */
     ZyraUserRecommendationGenerationResponse getLatestUserRecommendations(User user, String occasion);
+
+    /**
+     * Retrieve the authenticated user's latest persisted Zera recommendation collection for a specific occasion and gender.
+     *
+     * @param user     Authenticated user entity
+     * @param occasion Target occasion filter
+     * @param gender   Target gender context
+     * @return Latest recommendation generation with all items
+     */
+    ZyraUserRecommendationGenerationResponse getLatestUserRecommendations(User user, String occasion, String gender);
 
     /**
      * Retrieve a specific recommendation generation by ID for the authenticated user, enforcing user isolation.
