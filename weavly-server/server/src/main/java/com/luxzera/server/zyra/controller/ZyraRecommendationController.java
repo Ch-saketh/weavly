@@ -85,6 +85,15 @@ public class ZyraRecommendationController {
                 ? zyraRecommendationService.generateAndSaveUserRecommendations(user, productId, topK, occasion, gender)
                 : zyraRecommendationService.generateAndSaveUserRecommendations(user, productId, topK, occasion);
 
+        if (response == null) {
+            response = ZyraUserRecommendationGenerationResponse.builder()
+                    .userId(user.getId())
+                    .count(0)
+                    .modelVersion("zyra-v2-beta")
+                    .recommendations(java.util.List.of())
+                    .build();
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -104,6 +113,15 @@ public class ZyraRecommendationController {
         ZyraUserRecommendationGenerationResponse response = (gender != null && !gender.trim().isEmpty())
                 ? zyraRecommendationService.getLatestUserRecommendations(user, occasion, gender)
                 : zyraRecommendationService.getLatestUserRecommendations(user, occasion);
+
+        if (response == null) {
+            response = ZyraUserRecommendationGenerationResponse.builder()
+                    .userId(user.getId())
+                    .count(0)
+                    .modelVersion("zyra-v2-beta")
+                    .recommendations(java.util.List.of())
+                    .build();
+        }
 
         return ResponseEntity.ok(response);
     }

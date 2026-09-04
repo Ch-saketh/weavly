@@ -11,6 +11,17 @@ const getBaseUrl = () => {
   return "https://zera-server.onrender.com/api";
 };
 
+const safeParseJson = async (res) => {
+  try {
+    const text = await res.text();
+    if (!text || !text.trim()) return null;
+    return JSON.parse(text);
+  } catch (err) {
+    console.warn("JSON parse notice for response:", err);
+    return null;
+  }
+};
+
 const ensureHttps = (url) => {
   if (!url || typeof url !== "string") return null;
   if (url.startsWith("http://assets.myntassets.com")) {
@@ -153,11 +164,11 @@ export const getMyRecommendations = async (options = null) => {
   }
 
   if (!res.ok) {
-    const errData = await res.json().catch(() => ({}));
+    const errData = await safeParseJson(res) || {};
     throw new Error(errData.message || `Failed to fetch recommendations: ${res.status}`);
   }
 
-  const data = await res.json();
+  const data = await safeParseJson(res);
   return normalizeRecommendationCollection(data);
 };
 
@@ -200,11 +211,11 @@ export const generateUserRecommendations = async (params = {}, fallbackTopK = 50
   });
 
   if (!res.ok) {
-    const errData = await res.json().catch(() => ({}));
+    const errData = await safeParseJson(res) || {};
     throw new Error(errData.message || `Failed to generate recommendations: ${res.status}`);
   }
 
-  const data = await res.json();
+  const data = await safeParseJson(res);
   return normalizeRecommendationCollection(data);
 };
 
@@ -228,8 +239,8 @@ export const getOccasionRecommendations = async (occasion, gender = "Women", top
       return [];
     }
 
-    const data = await res.json();
-    const rawList = data.recommendations || [];
+    const data = await safeParseJson(res);
+    const rawList = data?.recommendations || [];
     return rawList.map(normalizeRecommendationItem);
   } catch (err) {
     console.warn("Occasion recommendation fetch notice:", err);
@@ -245,18 +256,23 @@ export const getProductRecommendations = async (productId, topK = 50) => {
   if (!productId) return [];
   const url = `${getBaseUrl()}/recommendations/product/${productId}?topK=${topK}`;
 
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  if (!res.ok) {
+    if (!res.ok) {
+      return [];
+    }
+
+    const data = await safeParseJson(res);
+    const rawList = data?.recommendations || [];
+    return rawList.map(normalizeRecommendationItem);
+  } catch (err) {
+    console.warn("Product recommendation fetch notice:", err);
     return [];
   }
-
-  const data = await res.json();
-  const rawList = data.recommendations || [];
-  return rawList.map(normalizeRecommendationItem);
 };
