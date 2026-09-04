@@ -12,21 +12,14 @@ import {
   Truck,
   Globe,
   ShieldCheck,
-  ChevronDown,
-  Star,
-  Check,
-  Feather,
-  Sparkles,
-  RefreshCw,
   ChevronLeft,
   ChevronRight,
   Maximize2,
   X,
   Bookmark,
   ArrowLeft,
-  Loader2,
+  Check,
 } from "lucide-react";
-import branding from "@/config/branding";
 
 const DEFAULT_FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80";
@@ -44,7 +37,6 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedImage, setSelectedImage] = useState(null);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
-  const [openAccordion, setOpenAccordion] = useState("designerNotes");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [added, setAdded] = useState(false);
 
@@ -59,9 +51,7 @@ export default function ProductDetailPage() {
         }
       });
     }
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [id]);
 
   useEffect(() => {
@@ -79,7 +69,6 @@ export default function ProductDetailPage() {
     }
   }, [product]);
 
-  // Handle ESC key & Keyboard Arrow navigation for Lightbox
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") setLightboxOpen(false);
@@ -131,10 +120,6 @@ export default function ProductDetailPage() {
     setSelectedImage(productImages[prevIdx]);
   };
 
-  const toggleAccordion = (name) => {
-    setOpenAccordion(openAccordion === name ? null : name);
-  };
-
   const handleAddToCart = () => {
     if (!product) return;
     const pid = product.productId || product.id;
@@ -178,7 +163,7 @@ export default function ProductDetailPage() {
         </p>
         <button
           onClick={() => router.push("/market")}
-          className="bg-[#183B56] text-white text-xs font-bold uppercase px-8 py-3 rounded-full hover:bg-[#102A43] transition-colors border-none cursor-pointer"
+          className="bg-[#183B56] text-white text-xs font-bold uppercase px-8 py-3 border-none cursor-pointer hover:bg-[#102A43] transition-colors"
         >
           Explore Catalog
         </button>
@@ -191,266 +176,277 @@ export default function ProductDetailPage() {
   const formattedPrice = Math.round(product.price || 999).toLocaleString("en-IN");
 
   return (
-    <div className="min-h-screen bg-[#F5EFEB] text-[#183B56] font-sans selection:bg-[#183B56] selection:text-white pb-28 relative">
-      {/* ── BREADCRUMB & BACK HEADER ── */}
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 pt-8 pb-4 flex items-center justify-between">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#71717A] hover:text-[#111111] transition-colors bg-transparent border-none cursor-pointer p-0"
-        >
-          <ArrowLeft size={16} />
-          <span>Back</span>
-        </button>
+    <div className="bg-[#F5EFEB] text-[#183B56] font-sans min-h-screen">
 
-        <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#86868B] flex items-center gap-2">
-          <span
-            className="hover:text-[#1D1D1F] cursor-pointer transition-colors"
-            onClick={() => router.push("/")}
+      {/* ── BREADCRUMB / BACK HEADER ── */}
+      <div className="border-b border-[#183B56] bg-[#F5EFEB]">
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 h-11 flex items-center justify-between">
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#5A7184] hover:text-[#183B56] transition-colors bg-transparent border-none cursor-pointer p-0"
           >
-            HOME
-          </span>
-          <span className="text-[#CCCCCC]">/</span>
-          <span
-            className="hover:text-[#1D1D1F] cursor-pointer transition-colors"
-            onClick={() => router.push("/market")}
-          >
-            CATALOG
-          </span>
-          <span className="text-[#CCCCCC]">/</span>
-          <span className="text-[#1D1D1F] font-bold truncate max-w-[200px] sm:max-w-none">
-            {product.name}
-          </span>
-        </p>
+            <ArrowLeft size={14} />
+            <span>Back</span>
+          </button>
+
+          <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#86868B] flex items-center gap-2">
+            <span
+              className="hover:text-[#183B56] cursor-pointer transition-colors"
+              onClick={() => router.push("/")}
+            >
+              HOME
+            </span>
+            <span>/</span>
+            <span
+              className="hover:text-[#183B56] cursor-pointer transition-colors"
+              onClick={() => router.push("/market")}
+            >
+              CATALOG
+            </span>
+            <span>/</span>
+            <span className="text-[#183B56] font-bold truncate max-w-[180px] sm:max-w-xs">
+              {product.name?.toUpperCase()}
+            </span>
+          </p>
+        </div>
       </div>
 
-      {/* ── MAIN EDITORIAL HERO GRID ── */}
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 py-4 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
-        {/* ════ LEFT COLUMN: Hero Image Gallery ════ */}
-        <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-6 items-start">
-          {/* Vertical Thumbnail Rail */}
-          {productImages.length > 1 && (
-            <div className="flex md:flex-col gap-4 shrink-0 overflow-x-auto md:overflow-y-auto max-w-full md:w-20">
-              {productImages.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSelectImg(img, idx)}
-                  className={`w-16 h-20 md:w-20 md:h-28 rounded-xl overflow-hidden transition-all duration-300 transform cursor-pointer p-0 bg-[#FAF8F5] border-none shrink-0 ${
-                    activeImgIndex === idx
-                      ? "ring-1 ring-[#1D1D1F] ring-offset-2 opacity-100 scale-102 shadow-xs"
-                      : "opacity-60 hover:opacity-100 hover:scale-103"
-                  }`}
-                >
-                  <img
-                    src={img}
-                    alt=""
-                    onError={(e) => {
-                      e.currentTarget.src = DEFAULT_FALLBACK_IMAGE;
-                    }}
-                    className="w-full h-full object-cover object-top"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
+      {/* ── MAIN PRODUCT GRID ── */}
+      <div className="max-w-[1440px] mx-auto border-x border-[#183B56]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-6rem)]">
 
-          {/* Main Hero Showcase Shot */}
-          <div
-            onClick={() => setLightboxOpen(true)}
-            className="flex-1 w-full bg-[#FAF8F5] rounded-2xl overflow-hidden min-h-[460px] sm:min-h-[580px] lg:min-h-[680px] relative group cursor-zoom-in select-none border border-[#EBE8E3]"
-          >
-            <img
-              src={selectedImage || product.imageUrl || product.image || DEFAULT_FALLBACK_IMAGE}
-              alt={product.name}
-              onError={(e) => {
-                e.currentTarget.src = DEFAULT_FALLBACK_IMAGE;
-              }}
-              className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-102"
-            />
+          {/* ════ LEFT: Image Column ════ */}
+          <div className="lg:col-span-7 border-r border-[#183B56] flex">
 
-            {/* View Fullscreen Expand Button */}
-            <div className="absolute top-6 left-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#ECECEC] text-[10px] font-bold uppercase tracking-wider text-[#1D1D1F] flex items-center gap-1.5 shadow-xs">
-                <Maximize2 size={12} /> Full Screen
-              </span>
-            </div>
-
-            {/* Left/Right Carousel Controls */}
+            {/* Thumbnail Rail */}
             {productImages.length > 1 && (
-              <>
-                <button
-                  onClick={handlePrevImg}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md border border-[#ECECEC] flex items-center justify-center text-[#1D1D1F] opacity-0 group-hover:opacity-100 transition-all hover:scale-110 cursor-pointer shadow-xs p-0"
-                  aria-label="Previous view"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-
-                <button
-                  onClick={handleNextImg}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md border border-[#ECECEC] flex items-center justify-center text-[#1D1D1F] opacity-0 group-hover:opacity-100 transition-all hover:scale-110 cursor-pointer shadow-xs p-0"
-                  aria-label="Next view"
-                >
-                  <ChevronRight size={20} />
-                </button>
-              </>
+              <div className="w-16 sm:w-20 shrink-0 border-r border-[#183B56] flex flex-col overflow-y-auto">
+                {productImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSelectImg(img, idx)}
+                    className={`w-full aspect-square shrink-0 overflow-hidden p-0 cursor-pointer border-none border-b border-[#183B56] transition-all ${
+                      activeImgIndex === idx
+                        ? "bg-[#183B56]"
+                        : "bg-[#F5EFEB] hover:bg-[#183B56]/10"
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt=""
+                      onError={(e) => { e.currentTarget.src = DEFAULT_FALLBACK_IMAGE; }}
+                      className="w-full h-full object-cover object-top"
+                    />
+                  </button>
+                ))}
+              </div>
             )}
 
-            {/* Bookmark Action */}
-            <button
-              onClick={handleToggleWardrobe}
-              className="absolute top-6 right-6 w-11 h-11 rounded-full bg-white/90 backdrop-blur-md border border-[#ECECEC] flex items-center justify-center cursor-pointer shadow-xs p-0 z-10 hover:bg-white transition-transform hover:scale-105 active:scale-95"
-              title={saved ? "Saved in Wardrobe" : "Save to Wardrobe"}
+            {/* Main Hero Image */}
+            <div
+              onClick={() => setLightboxOpen(true)}
+              className="relative flex-1 bg-[#DFE7ED] cursor-zoom-in group overflow-hidden"
             >
-              <Bookmark
-                size={18}
-                className={`transition-colors ${
-                  saved ? "fill-[#F07020] text-[#F07020]" : "text-[#71717A]"
-                }`}
+              <img
+                src={selectedImage || product.imageUrl || product.image || DEFAULT_FALLBACK_IMAGE}
+                alt={product.name}
+                onError={(e) => { e.currentTarget.src = DEFAULT_FALLBACK_IMAGE; }}
+                className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                style={{ maxHeight: "calc(100vh - 6rem)" }}
               />
-            </button>
-          </div>
-        </div>
 
-        {/* ════ RIGHT COLUMN: Sticky Purchase Panel ════ */}
-        <div className="lg:col-span-5 flex flex-col gap-8 lg:sticky lg:top-24 self-start">
-          {/* Brand & Name */}
-          <div className="space-y-3">
-            <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#86868B] block">
-              {product.brand || "Luxzera Atelier"}
-            </span>
+              {/* Fullscreen badge */}
+              <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <span className="px-2.5 py-1 bg-white border border-[#183B56] text-[10px] font-bold uppercase tracking-wider text-[#183B56] flex items-center gap-1.5">
+                  <Maximize2 size={11} /> Full Screen
+                </span>
+              </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#1D1D1F] tracking-tight leading-[1.15]">
-              {product.name}
-            </h1>
-
-            <div className="flex items-baseline gap-4 pt-2">
-              <span className="text-2xl sm:text-3xl font-black text-[#1D1D1F]">
-                ₹{formattedPrice}
-              </span>
-              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/50 px-3 py-0.5 rounded-full">
-                In Stock • Verified Authentic
-              </span>
-            </div>
-          </div>
-
-          {/* Description */}
-          <p className="text-sm leading-relaxed text-[#515154] font-normal">
-            {product.description ||
-              `Designed for effortless layering and refined movement, the ${product.name} combines precision tailoring with contemporary comfort. Handcrafted to endure beyond fleeting trends.`}
-          </p>
-
-          {/* Color Selector */}
-          <div className="space-y-3 pt-4 border-t border-[#ECECEC]">
-            <div className="flex items-center justify-between text-xs font-semibold">
-              <span className="text-[#1D1D1F] uppercase tracking-wider">Color</span>
-              <span className="text-[#86868B]">{selectedColor}</span>
-            </div>
-            <div className="flex items-center gap-3">
-              {colorOptions.map((c) => (
-                <button
-                  key={c.name}
-                  onClick={() => setSelectedColor(c.name)}
-                  className={`relative p-0.5 rounded-full border transition-all cursor-pointer bg-transparent ${
-                    selectedColor === c.name
-                      ? "border-[#1D1D1F] ring-2 ring-[#1D1D1F] ring-offset-2 scale-110"
-                      : "border-transparent hover:border-[#CCCCCC] opacity-85 hover:opacity-100"
-                  }`}
-                  title={c.name}
-                >
-                  <span
-                    className="block w-6 h-6 rounded-full border border-black/10 shadow-2xs"
-                    style={{ backgroundColor: c.color }}
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Size Selector */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between text-xs font-semibold">
-              <span className="text-[#1D1D1F] uppercase tracking-wider">Size</span>
-              <span className="text-[#86868B]">True to Size</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              {sizeOptions.map((sz) => (
-                <button
-                  key={sz}
-                  onClick={() => setSelectedSize(sz)}
-                  className={`min-w-[48px] h-10 px-3.5 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
-                    selectedSize === sz
-                      ? "bg-[#1D1D1F] text-white border-[#1D1D1F] shadow-xs"
-                      : "bg-[#FAFAF9] text-[#1D1D1F] border-[#E7E3DD] hover:border-[#1D1D1F] hover:bg-white"
-                  }`}
-                >
-                  {sz}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col gap-3 pt-2">
-            <button
-              onClick={handleAddToCart}
-              className="w-full h-12 rounded-xl bg-[#1D1D1F] hover:bg-[#F07020] text-white text-xs font-bold uppercase tracking-[0.15em] transition-colors cursor-pointer border-none shadow-xs flex items-center justify-center gap-2.5 active:scale-98"
-            >
-              {added ? (
+              {/* Carousel Arrows */}
+              {productImages.length > 1 && (
                 <>
-                  <Check size={16} />
-                  <span>ADDED TO BAG</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag size={16} strokeWidth={1.5} />
-                  <span>ADD TO BAG</span>
+                  <button
+                    onClick={handlePrevImg}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white border border-[#183B56] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-[#183B56] hover:text-white cursor-pointer p-0"
+                    aria-label="Previous"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    onClick={handleNextImg}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white border border-[#183B56] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-[#183B56] hover:text-white cursor-pointer p-0"
+                    aria-label="Next"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
                 </>
               )}
-            </button>
 
-            <button
-              onClick={handleToggleWardrobe}
-              className="w-full h-12 rounded-xl border border-[#ECECEC] hover:border-[#1D1D1F] bg-white text-[#1D1D1F] text-xs font-bold uppercase tracking-[0.15em] transition-colors cursor-pointer flex items-center justify-center gap-2 active:scale-98"
-            >
-              <Bookmark
-                size={16}
-                className={saved ? "fill-[#F07020] text-[#F07020]" : "text-[#111111]"}
-              />
-              <span>{saved ? "SAVED IN WARDROBE" : "SAVE TO WARDROBE"}</span>
-            </button>
+              {/* Image counter badge */}
+              {productImages.length > 1 && (
+                <div className="absolute bottom-4 left-4 bg-white border border-[#183B56] px-2 py-0.5 text-[10px] font-bold text-[#183B56] uppercase tracking-wider">
+                  {activeImgIndex + 1} / {productImages.length}
+                </div>
+              )}
+
+              {/* Wardrobe bookmark */}
+              <button
+                onClick={handleToggleWardrobe}
+                className={`absolute top-4 right-4 w-9 h-9 border flex items-center justify-center cursor-pointer p-0 transition-all ${
+                  saved
+                    ? "bg-[#183B56] border-[#183B56] text-white"
+                    : "bg-white border-[#183B56] text-[#183B56] hover:bg-[#183B56] hover:text-white"
+                }`}
+                title={saved ? "Saved in Wardrobe" : "Save to Wardrobe"}
+              >
+                <Bookmark size={15} className={saved ? "fill-white" : ""} />
+              </button>
+            </div>
           </div>
 
-          {/* Guarantees */}
-          <div className="flex flex-col gap-3 pt-6 border-t border-[#ECECEC]">
-            <div className="flex items-center gap-3 text-xs text-[#515154] font-medium">
-              <Truck size={16} strokeWidth={1.5} className="text-[#1D1D1F] shrink-0" />
-              <span>Delivered in 3–5 business days with premium express tracking</span>
+          {/* ════ RIGHT: Purchase Panel ════ */}
+          <div className="lg:col-span-5 flex flex-col lg:overflow-y-auto" style={{ maxHeight: "calc(100vh - 6rem)" }}>
+
+            {/* Brand + Name + Price block */}
+            <div className="border-b border-[#183B56] p-6 sm:p-8 space-y-3">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#5A7184] block">
+                {product.brand || "Luxzera Atelier"}
+              </span>
+
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#183B56] tracking-tight leading-tight">
+                {product.name}
+              </h1>
+
+              <div className="flex items-center gap-3 pt-1">
+                <span className="text-2xl sm:text-3xl font-black text-[#183B56]">
+                  ₹{formattedPrice}
+                </span>
+                <span className="text-[10px] font-bold text-[#2E7D32] bg-[#E8F5E9] border border-[#A5D6A7] px-2.5 py-0.5 uppercase tracking-wider">
+                  In Stock
+                </span>
+              </div>
+
+              {product.description && (
+                <p className="text-xs leading-relaxed text-[#5A7184] pt-1">
+                  {product.description}
+                </p>
+              )}
             </div>
-            <div className="flex items-center gap-3 text-xs text-[#515154] font-medium">
-              <Globe size={16} strokeWidth={1.5} className="text-[#1D1D1F] shrink-0" />
-              <span>Complimentary worldwide shipping on orders above ₹2,500</span>
+
+            {/* Color Selector */}
+            <div className="border-b border-[#183B56] p-5 sm:p-6 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#183B56]">Colour</span>
+                <span className="text-[10px] font-semibold text-[#5A7184] uppercase tracking-wider">{selectedColor}</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                {colorOptions.map((c) => (
+                  <button
+                    key={c.name}
+                    onClick={() => setSelectedColor(c.name)}
+                    className={`relative p-0 cursor-pointer border-2 transition-all ${
+                      selectedColor === c.name
+                        ? "border-[#183B56] scale-110"
+                        : "border-transparent hover:border-[#183B56]/40"
+                    }`}
+                    title={c.name}
+                    style={{ background: "none" }}
+                  >
+                    <span
+                      className="block w-6 h-6 border border-black/10"
+                      style={{ backgroundColor: c.color }}
+                    />
+                    {selectedColor === c.name && (
+                      <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-[#183B56]" />
+                    )}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex items-center gap-3 text-xs text-[#515154] font-medium">
-              <ShieldCheck size={16} strokeWidth={1.5} className="text-[#F07020] shrink-0" />
-              <span>100% Authenticity Guarantee & 30-Day Effortless Returns</span>
+
+            {/* Size Selector */}
+            <div className="border-b border-[#183B56] p-5 sm:p-6 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#183B56]">Size</span>
+                <span className="text-[10px] font-semibold text-[#5A7184] uppercase tracking-wider">True to Size</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {sizeOptions.map((sz) => (
+                  <button
+                    key={sz}
+                    onClick={() => setSelectedSize(sz)}
+                    className={`min-w-[44px] h-9 px-3 text-[11px] font-bold border transition-all cursor-pointer ${
+                      selectedSize === sz
+                        ? "bg-[#183B56] text-white border-[#183B56]"
+                        : "bg-[#F5EFEB] text-[#183B56] border-[#183B56] hover:bg-[#183B56]/10"
+                    }`}
+                  >
+                    {sz}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="p-5 sm:p-6 flex flex-col gap-3 border-b border-[#183B56]">
+              <button
+                onClick={handleAddToCart}
+                className="w-full h-11 bg-[#183B56] hover:bg-[#102A43] text-white text-[11px] font-bold uppercase tracking-[0.2em] transition-colors cursor-pointer border-none flex items-center justify-center gap-2 active:scale-[0.98]"
+              >
+                {added ? (
+                  <><Check size={15} /><span>Added to Bag</span></>
+                ) : (
+                  <><ShoppingBag size={15} strokeWidth={1.5} /><span>Add to Bag</span></>
+                )}
+              </button>
+
+              <button
+                onClick={handleToggleWardrobe}
+                className={`w-full h-11 border text-[11px] font-bold uppercase tracking-[0.2em] transition-colors cursor-pointer flex items-center justify-center gap-2 active:scale-[0.98] ${
+                  saved
+                    ? "bg-[#183B56] text-white border-[#183B56]"
+                    : "bg-transparent text-[#183B56] border-[#183B56] hover:bg-[#183B56]/10"
+                }`}
+              >
+                <Bookmark size={15} className={saved ? "fill-white" : ""} />
+                <span>{saved ? "Saved in Wardrobe" : "Save to Wardrobe"}</span>
+              </button>
+            </div>
+
+            {/* Guarantees */}
+            <div className="p-5 sm:p-6 space-y-3">
+              <div className="flex items-start gap-3 text-[11px] text-[#5A7184] font-medium">
+                <Truck size={14} strokeWidth={1.5} className="text-[#183B56] shrink-0 mt-0.5" />
+                <span>Delivered in 3–5 business days with premium express tracking</span>
+              </div>
+              <div className="flex items-start gap-3 text-[11px] text-[#5A7184] font-medium">
+                <Globe size={14} strokeWidth={1.5} className="text-[#183B56] shrink-0 mt-0.5" />
+                <span>Complimentary worldwide shipping on orders above ₹2,500</span>
+              </div>
+              <div className="flex items-start gap-3 text-[11px] text-[#5A7184] font-medium">
+                <ShieldCheck size={14} strokeWidth={1.5} className="text-[#183B56] shrink-0 mt-0.5" />
+                <span>100% Authenticity Guarantee & 30-Day Effortless Returns</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── LOWER SECTION: ZYRA RECOMMENDATIONS / CURATED PAIRINGS ── */}
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 pt-16 border-t border-[#ECECEC] mt-16">
-        <ZeraRecommendationsSection
-          title="Pairs Well With"
-          subtitle="Zyra Curated Selections"
-          genderFilter={product?.gender}
-        />
+      {/* ── ZYRA RECOMMENDATIONS ── */}
+      <div className="max-w-[1440px] mx-auto border-x border-b border-[#183B56] mt-0">
+        <div className="border-t border-[#183B56]">
+          <ZeraRecommendationsSection
+            title="Pairs Well With"
+            subtitle="Zyra Curated Selections"
+            genderFilter={product?.gender}
+          />
+        </div>
       </div>
 
-      {/* ════ FULLSCREEN INTERACTIVE LIGHTBOX MODAL ════ */}
+      {/* ════ LIGHTBOX ════ */}
       {lightboxOpen && (
         <div
-          className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl flex flex-col justify-between p-6 sm:p-10 animate-in fade-in duration-200"
+          className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl flex flex-col justify-between p-6 sm:p-10"
           onClick={() => setLightboxOpen(false)}
         >
           <div className="w-full flex items-center justify-between z-10">
@@ -465,10 +461,10 @@ export default function ProductDetailPage() {
 
             <button
               onClick={() => setLightboxOpen(false)}
-              className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer border-none p-0"
-              aria-label="Close fullscreen view"
+              className="w-10 h-10 border border-white/30 bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer p-0"
+              aria-label="Close"
             >
-              <X size={22} />
+              <X size={20} />
             </button>
           </div>
 
@@ -476,10 +472,8 @@ export default function ProductDetailPage() {
             <img
               src={productImages[activeImgIndex]}
               alt=""
-              onError={(e) => {
-                e.currentTarget.src = DEFAULT_FALLBACK_IMAGE;
-              }}
-              className="max-h-[80vh] max-w-full object-contain rounded-lg shadow-2xl select-none"
+              onError={(e) => { e.currentTarget.src = DEFAULT_FALLBACK_IMAGE; }}
+              className="max-h-[80vh] max-w-full object-contain select-none"
               onClick={(e) => e.stopPropagation()}
             />
 
@@ -487,18 +481,18 @@ export default function ProductDetailPage() {
               <>
                 <button
                   onClick={handlePrevImg}
-                  className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-white/30 text-white backdrop-blur-md flex items-center justify-center transition-all cursor-pointer border-none p-0 shadow-lg"
-                  aria-label="Previous view"
+                  className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 border border-white/30 bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all cursor-pointer p-0"
+                  aria-label="Previous"
                 >
-                  <ChevronLeft size={26} />
+                  <ChevronLeft size={22} />
                 </button>
 
                 <button
                   onClick={handleNextImg}
-                  className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-white/30 text-white backdrop-blur-md flex items-center justify-center transition-all cursor-pointer border-none p-0 shadow-lg"
-                  aria-label="Next view"
+                  className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 border border-white/30 bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all cursor-pointer p-0"
+                  aria-label="Next"
                 >
-                  <ChevronRight size={26} />
+                  <ChevronRight size={22} />
                 </button>
               </>
             )}
