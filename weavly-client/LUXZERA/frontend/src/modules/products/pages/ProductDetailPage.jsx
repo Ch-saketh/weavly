@@ -178,9 +178,9 @@ export default function ProductDetailPage() {
   return (
     <div className="bg-[#F5EFEB] text-[#183B56] font-sans min-h-screen">
 
-      {/* ── BREADCRUMB / BACK HEADER ── */}
+      {/* ── BACK HEADER ── */}
       <div className="border-b border-[#183B56] bg-[#F5EFEB]">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 h-11 flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 h-11 flex items-center">
           <button
             onClick={() => router.back()}
             className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#5A7184] hover:text-[#183B56] transition-colors bg-transparent border-none cursor-pointer p-0"
@@ -188,26 +188,6 @@ export default function ProductDetailPage() {
             <ArrowLeft size={14} />
             <span>Back</span>
           </button>
-
-          <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#86868B] flex items-center gap-2">
-            <span
-              className="hover:text-[#183B56] cursor-pointer transition-colors"
-              onClick={() => router.push("/")}
-            >
-              HOME
-            </span>
-            <span>/</span>
-            <span
-              className="hover:text-[#183B56] cursor-pointer transition-colors"
-              onClick={() => router.push("/market")}
-            >
-              CATALOG
-            </span>
-            <span>/</span>
-            <span className="text-[#183B56] font-bold truncate max-w-[180px] sm:max-w-xs">
-              {product.name?.toUpperCase()}
-            </span>
-          </p>
         </div>
       </div>
 
