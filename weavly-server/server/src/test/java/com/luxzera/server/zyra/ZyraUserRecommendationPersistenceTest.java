@@ -54,7 +54,9 @@ class ZyraUserRecommendationPersistenceTest {
     @Mock
     private com.luxzera.server.user.repository.UserFitDataRepository userFitDataRepository;
 
-    @InjectMocks
+    @Mock
+    private com.luxzera.server.user.repository.UserRecommendationImageRepository userRecommendationImageRepository;
+
     private ZyraRecommendationServiceImpl recommendationService;
 
     private User userA;
@@ -62,6 +64,16 @@ class ZyraUserRecommendationPersistenceTest {
 
     @BeforeEach
     void setUp() {
+        recommendationService = new ZyraRecommendationServiceImpl(
+                zyraClient,
+                generationRepository,
+                userProfileRepository,
+                userMetadataRepository,
+                userFitDataRepository,
+                productRepository,
+                userRecommendationImageRepository
+        );
+
         userA = User.builder()
                 .id(UUID.randomUUID())
                 .email("usera@luxzera.com")

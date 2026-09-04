@@ -17,14 +17,12 @@ import com.luxzera.server.zyra.exception.ZyraGenerationNotFoundException;
 import com.luxzera.server.zyra.exception.ZyraValidationException;
 import com.luxzera.server.zyra.mapper.ZyraRecommendationMapper;
 import com.luxzera.server.zyra.repository.UserRecommendationGenerationRepository;
-import lombok.RequiredArgsConstructor;
 import com.luxzera.server.user.entity.UserFitData;
 import com.luxzera.server.user.entity.UserMetadata;
 import com.luxzera.server.user.repository.UserFitDataRepository;
 import com.luxzera.server.user.repository.UserMetadataRepository;
 import com.luxzera.server.user.entity.UserRecommendationImage;
 import com.luxzera.server.user.repository.UserRecommendationImageRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -36,7 +34,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class ZyraRecommendationServiceImpl implements ZyraRecommendationService {
 
@@ -47,6 +44,24 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
     private final UserFitDataRepository userFitDataRepository;
     private final ProductRepository productRepository;
     private final UserRecommendationImageRepository userRecommendationImageRepository;
+
+    public ZyraRecommendationServiceImpl(
+            ZyraClient zyraClient,
+            UserRecommendationGenerationRepository generationRepository,
+            UserProfileRepository userProfileRepository,
+            UserMetadataRepository userMetadataRepository,
+            UserFitDataRepository userFitDataRepository,
+            ProductRepository productRepository,
+            UserRecommendationImageRepository userRecommendationImageRepository
+    ) {
+        this.zyraClient = zyraClient;
+        this.generationRepository = generationRepository;
+        this.userProfileRepository = userProfileRepository;
+        this.userMetadataRepository = userMetadataRepository;
+        this.userFitDataRepository = userFitDataRepository;
+        this.productRepository = productRepository;
+        this.userRecommendationImageRepository = userRecommendationImageRepository;
+    }
 
     private void enrichRecommendationItemImages(List<ZyraRecommendationItem> items) {
         if (items == null || items.isEmpty()) return;
@@ -219,7 +234,7 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
         UserRecommendationGeneration savedGeneration = generationRepository.save(generation);
         List<String> top10ProductIds = savedGeneration.getItems().stream()
                 .limit(10)
-                .map(item -> item.getProductId())
+                .map(item -> item.getRecommendedProductId())
                 .collect(java.util.stream.Collectors.toList());
         log.info("[ZYRA_RECOMMENDATION] Successfully persisted recommendation generation: id={}, userId={}, sectionGender={}, occasion={}, itemCount={}, top10ProductIds={}",
                 savedGeneration.getId(), user.getId(), sectionGender, targetOccasion, savedGeneration.getItems().size(), top10ProductIds);
