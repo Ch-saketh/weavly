@@ -116,11 +116,11 @@ export default function BespokeFitModal({ isOpen, onClose, onGenerated }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#183B56]/50 backdrop-blur-xs animate-fadeIn">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 bg-[#183B56]/50 backdrop-blur-xs animate-fadeIn">
       
       {/* ── ARCHITECTURAL BLUEPRINT MODAL CONTAINER ── */}
       <div 
-        className="w-full max-w-2xl bg-[#F5EFEB] border border-[#183B56] shadow-2xl text-[#183B56] flex flex-col max-h-[90vh] overflow-hidden"
+        className="w-full max-w-2xl bg-[#F5EFEB] border border-[#183B56] shadow-2xl text-[#183B56] flex flex-col max-h-[90vh] overflow-hidden my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         

@@ -227,7 +227,7 @@ export default function OnboardingModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 sm:p-6 overflow-y-auto">
       <div className="bg-[#E5EAE5] text-[#111827] w-full max-w-4xl border border-[#CCD4CC] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh]">
         
         {/* Modal Top Header */}

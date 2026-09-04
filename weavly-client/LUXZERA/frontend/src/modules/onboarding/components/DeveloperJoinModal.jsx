@@ -59,7 +59,7 @@ export default function DeveloperJoinModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-[#FFFFFF] border border-[#183B56] w-full max-w-2xl my-auto max-h-[92vh] flex flex-col shadow-2xl text-[#183B56] font-sans">
         
         {/* ── HEADER ── */}
