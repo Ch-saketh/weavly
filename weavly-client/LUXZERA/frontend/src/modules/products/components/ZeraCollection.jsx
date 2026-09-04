@@ -66,47 +66,29 @@ export default function ZeraCollection({
       try {
         const occParam = selectedOccasion && selectedOccasion.toLowerCase() !== "all" ? selectedOccasion : "casual";
 
-        // 1. If user is authenticated, use their personalized profile (budget, styles, occasions)
+        // 1. If user is authenticated, directly generate fresh recommendations matching occasion & profile
         if (user) {
-          if (forceRefresh) {
-            try {
-              const generated = await generateUserRecommendations({
-                occasion: occParam,
-                gender: effectiveGender,
-                topK: 50,
-              }, 50);
-              if (generated?.recommendations?.length > 0) {
-                setRecommendations(generated.recommendations);
-                setMetadata(generated.metadata);
-                return;
-              }
-            } catch (genErr) {
-              console.warn("Personalized generation on refresh note:", genErr.message);
+          try {
+            const generated = await generateUserRecommendations({
+              occasion: occParam,
+              gender: effectiveGender,
+              topK: 50,
+            }, 50);
+            if (generated?.recommendations?.length > 0) {
+              setRecommendations(generated.recommendations);
+              setMetadata(generated.metadata);
+              return;
             }
+          } catch (genErr) {
+            console.warn("Personalized generation note, trying fallback endpoint:", genErr.message);
           }
 
-          // Fetch latest cached/persisted recommendations
+          // Fallback to getMyRecommendations if needed
           const data = await getMyRecommendations({ occasion: occParam, gender: effectiveGender });
           if (data?.recommendations?.length > 0) {
             setRecommendations(data.recommendations);
             setMetadata(data.metadata);
             return;
-          }
-
-          // If no persisted recommendations yet, generate fresh ones
-          try {
-            const initialGen = await generateUserRecommendations({
-              occasion: occParam,
-              gender: effectiveGender,
-              topK: 50,
-            }, 50);
-            if (initialGen?.recommendations?.length > 0) {
-              setRecommendations(initialGen.recommendations);
-              setMetadata(initialGen.metadata);
-              return;
-            }
-          } catch (initErr) {
-            console.warn("Initial user recommendation generation notice:", initErr.message);
           }
         }
 

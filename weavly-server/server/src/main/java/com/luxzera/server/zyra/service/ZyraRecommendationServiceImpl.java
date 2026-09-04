@@ -284,18 +284,7 @@ public class ZyraRecommendationServiceImpl implements ZyraRecommendationService 
 
         if (occasion != null && !occasion.trim().isEmpty() && !occasion.equalsIgnoreCase("all")) {
             String normOcc = occasion.trim().toLowerCase();
-            Optional<UserRecommendationGeneration> occGen = generationRepository
-                    .findLatestByUserIdAndOccasionWithItems(user.getId(), normOcc);
-            if (occGen.isPresent() && isGenerationValidAndWearable(occGen.get(), effectiveGender, normOcc)) {
-                log.info("[ZYRA_CACHE] Cache HIT for userId={}, occasion={}, sectionGender={}, generationId={}, itemCount={}",
-                        user.getId(), normOcc, effectiveGender, occGen.get().getId(), occGen.get().getItems().size());
-                ZyraUserRecommendationGenerationResponse responseDto = ZyraRecommendationMapper.toUserResponse(occGen.get());
-                filterResponseByGender(responseDto, effectiveGender);
-                enrichRecommendationItemImages(responseDto.getRecommendations());
-                return responseDto;
-            }
-            // Generate fresh occasion recommendations on demand
-            log.info("[ZYRA_CACHE] Cache MISS for userId={}, occasion={}, sectionGender={}. Generating fresh occasion recommendations.",
+            log.info("[ZYRA_RECOMMENDATION] Generating fresh occasion recommendations on demand: userId={}, occasion={}, sectionGender={}",
                     user.getId(), normOcc, effectiveGender);
             return generateAndSaveUserRecommendations(user, null, 50, normOcc, effectiveGender);
         }
