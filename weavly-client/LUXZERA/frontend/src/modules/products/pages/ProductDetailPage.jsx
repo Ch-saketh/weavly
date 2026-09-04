@@ -180,7 +180,7 @@ export default function ProductDetailPage() {
 
       {/* ── BREADCRUMB / BACK HEADER ── */}
       <div className="border-b border-[#183B56] bg-[#F5EFEB]">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 h-11 flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 h-11 flex items-center justify-between">
           <button
             onClick={() => router.back()}
             className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#5A7184] hover:text-[#183B56] transition-colors bg-transparent border-none cursor-pointer p-0"
@@ -212,8 +212,8 @@ export default function ProductDetailPage() {
       </div>
 
       {/* ── MAIN PRODUCT GRID ── */}
-      <div className="max-w-[1440px] mx-auto border-x border-[#183B56]">
-        <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-6rem)]">
+      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 py-6">
+        <div className="border border-[#183B56] grid grid-cols-1 lg:grid-cols-12" style={{ minHeight: "calc(100vh - 10rem)" }}>
 
           {/* ════ LEFT: Image Column ════ */}
           <div className="lg:col-span-7 border-r border-[#183B56] flex">
@@ -433,8 +433,8 @@ export default function ProductDetailPage() {
       </div>
 
       {/* ── ZYRA RECOMMENDATIONS ── */}
-      <div className="max-w-[1440px] mx-auto border-x border-b border-[#183B56] mt-0">
-        <div className="border-t border-[#183B56]">
+      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 pb-10">
+        <div className="border border-t-0 border-[#183B56]">
           <ZeraRecommendationsSection
             title="Pairs Well With"
             subtitle="Zyra Curated Selections"
