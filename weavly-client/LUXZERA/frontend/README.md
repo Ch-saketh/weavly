@@ -1,46 +1,91 @@
 # 💎 LUXZERA Frontend — Modern AI Fashion Commerce Client
 
-> **High-fidelity, responsive fashion commerce and interactive styling client built with Next.js 14, React 19, Tailwind CSS, Motion, and Three.js.**
+> **High-fidelity, responsive fashion commerce storefront, creator atelier, and interactive styling client built with Next.js 14, React 19, Tailwind CSS, Motion, and Three.js.**
+
+---
+
+## 🌐 Live Deployments & Hosting
+
+| Service | Hosting Provider | Live URL / Endpoint | Status |
+| :--- | :--- | :--- | :---: |
+| **Storefront (LUXZERA)** | Vercel / Cloud | `https://weavly.vercel.app` | 🟢 **Active** |
+| **Commerce API (Backend)** | Render Cloud | `https://zera-server.onrender.com/api` | 🟢 **Active** |
+| **Zyra Recommendation Engine** | Render / Local | `http://localhost:5001` | 🟡 **Suspended on Free Cloud Tier** (See Note) |
+
+> [!IMPORTANT]
+> **Production AI Stylist Hosting Notice:**  
+> All primary e-commerce features (product catalog, faceted filters, 15-point user profile onboarding, measurement manager, cart, checkout, and designer ateliers) are **fully operational live online**.  
+> The heavy real-time neural recommendation model (Zyra V2 PyTorch & Fashion-CLIP stack) requires dedicated compute (>512 MiB RAM) and is currently suspended on free-tier cloud hosting. Running the full AI recommendation pipeline locally (`run servers`) connects seamlessly with the frontend.
 
 ---
 
 ## 🏛️ 1. Architecture & Design System
 
-**LUXZERA** is the user-facing storefront, interactive stylist studio, and creator atelier platform for the **Weavly** ecosystem. It connects directly with the Spring Boot backend (`weavly-server`) on port `8081` and integrates with the Zyra AI Intelligence Engine (`core-model`) on port `5001`.
+```mermaid
+flowchart TD
+    subgraph Browser["User Browser / Client"]
+        Store["LUXZERA Storefront<br/>(Port 3000)"]
+        Wardrobe["ZeraCollection AI Stylist<br/>(/wardrobe)"]
+        Onboarding["15-Point Onboarding<br/>(/onboarding)"]
+        Studio["Designer Atelier<br/>(/designer-studio)"]
+        Admin["Governance Portal<br/>(/admin)"]
+    end
 
+    subgraph StateManagement["State & Context Providers"]
+        AuthCtx["AuthContext<br/>(JWT + Google OAuth)"]
+        WardrobeCtx["WardrobeContext<br/>(Saved Items & Outfits)"]
+        CartCtx["CartContext<br/>(ZeraCart & Orders)"]
+    end
+
+    subgraph Gateway["API Gateway & Service Layer"]
+        HttpGateway["API Gateway Adapter<br/>(Axios / Fetch)"]
+        SafeParser["Safe JSON Parser<br/>(Zero Syntax Errors)"]
+    end
+
+    subgraph ExternalBackends["Backend Services"]
+        SpringServer["Weavly Server (8081)<br/>(Spring Boot REST API)"]
+        ZyraCore["Zyra ML Core (5001)<br/>(Python / PyTorch / Qdrant)"]
+    end
+
+    Store --> AuthCtx
+    Wardrobe --> WardrobeCtx
+    Studio --> CartCtx
+
+    AuthCtx --> HttpGateway
+    WardrobeCtx --> HttpGateway
+    CartCtx --> HttpGateway
+
+    HttpGateway --> SafeParser
+    SafeParser -->|REST HTTPS| SpringServer
+    SpringServer -.->|ML Inference| ZyraCore
 ```
-┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                       LUXZERA CLIENT (PORT 3000)                                 │
-├────────────────────────────────┬────────────────────────────────┬────────────────────────────────┤
-│ 🛍️ Storefront & Catalog        │ 🧠 Zyra Stylist & Wardrobe     │ 🎨 Designer & Atelier Studio   │
-│ • Next.js 14 App Router        │ • Live Occasion Switcher       │ • Creator Portfolio Pages      │
-│ • Faceted Filtering & Search   │ • On-Demand AI Recommendations │ • Bespoke Custom Requests      │
-│ • Responsive Product Grids     │ • 3D/Interactive Fit Studio    │ • Atelier Application Flow     │
-├────────────────────────────────┼────────────────────────────────┼────────────────────────────────┤
-│ 👤 User Identity & Fit         │ 🛡️ Admin & Governance Portal   │ 🛒 ZeraCart & Checkout         │
-│ • 15-Point Fit Questionnaire   │ • Designer Vetting & Approval  │ • Synchronized Cart State      │
-│ • Multi-Image Style Moodboard  │ • Product Catalog Moderation   │ • Escrow Order Management      │
-│ • Dynamic Account Sidebar      │ • Threat & Metric Dashboard    │ • Secure Payment Pipeline      │
-└────────────────────────────────┴────────────────────────────────┴────────────────────────────────┘
-                                 │                                │
-                                 ▼                                ▼
-                 ┌───────────────────────────────┐┌───────────────────────────────┐
-                 │    WEAVLY SERVER (PORT 8081)  ││    ZYRA CORE MODEL (PORT 5001)│
-                 │   Spring Boot 3.3 REST API    ││   FastAPI / Flask PyTorch ML  │
-                 └───────────────────────────────┘└───────────────────────────────┘
-```
+
+---
 
 ### 🎨 Wireframe Box Design Aesthetics
 LUXZERA follows a minimalist, high-fashion architectural wireframe aesthetic:
 - **Primary Color**: `#183B56` (Deep Obsidian / Navy)
 - **Background**: `#F5EFEB` (Alabaster Warm Paper) & `#FFFFFF` (Crisp White)
-- **Borders & Framing**: 1px crisp structural grid lines, rounded corners (`rounded-2xl`, `rounded-3xl`), and subtle elevation shadows.
-- **Typography**: Clean, sans-serif typography with high contrast hierarchy.
+- **Borders & Framing**: 1px crisp structural grid lines, sharp geometry, rounded-2xl cards, and subtle elevation shadows.
+- **Typography**: Sans-serif typography with high contrast hierarchy.
 - **Motion & Micro-interactions**: Smooth transitions powered by `motion` (Framer Motion) and GSAP.
 
 ---
 
 ## 🗺️ 2. Comprehensive Routing Matrix
+
+```mermaid
+graph TD
+    Root["/ (Hero & Storefront)"]
+    Root --> Shop["/men, /women, /unisex (Catalogs)"]
+    Root --> Wardrobe["/wardrobe (Zera AI Stylist)"]
+    Root --> Onboarding["/onboarding (15-Point Fit Questionnaire)"]
+    Root --> Account["/account (Profile, Biometrics, Moodboards)"]
+    Root --> Designers["/designers & /designer/:id (Atelier Portfolios)"]
+    Root --> Studio["/designer-studio (Creator Portal)"]
+    Root --> Admin["/admin (Moderation & Governance)"]
+    Root --> Cart["/cart & /orders (ZeraCart & Tracking)"]
+```
 
 | Route | Page / Feature | Access | Description |
 | :--- | :--- | :---: | :--- |
@@ -88,36 +133,27 @@ LUXZERA follows a minimalist, high-fashion architectural wireframe aesthetic:
 
 ## 🛠️ 4. State Management Architecture
 
-```
-                 ┌────────────────────────────────────────────────────────┐
-                 │                      Root Providers                    │
-                 └──────────────────────────┬─────────────────────────────┘
-                                            │
-        ┌───────────────────────────────────┼───────────────────────────────────┐
-        ▼                                   ▼                                   ▼
-┌───────────────────────┐       ┌───────────────────────┐       ┌───────────────────────┐
-│     `AuthContext`     │       │   `WardrobeContext`   │       │     `CartContext`     │
-├───────────────────────┤       ├───────────────────────┤       ├───────────────────────┤
-│ • JWT Session Token   │       │ • Saved Items         │       │ • Cart Items & Qty    │
-│ • User Profile Data   │       │ • Active Occasion     │       │ • Price Calculations  │
-│ • Google OAuth State  │       │ • Real-time AI Outfits│       │ • Checkout Pipeline   │
-│ • Login / Logout Flow │       │ • Inspiration Images  │       │ • LocalStorage Sync   │
-└───────────────────────┘       └───────────────────────┘       └───────────────────────┘
+```mermaid
+graph TD
+    App["LUXZERA App Shell"]
+    App --> AuthProvider["AuthContext<br/>• Session JWT<br/>• User Profile<br/>• Google OAuth2"]
+    App --> WardrobeProvider["WardrobeContext<br/>• Saved Garments<br/>• Active Occasion<br/>• AI Outfits"]
+    App --> CartProvider["CartContext<br/>• ZeraCart State<br/>• Line Items<br/>• Price Calculations"]
 ```
 
 ---
 
-## 🔧 5. Resolved Issues & Technical Improvements
+## 🔧 5. Key Resolved Issues & Production Hardening
 
-1. **Modal Z-Index Overlap Fix**:
+1. **Safe JSON Parsing on Cold-Starts**:
+   - **Problem**: When the backend returned an empty body or during server sleep states, `await res.json()` crashed with `JSON.parse: unexpected end of data at line 1 column 1`.
+   - **Resolution**: Integrated `safeParseJson` wrapper across all recommendation services to gracefully handle empty payloads.
+2. **Modal Z-Index Overlap Fix**:
    - **Problem**: Fixed navigation header (`z-[100]`) was clipping modal overlays and dialog headers.
-   - **Resolution**: Elevated [BespokeFitModal.jsx](file:///Users/saketh/Desktop/Projects/weavly/weavly-client/LUXZERA/frontend/src/modules/home/components/BespokeFitModal.jsx), [OnboardingModal.jsx](file:///Users/saketh/Desktop/Projects/weavly/weavly-client/LUXZERA/frontend/src/modules/onboarding/components/OnboardingModal.jsx), and [DeveloperJoinModal.jsx](file:///Users/saketh/Desktop/Projects/weavly/weavly-client/LUXZERA/frontend/src/modules/onboarding/components/DeveloperJoinModal.jsx) to `z-[200]` with `relative z-10` modal content layers.
-2. **Sidebar Text Wrapping in Account Page**:
+   - **Resolution**: Elevated `BespokeFitModal`, `OnboardingModal`, and `DeveloperJoinModal` to `z-[200]` with `relative z-10` modal content layers.
+3. **Sidebar Text Wrapping in Account Page**:
    - **Problem**: "STYLE INSPIRATION" sidebar tab text was overflowing and clipping in the profile navigation drawer.
-   - **Resolution**: Added `break-words`, `leading-tight`, and flexible width constraints in [AccountSidebar.jsx](file:///Users/saketh/Desktop/Projects/weavly/weavly-client/LUXZERA/frontend/src/modules/profile/components/account/AccountSidebar.jsx) and [LineSidebar.css](file:///Users/saketh/Desktop/Projects/weavly/weavly-client/LUXZERA/frontend/src/shared/components/ui/LineSidebar.css).
-3. **Disabled Stale AI Product Caching**:
-   - **Problem**: `ZeraCollection` was reusing persisted historical recommendations rather than generating fresh live outfits per occasion.
-   - **Resolution**: Updated `ZeraCollection.jsx` to fetch live on-demand recommendations from `/api/recommendations/my?occasion={selected}` with fresh timestamps.
+   - **Resolution**: Added `break-words`, `leading-tight`, and flexible width constraints in `AccountSidebar.jsx` and `LineSidebar.css`.
 4. **Complete Onboarding Data Capture**:
    - **Problem**: Onboarding questionnaire was skipping demographic data (name, phone, DOB, gender) and image upload.
    - **Resolution**: Integrated full four-step sequence capturing all identity attributes and multi-image moodboard uploads.
@@ -130,7 +166,7 @@ LUXZERA follows a minimalist, high-fashion architectural wireframe aesthetic:
 - Node.js `20.x` or higher
 - `npm` or `pnpm`
 
-### Installation
+### Installation & Execution
 ```bash
 # 1. Navigate to frontend directory
 cd weavly-client/LUXZERA/frontend
@@ -138,29 +174,7 @@ cd weavly-client/LUXZERA/frontend
 # 2. Install dependencies
 npm install
 
-# 3. Create environment file
-cp .env.example .env.local
-```
-
-### Environment Variables (`.env.local`)
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8081/api
-NEXT_PUBLIC_ZYRA_API_URL=http://localhost:5001
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id_here
-```
-
-### Development Server
-```bash
-# Start Next.js development server
+# 3. Start Next.js development server
 npm run dev
 ```
 The application will be available at **`http://localhost:3000`**.
-
-### Building for Production
-```bash
-# Build production bundle
-npm run build
-
-# Start production server
-npm run start
-```

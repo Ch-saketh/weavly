@@ -17,60 +17,126 @@
 
 ---
 
+## 🌐 Live Deployments & Hosting Links
+
+| Service | Hosting Provider | Live URL / Endpoint | Status |
+| :--- | :--- | :--- | :---: |
+| **Storefront (LUXZERA Client)** | Vercel / Cloud | `https://weavly.vercel.app` | 🟢 **Active** |
+| **Commerce API (Weavly Server)** | Render Cloud | `https://zera-server.onrender.com/api` | 🟢 **Active** |
+| **AI Intelligence Core (Zyra)** | Render / Local | `http://localhost:5001` (`/recommend`) | 🟡 **Suspended on Free Cloud Tier** (See Note) |
+
+> [!IMPORTANT]
+> **Hosting & Cloud Tier Architecture Notice:**  
+> The core commerce platform — including product browsing, faceted filtering, 15-point user onboarding, measurement management, cart/checkout, designer studios, and administrative governance — is **100% active and functional online**.  
+> The real-time deep learning model (**Zyra V2** featuring PyTorch, Fashion-CLIP ViT-B/32, and OutfitCLIPTransformer) requires dedicated compute (>512 MiB RAM) and is currently suspended on free-tier cloud instances. The complete AI recommendation pipeline runs seamlessly locally (`run servers`) or on dedicated cloud compute (1 GB+ RAM).
+
+---
+
 ## 🕶️ 1. What on Earth is Weavly?
 
 Think of **Weavly** as the intelligent copilot of high-fashion commerce. 
 
 Most e-commerce platforms do something embarrassing: they show you clothes based on basic keyword searches and whatever sponsored brand threw cash at them. That’s stone-age tech. 
 
-**Weavly** is a triple-tiered neural ecosystem that fuses **Computer Vision, Multi-Modal Latent Vectors, and Deep Compatibility Scoring** to orchestrate precision outfit intelligence. It doesn't just show garments; it constructs holistic fashion profiles by matching:
+**Weavly** is a triple-tiered neural ecosystem that fuses **Computer Vision, Multi-Modal Latent Vectors, and Deep Compatibility Scoring** to orchestrate precision outfit intelligence. It constructs holistic fashion profiles by matching:
 1. **Your Exact Biometrics & Facial Phenotype:** Face geometry, skin undertone, body proportions, and aesthetic archetypes.
-2. **Dense 662-Dimensional Multi-Modal Vector Embeddings:** Zero-shot CLIP visual encoders fused with categorical taxonomies.
+2. **Dense 662-Dimensional Multi-Modal Vector Embeddings:** Zero-shot CLIP visual encoders fused with categorical taxonomies and fit biometrics.
 3. **Multi-Occasion Suitability Matrices:** Distinct dynamic re-ranking for College, Formal, Wedding, Date Night, Work, Sport, Party, and Casual.
-
-If you don't look like you just walked out of a high-fashion runway, that’s a bug, not a feature.
 
 ---
 
-## 🏛️ 2. Architectural Blueprint (The Tri-Core Engine)
+## 🏛️ 2. Architectural Blueprint & System Design
 
+### High-Level System Architecture
+
+```mermaid
+flowchart TD
+    subgraph ClientLayer["Frontend Client Layer (Port 3000)"]
+        UI["LUXZERA Storefront<br/>(Next.js 14 • React 19 • Tailwind)"]
+        ZeraStylist["ZeraCollection AI Stylist<br/>(/wardrobe)"]
+        Onboarding["15-Point Onboarding<br/>(/onboarding)"]
+        DesignerPortal["Designer Atelier<br/>(/designer-studio)"]
+    end
+
+    subgraph BackendLayer["Commerce Backbone (Port 8081)"]
+        Server["Weavly Server<br/>(Java 21 • Spring Boot 3.3)"]
+        AuthMod["Auth & RBAC<br/>(JWT + Google OAuth2)"]
+        UserMod["User & Fit Profile<br/>(15-Point Fit Questionnaire)"]
+        CatalogMod["Product Catalog & Stock<br/>(PostgreSQL 16)"]
+        OrderMod["Orders & Escrow<br/>(Milestone Commerce)"]
+        ZyraProxy["Zyra Client Proxy<br/>(REST HTTP)"]
+    end
+
+    subgraph MLCore["AI Intelligence Engine (Port 5001)"]
+        ZyraAPI["Zyra V2 ML Engine<br/>(Flask / PyTorch / NumPy)"]
+        UserEncoder["User Encoder (U1-U7)<br/>(662D Unified Latent)"]
+        ConstraintGate["Hard Constraints Gate<br/>(Gender • Budget • Blacklist)"]
+        OccasionMatrix["8-Occasion Semantic Matrix<br/>(Formality Alignment)"]
+        OutfitModel["OutfitCLIPTransformer<br/>(Cross-Attention Compatibility)"]
+    end
+
+    subgraph DataStorage["Persistence & Infrastructure Layer"]
+        SupabaseDB[("PostgreSQL 16<br/>(Accounts, Catalog, Outfits)")]
+        R2Storage[("Cloudflare R2<br/>(Photos, Moodboards, Portfolios)")]
+        QdrantDB[("Qdrant Cloud<br/>(662D Vector Indexing)")]
+    end
+
+    UI -->|REST / HTTPS| Server
+    ZeraStylist -->|Occasion Request| Server
+    Onboarding -->|Fit Metrics & Photos| Server
+    DesignerPortal -->|Atelier Assets| Server
+
+    Server --> AuthMod
+    Server --> UserMod
+    Server --> CatalogMod
+    Server --> OrderMod
+    Server --> ZyraProxy
+
+    ZyraProxy -->|HTTP POST /recommend| ZyraAPI
+    ZyraAPI --> ConstraintGate
+    ConstraintGate --> UserEncoder
+    UserEncoder --> OccasionMatrix
+    OccasionMatrix --> OutfitModel
+
+    Server -->|JDBC / SSL| SupabaseDB
+    Server -->|S3 API| R2Storage
+    ZyraAPI -->|gRPC / REST| QdrantDB
+    ZyraAPI -->|Read Metadata| SupabaseDB
 ```
-                              ┌────────────────────────────────────────────────────────┐
-                              │                 LUXZERA CLIENT (3000)                  │
-                              │           Next.js 14 • React 19 • Tailwind • 3D        │
-                              └──────────────────────────┬─────────────────────────────┘
-                                                         │
-                                    REST / HTTP / JSON   │   Port 8081 & Port 5001
-                                                         ▼
-                ┌────────────────────────────────────────┴────────────────────────────────────────┐
-                │                                                                                 │
-                ▼                                                                                 ▼
-┌───────────────────────────────────────────────┐               ┌──────────────────────────────────────────────────┐
-│          WEAVLY SERVER (8081)                 │               │             CORE-MODEL / ZYRA (5001)             │
-│        Java 21 • Spring Boot 3.3              │               │         FastAPI / Flask • PyTorch • Qdrant       │
-├───────────────────────────────────────────────┤               ├──────────────────────────────────────────────────┤
-│ • Auth Service (JWT + Google OAuth2)          │               │ • User Encoder (662D Unified Identity Latent)    │
-│ • User Profile & 15-Point Fit Biometrics      │◄─────────────►│ • Product Encoder (CLIP Vision + Text Fusion)    │
-│ • ZeraCart & Secure Checkout Engine           │   PostgreSQL  │ • Zyra V2 Live Occasion Recommendation Engine    │
-│ • Designer Ateliers & Bespoke Commissioning   │   Supabase    │ • Pretrained OutfitCLIPTransformer Compatibility │
-│ • Cloudflare R2 Media Gateway & Image Sync    │               │ • Hard Constraint Gate (Budget, Gender, Slots)   │
-└───────────────────────────────────────────────┘               └──────────────────────────────────────────────────┘
-                │                                                                                 │
-                ▼                                                                                 ▼
-┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                       INFRASTRUCTURE & PERSISTENCE LAYER                                         │
-│               PostgreSQL 16 (Supabase)  •  Qdrant (6333)  •  RabbitMQ (5672)  •  Cloudflare R2                   │
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+---
+
+### End-to-End Recommendation Sequence Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Customer / Browser
+    participant Client as LUXZERA Client (Next.js)
+    participant Server as Weavly Server (Spring Boot)
+    participant Zyra as Zyra V2 AI Core (Python / PyTorch)
+    participant DB as Supabase PostgreSQL
+    participant R2 as Cloudflare R2
+
+    User->>Client: Selects Occasion ("Wedding", "Casual", etc.)
+    Client->>Server: GET /api/recommendations/my?occasion=wedding (Bearer Token)
+    Server->>DB: Fetch UserProfile, 15-Point FitData, & Inspiration Images
+    DB-->>Server: Return Biometrics, Preferred Styles, Budget Range
+    Server->>Zyra: POST /recommend (User Context, Occasion, Gender, Budget, Images)
+    
+    rect rgb(240, 245, 255)
+        Note over Zyra: Stage 1: Hard Constraints (0% Gender / Budget Leakage)
+        Note over Zyra: Stage 2: 662D Cosine Similarity & Occasion Formality Matching
+        Note over Zyra: Stage 3: Separates & All-Body Outfit Assembly
+        Note over Zyra: Stage 4: OutfitCLIPTransformer Cross-Attention Scoring
+        Note over Zyra: Stage 5: Diversity-Aware Final Re-Ranking
+    end
+
+    Zyra-->>Server: Return Top-K Ranked Outfits & Match Scores
+    Server->>DB: Persist Generation & Items atomically
+    Server-->>Client: Return 200 OK (Clean Normalized Outfits JSON)
+    Client-->>User: Render Interactive Outfit Cards with Match %
 ```
-
-### The Component Breakdown:
-
-| Service | Technology | Port | Repository & Scope |
-| :--- | :--- | :---: | :--- |
-| **`weavly-client`** | Next.js 14, React 19, Tailwind, Motion | `3000` | [LUXZERA Frontend](file:///weavly-client/LUXZERA/frontend/README.md) — Storefront, ZeraCollection AI stylist, onboarding, designer directory, and governance portal. |
-| **`weavly-server`** | Java 21, Spring Boot 3.3, Hibernate, Security | `8081` | [Weavly Server](file:///weavly-server/server/README.md) — Enterprise commerce, JWT security, user fit profiles, order escrow, and Zyra proxy dispatch. |
-| **`core-model`** | Python 3.13, PyTorch, Fashion-CLIP, NumPy | `5001` | [Zyra Intelligence](file:///core-model/README.md) — 662D multimodal embedding fusion, 8-occasion semantic matrix, and OutfitCLIPTransformer scoring. |
-| **`PostgreSQL`** | PostgreSQL 16 (Supabase / Render) | `5432` | Relational database for accounts, profiles, products, fit metrics, and recommendation snapshots. |
 
 ---
 
@@ -92,15 +158,19 @@ run stop
 run push "feat: your commit message"
 ```
 
-### 📦 Multi-Repository Sync Architecture
-The local monorepo automatically synchronizes with 3 separate standalone component repositories using `git subtree split`:
+### 📦 Multi-Repository Architecture
+The local monorepo synchronizes with 3 separate standalone component repositories using `git subtree split`:
 
-```
- Local Monorepo (/weavly)
-   ├── weavly-client/LUXZERA/frontend ──► https://github.com/Ch-saketh/weavly-client.git
-   ├── weavly-server/server           ──► https://github.com/Ch-saketh/Weavly-render.git
-   ├── core-model                     ──► https://github.com/Ch-saketh/Zyra.git
-   └── Root (Monorepo)                ──► https://github.com/Ch-saketh/weavly.git
+```mermaid
+graph LR
+    Mono["weavly (Monorepo)<br/>Ch-saketh/weavly"]
+    Client["weavly-client/LUXZERA/frontend<br/>Ch-saketh/weavly-client"]
+    Server["weavly-server/server<br/>Ch-saketh/Weavly-render"]
+    Core["core-model<br/>Ch-saketh/Zyra"]
+
+    Mono -->|Subtree Split| Client
+    Mono -->|Subtree Split| Server
+    Mono -->|Subtree Split| Core
 ```
 
 ---
@@ -109,105 +179,42 @@ The local monorepo automatically synchronizes with 3 separate standalone compone
 
 The **User Encoder** is an asynchronous multi-modal pipeline that ingests raw user biometrics, face/body imagery, style preferences, and browsing telemetry, distilling them into a canonical **662-Dimensional Unified Latent Vector** ($\mathbf{u} \in \mathbb{R}^{662}, \|\mathbf{u}\|_2 = 1.0$) and a rich structured JSON profile.
 
-```
-                      USER ENCODER ARCHITECTURE (PHASES U1 – U7)
+```mermaid
+flowchart TD
+    Raw["Raw User Profile & Ingested Imagery"] --> Ingestion["Phase U1: Ingestion & Normalization"]
+    
+    Ingestion --> ModalData["Phase U2: Data Encoder<br/>(128D Fit & Style Subspace)"]
+    Ingestion --> ModalImage["Phase U3: Image Encoder<br/>(512D Fashion-CLIP Visual Subspace)"]
+    Ingestion --> ModalBehav["Phase U4: Behaviour Encoder<br/>(64D Interaction Subspace)"]
+    
+    ModalData --> Aggregator["Phase U5: Unified Insight Aggregator<br/>(Source-Aware Conflict Adjudication)"]
+    ModalImage --> Aggregator
+    ModalBehav --> Aggregator
 
-   Raw User Input (Spring Boot Event / REST Payload)
-       │
-   [Phase U1: Ingestion & Normalization]
-       ├── UserInputNormalizer (Range bounding, unit conversion, missing-value defaults)
-       └── InputRouter (Dispatches to 3 parallel modal encoders)
-       │
-       ├───► [Phase U2: Data Encoder] ───────────────► 128D Structured Fashion Latent
-       │         • Fit Preferences & Biometrics (Height, weight, chest/waist/hip, inseam)
-       │         • Style Archetype Classifier (Minimalist, Streetwear, Classic, Bohemian)
-       │         • Color Palette Analyzer (Dominant tones, contrast ratios, avoid-list)
-       │
-       ├───► [Phase U3: Image Encoder] ──────────────► 512D Visual Latent
-       │         • Face Geometry & Undertone Extractor (Warm, cool, neutral melanin detection)
-       │         • Body Proportion Analyzer (Shoulder-to-hip ratio, silhouette topology)
-       │         • Multi-Image Vision Backbone (Zero-shot visual identity feature extraction)
-       │
-       └───► [Phase U4: Behaviour Encoder] ──────────► 64D Behavioral Latent
-                 • Price Tier & Budget Sensitivity Scoring
-                 • Occasion Affinity Histogram (Work vs Party vs Casual velocity)
-                 • Category Interaction & Recency Weighting
-       │
-   [Phase U5: Unified Insight Aggregator]
-       ├── Source-Aware Conflict Resolver (Image vs Data evidence adjudication)
-       ├── Cross-Modal Agreement Scorer (Confidence-weighted feature binding)
-       └── UnifiedUserInsights Generation (Canonical JSON profile)
-       │
-   [Phase U6: Multimodal Fusion Engine]
-       ├── Deterministic Orthogonal Projection (512D Visual ⊕ 128D Attribute ⊕ 22D Biometric)
-       ├── L2 Normalization Layer (Unit hypersphere constraint: ||u||₂ = 1.0)
-       └── EmbeddingValidator (NaN/Inf bounding, strict 662D dimension assertion)
-       │
-   [Phase U7: Dual Persistence Layer]
-       ├── PostgreSQL (Supabase `user_zyra_representations` JSONB profile)
-       └── Qdrant Vector Store (Real-time user latent indexing for fast retrieval)
+    Aggregator --> Fusion["Phase U6: Multimodal Fusion Engine<br/>(512D Visual ⊕ 128D Attribute ⊕ 22D Biometric)"]
+    Fusion --> Norm["L2 Spherical Hypersphere Normalization<br/>(||u||₂ = 1.0, Assertion: 662D)"]
+    
+    Norm --> P_Postgres["Phase U7: PostgreSQL JSONB<br/>(user_zyra_representations)"]
+    Norm --> P_Qdrant["Phase U7: Qdrant Vector Engine<br/>(zyra_user_embeddings)"]
 ```
 
 ---
 
-## 🎯 5. Zyra V2 — Fashion Intelligence Architecture
+## 🎯 5. Zyra V2 — Live Multi-Stage Fashion Intelligence
 
-**Zyra V2** is the active recommendation architecture for Weavly. It executes a multi-stage fashion intelligence pipeline combining hard constraint validation, semantic suitability, pretrained outfit compatibility, and diversity-aware ranking:
-
-```text
-User Profile & Context
-          ↓
-[1. Hard Constraints Gate] ──► 100% Gender, Slot & Budget Ceiling Compliance
-          ↓
-[2. Semantic Suitability] ──► Cosine Similarity (35%) + Style (30%) + Category (20%) + Color (15%)
-          ↓
-[3. Candidate Product Pools] ──► Separates & All-Body Sets
-          ↓
-[4. Outfit Compatibility] ──► Pretrained OutfitCLIPTransformer Cross-Attention
-          ↓
-[5. Diversity-Aware Ranking] ──► 0.45 * Suitability + 0.45 * Compatibility + 0.10 * DiversityBonus
-          ↓
-[6. Personalized Outfits] ──► Live Dynamic Output on Port 5001
-```
-
-### 15-Persona Adversarial Validation Results:
-```text
-Personas Evaluated: 15
-Outfits Synthesized: 45
-Total Items Recommended: 135
-
-• Gender Correctness: 100.0%
-• Category Correctness: 100.0%
-• Style Alignment: 100.0%
-• Occasion Accuracy: 100.0%
-• Avoidance Enforcement: 100.0%
-• Budget Compliance: 100.0% (0 violations)
-• Mean Outfit Compatibility: 0.8018
-• Average Latency: 821.8 ms
+```mermaid
+flowchart TD
+    A["User Profile, Context & Browsing Surface"] --> B["Stage 1: Hard Constraints Gate<br/>• Gender Compatibility (0% Cross-Gender Leakage)<br/>• Hard Budget Ceiling (price <= user_budget)<br/>• Avoided Category & Style Blacklist Filtering"]
+    B --> C["Stage 2: Deterministic Semantic Suitability<br/>• 662D Vector Cosine Similarity (35%)<br/>• Style & Formality Alignment (30%)<br/>• Wardrobe Category Match (20%)<br/>• Color Palette Harmony (15%)"]
+    C --> D["Stage 3: Outfit Assembly<br/>• Separates: Top + Bottom + Footwear<br/>• All-Body: Dress/Ethnic + Footwear + Accessory"]
+    D --> E["Stage 4: OutfitCLIPTransformer<br/>• Polyvore-Trained Self-Attention Cross-Compatibility"]
+    E --> F["Stage 5: Diversity-Aware Re-Ranking<br/>Score = 0.45*Suitability + 0.45*Compatibility + 0.10*BrandDiversity"]
+    F --> G["Stage 6: Output & Persistence<br/>• Calibrated Match % (65% - 95%)<br/>• Atomic Supabase Snapshot"]
 ```
 
 ---
 
-## 🛠️ 6. Running the Entire Platform
-
-```bash
-# 🚀 Method 1: Using the Unified Weavly CLI (Recommended)
-run servers
-
-# 🛠️ Method 2: Manual Terminal Startup
-# Terminal 1: Python Zyra ML Engine (Port 5001)
-cd core-model && source .venv/bin/activate && python app.py
-
-# Terminal 2: Spring Boot Server (Port 8081)
-cd weavly-server/server && ./mvnw spring-boot:run
-
-# Terminal 3: Next.js Frontend Client (Port 3000)
-cd weavly-client/LUXZERA/frontend && npm run dev
-```
-
----
-
-## 🧪 7. Test Suite Summary Across All Repositories
+## 🧪 6. Test Suite Summary Across All Repositories
 
 | Repository / Module | Test Command | Tests Passing | Key Verification Areas |
 | :--- | :--- | :---: | :--- |
@@ -218,7 +225,7 @@ cd weavly-client/LUXZERA/frontend && npm run dev
 
 ---
 
-## 🏆 8. Creator & Repository Links
+## 🏆 7. Creator & Repository Links
 
 - **Creator & Lead System Architect:** **Saketh Chokkapu** ([@Ch-saketh](https://github.com/Ch-saketh))
 - **Monorepo:** [https://github.com/Ch-saketh/weavly](https://github.com/Ch-saketh/weavly)

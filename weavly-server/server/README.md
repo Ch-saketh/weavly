@@ -4,39 +4,59 @@
 
 ---
 
+## 🌐 Live Deployments & Hosting
+
+| Service | Hosting Provider | Live URL / Endpoint | Status |
+| :--- | :--- | :--- | :---: |
+| **Commerce API (Backend)** | Render Cloud | `https://zera-server.onrender.com/api` | 🟢 **Active** |
+| **Storefront Client** | Vercel | `https://weavly.vercel.app` | 🟢 **Active** |
+| **Zyra AI Engine** | Render / Local | `http://localhost:5001` | 🟡 **Suspended on Free Cloud Tier** (See Note) |
+
+> [!IMPORTANT]
+> **Hosting & Zyra ML Service Notice:**  
+> The backend server on Render manages all authentication, user metadata, 15-point fit profiles, PostgreSQL data, Cloudflare R2 media storage, product catalogs, designer applications, and order lifecycle **100% online**.  
+> The deep-learning Zyra recommendation service requires >512 MiB RAM and is suspended on free cloud instances. On online environments where Zyra ML is offline, the backend gracefully falls back to empty collections without errors. Running Zyra locally on Port `5001` enables full live real-time recommendation generation.
+
+---
+
 ## 🏛️ 1. Architecture & Domain Design
 
-The **Weavly Server** (`weavly-server`) is the authoritative source of truth for user authentication, biometric fit profiles, product catalogs, designer ateliers, custom garment orders, escrow payments, and recommendation dispatching.
+```mermaid
+flowchart TD
+    subgraph Client["LUXZERA Client (Port 3000)"]
+        NextApp["Next.js 14 App Router"]
+    end
 
-```
-                                  ┌────────────────────────────────────────────────────────┐
-                                  │                 LUXZERA CLIENT (3000)                  │
-                                  │           Next.js 14 • React • Tailwind • 3D           │
-                                  └──────────────────────────┬─────────────────────────────┘
-                                                             │ REST / JSON (Port 8081)
-                                                             ▼
-┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                         WEAVLY SERVER (SPRING BOOT 3.3)                                          │
-├────────────────────────────────┬────────────────────────────────┬────────────────────────────────────────────────┤
-│ 🔐 Auth & Security Module      │ 👤 User & Profile Module       │ 🧠 Zyra Recommendation Module                  │
-│ • JWT Tokens (HS256)           │ • User Profile & Identity      │ • Zyra V2 Proxy Client (Port 5001)             │
-│ • Google OAuth2 Verification   │ • 15-Point Fit & Style Data    │ • On-Demand Occasion Generation                │
-│ • Role-Based Access Control    │ • Multi-Image Style Gallery    │ • Gender & Budget Context Conditioning         │
-│ • Threat & Audit Telemetry     │ • Address & Measurement Store  │ • Relational Recommendation Persistence        │
-├────────────────────────────────┼────────────────────────────────┼────────────────────────────────────────────────┤
-│ 👗 Product & Catalog Module    │ 🎨 Designer & Atelier Studio   │ 💳 Orders, Cart & Escrow Module                │
-│ • Categorical Taxonomy         │ • Creator Portfolios           │ • Cart & Wishlist Sync                         │
-│ • Inventory & Variant Stock    │ • Custom Design Request Flow   │ • Order Lifecycle Management                   │
-│ • Optimistic Locking Version   │ • Proposal & Milestone Escrow  │ • Transaction & Invoice Dispatch               │
-└────────────────────────────────┴────────────────────────────────┴────────────────────────────────────────────────┘
-                                 │                                │
-                                 ▼                                ▼
-┌─────────────────────────────────────────────────┐   ┌────────────────────────────────────────────────────────────┐
-│         SUPABASE POSTGRESQL 16 (DB)             │   │             CLOUDFLARE R2 OBJECT STORAGE                   │
-│ • users, user_profiles, user_fit_data           │   │ • User avatars & portraits                                 │
-│ • products, product_variants, orders            │   │ • User style inspiration lookbook photos                   │
-│ • user_recommendation_generations & items       │   │ • Designer garment portfolios & bespoke sketches           │
-└─────────────────────────────────────────────────┘   └────────────────────────────────────────────────────────────┘
+    subgraph SpringServer["Weavly Server (Port 8081)"]
+        Auth["🔐 Auth & Security Module<br/>(JWT HS256 • Google OAuth2 • RBAC)"]
+        User["👤 User & Fit Profile Module<br/>(15-Point Fit Data • Portfolios)"]
+        ZyraService["🧠 Zyra Recommendation Module<br/>(Occasion Generation • Gender Conditioning)"]
+        Catalog["👗 Product & Catalog Module<br/>(Taxonomy • Inventory • Optimistic Lock)"]
+        Designer["🎨 Designer Studio Module<br/>(Ateliers • Custom Garments • Escrow)"]
+        Orders["💳 Orders & Cart Module<br/>(ZeraCart • Invoices • Transactions)"]
+    end
+
+    subgraph ExternalServices["Storage & ML Subsystems"]
+        Postgres[("Supabase PostgreSQL 16<br/>(Relational Ground Truth)")]
+        R2[("Cloudflare R2 Storage<br/>(Portraits • Moodboards • Sketches)")]
+        ZyraEngine["Zyra V2 ML Engine (5001)<br/>(PyTorch • OutfitCLIP • 662D Vector)"]
+    end
+
+    NextApp -->|REST / JSON| Auth
+    NextApp -->|REST / JSON| User
+    NextApp -->|REST / JSON| ZyraService
+    NextApp -->|REST / JSON| Catalog
+    NextApp -->|REST / JSON| Designer
+    NextApp -->|REST / JSON| Orders
+
+    Auth --> Postgres
+    User --> Postgres
+    User --> R2
+    Catalog --> Postgres
+    Designer --> Postgres
+    Orders --> Postgres
+    ZyraService --> Postgres
+    ZyraService -.->|HTTP POST /recommend| ZyraEngine
 ```
 
 ---
@@ -46,7 +66,7 @@ The **Weavly Server** (`weavly-server`) is the authoritative source of truth for
 ### 🔐 1. Authentication & Security (`com.luxzera.server.auth`)
 - **Stateless JWT Authentication**: Issues standard signed HMAC-SHA256 bearer tokens with 24-hour expiration.
 - **Role-Based Access Control (RBAC)**: Enforces permissions across roles: `CUSTOMER`, `DESIGNER`, `ADMIN`, `SUPER_ADMIN`.
-- **Security Audit Logger**: Records every administrative login attempt, data export, product modification, and status change.
+- **Security Audit Logger**: Records administrative login attempts, data exports, product modifications, and status changes.
 
 ### 👤 2. User Profiles & Fit Data (`com.luxzera.server.user`)
 - **`UserProfile` Entity**: Handles phone numbers, canonical gender (`MALE`, `FEMALE`, `OTHER`), date of birth (DOB), biography, avatar URL, and onboarding completion flags.
@@ -65,21 +85,18 @@ The **Weavly Server** (`weavly-server`) is the authoritative source of truth for
 - **Live On-Demand Generation**: When a user selects any of the 8 canonical occasions (`college`, `casual`, `party`, `formal`, `wedding`, `date`, `work`, `sport`), the service generates fresh recommendations on demand via Zyra V2 rather than serving stale historical mocks.
 - **Context-Aware Gender Conditioning**: Combines the user's personal identity profile with the active browsing section (e.g. Men's vs Women's shelf) to guarantee 0% cross-gender leakage.
 - **Atomic Persistence**: Persists each generation and its ranked items into `user_recommendation_generations` and `user_recommendation_generation_items`.
-
-### 🎨 4. Designer & Customization Platform (`com.luxzera.server.designer`)
-- **Atelier Onboarding**: Review and approve independent fashion designer applications.
-- **Custom Design Workflow**: Structured multi-stage milestone request pipeline between customers and verified designers.
+- **Defensive Graceful Fallback**: Returns valid empty JSON collections (`{ "recommendations": [], "count": 0 }`) instead of null bodies when the external ML engine is offline.
 
 ---
 
-## 🛠️ 3. Key Issues Resolved & Engineering Hardening
+## 🛠️ 3. Key Resolved Issues & Engineering Hardening
 
-1. **Entity Getter Mismatch Fix**:
-   - Resolved compiler error in `ZyraRecommendationServiceImpl.java` by replacing incorrect `.getProductId()` calls with the canonical `.getRecommendedProductId()` from `UserRecommendationItemEntity`.
-2. **Mock Dependency Injection in Tests**:
-   - Injected missing dependencies (`UserRecommendationImageRepository`, `UserMetadataRepository`) and added an explicit constructor to `ZyraRecommendationServiceImpl` so unit tests execute cleanly across all environments.
-3. **Purged Stale September 1st Mock Recommendations**:
-   - Removed legacy static 98% recommendation rows from Supabase PostgreSQL, restoring live continuous similarity scoring ($60\% - 75\%$).
+1. **Guaranteed Non-Null JSON Responses**:
+   - Resolved client-side `JSON.parse` syntax errors by ensuring controller methods return empty `ZyraUserRecommendationGenerationResponse` objects instead of `null` HTTP response bodies when Zyra is offline or cold-starting.
+2. **Entity Getter Mismatch Fix**:
+   - Resolved compiler error in `ZyraRecommendationServiceImpl.java` by replacing incorrect `.getProductId()` calls with canonical `.getRecommendedProductId()` from `UserRecommendationItemEntity`.
+3. **Mock Dependency Injection in Tests**:
+   - Injected missing dependencies (`UserRecommendationImageRepository`, `UserMetadataRepository`) in `ZyraRecommendationServiceImpl` to pass test suites across all environments.
 4. **Occasion Caching Elimination**:
    - Updated `getLatestUserRecommendations` to generate fresh items on demand per occasion query.
 
@@ -96,12 +113,6 @@ The server contains a comprehensive unit and integration test suite with **191 /
 # Compile and package production JAR
 ./mvnw clean package -DskipTests
 ```
-
-### Test Coverage Highlights:
-- **`ZyraUserRecommendationPersistenceTest`**: Verifies user isolation, generation persistence, cross-user access prevention, and recommendation mapping.
-- **`ZyraRecommendationControllerTest`**: Validates authenticated `/api/recommendations/my`, public `/api/recommendations/occasion/{occ}`, and product-based recommendation endpoints.
-- **`DesignerOwnershipAndLifecycleTest`**: Tests multi-stage designer garment publishing and permissions.
-- **`UserFitDataServiceImplTest`**: Ensures all 15 questionnaire dimensions serialize and persist cleanly.
 
 ---
 
@@ -124,37 +135,10 @@ The server contains a comprehensive unit and integration test suite with **191 /
 
 ---
 
-## ⚙️ 6. Environment Configuration
-
-Create a `src/main/resources/application.properties` or provide environment variables:
-
-```properties
-server.port=8081
-spring.datasource.url=jdbc:postgresql://<SUPABASE_HOST>:5432/postgres?sslmode=require
-spring.datasource.username=postgres
-spring.datasource.password=<DB_PASSWORD>
-jwt.secret=<JWT_SECRET_KEY>
-jwt.expiration=86400000
-
-# Zyra Python ML Service URL
-zyra.flask.base-url=http://localhost:5001
-zyra.flask.connect-timeout-ms=5000
-zyra.flask.read-timeout-ms=15000
-
-# Cloudflare R2 Media Storage
-cloudflare.r2.endpoint=https://<ACCOUNT_ID>.r2.cloudflarestorage.com
-cloudflare.r2.access-key=<R2_ACCESS_KEY>
-cloudflare.r2.secret-key=<R2_SECRET_KEY>
-cloudflare.r2.bucket-name=weavly-media
-cloudflare.r2.public-url=https://media.weavly.store
-```
-
----
-
-## 🏃 7. Running Locally
+## 🏃 6. Running Locally
 
 ```bash
 # Start server with Maven wrapper
 ./mvnw spring-boot:run
 ```
-Server boots on port **`8081`** (or configured `server.port`).
+Server boots on port **`8081`**.

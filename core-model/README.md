@@ -4,35 +4,71 @@
 
 ---
 
+## 🌐 Deployments & Compute Architecture
+
+| Mode | Environment | Endpoint | Status |
+| :--- | :--- | :--- | :---: |
+| **Local ML Engine** | Development | `http://localhost:5001` | 🟢 **Active** |
+| **Cloud Inference** | Render Cloud | `https://zera-server.onrender.com/api` (via Spring Proxy) | 🟡 **Suspended on Free Cloud Tier** (See Note) |
+
+> [!IMPORTANT]
+> **Free-Tier Cloud RAM Notice:**  
+> Zyra V2 runs an advanced multi-modal deep learning pipeline combining **Fashion-CLIP ViT-B/32**, a **Polyvore-trained OutfitCLIPTransformer**, and a **662-dimensional dense embedding space**.  
+> Because these neural backbones require >512 MiB RAM, the real-time Python ML microservice is suspended on free cloud tiers. The complete AI recommendation system runs locally (`python app.py` on Port `5001`) and is fully tested with 100% adherence on standard hardware (including Apple Silicon MPS and CPU).
+
+---
+
 ## 🏛️ 1. Architectural Role & Pipeline Overview
 
-**Zyra** is the artificial intelligence core of the **Weavly** commerce ecosystem. It processes multimodal fashion signals across user phenotypes, biometric fit profiles, garment photography, and categorical taxonomies to perform zero-shot and calibrated fashion recommendations.
+```mermaid
+flowchart TD
+    subgraph SpringBoot["Spring Boot 3.3 (Port 8081)"]
+        Truth["Authoritative Source of Truth<br/>(Users, UserFitData, R2 Images, Products)"]
+    end
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Spring Boot (Port 8081)                  │
-│              Canonical Source of Truth for Data             │
-│   (Users, GeneralProfile, UserFitData, Images, Products)    │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-               HTTP POST /recommend (Port 5001)
-               HTTP GET /api/internal/users/{id}/encoder-data
-               RabbitMQ (Topic: zyra.user.events)
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 Zyra AI Engine (Port 5001)                  │
-│               Recommendation & Deep Encoding                │
-│  (Transforms user fashion signals into deep representations)│
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-            ┌──────────────────┴──────────────────┐
-            ▼                                     ▼
-┌─────────────────────────────┐       ┌───────────────────────┐
-│       Zyra PostgreSQL       │       │      Qdrant Cloud     │
-│  user_zyra_representations  │       │ zyra_user_embeddings  │
-│    user_recommendations     │       │   (662-dim vectors)   │
-└─────────────────────────────┘       └───────────────────────┘
+    subgraph ZyraEngine["Zyra V2 ML Engine (Port 5001)"]
+        API["Flask Inference API (/recommend)"]
+        Router["Multi-Modal Input Router"]
+        
+        DataEnc["Data Encoder (U2)<br/>86D Structured Features"]
+        ImageEnc["Image Encoder (U3)<br/>512D Fashion-CLIP Features"]
+        BehavEnc["Behaviour Encoder (U4)<br/>64D Interaction Velocity"]
+        
+        Aggregator["Unified Insight Aggregator (U5)<br/>Source-Aware Conflict Resolution"]
+        Fusion["Multimodal Fusion Layer (U6)<br/>662D Dense Latent (||u||₂ = 1.0)"]
+        
+        HardGate["Stage 1: Hard Constraints Gate<br/>(Gender • Budget Ceiling • Blacklist)"]
+        Suitability["Stage 2: Deterministic Semantic Suitability<br/>(Cosine 35% + Style 30% + Category 20% + Color 15%)"]
+        Assembly["Stage 3: Separates & Allbody Outfit Assembly"]
+        OutfitModel["Stage 4: OutfitCLIPTransformer<br/>(Polyvore Cross-Attention Compatibility)"]
+        Ranker["Stage 5: Diversity-Aware Ranking<br/>Score = 0.45*Suit + 0.45*Comp + 0.10*Div"]
+    end
+
+    subgraph Persistence["Dual Persistence Layer"]
+        Postgres[("PostgreSQL JSONB<br/>(user_zyra_representations)")]
+        Qdrant[("Qdrant Cloud<br/>(zyra_user_embeddings)")]
+    end
+
+    Truth -->|HTTP POST /recommend| API
+    API --> Router
+    Router --> DataEnc
+    Router --> ImageEnc
+    Router --> BehavEnc
+    
+    DataEnc --> Aggregator
+    ImageEnc --> Aggregator
+    BehavEnc --> Aggregator
+    
+    Aggregator --> Fusion
+    Fusion --> HardGate
+    HardGate --> Suitability
+    Suitability --> Assembly
+    Assembly --> OutfitModel
+    OutfitModel --> Ranker
+    
+    Fusion -.-> Postgres
+    Fusion -.-> Qdrant
+    Ranker -->|Top-K Ranked Outfits| API
 ```
 
 ---
@@ -50,52 +86,7 @@ Zyra constructs a canonical **662-Dimensional Normalized Vector** ($\mathbf{u} \
 
 ---
 
-## ⚡ 3. Zyra V2 — Live Recommendation Pipeline
-
-```text
-User Profile & Browsing Context
-              ↓
-[Stage 1: Hard Constraints Gate] ──► 0% Gender, Budget, & Blacklist Leakage
-              ↓
-[Stage 2: Semantic Suitability] ──► B2-PFR Inspired Multi-Signal Scoring (0.0 – 1.0)
-              ↓
-[Stage 3: Candidate Product Pools] ──► Top Separates & All-Body Garments
-              ↓
-[Stage 4: Outfit Compatibility] ──► Pretrained OutfitCLIPTransformer Cross-Attention
-              ↓
-[Stage 5: Diversity-Aware Ranking] ──► Multi-Objective Final Score Synthesis
-              ↓
-[Stage 6: Output & Persistence] ──► Ranked Outfits & Calibrated Match Scores
-```
-
-### 1. Hard Constraints Filtering
-Before computing neural compatibility, candidates undergo strict deterministic gatekeeping:
-- **Gender Compatibility**: Zero cross-gender leakage (`MALE` accounts only receive Men's + Unisex; `FEMALE` accounts receive Women's + Unisex).
-- **Budget Ceiling**: Strict inequality (`product.price <= user.budget_ceiling`). Products above the user's budget ceiling are strictly excluded.
-- **Negative Blacklist Filtering**: Avoided clothing types and avoided color palettes are instantly dropped.
-- **Catalog Validity**: Active stock, valid pricing, and verified image assets.
-
-### 2. Semantic Suitability Scoring
-Candidates passing hard constraints are evaluated across 4 weighted suitability signals:
-- **Dense Vector Cosine Similarity (35%)**: Dot product of 662D user latent and 662D product latent.
-- **Style Archetype & Formality Alignment (30%)**: Semantic match against target dress code and preferred styles.
-- **Category Preference Resonance (20%)**: Keyword matching against preferred wardrobe types.
-- **Color Palette Harmony (15%)**: Contrast and color resonance against preferred color swatches.
-
-### 3. Outfit Compatibility (OutfitCLIPTransformer)
-Assembled outfit sets (tops, bottoms, footwear, outerwear) are evaluated by **OutfitCLIPTransformer** — a self-attention transformer trained on Polyvore datasets over Fashion-CLIP representations:
-- Cross-garment visual cohesion
-- Pattern and texture harmony
-- Formality equilibrium
-
-### 4. Diversity-Aware Ranking Formula
-$$\text{FinalScore} = 0.45 \times \text{Suitability} + 0.45 \times \text{Compatibility} + 0.10 \times \text{DiversityBonus}$$
-
-Where $\text{DiversityBonus} = 0.10 \times \frac{|\text{Unique Brands}|}{|\text{Outfit Items}|}$ to avoid brand over-concentration.
-
----
-
-## 👔 4. 8-Occasion Semantic Intelligence Matrix
+## 👔 3. 8-Occasion Semantic Intelligence Matrix
 
 Zyra dynamically adapts its formality thresholds and categorical weighting based on the requested occasion:
 
@@ -146,23 +137,10 @@ OCCASION_SEMANTICS_MAP = {
 
 ---
 
-## 🛠️ 5. Key Resolved Issues & Engineering Hardening
-
-1. **Live Fresh Recommendation Synthesis**:
-   - Resolved stale recommendation caching by enabling direct dynamic pipeline inference on `/recommend` for all 8 occasion modes.
-2. **Strict Budget Ceiling Hard-Filter**:
-   - Implemented zero-tolerance numerical price boundary validation ensuring 0 budget leaks across all adversarial tests.
-3. **Word-Boundary Category Classification**:
-   - Eliminated partial substring false positives during category slot assignment using regex word boundaries (`\b(shirt|t-shirt|top)\b`).
-4. **Calibrated Match Scores**:
-   - Re-centered raw cosine dot products onto realistic percentage distributions ($60\% - 95\%$) reflecting genuine fashion compatibility.
-
----
-
-## 🧪 6. Testing & Adversarial Validation
+## 🧪 4. Testing & Adversarial Validation
 
 ```bash
-# 1. Run User Encoder Unit & Integration Suite
+# 1. Run User Encoder Unit & Integration Suite (113 tests)
 pytest zyra/user_encoder/tests/ -v
 
 # 2. Run Budget Hard-Filter Regression Suite (0 violations required)
@@ -190,50 +168,8 @@ Total Items Recommended: 135
 
 ---
 
-## 🔌 7. API Reference (Port 5001)
+## 🏃 5. Setup & Local Execution
 
-### Health Check
-```bash
-GET /health
-# Response: {"status":"ok","service":"zyra-v2","engineVersion":"zyra-v2-beta","database":"connected"}
-```
-
-### Engine Information
-```bash
-GET /info
-```
-
-### Real-Time Recommendation Inference
-```bash
-POST /recommend
-Content-Type: application/json
-
-{
-  "userGender": "Men",
-  "occasion": "Casual",
-  "preferredStyles": ["Streetwear", "Minimalist"],
-  "preferredCategories": ["tshirt", "jeans", "sneakers"],
-  "budgetRange": "₹2500",
-  "topK": 10
-}
-```
-
-### Persist Recommendation Snapshot
-```bash
-POST /recommend/save
-Content-Type: application/json
-
-{
-  "productId": "10161531",
-  "topK": 10
-}
-```
-
----
-
-## 🏃 8. Setup & Execution
-
-### Local Development
 ```bash
 # 1. Navigate to directory
 cd core-model
@@ -241,29 +177,10 @@ cd core-model
 # 2. Activate virtual environment
 source .venv/bin/activate
 
-# 3. Install dependencies (CPU or local acceleration)
+# 3. Install dependencies
 pip install -r requirements.txt
 
 # 4. Launch Zyra V2 Live Inference Engine
 python app.py
 ```
 Engine boots on **`http://localhost:5001`**.
-
----
-
-## ☁️ 9. Render Cloud Deployment (512MB RAM Optimized)
-
-To deploy Zyra V2 on Render's 512 MiB instance without running Out of Memory (OOM):
-
-1. **Build Command**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-   *(Uses `--extra-index-url https://download.pytorch.org/whl/cpu` to install pure CPU wheels and eliminate ~3GB of NVIDIA CUDA packages)*
-
-2. **Start Command**:
-   ```bash
-   gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 120
-   ```
-   *(Restricts Gunicorn to a single worker to avoid duplicate model loading in RAM)*
-
