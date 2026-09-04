@@ -4,10 +4,24 @@ Exposes the validated Zyra V2 multi-stage recommendation engine and recommendati
 persistence services via a lightweight HTTP API.
 """
 
+import gc
 import logging
+import os
 from pathlib import Path
 import time
 from typing import Any, Dict, Optional, Tuple
+
+# Restrict thread pools to reduce virtual memory footprint on 512MB RAM instances
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+
+try:
+    import torch
+    torch.set_num_threads(1)
+    torch.set_grad_enabled(False)
+except ImportError:
+    pass
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -35,6 +49,9 @@ logger.info("ZyraV2 engine initialized successfully.")
 logger.info("Initializing RecommendationPersistenceService with %s...", DB_PATH)
 persistence_service = RecommendationPersistenceService(db_path=DB_PATH)
 logger.info("RecommendationPersistenceService initialized successfully.")
+
+# Clean up memory immediately after initialization
+gc.collect()
 
 app = Flask(__name__)
 

@@ -233,6 +233,7 @@ Content-Type: application/json
 
 ## 🏃 8. Setup & Execution
 
+### Local Development
 ```bash
 # 1. Navigate to directory
 cd core-model
@@ -240,10 +241,29 @@ cd core-model
 # 2. Activate virtual environment
 source .venv/bin/activate
 
-# 3. Install dependencies
-pip install -e .
+# 3. Install dependencies (CPU or local acceleration)
+pip install -r requirements.txt
 
 # 4. Launch Zyra V2 Live Inference Engine
 python app.py
 ```
 Engine boots on **`http://localhost:5001`**.
+
+---
+
+## ☁️ 9. Render Cloud Deployment (512MB RAM Optimized)
+
+To deploy Zyra V2 on Render's 512 MiB instance without running Out of Memory (OOM):
+
+1. **Build Command**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   *(Uses `--extra-index-url https://download.pytorch.org/whl/cpu` to install pure CPU wheels and eliminate ~3GB of NVIDIA CUDA packages)*
+
+2. **Start Command**:
+   ```bash
+   gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 120
+   ```
+   *(Restricts Gunicorn to a single worker to avoid duplicate model loading in RAM)*
+
