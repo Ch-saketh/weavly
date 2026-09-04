@@ -66,6 +66,8 @@ const createClient = (baseURL) => {
           if (typeof window !== "undefined") {
             try {
               localStorage.removeItem("Weavly_user_cache");
+              // Also expire the cookie so SSR doesn't re-hydrate a stale session
+              document.cookie = "Weavly_user_cache=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
             } catch (e) {}
           }
         }

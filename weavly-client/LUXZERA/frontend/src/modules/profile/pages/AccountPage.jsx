@@ -70,11 +70,10 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
           onboardingMessage: profileData.onboardingMessage || currentUser.onboardingMessage,
         };
         setUser(synchronizedUser);
-        if (typeof window !== "undefined") {
-          try {
-            localStorage.setItem("Weavly_user_cache", JSON.stringify(synchronizedUser));
-          } catch (e) {}
-        }
+        // Push fresh server data into AuthContext so navbar and all consumers
+        // immediately reflect the latest firstName/lastName/profilePicture
+        // without waiting for the next page reload.
+        setContextUser(synchronizedUser);
       }
     } catch (err) {
       console.warn("Profile load sync:", err);
@@ -197,8 +196,9 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
         window.dispatchEvent(new CustomEvent("weavly:profileUpdated", { detail: nextUser }));
         window.dispatchEvent(new CustomEvent("weavly:userUpdated", { detail: nextUser }));
       }
+      // setContextUser already syncs localStorage + cookie via AuthContext.setUser.
+      // onUserChange IS setContextUser (see line 24), so calling both is a double-write — removed.
       setContextUser(nextUser);
-      onUserChange?.(nextUser);
       setSuccessMsg("Profile details updated successfully!");
       setTimeout(() => setSuccessMsg(""), 3500);
     } catch (err) {
@@ -228,8 +228,7 @@ const AccountPage = ({ currentUser: propUser, authLoading: propAuthLoading, onUs
         window.dispatchEvent(new CustomEvent("weavly:profileUpdated", { detail: nextUser }));
         window.dispatchEvent(new CustomEvent("weavly:userUpdated", { detail: nextUser }));
       }
-      setContextUser(nextUser);
-      onUserChange?.(nextUser);
+      setContextUser(nextUser); // syncs localStorage + cookie via AuthContext.setUser
       setSuccessMsg("Profile picture removed.");
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
