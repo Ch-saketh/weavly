@@ -413,3 +413,71 @@ export const rejectAdminApplication = async (id, reason = '') => {
 };
 
 export const rejectApplication = rejectAdminApplication;
+
+/**
+ * 8. Designer Governance & Designer Studio Administration
+ */
+
+export const getDesigners = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/designers', { params });
+  return response.data;
+};
+
+export const getDesignerSummary = async () => {
+  const response = await apiClient.get('/api/admin/designers/summary');
+  return response.data;
+};
+
+export const getDesignerDetail = async (id) => {
+  const response = await apiClient.get(`/api/admin/designers/${id}`);
+  return response.data;
+};
+
+export const approveDesigner = async (id) => {
+  const response = await apiClient.post(`/api/admin/designers/${id}/approve`);
+  return response.data;
+};
+
+export const rejectDesigner = async (id, reason = '') => {
+  const response = await apiClient.post(`/api/admin/designers/${id}/reject`, { reason });
+  return response.data;
+};
+
+export const suspendDesigner = async (id, reason = '') => {
+  const response = await apiClient.post(`/api/admin/designers/${id}/suspend`, { reason });
+  return response.data;
+};
+
+export const restoreDesigner = async (id) => {
+  const response = await apiClient.post(`/api/admin/designers/${id}/restore`);
+  return response.data;
+};
+
+export const updateDesigner = async (id, payload) => {
+  const response = await apiClient.patch(`/api/admin/designers/${id}`, payload);
+  return response.data;
+};
+
+export const getDesignerProducts = async (id, params = {}) => {
+  const response = await apiClient.get(`/api/admin/designers/${id}/products`, { params });
+  return response.data;
+};
+
+export const getDesignerMedia = async (id) => {
+  const response = await apiClient.get(`/api/admin/designers/${id}/media`);
+  return response.data;
+};
+
+export const deleteDesignerMedia = async (id, mediaId) => {
+  const response = await apiClient.delete(`/api/admin/designers/${id}/media/${encodeURIComponent(mediaId)}`);
+  return response.data;
+};
+
+export const exportDesigners = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/designers/export', {
+    params,
+    responseType: 'blob'
+  });
+  return response.data;
+};
+

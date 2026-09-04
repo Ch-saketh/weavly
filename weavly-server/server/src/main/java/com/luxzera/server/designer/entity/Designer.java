@@ -12,7 +12,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "designers", indexes = {
         @Index(name = "idx_designer_id", columnList = "designer_id", unique = true),
-        @Index(name = "idx_designer_email", columnList = "email", unique = true)
+        @Index(name = "idx_designer_email", columnList = "email", unique = true),
+        @Index(name = "idx_designer_status", columnList = "status"),
+        @Index(name = "idx_designer_created_at", columnList = "created_at")
 })
 @Getter
 @Setter
@@ -42,6 +44,19 @@ public class Designer {
     @Column(name = "status", nullable = false, length = 32)
     @Builder.Default
     private DesignerStatus status = DesignerStatus.ACTIVE;
+
+    @Column(name = "approved_at")
+    private LocalDateTime approvedAt;
+
+    @Column(name = "approved_by", length = 100)
+    private String approvedBy;
+
+    @Column(name = "suspension_reason", columnDefinition = "TEXT")
+    private String suspensionReason;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
     @OneToOne(mappedBy = "designer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private DesignerProfile profile;

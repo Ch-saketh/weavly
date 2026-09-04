@@ -58,8 +58,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
                 // Check Designer first
-                boolean isDesigner = designerRepository.findByEmailIgnoreCase(email).isPresent();
-                if (isDesigner) {
+                var designerOpt = designerRepository.findByEmailIgnoreCase(email);
+                if (designerOpt.isPresent()) {
+                    var designer = designerOpt.get();
+                    if (designer.getStatus() == com.luxzera.server.designer.enums.DesignerStatus.SUSPENDED) {
+                        filterChain.doFilter(request, response);
+                        return;
+                    }
                     authorities.add(new SimpleGrantedAuthority("ROLE_DESIGNER"));
                 } else {
                     userRepository.findByEmailIgnoreCase(email)
