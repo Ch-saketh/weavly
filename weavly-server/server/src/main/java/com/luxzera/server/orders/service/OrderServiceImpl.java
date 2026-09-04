@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.luxzera.server.coupons.dto.CouponValidationResult;
+import com.luxzera.server.coupons.service.CouponValidationService;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private final CouponValidationService couponValidationService;
 
     @Override
     @Transactional
@@ -27,15 +31,31 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal subtotal = request.getItems().stream()
                 .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal discount = request.getDiscountTotal() == null ? BigDecimal.ZERO : request.getDiscountTotal();
+
+        // Server-authoritative coupon calculation
+        CouponValidationResult couponResult = null;
+        BigDecimal discount = BigDecimal.ZERO;
+        String couponCode = null;
+        UUID couponId = null;
+
+        if (request.getCouponCode() != null && !request.getCouponCode().isBlank()) {
+            couponResult = couponValidationService.validateAndCalculate(request.getCouponCode(), subtotal, request.getUserId());
+            discount = couponResult.getDiscountAmount();
+            couponCode = couponResult.getCoupon().getCode();
+            couponId = couponResult.getCoupon().getId();
+        }
+
+        BigDecimal total = subtotal.subtract(discount).max(BigDecimal.ZERO);
 
         Order order = Order.builder()
                 .userId(request.getUserId())
                 .status(OrderStatus.PENDING)
                 .subtotal(subtotal)
                 .discountTotal(discount)
-                .total(subtotal.subtract(discount).max(BigDecimal.ZERO))
+                .total(total)
                 .currency(request.getCurrency() == null ? "USD" : request.getCurrency().toUpperCase())
+                .couponCode(couponCode)
+                .couponId(couponId)
                 .build();
 
         List<OrderItem> items = request.getItems().stream()
@@ -49,7 +69,15 @@ public class OrderServiceImpl implements OrderService {
                         .build())
                 .toList();
         order.setItems(items);
-        return toResponse(orderRepository.save(order));
+
+        Order saved = orderRepository.save(order);
+
+        // Record atomic redemption
+        if (couponResult != null && couponResult.getCoupon() != null) {
+            couponValidationService.recordRedemption(couponResult.getCoupon(), request.getUserId(), saved.getId(), discount);
+        }
+
+        return toResponse(saved);
     }
 
     @Override
@@ -74,6 +102,7 @@ public class OrderServiceImpl implements OrderService {
                 .status(order.getStatus())
                 .subtotal(order.getSubtotal())
                 .discountTotal(order.getDiscountTotal())
+                .couponCode(order.getCouponCode())
                 .total(order.getTotal())
                 .currency(order.getCurrency())
                 .items(order.getItems().stream()

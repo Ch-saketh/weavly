@@ -17,6 +17,7 @@ import {
   UserCheck,
   ShoppingBag,
   Palette,
+  Tag,
 } from "lucide-react";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import { getCurrentAdmin, adminLogout } from "@/modules/admin/services/adminService";
@@ -115,6 +116,14 @@ export default function AdminSidebar({ activeTab = "overview" }) {
       href: "/admin/orders",
       active: pathname.startsWith("/admin/orders") || activeTab === "orders",
       visible: hasPermission("orders.read"),
+    },
+    {
+      id: "coupons",
+      label: "Commercial Coupons",
+      icon: Tag,
+      href: "/admin/coupons",
+      active: pathname.startsWith("/admin/coupons") || activeTab === "coupons",
+      visible: hasPermission("coupons.read"),
     },
     {
       id: "applications",

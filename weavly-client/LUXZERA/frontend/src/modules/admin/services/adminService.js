@@ -481,3 +481,51 @@ export const exportDesigners = async (params = {}) => {
   return response.data;
 };
 
+/**
+ * 9. Commercial Coupons & Promotions Administration
+ */
+
+export const getCoupons = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/coupons', { params });
+  return response.data;
+};
+
+export const getCouponDetail = async (id) => {
+  const response = await apiClient.get(`/api/admin/coupons/${id}`);
+  return response.data;
+};
+
+export const createCoupon = async (payload) => {
+  const response = await apiClient.post('/api/admin/coupons', payload);
+  return response.data;
+};
+
+export const updateCoupon = async (id, payload) => {
+  const response = await apiClient.patch(`/api/admin/coupons/${id}`, payload);
+  return response.data;
+};
+
+export const activateCoupon = async (id) => {
+  const response = await apiClient.post(`/api/admin/coupons/${id}/activate`);
+  return response.data;
+};
+
+export const deactivateCoupon = async (id) => {
+  const response = await apiClient.post(`/api/admin/coupons/${id}/deactivate`);
+  return response.data;
+};
+
+export const deleteCoupon = async (id) => {
+  const response = await apiClient.delete(`/api/admin/coupons/${id}`);
+  return response.data;
+};
+
+export const exportCoupons = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/coupons/export', {
+    params,
+    responseType: 'blob'
+  });
+  return response.data;
+};
+
+

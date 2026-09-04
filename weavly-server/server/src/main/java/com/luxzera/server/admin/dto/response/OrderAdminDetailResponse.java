@@ -23,6 +23,8 @@ public class OrderAdminDetailResponse {
     private OrderStatus status;
     private BigDecimal subtotal;
     private BigDecimal discountTotal;
+    private String couponCode;
+    private UUID couponId;
     private BigDecimal total;
     private String currency;
     private CustomerSnapshotDto customer;

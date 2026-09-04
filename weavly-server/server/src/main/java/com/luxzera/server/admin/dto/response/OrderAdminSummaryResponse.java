@@ -25,6 +25,7 @@ public class OrderAdminSummaryResponse {
     private OrderStatus status;
     private BigDecimal subtotal;
     private BigDecimal discountTotal;
+    private String couponCode;
     private BigDecimal total;
     private String currency;
     private int itemCount;

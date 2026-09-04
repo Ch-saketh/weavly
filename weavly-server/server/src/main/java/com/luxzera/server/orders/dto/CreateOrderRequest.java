@@ -14,6 +14,7 @@ public class CreateOrderRequest {
     @NotNull
     private UUID userId;
     private BigDecimal discountTotal = BigDecimal.ZERO;
+    private String couponCode;
     private String currency = "USD";
     @Valid
     @NotEmpty

@@ -80,6 +80,12 @@ public class Order {
     @Column(name = "refund_requested_amount")
     private BigDecimal refundRequestedAmount;
 
+    @Column(name = "coupon_code", length = 64)
+    private String couponCode;
+
+    @Column(name = "coupon_id")
+    private UUID couponId;
+
     @Version
     @Column(name = "version")
     private Long version;
