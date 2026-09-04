@@ -43,3 +43,4 @@ huggingface/
 zyra_fashion_research/models/
 zyra/product_encoder/models/
 zyra/zyra_model/models/
+reports/image_cache/

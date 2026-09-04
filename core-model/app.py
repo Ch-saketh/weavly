@@ -1,7 +1,7 @@
-"""Zyra V1 Recommendation Engine - Flask Inference & Persistence API.
+"""Zyra V2 Recommendation Engine - Flask Inference & Persistence API.
 
-Exposes the validated Zyra V1 standalone engine and recommendation persistence
-services via a lightweight HTTP API.
+Exposes the validated Zyra V2 multi-stage recommendation engine and recommendation
+persistence services via a lightweight HTTP API.
 """
 
 import logging
@@ -12,7 +12,7 @@ from typing import Any, Dict, Optional, Tuple
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from zyra import RecommendationPersistenceService, ZyraV1
+from zyra import RecommendationPersistenceService, ZyraV1, ZyraV2
 
 # Configure logging
 logging.basicConfig(
@@ -26,10 +26,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 ARTIFACT_DIR = PROJECT_ROOT / "p10_production_artifacts"
 DB_PATH = PROJECT_ROOT / "zyra_recommendations.db"
 
-# Initialize Zyra V1 Engine once at module import
-logger.info("Initializing ZyraV1 engine from %s...", ARTIFACT_DIR)
-zyra = ZyraV1(artifact_dir=ARTIFACT_DIR)
-logger.info("ZyraV1 engine initialized successfully.")
+# Initialize Zyra V2 Engine once at module import
+logger.info("Initializing ZyraV2 engine from %s...", ARTIFACT_DIR)
+zyra = ZyraV2(artifact_dir=ARTIFACT_DIR)
+logger.info("ZyraV2 engine initialized successfully.")
 
 # Initialize Persistence Service once
 logger.info("Initializing RecommendationPersistenceService with %s...", DB_PATH)
@@ -56,7 +56,7 @@ def health() -> Tuple[Any, int]:
         jsonify(
             {
                 "status": "ok",
-                "service": "zyra-v1",
+                "service": "zyra-v2",
                 "engineVersion": zyra.config.engine_version,
                 "database": "connected" if db_healthy else "degraded",
             }
@@ -168,6 +168,7 @@ def recommend() -> Tuple[Any, int]:
             avoided_colors=avoided_colors,
             budget_range=budget_range,
             user_embedding=user_embedding,
+            user_id=user_id,
         )
     except ValueError as exc:
         return jsonify({"error": str(exc), "productId": product_id_str}), 400

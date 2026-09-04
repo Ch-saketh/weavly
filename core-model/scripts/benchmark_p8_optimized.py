@@ -97,7 +97,7 @@ def run_benchmark():
     print("=" * 70)
 
     # 1. Load Dataset
-    dataset_path = Path("/Users/saketh/Desktop/Projects/weavly/data/raw/myntra-fashion-products/Myntra_fashion_products.csv")
+    dataset_path = PROJECT_ROOT.parent / "data" / "raw" / "myntra-fashion-products" / "Myntra_fashion_products.csv"
     if not dataset_path.exists():
         raise FileNotFoundError(f"Dataset not found at {dataset_path}")
 

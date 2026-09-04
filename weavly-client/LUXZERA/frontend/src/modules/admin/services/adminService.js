@@ -295,7 +295,59 @@ export const exportProducts = async (params = {}) => {
 };
 
 /**
- * 6. Admin Invitations & Onboarding Lifecycle (Super Admin)
+ * 6. Order Operations & Commerce Administration
+ */
+
+export const getOrders = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/orders', { params });
+  return response.data;
+};
+
+export const getOrderDetail = async (id) => {
+  const response = await apiClient.get(`/api/admin/orders/${id}`);
+  return response.data;
+};
+
+export const updateOrderStatus = async (id, payload) => {
+  const response = await apiClient.patch(`/api/admin/orders/${id}/status`, payload);
+  return response.data;
+};
+
+export const cancelOrder = async (id, payload) => {
+  const response = await apiClient.post(`/api/admin/orders/${id}/cancel`, payload);
+  return response.data;
+};
+
+export const getOrderTracking = async (id) => {
+  const response = await apiClient.get(`/api/admin/orders/${id}/tracking`);
+  return response.data;
+};
+
+export const updateOrderTracking = async (id, payload) => {
+  const response = await apiClient.patch(`/api/admin/orders/${id}/tracking`, payload);
+  return response.data;
+};
+
+export const requestOrderRefund = async (id, payload) => {
+  const response = await apiClient.post(`/api/admin/orders/${id}/refund`, payload);
+  return response.data;
+};
+
+export const getOrderTimeline = async (id) => {
+  const response = await apiClient.get(`/api/admin/orders/${id}/timeline`);
+  return response.data;
+};
+
+export const exportOrders = async (params = {}) => {
+  const response = await apiClient.get('/api/admin/orders/export', {
+    params,
+    responseType: 'blob'
+  });
+  return response.data;
+};
+
+/**
+ * 7. Admin Invitations & Onboarding Lifecycle (Super Admin)
  */
 
 // Super Admin sends invitation to email with assigned role

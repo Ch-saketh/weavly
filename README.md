@@ -197,48 +197,114 @@ The **Product Encoder** transforms raw catalog entries (garment photography, des
 
 ---
 
-## 🎯 5. Zyra Multi-Model Recommendation Engine
+## 🎯 5. Zyra V2 — Fashion Intelligence Architecture
 
-When a user visits the **ZeraCollection** or **Virtual Wardrobe**, Zyra executes a 6-stage real-time inference pipeline in under 500ms:
+**Zyra V2** is the active beta recommendation architecture for Weavly. It executes a multi-stage fashion intelligence pipeline combining hard constraint validation, semantic suitability, pretrained outfit compatibility, and diversity-aware ranking:
 
+```text
+User Profile
+    ↓
+Hard Constraints
+    ↓
+Semantic Suitability
+    ↓
+Candidate Products
+    ↓
+Outfit Compatibility
+    ↓
+Diversity-Aware Ranking
+    ↓
+Personalized Outfits
 ```
-                         ZYRA INFERENCE & RECOMMENDATION PIPELINE
 
-   User Representation (662D) + Target Occasion (e.g. Wedding, College, Formal)
-       │
-   [Step 1: Vector Candidate Retrieval]
-       • High-speed Cosine Vector Search in Qdrant over product embeddings:
-         CosineSimilarity(u, v) = (u · v) / (||u||₂ ||v||₂)
-       • Pulls top 50-100 nearest candidates
-       │
-   [Step 2: Profile Hydration & Gender/Age Guardrails]
-       • Real-time batch hydration of structured product profiles from PostgreSQL
-       • Strict gender & age filtering: Male users never receive women's/kids items;
-         Female accounts only receive Women's + Unisex fashion.
-       │
-   [Step 3: Model 1 — Outfit Compatibility (S_outfit)]
-       • Graph-based synergy scoring across item categories (Tops, Bottoms, Outerwear, Footwear)
-       • Color harmony matrix (monochromatic, complementary, split-complementary, analogous)
-       • Pattern clash prevention & formality level cohesion
-       │
-   [Step 4: Model 2 — Person x Garment Suitability (S_person)]
-       • Biometric fit evaluation (Shoulder width, chest ease, drape characteristics)
-       • Melanin undertone & color season palette alignment
-       • Fashion archetype resonance (Minimalist, Classic, Streetwear, Ethnic, Sporty)
-       │
-   [Step 5: Model 3 — Occasion Suitability Matrix (S_occasion)]
-       • Contextual occasion affinity:
-         - Wedding / Formal: Bandhgala, Tuxedos, Blazers, Sherwanis, Evening Gowns
-         - College / Casual: Oversized Tees, Denim, Hoodies, Sneakers
-         - Sport / Gym: Performance activewear, dry-fit tees, trainers
-       │
-   [Step 6: Dynamic Multi-Objective Re-Ranker & Top-10 Generator]
-       • Final blended suitability score:
-         S_final = 0.20 * S_retrieval + 0.30 * S_person + 0.25 * S_outfit + 0.25 * S_occasion
-       • Title & Image Deduplication (Zero repeated cards or identical thumbnail previews)
-       • Sequential rank assignment (Ranks 1..10)
-       • Real-time Indian Rupees (₹) pricing formatting
+### 1. User Representation
+Zyra consumes the existing Weavly user profile containing relevant:
+- Gender
+- Body/fit information (height, weight, body proportions, sizing)
+- Preferred styles & fashion archetypes
+- Explicit avoided styles
+- Preferred colors & palette affinity
+- Explicit avoided colors
+- Preferred clothing types / categories
+- Explicit avoided clothing types
+- Target occasions (Casual, Work, Festive, Evening, etc.)
+- Budget & maximum price ceiling
+- Visual signals where available (melanin undertone, face geometry, multi-image anchors)
+
+*Implementation Classification: DETERMINISTIC SYNTHESIS*  
+Body and fit personalization is currently constrained by catalog coverage and remains an area for continuous future refinement.
+
+### 2. Hard Constraints
+Explicit constraints are strictly evaluated before semantic scoring to guarantee zero dress-code, category, or budget leakage:
+- **Gender Compatibility**: Zero cross-gender leakage (Male accounts only receive Men's + Unisex garments; Female accounts receive Women's + Unisex garments).
+- **Valid Product/Category Requirements**: Slot classification with word-boundary title sanitization.
+- **Explicit Avoided Categories & Styles**: Strict negative-constraint blacklist filtering.
+- **Budget Ceiling**: Explicit hard constraint (`product.price_numeric <= user_budget_ceiling`). Products above the user's hard budget ceiling never enter the candidate pool.
+- **Catalog Validity**: Strict positive non-zero pricing and inventory checks.
+
+*Implementation Classification: RULE / DATA VALIDATION*
+
+### 3. Semantic Suitability
+Candidates passing hard constraints are ranked using **B2-PFR-inspired deterministic semantic suitability**.
+
+Suitability combines pretrained dense representations and explicit profile signals rather than a supervised B2-PFR model:
+- **Dense Vector Cosine Similarity (35%)**: 662-dimensional space combining 512D Fashion-CLIP visual representations with 128D attribute and 22D fit dimensions.
+- **Style Archetype & Formality Alignment (30%)**: Lexical and semantic affinity against user preferred styles and target dress codes.
+- **Category Preference Resonance (20%)**: Keyword and category matching against user-specified wardrobe preferences.
+- **Color Palette Affinity (15%)**: Palette harmony matching against user-selected preferred colors.
+
+*Implementation Classification: DETERMINISTIC SEMANTIC SCORING*
+
+### 4. Outfit Compatibility
+Garments from suitable candidate pools are assembled into harmonized outfit combinations (separates and allbody sets) and evaluated by:
+
+**OutfitCLIPTransformer**
+
+This pretrained outfit compatibility component (trained on Polyvore Outfits using Fashion-CLIP ViT-B/32 representations) executes cross-attention self-interaction over all items in an outfit to predict multi-modal visual and stylistic compatibility. It evaluates whether selected garments cohere as an outfit, while individual user preference is governed by the suitability stage.
+
+*Implementation Classification: PRETRAINED OutfitCLIPTransformer*
+
+### 5. Diversity-Aware Ranking
+Final outfit selection uses a multi-objective ranking function balancing personal affinity, aesthetic coherence, and wardrobe variety:
+
+$$\text{FinalScore} = 0.45 \times \text{Suitability} + 0.45 \times \text{Compatibility} + 0.10 \times \text{DiversityBonus}$$
+
+Where:
+- $\text{Suitability}$ is the mean composite suitability across items in the outfit.
+- $\text{Compatibility}$ is the OutfitCLIPTransformer score $\in [0, 1]$.
+- $\text{DiversityBonus} = 0.10 \times \frac{|\text{Unique Brands}|}{|\text{Outfit Items}|}$ to prevent single-brand saturation.
+
+### 6. Personalization
+Zyra V2 generates distinct candidate pools, dress codes, and outfit selections across varying user personas. While candidate generation adapts to each profile's style, color, occasion, and budget parameters, universal personalization guarantees are not claimed across edge-case catalog bounds.
+
+### 7. Beta Validation Results
+The active Zyra V2 beta architecture has undergone exhaustive adversarial stress testing across 15 distinct personas:
+
+```text
+15 personas
+45 outfits
+135 recommended items
+
+Gender correctness: 100%
+Category correctness: 100%
+Style correctness: 100%
+Occasion correctness: 100%
+Avoidance adherence: 100%
+Budget enforcement: 100%
+Personalization divergence: 97.17%
+Mean outfit compatibility: 0.8018
+Mean latency: 821.8 ms
 ```
+
+> **Beta Status**: `BETA READY WITH VALIDATED BUDGET CEILING`  
+> *(Results represent empirical beta validation measurements on Apple Silicon MPS, not absolute production guarantees.)*
+
+### 8. Known Limitations
+- **Men's Ethnic Footwear Catalog Coverage**: The current catalog contains zero items for men's traditional ethnic footwear (juttis/mojris).
+- **Oversized Menswear Catalog Scarcity**: Less than 3 products in the catalog explicitly represent oversized menswear cuts.
+- **Body-Fit Signal Constraints**: Sizing and biometric personalization are currently constrained by sparse structured sizing in catalog metadata.
+- **Learned Personalization**: End-to-end supervised user-item interaction training represents future V3 research.
+- **Budget Enforcement vs Optimization**: Budget is enforced as a hard ceiling; optimization within the allowed range does not yet model non-linear price elasticity.
 
 ---
 
@@ -280,13 +346,12 @@ cd core-model
 
 # 1. Activate Python Virtual Environment
 source .venv/bin/activate
-# (Or create one: python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt)
 
-# 2. Launch FastAPI with Hot-Reload
-uvicorn zyra.zyra_model.main:app --host 0.0.0.0 --port 8001 --reload
+# 2. Launch Zyra V2 Recommendation Engine (Port 5001)
+python app.py
 ```
-- **Health Check:** `curl http://localhost:8001/health`
-- **Interactive OpenAPI Docs:** `http://localhost:8001/docs`
+- **Health Check:** `curl http://localhost:5001/health`
+- **Engine Info:** `curl http://localhost:5001/info`
 
 ---
 
@@ -319,23 +384,27 @@ npm run dev
 
 ---
 
-## 🧪 8. Testing & Evaluation Framework (Phase P5)
+## 🧪 8. Testing & Evaluation Framework
 
-We test our neural algorithms before deploying them to mission-critical operations.
+We test our recommendation algorithms before deploying them to mission-critical operations.
 
 ```bash
-# Run the complete 121-suite unit & integration tests
 cd core-model
-.venv/bin/pytest zyra/zyra_model/tests/
 
-# Execute the 24-case Phase P5 Evaluation Benchmark
-.venv/bin/python zyra/zyra_model/evaluation/runner.py
+# 1. Run unit & integration tests
+pytest zyra/user_encoder/tests/
+
+# 2. Run the Budget Hard-Filter Regression Suite (0 violations required)
+python run_budget_regression.py
+
+# 3. Execute the 15-Persona Adversarial Stress Test
+python adversarial_stress_test.py
 ```
 
 Generated reports:
-- **Human Review Document:** [`docs/ZYRA_V0_HUMAN_EVALUATION.md`](file:///docs/ZYRA_V0_HUMAN_EVALUATION.md)
-- **Automated Quality Summary:** [`reports/zyra_v0_evaluation.md`](file:///reports/zyra_v0_evaluation.md)
-- **Raw Latency & Score Metrics:** [`reports/zyra_v0_evaluation.json`](file:///reports/zyra_v0_evaluation.json)
+- **Zyra V2 Release Validation Report:** [`reports/zyra_v2_release_validation.md`](file:///core-model/reports/zyra_v2_release_validation.md)
+- **Adversarial Stress Test Report:** [`reports/adversarial_stress_test_report.md`](file:///core-model/reports/adversarial_stress_test_report.md)
+- **Budget Regression Report:** [`reports/budget_regression_test_report.md`](file:///core-model/reports/budget_regression_test_report.md)
 
 ---
 

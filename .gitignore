@@ -47,6 +47,7 @@ htmlcov/
 .ipynb_checkpoints/
 data/raw/
 p8_output/
+**/image_cache/
 
 # Java / Spring Boot
 target/

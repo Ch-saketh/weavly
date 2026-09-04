@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Activity,
   UserCheck,
+  ShoppingBag,
 } from "lucide-react";
 import WeavlyLogo from "@/shared/components/ui/WeavlyLogo";
 import { getCurrentAdmin, adminLogout } from "@/modules/admin/services/adminService";
@@ -97,6 +98,14 @@ export default function AdminSidebar({ activeTab = "overview" }) {
       href: "/admin/products",
       active: pathname.startsWith("/admin/products") || activeTab === "products",
       visible: hasPermission("products.read"),
+    },
+    {
+      id: "orders",
+      label: "Order Operations",
+      icon: ShoppingBag,
+      href: "/admin/orders",
+      active: pathname.startsWith("/admin/orders") || activeTab === "orders",
+      visible: hasPermission("orders.read"),
     },
     {
       id: "applications",

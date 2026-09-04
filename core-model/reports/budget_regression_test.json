@@ -1,0 +1,4338 @@
+{
+  "timestamp": "2026-09-04 03:07:11 UTC",
+  "device": "mps",
+  "controlled_evaluations": {
+    "user_a_budget_500": {
+      "name": "User A (Max Budget \u20b9500)",
+      "profile": {
+        "persona_id": "user_a_budget_500",
+        "name": "User A (Max Budget \u20b9500)",
+        "gender": "Women",
+        "max_budget": 500.0,
+        "budget_range": "Under \u20b9500",
+        "style": "Casual, minimalist, affordable",
+        "occasion": "Casual",
+        "fit_preference": "Regular",
+        "formality_target": "MINIMALIST_ELEGANT",
+        "preferred_styles": [
+          "Casual",
+          "Minimalist",
+          "Classic"
+        ],
+        "avoided_styles": [
+          "Luxury",
+          "Glamorous"
+        ],
+        "preferred_categories": [
+          "shirt",
+          "trousers",
+          "flats",
+          "kurta",
+          "palazzo"
+        ],
+        "avoided_categories": [
+          "heels",
+          "designer",
+          "suit"
+        ],
+        "preferred_colors": [
+          "black",
+          "navy",
+          "white",
+          "blue"
+        ],
+        "avoided_colors": [
+          "neon"
+        ],
+        "sizing": {
+          "top": "S",
+          "bottom": "28",
+          "shoe": "6",
+          "height_cm": 162.0,
+          "weight_kg": 54.0
+        }
+      },
+      "max_budget": 500.0,
+      "status": "PASS",
+      "outfits_recommended": 3,
+      "items_recommended": 9,
+      "min_item_price": 359.0,
+      "max_item_price": 499.0,
+      "budget_violations": 0,
+      "violation_rate_pct": 0.0,
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_9",
+          "finalScore": 0.1846,
+          "suitabilityScore": 0.1756,
+          "compatibilityScore": 0.2124,
+          "items": [
+            {
+              "productId": 10255959,
+              "name": "STREET 9 Women Peach-Coloured & White Regular Fit Printed Casual Crop Shirt",
+              "brand": "street 9",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 419.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10255959/2019/7/22/693e7fdc-7ffa-410f-8977-e559f040ae1b1563776605775-STREET-9-Women-Tops-4091563776604208-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2527500726655125,
+              "globalIndex": 11491
+            },
+            {
+              "productId": 10185303,
+              "name": "AURELIA Women Navy Blue Regular Fit Printed Cropped Trousers",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 499.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10185303/2019/7/25/a8be3c11-01ce-4dbf-a452-c85ecd8b349f1564047393848-AURELIA-Women-Trousers-3361564047392205-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15768436642363667,
+              "globalIndex": 6887
+            },
+            {
+              "productId": 10203187,
+              "name": "Shoetopia Women Pink Solid Open Toe Flats",
+              "brand": "shoetopia",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 499.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/4/41d483a2-5d01-4187-8497-384e258789331562264331826-1.jpg",
+              "formalities": [
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.11628099046647548,
+              "globalIndex": 8803
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_5",
+          "finalScore": 0.1737,
+          "suitabilityScore": 0.1761,
+          "compatibilityScore": 0.1877,
+          "items": [
+            {
+              "productId": 10255959,
+              "name": "STREET 9 Women Peach-Coloured & White Regular Fit Printed Casual Crop Shirt",
+              "brand": "street 9",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 419.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10255959/2019/7/22/693e7fdc-7ffa-410f-8977-e559f040ae1b1563776605775-STREET-9-Women-Tops-4091563776604208-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2527500726655125,
+              "globalIndex": 11491
+            },
+            {
+              "productId": 10185325,
+              "name": "AURELIA Women Navy Blue Regular Fit Solid Cropped Trousers",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 359.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10185325/2019/7/17/d452a063-28fe-4f48-83d9-674ee18a62051563359724688-AURELIA-Women-Navy-Blue-Regular-Fit-Solid-Regular-Trousers-3-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15836486450396478,
+              "globalIndex": 7163
+            },
+            {
+              "productId": 10007607,
+              "name": "ether Women Cream-Coloured Solid Peep Toe Flats",
+              "brand": "ether",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 449.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10007607/2019/12/20/832a6acf-5459-4d21-bf62-5b6985b68feb1576831851884-ether-Women-Flats-1711576831850773-1.jpg",
+              "formalities": [
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1172917140647769,
+              "globalIndex": 920
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_6",
+          "finalScore": 0.1702,
+          "suitabilityScore": 0.1758,
+          "compatibilityScore": 0.1802,
+          "items": [
+            {
+              "productId": 10255959,
+              "name": "STREET 9 Women Peach-Coloured & White Regular Fit Printed Casual Crop Shirt",
+              "brand": "street 9",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 419.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10255959/2019/7/22/693e7fdc-7ffa-410f-8977-e559f040ae1b1563776605775-STREET-9-Women-Tops-4091563776604208-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2527500726655125,
+              "globalIndex": 11491
+            },
+            {
+              "productId": 10185325,
+              "name": "AURELIA Women Navy Blue Regular Fit Solid Cropped Trousers",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 359.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10185325/2019/7/17/d452a063-28fe-4f48-83d9-674ee18a62051563359724688-AURELIA-Women-Navy-Blue-Regular-Fit-Solid-Regular-Trousers-3-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15836486450396478,
+              "globalIndex": 7163
+            },
+            {
+              "productId": 10203187,
+              "name": "Shoetopia Women Pink Solid Open Toe Flats",
+              "brand": "shoetopia",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 499.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/4/41d483a2-5d01-4187-8497-384e258789331562264331826-1.jpg",
+              "formalities": [
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.11628099046647548,
+              "globalIndex": 8803
+            }
+          ]
+        }
+      ]
+    },
+    "user_b_budget_2000": {
+      "name": "User B (Max Budget \u20b92,000)",
+      "profile": {
+        "persona_id": "user_b_budget_2000",
+        "name": "User B (Max Budget \u20b92,000)",
+        "gender": "Men",
+        "max_budget": 2000.0,
+        "budget_range": "\u20b91,500\u2013\u20b92,000",
+        "style": "Streetwear, casual, urban",
+        "occasion": "Casual",
+        "fit_preference": "Regular",
+        "formality_target": "STREETWEAR_CASUAL",
+        "preferred_styles": [
+          "Streetwear",
+          "Casual",
+          "Urban"
+        ],
+        "avoided_styles": [
+          "Formal",
+          "Traditional"
+        ],
+        "preferred_categories": [
+          "tshirt",
+          "jeans",
+          "sneakers"
+        ],
+        "avoided_categories": [
+          "derby",
+          "oxford",
+          "formalwear",
+          "suit"
+        ],
+        "preferred_colors": [
+          "black",
+          "grey",
+          "navy",
+          "blue"
+        ],
+        "avoided_colors": [
+          "pink",
+          "pastel"
+        ],
+        "sizing": {
+          "top": "L",
+          "bottom": "32",
+          "shoe": "10",
+          "height_cm": 180.0,
+          "weight_kg": 75.0
+        }
+      },
+      "max_budget": 2000.0,
+      "status": "PASS",
+      "outfits_recommended": 3,
+      "items_recommended": 9,
+      "min_item_price": 1279.0,
+      "max_item_price": 1999.0,
+      "budget_violations": 0,
+      "violation_rate_pct": 0.0,
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_5",
+          "finalScore": 0.5478,
+          "suitabilityScore": 0.2038,
+          "compatibilityScore": 0.9913,
+          "items": [
+            {
+              "productId": 10264371,
+              "name": "Pepe Jeans Men Navy Blue & White Regular Fit Checked Reversible Casual Shirt",
+              "brand": "pepe jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1299.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10264371/2019/12/19/d9bdaa02-ec5d-42da-83e1-83d038592d221576747204327-Pepe-Jeans-Men-Shirts-6721576747202231-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.27376612000167366,
+              "globalIndex": 11944
+            },
+            {
+              "productId": 10222883,
+              "name": "Ed Hardy Men Navy Blue Slim Fit Mid-Rise Clean Look Stretchable Jeans",
+              "brand": "ed hardy",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 1439.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10222883/2020/7/20/fbfe9c01-1b39-4f2b-8708-fc2208b612841595233522725-Ed-Hardy-Men-Jeans-9231595233520624-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.17208757635205982,
+              "globalIndex": 9647
+            },
+            {
+              "productId": 10274547,
+              "name": "Parx Men Navy Blue Sneakers",
+              "brand": "parx",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10274547/2019/7/23/d03fc3eb-c983-443b-90ba-d59fe754a8c71563881531204-Parx-Men-Navy-Blue-Sneakers-7711563881530348-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1654757976718247,
+              "globalIndex": 12440
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_1",
+          "finalScore": 0.5455,
+          "suitabilityScore": 0.2041,
+          "compatibilityScore": 0.986,
+          "items": [
+            {
+              "productId": 10264371,
+              "name": "Pepe Jeans Men Navy Blue & White Regular Fit Checked Reversible Casual Shirt",
+              "brand": "pepe jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1299.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10264371/2019/12/19/d9bdaa02-ec5d-42da-83e1-83d038592d221576747204327-Pepe-Jeans-Men-Shirts-6721576747202231-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.27376612000167366,
+              "globalIndex": 11944
+            },
+            {
+              "productId": 10222837,
+              "name": "Ed Hardy Men Black Skuller Super Slim Fit Mid-Rise Clean Look Stretchable Jeans",
+              "brand": "ed hardy",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 1279.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10222837/2019/8/3/7d1367fd-b29a-4d03-a0db-03f47f56589e1564828864156-Ed-Hardy-Men-Jeans-6601564828862228-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.17271909948438405,
+              "globalIndex": 9099
+            },
+            {
+              "productId": 10224525,
+              "name": "Roadster Men Black Sneakers",
+              "brand": "roadster",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10224525/2020/2/20/80c0ac33-9111-4d6d-a700-5f42318dcef31582182806510-Roadster-Men-Black-Sneakers-2811582182805474-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1657828247360885,
+              "globalIndex": 8945
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_7",
+          "finalScore": 0.5427,
+          "suitabilityScore": 0.2039,
+          "compatibilityScore": 0.9799,
+          "items": [
+            {
+              "productId": 10264371,
+              "name": "Pepe Jeans Men Navy Blue & White Regular Fit Checked Reversible Casual Shirt",
+              "brand": "pepe jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1299.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10264371/2019/12/19/d9bdaa02-ec5d-42da-83e1-83d038592d221576747204327-Pepe-Jeans-Men-Shirts-6721576747202231-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.27376612000167366,
+              "globalIndex": 11944
+            },
+            {
+              "productId": 10178063,
+              "name": "Duke Men Black Slim Fit Mid-Rise Clean Look Jeans",
+              "brand": "duke",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 1627.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/1/d065a0cb-e7f6-4be4-a876-a0b137f3da7b1561981937852-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.17207304622977973,
+              "globalIndex": 7344
+            },
+            {
+              "productId": 10224525,
+              "name": "Roadster Men Black Sneakers",
+              "brand": "roadster",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10224525/2020/2/20/80c0ac33-9111-4d6d-a700-5f42318dcef31582182806510-Roadster-Men-Black-Sneakers-2811582182805474-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1657828247360885,
+              "globalIndex": 8945
+            }
+          ]
+        }
+      ]
+    },
+    "user_c_budget_10000": {
+      "name": "User C (Max Budget \u20b910,000)",
+      "profile": {
+        "persona_id": "user_c_budget_10000",
+        "name": "User C (Max Budget \u20b910,000)",
+        "gender": "Women",
+        "max_budget": 10000.0,
+        "budget_range": "\u20b95,000\u2013\u20b910,000",
+        "style": "Festive, ethnic, elegant, luxury",
+        "occasion": "Wedding",
+        "fit_preference": "Regular",
+        "formality_target": "ETHNIC_FESTIVE",
+        "preferred_styles": [
+          "Festive",
+          "Ethnic",
+          "Elegant"
+        ],
+        "avoided_styles": [
+          "Sporty",
+          "Streetwear"
+        ],
+        "preferred_categories": [
+          "saree",
+          "kurta",
+          "anarkali",
+          "palazzo",
+          "heels"
+        ],
+        "avoided_categories": [
+          "gymwear",
+          "tshirt",
+          "sneakers"
+        ],
+        "preferred_colors": [
+          "red",
+          "gold",
+          "maroon"
+        ],
+        "avoided_colors": [
+          "black",
+          "grey"
+        ],
+        "sizing": {
+          "top": "M",
+          "bottom": "30",
+          "shoe": "7",
+          "height_cm": 165.0,
+          "weight_kg": 59.0
+        }
+      },
+      "max_budget": 10000.0,
+      "status": "PASS",
+      "outfits_recommended": 3,
+      "items_recommended": 9,
+      "min_item_price": 524.0,
+      "max_item_price": 4999.0,
+      "budget_violations": 0,
+      "violation_rate_pct": 0.0,
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_10",
+          "finalScore": 0.4208,
+          "suitabilityScore": 0.1912,
+          "compatibilityScore": 0.7217,
+          "items": [
+            {
+              "productId": 10186807,
+              "name": "AURELIA Women Maroon Ethnic Motifs Printed Anarakli Kurta with Churidar & With Dupatta",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 4999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10186807/2021/6/28/d63f9a54-1099-43a4-ab6f-b5b8636e23521624873386554-AURELIA-Women-Kurta-Sets-2131624873386117-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.25498441633768376,
+              "globalIndex": 7181
+            },
+            {
+              "productId": 10266011,
+              "name": "Jompers Women Red Solid Wide Leg Palazzos",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 699.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266011/2019/7/23/800310d8-982a-44de-8967-623b16a1f3df1563883530396-Jompers-Women-Red-Solid-Straight-Palazzos-4951563883527654-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15724385054316373,
+              "globalIndex": 11933
+            },
+            {
+              "productId": 10261763,
+              "name": "Mochi Women Gold-Toned Solid Heels",
+              "brand": "mochi",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1990.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/15/7396f336-8069-4a0a-97d6-51dbbf4363aa1563185022659-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16123412784188987,
+              "globalIndex": 11907
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_2",
+          "finalScore": 0.3625,
+          "suitabilityScore": 0.191,
+          "compatibilityScore": 0.5924,
+          "items": [
+            {
+              "productId": 10186807,
+              "name": "AURELIA Women Maroon Ethnic Motifs Printed Anarakli Kurta with Churidar & With Dupatta",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 4999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10186807/2021/6/28/d63f9a54-1099-43a4-ab6f-b5b8636e23521624873386554-AURELIA-Women-Kurta-Sets-2131624873386117-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.25498441633768376,
+              "globalIndex": 7181
+            },
+            {
+              "productId": 10013787,
+              "name": "Ishin Women Red & Gold-Toned Hem Design Wide Leg Palazzos",
+              "brand": "ishin",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 524.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10013787/2019/7/11/fabc7df4-ab72-40b1-9cef-48f83d836afe1562831482152-Ishin-Women-Red--Gold-Toned-Solid-Wide-Leg-Palazzos-22115628-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.15750811111181975,
+              "globalIndex": 217
+            },
+            {
+              "productId": 10261721,
+              "name": "Mochi Women Gold-Toned Solid Heels",
+              "brand": "mochi",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1990.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/15/3b377fdf-041f-472c-a694-c9d853ed2add1563189455243-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16048359304666518,
+              "globalIndex": 12461
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_5",
+          "finalScore": 0.3237,
+          "suitabilityScore": 0.191,
+          "compatibilityScore": 0.5062,
+          "items": [
+            {
+              "productId": 10186807,
+              "name": "AURELIA Women Maroon Ethnic Motifs Printed Anarakli Kurta with Churidar & With Dupatta",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 4999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10186807/2021/6/28/d63f9a54-1099-43a4-ab6f-b5b8636e23521624873386554-AURELIA-Women-Kurta-Sets-2131624873386117-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.25498441633768376,
+              "globalIndex": 7181
+            },
+            {
+              "productId": 10074635,
+              "name": "Vishudh Women Navy Blue & Red Solid Palazzos",
+              "brand": "vishudh",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 574.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/18/ac609e06-9d2c-4f50-bfe8-e3b455b8c25d1560852226402-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15743369753006844,
+              "globalIndex": 3458
+            },
+            {
+              "productId": 10261721,
+              "name": "Mochi Women Gold-Toned Solid Heels",
+              "brand": "mochi",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1990.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/15/3b377fdf-041f-472c-a694-c9d853ed2add1563189455243-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16048359304666518,
+              "globalIndex": 12461
+            }
+          ]
+        }
+      ]
+    },
+    "user_d_edge_budget_50": {
+      "name": "User D (Edge Case: Restrictive Budget \u20b950)",
+      "profile": {
+        "persona_id": "user_d_edge_budget_50",
+        "name": "User D (Edge Case: Restrictive Budget \u20b950)",
+        "gender": "Men",
+        "max_budget": 50.0,
+        "budget_range": "Under \u20b950",
+        "style": "Casual",
+        "occasion": "Casual",
+        "fit_preference": "Regular",
+        "formality_target": "STREETWEAR_CASUAL",
+        "preferred_styles": [
+          "Casual"
+        ],
+        "avoided_styles": [],
+        "preferred_categories": [
+          "tshirt",
+          "jeans",
+          "sneakers"
+        ],
+        "avoided_categories": [],
+        "preferred_colors": [
+          "black"
+        ],
+        "avoided_colors": [],
+        "sizing": {
+          "top": "L",
+          "bottom": "32",
+          "shoe": "10",
+          "height_cm": 180.0,
+          "weight_kg": 75.0
+        }
+      },
+      "max_budget": 50.0,
+      "status": "INSUFFICIENT CATALOG SUPPLY UNDER BUDGET",
+      "starved_slots": [
+        "top",
+        "bottom",
+        "shoes"
+      ],
+      "outfits_recommended": 0,
+      "items_recommended": 0,
+      "budget_violations": 0,
+      "violation_rate_pct": 0.0,
+      "top_outfits": []
+    }
+  },
+  "stress_test_metrics": {
+    "total_personas_tested": 15,
+    "total_recommendations_generated": 135,
+    "gender_leakage_rate_pct": 0.0,
+    "category_correctness_pct": 100.0,
+    "style_correctness_pct": 100.0,
+    "occasion_correctness_pct": 100.0,
+    "avoidance_correctness_pct": 100.0,
+    "budget_correctness_pct": 100.0,
+    "budget_violation_count": 0,
+    "budget_violation_rate_pct": 0.0,
+    "mean_compatibility": 0.783,
+    "mean_personalization_divergence_pct": 97.38,
+    "mean_top_divergence_pct": 99.05,
+    "mean_bottom_divergence_pct": 97.14,
+    "mean_shoe_divergence_pct": 94.68,
+    "worst_personalization_pair": {
+      "pair": "persona_02_m_formal vs persona_10_m_slim",
+      "jaccard_similarity": 0.6667,
+      "divergence_pct": 33.33
+    },
+    "mean_latency_ms": 815.8,
+    "p95_latency_ms": 942.8
+  },
+  "persona_evaluations": {
+    "persona_01_m_streetwear": {
+      "name": "Alex Mercer (Male Streetwear)",
+      "profile": {
+        "persona_id": "persona_01_m_streetwear",
+        "name": "Alex Mercer (Male Streetwear)",
+        "gender": "Men",
+        "style": "Streetwear, casual, graphic tees",
+        "occasion": "Casual",
+        "fit_preference": "Relaxed",
+        "preferred_styles": [
+          "Streetwear",
+          "Casual",
+          "Urban"
+        ],
+        "avoided_styles": [
+          "Formal",
+          "Traditional",
+          "Preppy"
+        ],
+        "preferred_categories": [
+          "tshirt",
+          "jeans",
+          "joggers",
+          "sneakers"
+        ],
+        "avoided_categories": [
+          "formalwear",
+          "suit",
+          "derby",
+          "oxford",
+          "kurta"
+        ],
+        "preferred_colors": [
+          "black",
+          "grey",
+          "navy"
+        ],
+        "avoided_colors": [
+          "pink",
+          "pastel",
+          "neon"
+        ],
+        "budget_range": "$100-$300",
+        "formality_target": "STREETWEAR_CASUAL",
+        "sizing": {
+          "top": "L",
+          "bottom": "32",
+          "shoe": "10",
+          "height_cm": 180.0,
+          "weight_kg": 75.0
+        }
+      },
+      "latency_ms": 932.5,
+      "scores": {
+        "suitability": 0.2086,
+        "compatibility": 0.9514,
+        "final": 0.532
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.9514
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_9",
+          "finalScore": 0.5439,
+          "suitabilityScore": 0.2085,
+          "compatibilityScore": 0.978,
+          "items": [
+            {
+              "productId": 10264121,
+              "name": "Pepe Jeans Men Navy Blue Regular Fit Printed Casual Shirt",
+              "brand": "pepe jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1099.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10264121/2019/12/19/be3cd2d2-c035-4f8d-b511-9ceae1d651211576747079945-Pepe-Jeans-Men-Shirts-7691576747078197-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2779592480883002,
+              "globalIndex": 11949
+            },
+            {
+              "productId": 10222829,
+              "name": "Ed Hardy Men Navy Blue Skuller Super Slim Fit Mid-Rise Clean Look Stretchable Jeans",
+              "brand": "ed hardy",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 1359.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10222829/2019/9/16/bae7c58c-be89-4d6c-a7be-4f92517715531568628697060-Ed-Hardy-Men-Navy-Blue-Skuller-Super-Slim-Fit-Mid-Rise-Clean-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1751607571914792,
+              "globalIndex": 9809
+            },
+            {
+              "productId": 10266865,
+              "name": "Levis Men Navy Blue Solid Sneakers",
+              "brand": "levis",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266865/2019/10/29/50a584ae-7492-45e5-8d5e-4c973f976ac51572326232182-Levis-Men-Navy-Blue-Sneakers-8431572326230003-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1724076523631811,
+              "globalIndex": 11816
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_7",
+          "finalScore": 0.535,
+          "suitabilityScore": 0.2087,
+          "compatibilityScore": 0.958,
+          "items": [
+            {
+              "productId": 10264121,
+              "name": "Pepe Jeans Men Navy Blue Regular Fit Printed Casual Shirt",
+              "brand": "pepe jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1099.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10264121/2019/12/19/be3cd2d2-c035-4f8d-b511-9ceae1d651211576747079945-Pepe-Jeans-Men-Shirts-7691576747078197-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2779592480883002,
+              "globalIndex": 11949
+            },
+            {
+              "productId": 10222829,
+              "name": "Ed Hardy Men Navy Blue Skuller Super Slim Fit Mid-Rise Clean Look Stretchable Jeans",
+              "brand": "ed hardy",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 1359.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10222829/2019/9/16/bae7c58c-be89-4d6c-a7be-4f92517715531568628697060-Ed-Hardy-Men-Navy-Blue-Skuller-Super-Slim-Fit-Mid-Rise-Clean-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1751607571914792,
+              "globalIndex": 9809
+            },
+            {
+              "productId": 10030431,
+              "name": "Geox Men Navy Blue Sneakers",
+              "brand": "geox",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3499.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10030431/2019/6/17/34867eb9-ed13-4d62-81bb-551fe5972a6e1560755930478-Geox-Men-Navy-Blue-Sneakers-1941560755929389-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.17299593195319177,
+              "globalIndex": 1042
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_6",
+          "finalScore": 0.5171,
+          "suitabilityScore": 0.2086,
+          "compatibilityScore": 0.9182,
+          "items": [
+            {
+              "productId": 10264121,
+              "name": "Pepe Jeans Men Navy Blue Regular Fit Printed Casual Shirt",
+              "brand": "pepe jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1099.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10264121/2019/12/19/be3cd2d2-c035-4f8d-b511-9ceae1d651211576747079945-Pepe-Jeans-Men-Shirts-7691576747078197-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2779592480883002,
+              "globalIndex": 11949
+            },
+            {
+              "productId": 10222883,
+              "name": "Ed Hardy Men Navy Blue Slim Fit Mid-Rise Clean Look Stretchable Jeans",
+              "brand": "ed hardy",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 1439.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10222883/2020/7/20/fbfe9c01-1b39-4f2b-8708-fc2208b612841595233522725-Ed-Hardy-Men-Jeans-9231595233520624-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.17551781564950944,
+              "globalIndex": 9647
+            },
+            {
+              "productId": 10266865,
+              "name": "Levis Men Navy Blue Solid Sneakers",
+              "brand": "levis",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266865/2019/10/29/50a584ae-7492-45e5-8d5e-4c973f976ac51572326232182-Levis-Men-Navy-Blue-Sneakers-8431572326230003-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1724076523631811,
+              "globalIndex": 11816
+            }
+          ]
+        }
+      ]
+    },
+    "persona_02_m_formal": {
+      "name": "Marcus Vance (Male Formal Professional)",
+      "profile": {
+        "persona_id": "persona_02_m_formal",
+        "name": "Marcus Vance (Male Formal Professional)",
+        "gender": "Men",
+        "style": "Formal, professional, tailored",
+        "occasion": "Work",
+        "fit_preference": "Tailored",
+        "preferred_styles": [
+          "Formal",
+          "Professional",
+          "Tailored"
+        ],
+        "avoided_styles": [
+          "Streetwear",
+          "Sporty",
+          "Casual"
+        ],
+        "preferred_categories": [
+          "shirt",
+          "trousers",
+          "blazers",
+          "shoes"
+        ],
+        "avoided_categories": [
+          "graphic tees",
+          "joggers",
+          "sneakers",
+          "t-shirt"
+        ],
+        "preferred_colors": [
+          "black",
+          "navy",
+          "white"
+        ],
+        "avoided_colors": [
+          "neon",
+          "orange",
+          "yellow"
+        ],
+        "budget_range": "$100-$300",
+        "formality_target": "FORMAL_BUSINESS",
+        "sizing": {
+          "top": "L",
+          "bottom": "32",
+          "shoe": "10",
+          "height_cm": 180.0,
+          "weight_kg": 75.0
+        }
+      },
+      "latency_ms": 749.9,
+      "scores": {
+        "suitability": 0.2696,
+        "compatibility": 0.9957,
+        "final": 0.5794
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.9957
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_6",
+          "finalScore": 0.5803,
+          "suitabilityScore": 0.2697,
+          "compatibilityScore": 0.9978,
+          "items": [
+            {
+              "productId": 10178403,
+              "name": "Canary London Men Navy Blue Smart Slim Fit Solid Formal Shirt",
+              "brand": "canary london",
+              "gender": "Men",
+              "category": "shirt",
+              "slot": "top",
+              "price": 674.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/1/bbbe1e58-86f0-4416-8882-b8144b5296161562004978211-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2691284893453121,
+              "globalIndex": 7113
+            },
+            {
+              "productId": 10201913,
+              "name": "Allen Solly Men Navy Blue Slim Fit Solid Formal Trousers",
+              "brand": "allen solly",
+              "gender": "Men",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1474.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/4/2c0e7b51-cc18-41da-8cac-a9f0178ac4241562238999949-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2694956526532769,
+              "globalIndex": 8525
+            },
+            {
+              "productId": 10005993,
+              "name": "ID Men Black Solid Formal Leather Derbys",
+              "brand": "id",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 956.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/13/314a5a70-59d1-4dee-9009-1cc33e58e4ea1560404067983-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2703606591001153,
+              "globalIndex": 627
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_9",
+          "finalScore": 0.579,
+          "suitabilityScore": 0.2692,
+          "compatibilityScore": 0.9951,
+          "items": [
+            {
+              "productId": 10178403,
+              "name": "Canary London Men Navy Blue Smart Slim Fit Solid Formal Shirt",
+              "brand": "canary london",
+              "gender": "Men",
+              "category": "shirt",
+              "slot": "top",
+              "price": 674.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/1/bbbe1e58-86f0-4416-8882-b8144b5296161562004978211-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2691284893453121,
+              "globalIndex": 7113
+            },
+            {
+              "productId": 10061121,
+              "name": "CODE by Lifestyle Men Navy Blue Slim Fit Self Design Formal Trousers",
+              "brand": "code by lifestyle",
+              "gender": "Men",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1699.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10061121/2019/9/26/d841d43c-02b5-4577-8c1d-20c9c1ad36661569488555041-CODE-by-Lifestyle-Men-Trousers-7341569488553907-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2681452913582325,
+              "globalIndex": 2346
+            },
+            {
+              "productId": 10005993,
+              "name": "ID Men Black Solid Formal Leather Derbys",
+              "brand": "id",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 956.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/13/314a5a70-59d1-4dee-9009-1cc33e58e4ea1560404067983-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2703606591001153,
+              "globalIndex": 627
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_4",
+          "finalScore": 0.5789,
+          "suitabilityScore": 0.27,
+          "compatibilityScore": 0.9942,
+          "items": [
+            {
+              "productId": 10178403,
+              "name": "Canary London Men Navy Blue Smart Slim Fit Solid Formal Shirt",
+              "brand": "canary london",
+              "gender": "Men",
+              "category": "shirt",
+              "slot": "top",
+              "price": 674.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/1/bbbe1e58-86f0-4416-8882-b8144b5296161562004978211-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2691284893453121,
+              "globalIndex": 7113
+            },
+            {
+              "productId": 10201913,
+              "name": "Allen Solly Men Navy Blue Slim Fit Solid Formal Trousers",
+              "brand": "allen solly",
+              "gender": "Men",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1474.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/4/2c0e7b51-cc18-41da-8cac-a9f0178ac4241562238999949-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2694956526532769,
+              "globalIndex": 8525
+            },
+            {
+              "productId": 10132801,
+              "name": "Allen Cooper Men Black Leather Formal Derbys",
+              "brand": "allen cooper",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1199.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/25/3ace1ab4-4256-4eb4-a08f-9cfc4a860e1d1561461506898-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2713392988219857,
+              "globalIndex": 4489
+            }
+          ]
+        }
+      ]
+    },
+    "persona_03_m_ethnic": {
+      "name": "Aarav Patel (Male Ethnic)",
+      "profile": {
+        "persona_id": "persona_03_m_ethnic",
+        "name": "Aarav Patel (Male Ethnic)",
+        "gender": "Men",
+        "style": "Ethnic, traditional, festive",
+        "occasion": "Festive",
+        "fit_preference": "Regular",
+        "preferred_styles": [
+          "Ethnic",
+          "Traditional",
+          "Festive"
+        ],
+        "avoided_styles": [
+          "Streetwear",
+          "Sporty"
+        ],
+        "preferred_categories": [
+          "kurta",
+          "nehru jacket",
+          "trousers",
+          "shoes"
+        ],
+        "avoided_categories": [
+          "graphic tees",
+          "joggers",
+          "sneakers",
+          "t-shirt"
+        ],
+        "preferred_colors": [
+          "cream",
+          "beige",
+          "maroon",
+          "gold"
+        ],
+        "avoided_colors": [
+          "neon",
+          "grey"
+        ],
+        "budget_range": "$100-$300",
+        "formality_target": "ETHNIC_FESTIVE",
+        "sizing": {
+          "top": "M",
+          "bottom": "32",
+          "shoe": "9",
+          "height_cm": 175.0,
+          "weight_kg": 70.0
+        }
+      },
+      "latency_ms": 758.4,
+      "scores": {
+        "suitability": 0.1038,
+        "compatibility": 0.1033,
+        "final": 0.101
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.1033
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_4",
+          "finalScore": 0.1171,
+          "suitabilityScore": 0.104,
+          "compatibilityScore": 0.1414,
+          "items": [
+            {
+              "productId": 10169315,
+              "name": "Melange by Lifestyle Men Beige Printed Straight Kurta",
+              "brand": "melange by lifestyle",
+              "gender": "Men",
+              "category": "kurta",
+              "slot": "top",
+              "price": 499.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10169315/2019/9/20/4f810e30-3290-41ed-9de3-f6a870350ed61568974338041-Melange-by-Lifestyle-Men-Kurtas-111568974336553-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.16351641250774265,
+              "globalIndex": 6581
+            },
+            {
+              "productId": 1011624,
+              "name": "Melange by Lifestyle Off-White Churidar",
+              "brand": "melange by lifestyle",
+              "gender": "Men",
+              "category": "other",
+              "slot": "bottom",
+              "price": 599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/1011624/2015/10/14/11444823741950-Melange-by-Lifestyle-Off-White-Churidar-9791444823741449-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.07303088386543095,
+              "globalIndex": 4729
+            },
+            {
+              "productId": 10248311,
+              "name": "Puma Men Cream-Coloured Vertex Pro Nu Idp Running Shoes",
+              "brand": "puma",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 2599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10248311/2019/10/9/57635077-ede2-40ff-9f5b-0d963a3ecf481570622064353-Puma-Men-Cream-Coloured-Vertex-Pro-Nu-Idp-Running-Shoes-8157-1.jpg",
+              "formalities": [],
+              "suitabilityScore": 0.07540322162210941,
+              "globalIndex": 11668
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_1",
+          "finalScore": 0.1057,
+          "suitabilityScore": 0.104,
+          "compatibilityScore": 0.1159,
+          "items": [
+            {
+              "productId": 10169315,
+              "name": "Melange by Lifestyle Men Beige Printed Straight Kurta",
+              "brand": "melange by lifestyle",
+              "gender": "Men",
+              "category": "kurta",
+              "slot": "top",
+              "price": 499.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10169315/2019/9/20/4f810e30-3290-41ed-9de3-f6a870350ed61568974338041-Melange-by-Lifestyle-Men-Kurtas-111568974336553-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.16351641250774265,
+              "globalIndex": 6581
+            },
+            {
+              "productId": 1011625,
+              "name": "Melange by Lifestyle White Churidar",
+              "brand": "melange by lifestyle",
+              "gender": "Men",
+              "category": "other",
+              "slot": "bottom",
+              "price": 599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/1011625/2015/10/14/11444806792788-Melange-by-Lifestyle-Men-Churidar-2131444806791995-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.07316581262275576,
+              "globalIndex": 4584
+            },
+            {
+              "productId": 10248311,
+              "name": "Puma Men Cream-Coloured Vertex Pro Nu Idp Running Shoes",
+              "brand": "puma",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 2599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10248311/2019/10/9/57635077-ede2-40ff-9f5b-0d963a3ecf481570622064353-Puma-Men-Cream-Coloured-Vertex-Pro-Nu-Idp-Running-Shoes-8157-1.jpg",
+              "formalities": [],
+              "suitabilityScore": 0.07540322162210941,
+              "globalIndex": 11668
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_10",
+          "finalScore": 0.0802,
+          "suitabilityScore": 0.1035,
+          "compatibilityScore": 0.0526,
+          "items": [
+            {
+              "productId": 10184943,
+              "name": "Taavi Men Maroon Kalamkari Block Printed Straight Sustainable Kurta with Roll-Up Sleeves",
+              "brand": "taavi",
+              "gender": "Men",
+              "category": "kurta",
+              "slot": "top",
+              "price": 1299.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10184943/2021/3/16/37ca56fc-5d1a-42e2-aea6-d61a1fac1d6a1615884945424-Taavi-Men-Maroon-Kalamkari-Block-Printed-Straight-Sustainabl-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.16206419236958028,
+              "globalIndex": 7105
+            },
+            {
+              "productId": 1011624,
+              "name": "Melange by Lifestyle Off-White Churidar",
+              "brand": "melange by lifestyle",
+              "gender": "Men",
+              "category": "other",
+              "slot": "bottom",
+              "price": 599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/1011624/2015/10/14/11444823741950-Melange-by-Lifestyle-Off-White-Churidar-9791444823741449-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.07303088386543095,
+              "globalIndex": 4729
+            },
+            {
+              "productId": 10248311,
+              "name": "Puma Men Cream-Coloured Vertex Pro Nu Idp Running Shoes",
+              "brand": "puma",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 2599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10248311/2019/10/9/57635077-ede2-40ff-9f5b-0d963a3ecf481570622064353-Puma-Men-Cream-Coloured-Vertex-Pro-Nu-Idp-Running-Shoes-8157-1.jpg",
+              "formalities": [],
+              "suitabilityScore": 0.07540322162210941,
+              "globalIndex": 11668
+            }
+          ]
+        }
+      ]
+    },
+    "persona_04_w_streetwear": {
+      "name": "Zoe Chen (Female Streetwear)",
+      "profile": {
+        "persona_id": "persona_04_w_streetwear",
+        "name": "Zoe Chen (Female Streetwear)",
+        "gender": "Women",
+        "style": "Urban streetwear",
+        "occasion": "Weekend",
+        "fit_preference": "Oversized",
+        "preferred_styles": [
+          "Streetwear",
+          "Urban",
+          "Casual"
+        ],
+        "avoided_styles": [
+          "Traditional",
+          "Corporate"
+        ],
+        "preferred_categories": [
+          "tshirt",
+          "cargo",
+          "joggers",
+          "sneakers"
+        ],
+        "avoided_categories": [
+          "saree",
+          "heels",
+          "trousers",
+          "dress"
+        ],
+        "preferred_colors": [
+          "black",
+          "grey",
+          "white"
+        ],
+        "avoided_colors": [
+          "pastel",
+          "pink",
+          "floral"
+        ],
+        "budget_range": "$80-$250",
+        "formality_target": "STREETWEAR_CASUAL",
+        "sizing": {
+          "top": "M",
+          "bottom": "28",
+          "shoe": "7",
+          "height_cm": 165.0,
+          "weight_kg": 55.0
+        }
+      },
+      "latency_ms": 827.1,
+      "scores": {
+        "suitability": 0.2154,
+        "compatibility": 0.7672,
+        "final": 0.4522
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "NOT TESTABLE (CATALOG LIMITATION)",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.7672
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_1",
+          "finalScore": 0.5426,
+          "suitabilityScore": 0.2391,
+          "compatibilityScore": 0.9446,
+          "items": [
+            {
+              "productId": 10184313,
+              "name": "Just Wow Black Women Casual Jumpsuit",
+              "brand": "just wow",
+              "gender": "Women",
+              "category": "playsuit",
+              "slot": "allbody",
+              "price": 1299.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/3/c79a01f4-0795-4061-b16b-d6efb9ac4ee11562095806307-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.22529037989675998,
+              "globalIndex": 7748
+            },
+            {
+              "productId": 10252933,
+              "name": "Puma Women Black Urban Graphicster Sneakers",
+              "brand": "puma",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1949.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10252933/2019/10/31/9fe3b522-9711-4b51-9c02-8b7b17b967221572501139800-Puma-Women-Black-Urban-Graphicster-Sneakers-2331572501138583-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2709002600423992,
+              "globalIndex": 11687
+            },
+            {
+              "productId": 10161551,
+              "name": "Kook N Keech Disney Women Black Printed Open Front Casual Pure Cotton Blazer",
+              "brand": "kook n keech disney",
+              "gender": "Women",
+              "category": "suit",
+              "slot": "accessory",
+              "price": 1374.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10161551/2020/2/19/e648644c-c468-402d-be84-a42589759a981582089804782-Kook-N-Keech-Disney-Women-Black-Printed-Open-Front-Shrug-390-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.22100399512797594,
+              "globalIndex": 6049
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_2",
+          "finalScore": 0.4077,
+          "suitabilityScore": 0.2278,
+          "compatibilityScore": 0.6559,
+          "items": [
+            {
+              "productId": 10184313,
+              "name": "Just Wow Black Women Casual Jumpsuit",
+              "brand": "just wow",
+              "gender": "Women",
+              "category": "playsuit",
+              "slot": "allbody",
+              "price": 1299.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/3/c79a01f4-0795-4061-b16b-d6efb9ac4ee11562095806307-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.22529037989675998,
+              "globalIndex": 7748
+            },
+            {
+              "productId": 10253247,
+              "name": "Puma Women Urban Graphicster Sneakers",
+              "brand": "puma",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1949.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10253247/2019/10/31/461ebb5e-ef53-40a7-9318-1f5c73a424881572516013576-Puma-Women-Urban-Graphicster-Sneakers-6871572516010915-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL"
+              ],
+              "suitabilityScore": 0.23711840782314536,
+              "globalIndex": 11731
+            },
+            {
+              "productId": 10161551,
+              "name": "Kook N Keech Disney Women Black Printed Open Front Casual Pure Cotton Blazer",
+              "brand": "kook n keech disney",
+              "gender": "Women",
+              "category": "suit",
+              "slot": "accessory",
+              "price": 1374.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10161551/2020/2/19/e648644c-c468-402d-be84-a42589759a981582089804782-Kook-N-Keech-Disney-Women-Black-Printed-Open-Front-Shrug-390-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.22100399512797594,
+              "globalIndex": 6049
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_7",
+          "finalScore": 0.4062,
+          "suitabilityScore": 0.1794,
+          "compatibilityScore": 0.7011,
+          "items": [
+            {
+              "productId": 10260329,
+              "name": "QUIERO Women Off-White & Navy Blue Printed Basic Jumpsuit",
+              "brand": "quiero",
+              "gender": "Women",
+              "category": "playsuit",
+              "slot": "allbody",
+              "price": 963.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10260329/2019/7/19/a9b88522-2baa-4c1e-9fe6-09dc2efb59391563524606785-QUIERO-Women-Jumpsuit-3691563524605647-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.04639568097889423,
+              "globalIndex": 11756
+            },
+            {
+              "productId": 10252933,
+              "name": "Puma Women Black Urban Graphicster Sneakers",
+              "brand": "puma",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1949.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10252933/2019/10/31/9fe3b522-9711-4b51-9c02-8b7b17b967221572501139800-Puma-Women-Black-Urban-Graphicster-Sneakers-2331572501138583-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2709002600423992,
+              "globalIndex": 11687
+            },
+            {
+              "productId": 10161551,
+              "name": "Kook N Keech Disney Women Black Printed Open Front Casual Pure Cotton Blazer",
+              "brand": "kook n keech disney",
+              "gender": "Women",
+              "category": "suit",
+              "slot": "accessory",
+              "price": 1374.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10161551/2020/2/19/e648644c-c468-402d-be84-a42589759a981582089804782-Kook-N-Keech-Disney-Women-Black-Printed-Open-Front-Shrug-390-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.22100399512797594,
+              "globalIndex": 6049
+            }
+          ]
+        }
+      ]
+    },
+    "persona_05_w_formal": {
+      "name": "Victoria Sterling (Female Corporate Formal)",
+      "profile": {
+        "persona_id": "persona_05_w_formal",
+        "name": "Victoria Sterling (Female Corporate Formal)",
+        "gender": "Women",
+        "style": "Minimalist professional",
+        "occasion": "Work",
+        "fit_preference": "Tailored",
+        "preferred_styles": [
+          "Minimalist",
+          "Formal",
+          "Professional"
+        ],
+        "avoided_styles": [
+          "Streetwear",
+          "Sporty",
+          "Bohemian"
+        ],
+        "preferred_categories": [
+          "shirt",
+          "trousers",
+          "blazers",
+          "flats",
+          "shoes"
+        ],
+        "avoided_categories": [
+          "graphic tees",
+          "sneakers",
+          "kurta",
+          "saree",
+          "t-shirt"
+        ],
+        "preferred_colors": [
+          "navy",
+          "black",
+          "white",
+          "beige"
+        ],
+        "avoided_colors": [
+          "neon",
+          "yellow",
+          "hot pink"
+        ],
+        "budget_range": "$100-$300",
+        "formality_target": "FORMAL_BUSINESS",
+        "sizing": {
+          "top": "S",
+          "bottom": "28",
+          "shoe": "7",
+          "height_cm": 165.0,
+          "weight_kg": 58.0
+        }
+      },
+      "latency_ms": 816.4,
+      "scores": {
+        "suitability": 0.2197,
+        "compatibility": 0.9986,
+        "final": 0.5582
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.9986
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_4",
+          "finalScore": 0.5599,
+          "suitabilityScore": 0.2227,
+          "compatibilityScore": 0.9993,
+          "items": [
+            {
+              "productId": 10026223,
+              "name": "Park Avenue Women Navy Blue Regular Fit Self Design Formal Shirt",
+              "brand": "park avenue",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 629.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/14/b6f765a9-5e7c-4e3c-901e-92b90ace415d1560457572961-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.25707439234480256,
+              "globalIndex": 1197
+            },
+            {
+              "productId": 10242711,
+              "name": "FableStreet Women Black Straight Fit Solid Formal Trousers",
+              "brand": "fablestreet",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1956.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/11/677912d7-3639-4c97-ba2c-a973c6741e711562823538635-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.25516190998256205,
+              "globalIndex": 10412
+            },
+            {
+              "productId": 10007763,
+              "name": "her by invictus Women Black Solid Cushioned Smart Casual Derbys",
+              "brand": "her by invictus",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10007763/2019/9/3/5431a5d8-1b92-4d6d-b4d3-49010ce688941567513694267-her-by-invictus-Women-Black-Solid-Derbys-81567513693205-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.15579809734597802,
+              "globalIndex": 293
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_1",
+          "finalScore": 0.5597,
+          "suitabilityScore": 0.223,
+          "compatibilityScore": 0.9986,
+          "items": [
+            {
+              "productId": 10026223,
+              "name": "Park Avenue Women Navy Blue Regular Fit Self Design Formal Shirt",
+              "brand": "park avenue",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 629.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/14/b6f765a9-5e7c-4e3c-901e-92b90ace415d1560457572961-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.25707439234480256,
+              "globalIndex": 1197
+            },
+            {
+              "productId": 10041745,
+              "name": "Forever New Women Black Tapered Fit Solid Formal Trousers",
+              "brand": "forever new",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 3800.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/15/b837e51f-74ff-442b-9909-8c1c2f2ea93d1560578615623-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2562749761529267,
+              "globalIndex": 2605
+            },
+            {
+              "productId": 10007763,
+              "name": "her by invictus Women Black Solid Cushioned Smart Casual Derbys",
+              "brand": "her by invictus",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10007763/2019/9/3/5431a5d8-1b92-4d6d-b4d3-49010ce688941567513694267-her-by-invictus-Women-Black-Solid-Derbys-81567513693205-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.15579809734597802,
+              "globalIndex": 293
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_7",
+          "finalScore": 0.555,
+          "suitabilityScore": 0.2133,
+          "compatibilityScore": 0.9979,
+          "items": [
+            {
+              "productId": 10026223,
+              "name": "Park Avenue Women Navy Blue Regular Fit Self Design Formal Shirt",
+              "brand": "park avenue",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 629.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/14/b6f765a9-5e7c-4e3c-901e-92b90ace415d1560457572961-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.25707439234480256,
+              "globalIndex": 1197
+            },
+            {
+              "productId": 10242703,
+              "name": "FableStreet Women Maroon Slim Fit Solid Formal Trousers",
+              "brand": "fablestreet",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1996.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/11/fbfb3d20-1493-4803-9bf9-6b3bea412b4f1562824559362-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.22698624219745395,
+              "globalIndex": 10770
+            },
+            {
+              "productId": 10007763,
+              "name": "her by invictus Women Black Solid Cushioned Smart Casual Derbys",
+              "brand": "her by invictus",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10007763/2019/9/3/5431a5d8-1b92-4d6d-b4d3-49010ce688941567513694267-her-by-invictus-Women-Black-Solid-Derbys-81567513693205-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.15579809734597802,
+              "globalIndex": 293
+            }
+          ]
+        }
+      ]
+    },
+    "persona_06_w_festive_ethnic": {
+      "name": "Meera Kapoor (Female Festive Ethnic)",
+      "profile": {
+        "persona_id": "persona_06_w_festive_ethnic",
+        "name": "Meera Kapoor (Female Festive Ethnic)",
+        "gender": "Women",
+        "style": "Festive, ethnic",
+        "occasion": "Festive",
+        "fit_preference": "Regular",
+        "preferred_styles": [
+          "Festive",
+          "Ethnic",
+          "Traditional"
+        ],
+        "avoided_styles": [
+          "Sporty",
+          "Streetwear",
+          "Minimalist"
+        ],
+        "preferred_categories": [
+          "kurta",
+          "anarkali",
+          "saree",
+          "palazzo",
+          "shoes"
+        ],
+        "avoided_categories": [
+          "jeans",
+          "trousers",
+          "tshirt",
+          "sneakers"
+        ],
+        "preferred_colors": [
+          "gold",
+          "emerald",
+          "maroon",
+          "red"
+        ],
+        "avoided_colors": [
+          "grey",
+          "dull brown"
+        ],
+        "budget_range": "$100-$300",
+        "formality_target": "ETHNIC_FESTIVE",
+        "sizing": {
+          "top": "M",
+          "bottom": "30",
+          "shoe": "8",
+          "height_cm": 165.0,
+          "weight_kg": 58.0
+        }
+      },
+      "latency_ms": 840.8,
+      "scores": {
+        "suitability": 0.1917,
+        "compatibility": 0.2657,
+        "final": 0.2159
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.2657
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_10",
+          "finalScore": 0.2383,
+          "suitabilityScore": 0.1914,
+          "compatibilityScore": 0.3158,
+          "items": [
+            {
+              "productId": 10186807,
+              "name": "AURELIA Women Maroon Ethnic Motifs Printed Anarakli Kurta with Churidar & With Dupatta",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 4999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10186807/2021/6/28/d63f9a54-1099-43a4-ab6f-b5b8636e23521624873386554-AURELIA-Women-Kurta-Sets-2131624873386117-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.2559048107266426,
+              "globalIndex": 7181
+            },
+            {
+              "productId": 10013787,
+              "name": "Ishin Women Red & Gold-Toned Hem Design Wide Leg Palazzos",
+              "brand": "ishin",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 524.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10013787/2019/7/11/fabc7df4-ab72-40b1-9cef-48f83d836afe1562831482152-Ishin-Women-Red--Gold-Toned-Solid-Wide-Leg-Palazzos-22115628-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.15661641254089773,
+              "globalIndex": 217
+            },
+            {
+              "productId": 10131839,
+              "name": "Lavie Women Black & Gold-Toned Colourblocked T-Strap Flats",
+              "brand": "lavie",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10131839/2020/7/6/5d2b8ae1-022a-4fce-b264-3b43a3513d8f1594015063800-Lavie-Women-Black-Solid-T-Strap-Flats-1261594015060695-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16175905719399453,
+              "globalIndex": 4195
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_6",
+          "finalScore": 0.2085,
+          "suitabilityScore": 0.1918,
+          "compatibilityScore": 0.2492,
+          "items": [
+            {
+              "productId": 10186807,
+              "name": "AURELIA Women Maroon Ethnic Motifs Printed Anarakli Kurta with Churidar & With Dupatta",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 4999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10186807/2021/6/28/d63f9a54-1099-43a4-ab6f-b5b8636e23521624873386554-AURELIA-Women-Kurta-Sets-2131624873386117-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.2559048107266426,
+              "globalIndex": 7181
+            },
+            {
+              "productId": 10074635,
+              "name": "Vishudh Women Navy Blue & Red Solid Palazzos",
+              "brand": "vishudh",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 574.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/18/ac609e06-9d2c-4f50-bfe8-e3b455b8c25d1560852226402-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1583520984929055,
+              "globalIndex": 3458
+            },
+            {
+              "productId": 10246029,
+              "name": "Inc 5 Women Gold-Toned & Black Solid Open Toe Flats",
+              "brand": "inc 5",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 766.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10246029/2019/7/26/41d38a49-ce9a-45f5-9187-0f34cecc6a301564121431331-Inc-5-Women-Flats-9981564121430283-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16125998191535473,
+              "globalIndex": 10386
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_5",
+          "finalScore": 0.2008,
+          "suitabilityScore": 0.1919,
+          "compatibilityScore": 0.2322,
+          "items": [
+            {
+              "productId": 10186807,
+              "name": "AURELIA Women Maroon Ethnic Motifs Printed Anarakli Kurta with Churidar & With Dupatta",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 4999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10186807/2021/6/28/d63f9a54-1099-43a4-ab6f-b5b8636e23521624873386554-AURELIA-Women-Kurta-Sets-2131624873386117-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.2559048107266426,
+              "globalIndex": 7181
+            },
+            {
+              "productId": 10074635,
+              "name": "Vishudh Women Navy Blue & Red Solid Palazzos",
+              "brand": "vishudh",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 574.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/18/ac609e06-9d2c-4f50-bfe8-e3b455b8c25d1560852226402-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1583520984929055,
+              "globalIndex": 3458
+            },
+            {
+              "productId": 10072343,
+              "name": "Metro Women Gold-Toned Solid T-Strap Flats",
+              "brand": "metro",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 645.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/19/85268f8c-0bb9-4190-86a6-3ade49478c2e1560892884143-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16139342460781336,
+              "globalIndex": 3257
+            }
+          ]
+        }
+      ]
+    },
+    "persona_07_w_minimalist_neutral": {
+      "name": "Elena Rostova (Minimalist Neutral)",
+      "profile": {
+        "persona_id": "persona_07_w_minimalist_neutral",
+        "name": "Elena Rostova (Minimalist Neutral)",
+        "gender": "Women",
+        "style": "Minimalist",
+        "occasion": "Work",
+        "fit_preference": "Regular",
+        "preferred_styles": [
+          "Minimalist",
+          "Classic",
+          "Clean"
+        ],
+        "avoided_styles": [
+          "Bohemian",
+          "Grunge",
+          "Loud"
+        ],
+        "preferred_categories": [
+          "shirt",
+          "trousers",
+          "flats",
+          "shoes"
+        ],
+        "avoided_categories": [
+          "loud graphics",
+          "t-shirt",
+          "shorts"
+        ],
+        "preferred_colors": [
+          "black",
+          "white",
+          "beige",
+          "navy"
+        ],
+        "avoided_colors": [
+          "neon",
+          "yellow",
+          "hot pink",
+          "red",
+          "orange"
+        ],
+        "budget_range": "$100-$300",
+        "formality_target": "FORMAL_BUSINESS",
+        "sizing": {
+          "top": "S",
+          "bottom": "28",
+          "shoe": "7",
+          "height_cm": 165.0,
+          "weight_kg": 58.0
+        }
+      },
+      "latency_ms": 822.3,
+      "scores": {
+        "suitability": 0.1917,
+        "compatibility": 0.947,
+        "final": 0.5224
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.947
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_4",
+          "finalScore": 0.5377,
+          "suitabilityScore": 0.1946,
+          "compatibilityScore": 0.9781,
+          "items": [
+            {
+              "productId": 10182333,
+              "name": "Style Quotient Women White Classic Regular Fit Solid Casual Shirt",
+              "brand": "style quotient",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 584.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10182333/2019/7/25/6da22c56-003d-4db4-9bf9-170d159dcfe11564043541211-Style-Quotient-Women-Shirts-1141564043539866-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2414355157315731,
+              "globalIndex": 7662
+            },
+            {
+              "productId": 10095221,
+              "name": "HERE&NOW Women Black Bootcut Mid-Rise Clean Look Stretchable Jeans",
+              "brand": "here&now",
+              "gender": "Women",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 499.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10095221/2021/7/6/7841e555-4c3e-4887-90c3-fe5f3e0ebbe51625566537886-HERENOW-Women-Black-Bootcut-Mid-Rise-Clean-Look-Stretchable--1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.19897374421358108,
+              "globalIndex": 3902
+            },
+            {
+              "productId": 10007763,
+              "name": "her by invictus Women Black Solid Cushioned Smart Casual Derbys",
+              "brand": "her by invictus",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10007763/2019/9/3/5431a5d8-1b92-4d6d-b4d3-49010ce688941567513694267-her-by-invictus-Women-Black-Solid-Derbys-81567513693205-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.14348526794463395,
+              "globalIndex": 293
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_7",
+          "finalScore": 0.5336,
+          "suitabilityScore": 0.194,
+          "compatibilityScore": 0.9696,
+          "items": [
+            {
+              "productId": 10182333,
+              "name": "Style Quotient Women White Classic Regular Fit Solid Casual Shirt",
+              "brand": "style quotient",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 584.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10182333/2019/7/25/6da22c56-003d-4db4-9bf9-170d159dcfe11564043541211-Style-Quotient-Women-Shirts-1141564043539866-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2414355157315731,
+              "globalIndex": 7662
+            },
+            {
+              "productId": 10095327,
+              "name": "HERE&NOW Women Black Bootcut Mid-Rise Clean Look Stretchable Jeans",
+              "brand": "here&now",
+              "gender": "Women",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 539.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10095327/2019/8/27/f3e3e1d0-d27a-43be-a60d-c1fff2cc252b1566887057030-HERENOW-Women-Jeans-2091566887055589-4.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.19694478683173655,
+              "globalIndex": 3600
+            },
+            {
+              "productId": 10007763,
+              "name": "her by invictus Women Black Solid Cushioned Smart Casual Derbys",
+              "brand": "her by invictus",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10007763/2019/9/3/5431a5d8-1b92-4d6d-b4d3-49010ce688941567513694267-her-by-invictus-Women-Black-Solid-Derbys-81567513693205-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.14348526794463395,
+              "globalIndex": 293
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_10",
+          "finalScore": 0.4959,
+          "suitabilityScore": 0.1866,
+          "compatibilityScore": 0.8932,
+          "items": [
+            {
+              "productId": 10182333,
+              "name": "Style Quotient Women White Classic Regular Fit Solid Casual Shirt",
+              "brand": "style quotient",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 584.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10182333/2019/7/25/6da22c56-003d-4db4-9bf9-170d159dcfe11564043541211-Style-Quotient-Women-Shirts-1141564043539866-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2414355157315731,
+              "globalIndex": 7662
+            },
+            {
+              "productId": 10252595,
+              "name": "Genius18 Women Navy Blue Solid Classic Regular Fit Track Pants",
+              "brand": "genius18",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 704.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10252595/2019/7/26/eec6220f-c85b-4dd8-a035-9b997ad0aa641564138127943-Genius18-Women-Track-Pants-8831564138125945-1.jpg",
+              "formalities": [
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.17489918418228625,
+              "globalIndex": 11433
+            },
+            {
+              "productId": 10007763,
+              "name": "her by invictus Women Black Solid Cushioned Smart Casual Derbys",
+              "brand": "her by invictus",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10007763/2019/9/3/5431a5d8-1b92-4d6d-b4d3-49010ce688941567513694267-her-by-invictus-Women-Black-Solid-Derbys-81567513693205-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.14348526794463395,
+              "globalIndex": 293
+            }
+          ]
+        }
+      ]
+    },
+    "persona_08_w_maximalist_color": {
+      "name": "Chloe Delacroix (Maximalist Color Lover)",
+      "profile": {
+        "persona_id": "persona_08_w_maximalist_color",
+        "name": "Chloe Delacroix (Maximalist Color Lover)",
+        "gender": "Women",
+        "style": "Bold, expressive",
+        "occasion": "Party",
+        "fit_preference": "Regular",
+        "preferred_styles": [
+          "Bold",
+          "Expressive",
+          "Festive",
+          "Bohemian"
+        ],
+        "avoided_styles": [
+          "Minimalist",
+          "Monochrome"
+        ],
+        "preferred_categories": [
+          "kurta",
+          "palazzo",
+          "dress",
+          "shoes"
+        ],
+        "avoided_categories": [
+          "plain",
+          "office trouser"
+        ],
+        "preferred_colors": [
+          "red",
+          "pink",
+          "orange",
+          "emerald",
+          "purple"
+        ],
+        "avoided_colors": [
+          "grey",
+          "brown",
+          "dull brown"
+        ],
+        "budget_range": "$100-$300",
+        "formality_target": "ETHNIC_FESTIVE",
+        "sizing": {
+          "top": "S",
+          "bottom": "28",
+          "shoe": "7",
+          "height_cm": 165.0,
+          "weight_kg": 58.0
+        }
+      },
+      "latency_ms": 816.0,
+      "scores": {
+        "suitability": 0.1563,
+        "compatibility": 0.9976,
+        "final": 0.5259
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.9976
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_6",
+          "finalScore": 0.5266,
+          "suitabilityScore": 0.1558,
+          "compatibilityScore": 0.9996,
+          "items": [
+            {
+              "productId": 10266059,
+              "name": "Jompers Women Black & Red Floral Print A-Line Kurta",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 799.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266059/2019/7/26/f5aa4685-2a2b-4485-b8a4-39727f230dad1564118692417-Jompers-Women-Black--Red-Printed-A-Line-Kurta-28315641186906-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15924985084682702,
+              "globalIndex": 12399
+            },
+            {
+              "productId": 10266011,
+              "name": "Jompers Women Red Solid Wide Leg Palazzos",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 699.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266011/2019/7/23/800310d8-982a-44de-8967-623b16a1f3df1563883530396-Jompers-Women-Red-Solid-Straight-Palazzos-4951563883527654-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15847801209427417,
+              "globalIndex": 11933
+            },
+            {
+              "productId": 10226467,
+              "name": "Signature Sole Women Red & Gold-Toned Woven Design Heels",
+              "brand": "signature sole",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 962.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/9/b985526e-0ea7-43dc-a71c-b955311871071562666204322-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.14973568936809897,
+              "globalIndex": 9758
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_5",
+          "finalScore": 0.5258,
+          "suitabilityScore": 0.1563,
+          "compatibilityScore": 0.9973,
+          "items": [
+            {
+              "productId": 10266059,
+              "name": "Jompers Women Black & Red Floral Print A-Line Kurta",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 799.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266059/2019/7/26/f5aa4685-2a2b-4485-b8a4-39727f230dad1564118692417-Jompers-Women-Black--Red-Printed-A-Line-Kurta-28315641186906-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15924985084682702,
+              "globalIndex": 12399
+            },
+            {
+              "productId": 10266011,
+              "name": "Jompers Women Red Solid Wide Leg Palazzos",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 699.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266011/2019/7/23/800310d8-982a-44de-8967-623b16a1f3df1563883530396-Jompers-Women-Red-Solid-Straight-Palazzos-4951563883527654-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15847801209427417,
+              "globalIndex": 11933
+            },
+            {
+              "productId": 10029001,
+              "name": "MSC Women Pink Embroidered Open Toe Flats",
+              "brand": "msc",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 679.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/13/7f8c19dd-7dfa-4222-a43d-0aee59eb47cf1560424549642-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1512816433981061,
+              "globalIndex": 1935
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_4",
+          "finalScore": 0.5254,
+          "suitabilityScore": 0.1569,
+          "compatibilityScore": 0.9959,
+          "items": [
+            {
+              "productId": 10266059,
+              "name": "Jompers Women Black & Red Floral Print A-Line Kurta",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 799.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266059/2019/7/26/f5aa4685-2a2b-4485-b8a4-39727f230dad1564118692417-Jompers-Women-Black--Red-Printed-A-Line-Kurta-28315641186906-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15924985084682702,
+              "globalIndex": 12399
+            },
+            {
+              "productId": 10266011,
+              "name": "Jompers Women Red Solid Wide Leg Palazzos",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 699.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266011/2019/7/23/800310d8-982a-44de-8967-623b16a1f3df1563883530396-Jompers-Women-Red-Solid-Straight-Palazzos-4951563883527654-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15847801209427417,
+              "globalIndex": 11933
+            },
+            {
+              "productId": 10259855,
+              "name": "DressBerry Women Gold-Toned & Purple Colourblocked Open Toe Flats",
+              "brand": "dressberry",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 559.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10259855/2019/11/12/80226192-f693-4e93-b7c6-c9d1d3b594421573541182548-DressBerry-Women-Gold-Toned-Colourblocked-Open-Toe-Flats-361-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15286907506641,
+              "globalIndex": 11551
+            }
+          ]
+        }
+      ]
+    },
+    "persona_09_m_oversized": {
+      "name": "Liam Hayes (Oversized Fit User)",
+      "profile": {
+        "persona_id": "persona_09_m_oversized",
+        "name": "Liam Hayes (Oversized Fit User)",
+        "gender": "Men",
+        "style": "Streetwear, relaxed",
+        "occasion": "Casual",
+        "fit_preference": "Oversized",
+        "preferred_styles": [
+          "Streetwear",
+          "Casual",
+          "Relaxed"
+        ],
+        "avoided_styles": [
+          "Formal",
+          "Tailored"
+        ],
+        "preferred_categories": [
+          "tshirt",
+          "jeans",
+          "joggers",
+          "sneakers"
+        ],
+        "avoided_categories": [
+          "slim-fit",
+          "skinny",
+          "tight"
+        ],
+        "preferred_colors": [
+          "black",
+          "grey",
+          "blue"
+        ],
+        "avoided_colors": [
+          "pink",
+          "pastel"
+        ],
+        "budget_range": "$50-$150",
+        "formality_target": "STREETWEAR_CASUAL",
+        "sizing": {
+          "top": "XL",
+          "bottom": "34",
+          "shoe": "11",
+          "height_cm": 180.0,
+          "weight_kg": 75.0
+        }
+      },
+      "latency_ms": 966.7,
+      "scores": {
+        "suitability": 0.2013,
+        "compatibility": 0.9924,
+        "final": 0.5472
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "NOT TESTABLE (CATALOG LIMITATION)",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.9924
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_3",
+          "finalScore": 0.5473,
+          "suitabilityScore": 0.2014,
+          "compatibilityScore": 0.9927,
+          "items": [
+            {
+              "productId": 10264371,
+              "name": "Pepe Jeans Men Navy Blue & White Regular Fit Checked Reversible Casual Shirt",
+              "brand": "pepe jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1299.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10264371/2019/12/19/d9bdaa02-ec5d-42da-83e1-83d038592d221576747204327-Pepe-Jeans-Men-Shirts-6721576747202231-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2710233860090375,
+              "globalIndex": 11944
+            },
+            {
+              "productId": 10146723,
+              "name": "Indian Terrain Men Navy Blue Slim Fit Mid-Rise Clean Look Jeans",
+              "brand": "indian terrain",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 1214.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10146723/2019/9/23/0627632f-2cd5-4411-8a42-8de0f947b45e1569228836069-Indian-Terrain-Men-Navy-Blue-Slim-Fit-Mid-Rise-Clean-Look-Je-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16853654433041812,
+              "globalIndex": 5545
+            },
+            {
+              "productId": 10266929,
+              "name": "Levis Men Navy Blue Sneakers",
+              "brand": "levis",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266929/2019/8/20/f09c8165-56cd-4a84-ad2c-0c3a7ece42521566292415531-Levis-Men-Casual-Shoes-9331566292414284-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16450554497539996,
+              "globalIndex": 12188
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_2",
+          "finalScore": 0.5472,
+          "suitabilityScore": 0.2015,
+          "compatibilityScore": 0.9922,
+          "items": [
+            {
+              "productId": 10264371,
+              "name": "Pepe Jeans Men Navy Blue & White Regular Fit Checked Reversible Casual Shirt",
+              "brand": "pepe jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1299.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10264371/2019/12/19/d9bdaa02-ec5d-42da-83e1-83d038592d221576747204327-Pepe-Jeans-Men-Shirts-6721576747202231-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2710233860090375,
+              "globalIndex": 11944
+            },
+            {
+              "productId": 10146723,
+              "name": "Indian Terrain Men Navy Blue Slim Fit Mid-Rise Clean Look Jeans",
+              "brand": "indian terrain",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 1214.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10146723/2019/9/23/0627632f-2cd5-4411-8a42-8de0f947b45e1569228836069-Indian-Terrain-Men-Navy-Blue-Slim-Fit-Mid-Rise-Clean-Look-Je-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16853654433041812,
+              "globalIndex": 5545
+            },
+            {
+              "productId": 10266865,
+              "name": "Levis Men Navy Blue Solid Sneakers",
+              "brand": "levis",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266865/2019/10/29/50a584ae-7492-45e5-8d5e-4c973f976ac51572326232182-Levis-Men-Navy-Blue-Sneakers-8431572326230003-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16491689125075934,
+              "globalIndex": 11816
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_6",
+          "finalScore": 0.5471,
+          "suitabilityScore": 0.2011,
+          "compatibilityScore": 0.9924,
+          "items": [
+            {
+              "productId": 10264371,
+              "name": "Pepe Jeans Men Navy Blue & White Regular Fit Checked Reversible Casual Shirt",
+              "brand": "pepe jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1299.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10264371/2019/12/19/d9bdaa02-ec5d-42da-83e1-83d038592d221576747204327-Pepe-Jeans-Men-Shirts-6721576747202231-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.2710233860090375,
+              "globalIndex": 11944
+            },
+            {
+              "productId": 10274471,
+              "name": "Calvin Klein Jeans Men Black Slim Fit Low-Rise Clean Look Stretchable Jeans",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 5999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10274471/2019/8/1/43e61ad8-70ea-438d-953b-f85d663b98fa1564664991241-Calvin-Klein-Jeans-Men-Jeans-8721564664988930-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16784788381308316,
+              "globalIndex": 11990
+            },
+            {
+              "productId": 10266929,
+              "name": "Levis Men Navy Blue Sneakers",
+              "brand": "levis",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266929/2019/8/20/f09c8165-56cd-4a84-ad2c-0c3a7ece42521566292415531-Levis-Men-Casual-Shoes-9331566292414284-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16450554497539996,
+              "globalIndex": 12188
+            }
+          ]
+        }
+      ]
+    },
+    "persona_10_m_slim": {
+      "name": "Ethan Cole (Slim Fit User)",
+      "profile": {
+        "persona_id": "persona_10_m_slim",
+        "name": "Ethan Cole (Slim Fit User)",
+        "gender": "Men",
+        "style": "Formal, tailored, slim",
+        "occasion": "Casual",
+        "fit_preference": "Slim",
+        "preferred_styles": [
+          "Formal",
+          "Tailored",
+          "Slim"
+        ],
+        "avoided_styles": [
+          "Oversized",
+          "Baggy"
+        ],
+        "preferred_categories": [
+          "shirt",
+          "jeans",
+          "trousers",
+          "shoes"
+        ],
+        "avoided_categories": [
+          "oversized",
+          "baggy",
+          "loose"
+        ],
+        "preferred_colors": [
+          "black",
+          "grey",
+          "blue"
+        ],
+        "avoided_colors": [
+          "pink",
+          "pastel"
+        ],
+        "budget_range": "$50-$150",
+        "formality_target": "FORMAL_BUSINESS",
+        "sizing": {
+          "top": "M",
+          "bottom": "30",
+          "shoe": "9",
+          "height_cm": 180.0,
+          "weight_kg": 75.0
+        }
+      },
+      "latency_ms": 768.8,
+      "scores": {
+        "suitability": 0.2656,
+        "compatibility": 0.9965,
+        "final": 0.578
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.9965
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_3",
+          "finalScore": 0.5788,
+          "suitabilityScore": 0.2658,
+          "compatibilityScore": 0.9982,
+          "items": [
+            {
+              "productId": 10015831,
+              "name": "Raymond Men Blue Regular Fit Self Design Formal Shirt",
+              "brand": "raymond",
+              "gender": "Men",
+              "category": "shirt",
+              "slot": "top",
+              "price": 1154.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/13/fdd69f86-f328-487d-a78f-d44f9352a9791560416922294-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.26654723476618525,
+              "globalIndex": 67
+            },
+            {
+              "productId": 10201913,
+              "name": "Allen Solly Men Navy Blue Slim Fit Solid Formal Trousers",
+              "brand": "allen solly",
+              "gender": "Men",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1474.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/4/2c0e7b51-cc18-41da-8cac-a9f0178ac4241562238999949-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2662269755639136,
+              "globalIndex": 8525
+            },
+            {
+              "productId": 10005993,
+              "name": "ID Men Black Solid Formal Leather Derbys",
+              "brand": "id",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 956.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/13/314a5a70-59d1-4dee-9009-1cc33e58e4ea1560404067983-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.26455466462299226,
+              "globalIndex": 627
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_1",
+          "finalScore": 0.5779,
+          "suitabilityScore": 0.2662,
+          "compatibilityScore": 0.9958,
+          "items": [
+            {
+              "productId": 10015831,
+              "name": "Raymond Men Blue Regular Fit Self Design Formal Shirt",
+              "brand": "raymond",
+              "gender": "Men",
+              "category": "shirt",
+              "slot": "top",
+              "price": 1154.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/13/fdd69f86-f328-487d-a78f-d44f9352a9791560416922294-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.26654723476618525,
+              "globalIndex": 67
+            },
+            {
+              "productId": 10201913,
+              "name": "Allen Solly Men Navy Blue Slim Fit Solid Formal Trousers",
+              "brand": "allen solly",
+              "gender": "Men",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1474.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/4/2c0e7b51-cc18-41da-8cac-a9f0178ac4241562238999949-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2662269755639136,
+              "globalIndex": 8525
+            },
+            {
+              "productId": 10132801,
+              "name": "Allen Cooper Men Black Leather Formal Derbys",
+              "brand": "allen cooper",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1199.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/25/3ace1ab4-4256-4eb4-a08f-9cfc4a860e1d1561461506898-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.26596118150278925,
+              "globalIndex": 4489
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_9",
+          "finalScore": 0.5772,
+          "suitabilityScore": 0.2649,
+          "compatibilityScore": 0.9956,
+          "items": [
+            {
+              "productId": 10015831,
+              "name": "Raymond Men Blue Regular Fit Self Design Formal Shirt",
+              "brand": "raymond",
+              "gender": "Men",
+              "category": "shirt",
+              "slot": "top",
+              "price": 1154.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/13/fdd69f86-f328-487d-a78f-d44f9352a9791560416922294-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.26654723476618525,
+              "globalIndex": 67
+            },
+            {
+              "productId": 10061121,
+              "name": "CODE by Lifestyle Men Navy Blue Slim Fit Self Design Formal Trousers",
+              "brand": "code by lifestyle",
+              "gender": "Men",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1699.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10061121/2019/9/26/d841d43c-02b5-4577-8c1d-20c9c1ad36661569488555041-CODE-by-Lifestyle-Men-Trousers-7341569488553907-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.26348109700717026,
+              "globalIndex": 2346
+            },
+            {
+              "productId": 10005993,
+              "name": "ID Men Black Solid Formal Leather Derbys",
+              "brand": "id",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 956.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/13/314a5a70-59d1-4dee-9009-1cc33e58e4ea1560404067983-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.26455466462299226,
+              "globalIndex": 627
+            }
+          ]
+        }
+      ]
+    },
+    "persona_11_m_sneaker_first": {
+      "name": "Kai Jordan (Sneaker-First User)",
+      "profile": {
+        "persona_id": "persona_11_m_sneaker_first",
+        "name": "Kai Jordan (Sneaker-First User)",
+        "gender": "Men",
+        "style": "Casual / streetwear",
+        "occasion": "Casual",
+        "fit_preference": "Regular",
+        "preferred_styles": [
+          "Streetwear",
+          "Sporty",
+          "Casual"
+        ],
+        "avoided_styles": [
+          "Formal"
+        ],
+        "preferred_categories": [
+          "tshirt",
+          "jeans",
+          "sneakers"
+        ],
+        "avoided_categories": [
+          "derby",
+          "oxford",
+          "formal shoes"
+        ],
+        "preferred_colors": [
+          "black",
+          "white",
+          "blue"
+        ],
+        "avoided_colors": [
+          "pink",
+          "purple"
+        ],
+        "budget_range": "$60-$200",
+        "formality_target": "STREETWEAR_CASUAL",
+        "sizing": {
+          "top": "L",
+          "bottom": "32",
+          "shoe": "10",
+          "height_cm": 178.0,
+          "weight_kg": 74.0
+        }
+      },
+      "latency_ms": 779.3,
+      "scores": {
+        "suitability": 0.2063,
+        "compatibility": 0.8512,
+        "final": 0.4837
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.8512
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_8",
+          "finalScore": 0.5146,
+          "suitabilityScore": 0.2063,
+          "compatibilityScore": 0.9224,
+          "items": [
+            {
+              "productId": 10267679,
+              "name": "Calvin Klein Jeans Men Black Slim Fit Solid Casual Shirt",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 2999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10267679/2021/3/31/b1b709f4-5ae8-4c76-be51-ad0bbb80f2b01617174263495-Calvin-Klein-Jeans-Men-Shirts-661617174261103-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.27575027704238886,
+              "globalIndex": 12386
+            },
+            {
+              "productId": 10274471,
+              "name": "Calvin Klein Jeans Men Black Slim Fit Low-Rise Clean Look Stretchable Jeans",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 5999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10274471/2019/8/1/43e61ad8-70ea-438d-953b-f85d663b98fa1564664991241-Calvin-Klein-Jeans-Men-Jeans-8721564664988930-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1724493886530399,
+              "globalIndex": 11990
+            },
+            {
+              "productId": 10266929,
+              "name": "Levis Men Navy Blue Sneakers",
+              "brand": "levis",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266929/2019/8/20/f09c8165-56cd-4a84-ad2c-0c3a7ece42521566292415531-Levis-Men-Casual-Shoes-9331566292414284-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.17071379005908965,
+              "globalIndex": 12188
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_5",
+          "finalScore": 0.4772,
+          "suitabilityScore": 0.2063,
+          "compatibilityScore": 0.8319,
+          "items": [
+            {
+              "productId": 10267679,
+              "name": "Calvin Klein Jeans Men Black Slim Fit Solid Casual Shirt",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 2999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10267679/2021/3/31/b1b709f4-5ae8-4c76-be51-ad0bbb80f2b01617174263495-Calvin-Klein-Jeans-Men-Shirts-661617174261103-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.27575027704238886,
+              "globalIndex": 12386
+            },
+            {
+              "productId": 10187417,
+              "name": "WROGN Men Black Slim Fit Mid-Rise Clean Look Stretchable Jeans",
+              "brand": "wrogn",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 1319.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10187417/2019/8/20/7e77c554-067f-4989-94b2-37076eb9ad1a1566284406877-WROGN-Men-Jeans-2231566284405485-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.17250220768153665,
+              "globalIndex": 7060
+            },
+            {
+              "productId": 10266929,
+              "name": "Levis Men Navy Blue Sneakers",
+              "brand": "levis",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266929/2019/8/20/f09c8165-56cd-4a84-ad2c-0c3a7ece42521566292415531-Levis-Men-Casual-Shoes-9331566292414284-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.17071379005908965,
+              "globalIndex": 12188
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_9",
+          "finalScore": 0.4592,
+          "suitabilityScore": 0.2062,
+          "compatibilityScore": 0.7994,
+          "items": [
+            {
+              "productId": 10267679,
+              "name": "Calvin Klein Jeans Men Black Slim Fit Solid Casual Shirt",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 2999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10267679/2021/3/31/b1b709f4-5ae8-4c76-be51-ad0bbb80f2b01617174263495-Calvin-Klein-Jeans-Men-Shirts-661617174261103-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.27575027704238886,
+              "globalIndex": 12386
+            },
+            {
+              "productId": 10274471,
+              "name": "Calvin Klein Jeans Men Black Slim Fit Low-Rise Clean Look Stretchable Jeans",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 5999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10274471/2019/8/1/43e61ad8-70ea-438d-953b-f85d663b98fa1564664991241-Calvin-Klein-Jeans-Men-Jeans-8721564664988930-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1724493886530399,
+              "globalIndex": 11990
+            },
+            {
+              "productId": 10266865,
+              "name": "Levis Men Navy Blue Solid Sneakers",
+              "brand": "levis",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266865/2019/10/29/50a584ae-7492-45e5-8d5e-4c973f976ac51572326232182-Levis-Men-Navy-Blue-Sneakers-8431572326230003-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.17050878807902334,
+              "globalIndex": 11816
+            }
+          ]
+        }
+      ]
+    },
+    "persona_12_m_formal_shoes": {
+      "name": "Arthur Pendelton (Formal-Footwear User)",
+      "profile": {
+        "persona_id": "persona_12_m_formal_shoes",
+        "name": "Arthur Pendelton (Formal-Footwear User)",
+        "gender": "Men",
+        "style": "Formal / business",
+        "occasion": "Work",
+        "fit_preference": "Tailored",
+        "preferred_styles": [
+          "Formal",
+          "Business"
+        ],
+        "avoided_styles": [
+          "Streetwear",
+          "Casual"
+        ],
+        "preferred_categories": [
+          "shirt",
+          "trousers",
+          "shoes"
+        ],
+        "avoided_categories": [
+          "sneakers",
+          "running shoes",
+          "sporty"
+        ],
+        "preferred_colors": [
+          "black",
+          "brown",
+          "navy"
+        ],
+        "avoided_colors": [
+          "neon",
+          "pink"
+        ],
+        "budget_range": "$100-$300",
+        "formality_target": "FORMAL_BUSINESS",
+        "sizing": {
+          "top": "L",
+          "bottom": "32",
+          "shoe": "10",
+          "height_cm": 178.0,
+          "weight_kg": 74.0
+        }
+      },
+      "latency_ms": 731.6,
+      "scores": {
+        "suitability": 0.2693,
+        "compatibility": 0.9879,
+        "final": 0.5758
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.9879
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_4",
+          "finalScore": 0.5766,
+          "suitabilityScore": 0.2697,
+          "compatibilityScore": 0.9894,
+          "items": [
+            {
+              "productId": 10217005,
+              "name": "Hancock Men Navy Blue Slim Fit Solid Formal Shirt",
+              "brand": "hancock",
+              "gender": "Men",
+              "category": "shirt",
+              "slot": "top",
+              "price": 569.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/8/88f5e404-0776-40cd-a72c-9479e56f6ab71562565804178-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2693114145100116,
+              "globalIndex": 9001
+            },
+            {
+              "productId": 10201913,
+              "name": "Allen Solly Men Navy Blue Slim Fit Solid Formal Trousers",
+              "brand": "allen solly",
+              "gender": "Men",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1474.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/4/2c0e7b51-cc18-41da-8cac-a9f0178ac4241562238999949-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.26896712858229876,
+              "globalIndex": 8525
+            },
+            {
+              "productId": 10132801,
+              "name": "Allen Cooper Men Black Leather Formal Derbys",
+              "brand": "allen cooper",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1199.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/25/3ace1ab4-4256-4eb4-a08f-9cfc4a860e1d1561461506898-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2708829285949469,
+              "globalIndex": 4489
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_10",
+          "finalScore": 0.5754,
+          "suitabilityScore": 0.2689,
+          "compatibilityScore": 0.9875,
+          "items": [
+            {
+              "productId": 10217005,
+              "name": "Hancock Men Navy Blue Slim Fit Solid Formal Shirt",
+              "brand": "hancock",
+              "gender": "Men",
+              "category": "shirt",
+              "slot": "top",
+              "price": 569.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/8/88f5e404-0776-40cd-a72c-9479e56f6ab71562565804178-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2693114145100116,
+              "globalIndex": 9001
+            },
+            {
+              "productId": 10028843,
+              "name": "Park Avenue Men Black Slim Fit Solid Formal Trousers",
+              "brand": "park avenue",
+              "gender": "Men",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1199.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/14/acff8f74-b318-49c8-ab3a-55e2b7d28be11560474267836-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2665343129448593,
+              "globalIndex": 1258
+            },
+            {
+              "productId": 10132801,
+              "name": "Allen Cooper Men Black Leather Formal Derbys",
+              "brand": "allen cooper",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1199.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/25/3ace1ab4-4256-4eb4-a08f-9cfc4a860e1d1561461506898-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2708829285949469,
+              "globalIndex": 4489
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_5",
+          "finalScore": 0.5753,
+          "suitabilityScore": 0.2694,
+          "compatibilityScore": 0.9869,
+          "items": [
+            {
+              "productId": 10217005,
+              "name": "Hancock Men Navy Blue Slim Fit Solid Formal Shirt",
+              "brand": "hancock",
+              "gender": "Men",
+              "category": "shirt",
+              "slot": "top",
+              "price": 569.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/8/88f5e404-0776-40cd-a72c-9479e56f6ab71562565804178-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2693114145100116,
+              "globalIndex": 9001
+            },
+            {
+              "productId": 10201913,
+              "name": "Allen Solly Men Navy Blue Slim Fit Solid Formal Trousers",
+              "brand": "allen solly",
+              "gender": "Men",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1474.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/4/2c0e7b51-cc18-41da-8cac-a9f0178ac4241562238999949-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.26896712858229876,
+              "globalIndex": 8525
+            },
+            {
+              "productId": 10029069,
+              "name": "Geox Men Black Solid Leather Formal Derbys",
+              "brand": "geox",
+              "gender": "Men",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 8499.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10029069/2019/6/18/7c89b4b3-ebe8-4c9c-8778-96bd1c5b61c91560841836924-Geox-Men-Black-Solid-Leather-Formal-Derbys-3391560841836430-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2698043551668524,
+              "globalIndex": 1750
+            }
+          ]
+        }
+      ]
+    },
+    "persona_13_w_jeans_avoiding": {
+      "name": "Sunita Rao (Jeans-Avoiding User)",
+      "profile": {
+        "persona_id": "persona_13_w_jeans_avoiding",
+        "name": "Sunita Rao (Jeans-Avoiding User)",
+        "gender": "Women",
+        "style": "Ethnic / smart casual",
+        "occasion": "Casual",
+        "fit_preference": "Regular",
+        "preferred_styles": [
+          "Ethnic",
+          "Casual"
+        ],
+        "avoided_styles": [
+          "Western",
+          "Denim"
+        ],
+        "preferred_categories": [
+          "kurta",
+          "palazzo",
+          "skirt",
+          "flats"
+        ],
+        "avoided_categories": [
+          "jeans",
+          "denim",
+          "western trousers",
+          "trousers"
+        ],
+        "preferred_colors": [
+          "blue",
+          "pink",
+          "white"
+        ],
+        "avoided_colors": [
+          "black",
+          "dark grey"
+        ],
+        "budget_range": "$50-$150",
+        "formality_target": "ETHNIC_FESTIVE",
+        "sizing": {
+          "top": "M",
+          "bottom": "30",
+          "shoe": "7",
+          "height_cm": 160.0,
+          "weight_kg": 58.0
+        }
+      },
+      "latency_ms": 807.3,
+      "scores": {
+        "suitability": 0.1864,
+        "compatibility": 0.3123,
+        "final": 0.2344
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.3123
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_10",
+          "finalScore": 0.2696,
+          "suitabilityScore": 0.1861,
+          "compatibilityScore": 0.3908,
+          "items": [
+            {
+              "productId": 10190887,
+              "name": "AURELIA Women Green & Golden Foil Print Straight Kurta with Ethnic Jacket",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 799.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10190887/2021/1/21/02996ea8-f999-4185-8552-58f6deb447761611210057928-AURELIA-Women-Green--Golden-Foil-Print-Straight-Kurta-with-E-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.23465573398396372,
+              "globalIndex": 8167
+            },
+            {
+              "productId": 10207485,
+              "name": "W Women Navy Blue & Golden Printed Flared Palazzos",
+              "brand": "w",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 1119.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10207485/2019/10/18/3dae7e4b-72de-46ae-a8e8-8e0117c527621571405761142-W-Women-Palazzos-471571405759663-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16698788154870273,
+              "globalIndex": 8063
+            },
+            {
+              "productId": 10182185,
+              "name": "SOLES Women Blue Embellished T-Strap Flats",
+              "brand": "soles",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 986.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/3/f02b9108-f11a-4a1f-8c77-1c0224e318f31562093440927-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15656611858401448,
+              "globalIndex": 7763
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_7",
+          "finalScore": 0.2187,
+          "suitabilityScore": 0.1862,
+          "compatibilityScore": 0.2776,
+          "items": [
+            {
+              "productId": 10190887,
+              "name": "AURELIA Women Green & Golden Foil Print Straight Kurta with Ethnic Jacket",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 799.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10190887/2021/1/21/02996ea8-f999-4185-8552-58f6deb447761611210057928-AURELIA-Women-Green--Golden-Foil-Print-Straight-Kurta-with-E-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.23465573398396372,
+              "globalIndex": 8167
+            },
+            {
+              "productId": 10232991,
+              "name": "RAISIN Women White Solid Flared Palazzos",
+              "brand": "raisin",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 636.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/10/b39c4e1b-b1c5-4ff0-8324-a8ee879064651562710478918-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1673733352869749,
+              "globalIndex": 8973
+            },
+            {
+              "productId": 10182185,
+              "name": "SOLES Women Blue Embellished T-Strap Flats",
+              "brand": "soles",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 986.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/3/f02b9108-f11a-4a1f-8c77-1c0224e318f31562093440927-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15656611858401448,
+              "globalIndex": 7763
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_1",
+          "finalScore": 0.2149,
+          "suitabilityScore": 0.1868,
+          "compatibilityScore": 0.2685,
+          "items": [
+            {
+              "productId": 10190887,
+              "name": "AURELIA Women Green & Golden Foil Print Straight Kurta with Ethnic Jacket",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 799.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10190887/2021/1/21/02996ea8-f999-4185-8552-58f6deb447761611210057928-AURELIA-Women-Green--Golden-Foil-Print-Straight-Kurta-with-E-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.23465573398396372,
+              "globalIndex": 8167
+            },
+            {
+              "productId": 10232995,
+              "name": "RAISIN Women Navy Blue Solid Flared Palazzos",
+              "brand": "raisin",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 636.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/9/4aa0c2e2-c247-4b98-960a-ae26069a8fdd1562691790653-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1692197273671627,
+              "globalIndex": 9356
+            },
+            {
+              "productId": 10182185,
+              "name": "SOLES Women Blue Embellished T-Strap Flats",
+              "brand": "soles",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 986.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/3/f02b9108-f11a-4a1f-8c77-1c0224e318f31562093440927-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.15656611858401448,
+              "globalIndex": 7763
+            }
+          ]
+        }
+      ]
+    },
+    "persona_14_w_budget_conscious": {
+      "name": "Tanya Miller (Budget-Conscious User)",
+      "profile": {
+        "persona_id": "persona_14_w_budget_conscious",
+        "name": "Tanya Miller (Budget-Conscious User)",
+        "gender": "Women",
+        "style": "Casual, minimalist, affordable",
+        "occasion": "Casual",
+        "fit_preference": "Regular",
+        "preferred_styles": [
+          "Casual",
+          "Minimalist"
+        ],
+        "avoided_styles": [
+          "Luxury",
+          "Glamorous"
+        ],
+        "preferred_categories": [
+          "shirt",
+          "trousers",
+          "flats"
+        ],
+        "avoided_categories": [
+          "designer",
+          "luxury",
+          "expensive"
+        ],
+        "preferred_colors": [
+          "black",
+          "navy",
+          "white"
+        ],
+        "avoided_colors": [
+          "neon"
+        ],
+        "budget_range": "$10-$30",
+        "formality_target": "FORMAL_BUSINESS",
+        "sizing": {
+          "top": "S",
+          "bottom": "28",
+          "shoe": "6",
+          "height_cm": 162.0,
+          "weight_kg": 54.0
+        }
+      },
+      "latency_ms": 770.4,
+      "scores": {
+        "suitability": 0.2363,
+        "compatibility": 0.9942,
+        "final": 0.5637
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.9942
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_1",
+          "finalScore": 0.5728,
+          "suitabilityScore": 0.251,
+          "compatibilityScore": 0.9996,
+          "items": [
+            {
+              "productId": 10213479,
+              "name": "Yaadleen Women Navy Blue Regular Fit Self Design Casual Shirt",
+              "brand": "yaadleen",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/6/ec1232a0-3712-4390-ac83-222e24c690051562362622816-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.27171157322824,
+              "globalIndex": 9668
+            },
+            {
+              "productId": 1015476,
+              "name": "Vero Moda Black Casual Trousers",
+              "brand": "vero moda",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1048.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/1015476/2015/11/18/11447826364599-Vero-Moda-Black-Casual-Trousers-5971447826364149-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.26365739404223854,
+              "globalIndex": 6182
+            },
+            {
+              "productId": 10007763,
+              "name": "her by invictus Women Black Solid Cushioned Smart Casual Derbys",
+              "brand": "her by invictus",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10007763/2019/9/3/5431a5d8-1b92-4d6d-b4d3-49010ce688941567513694267-her-by-invictus-Women-Black-Solid-Derbys-81567513693205-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.21767352003604173,
+              "globalIndex": 293
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_2",
+          "finalScore": 0.5615,
+          "suitabilityScore": 0.2395,
+          "compatibilityScore": 0.9861,
+          "items": [
+            {
+              "productId": 10213479,
+              "name": "Yaadleen Women Navy Blue Regular Fit Self Design Casual Shirt",
+              "brand": "yaadleen",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/6/ec1232a0-3712-4390-ac83-222e24c690051562362622816-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.27171157322824,
+              "globalIndex": 9668
+            },
+            {
+              "productId": 1015476,
+              "name": "Vero Moda Black Casual Trousers",
+              "brand": "vero moda",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 1048.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/1015476/2015/11/18/11447826364599-Vero-Moda-Black-Casual-Trousers-5971447826364149-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.26365739404223854,
+              "globalIndex": 6182
+            },
+            {
+              "productId": 10007743,
+              "name": "her by invictus Women Pink Solid Cushioned Smart Casual Derbys",
+              "brand": "her by invictus",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10007743/2019/9/3/8b3fade9-e1f8-4283-92b1-16db8ce3bc811567513682018-her-by-invictus-Women-Pink-Solid-Derbys-7161567513680858-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.18326756881549955,
+              "globalIndex": 370
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_4",
+          "finalScore": 0.5569,
+          "suitabilityScore": 0.2183,
+          "compatibilityScore": 0.9969,
+          "items": [
+            {
+              "productId": 10213479,
+              "name": "Yaadleen Women Navy Blue Regular Fit Self Design Casual Shirt",
+              "brand": "yaadleen",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/6/ec1232a0-3712-4390-ac83-222e24c690051562362622816-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.27171157322824,
+              "globalIndex": 9668
+            },
+            {
+              "productId": 10185313,
+              "name": "AURELIA Women Navy Blue Regular Fit Solid Trousers",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 479.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10185313/2019/8/5/9531fb8e-92c6-4b98-8df1-14181bd9b6651564995410153-AURELIA-Women-Trousers-2471564995408477-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16552220370620488,
+              "globalIndex": 7090
+            },
+            {
+              "productId": 10007763,
+              "name": "her by invictus Women Black Solid Cushioned Smart Casual Derbys",
+              "brand": "her by invictus",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10007763/2019/9/3/5431a5d8-1b92-4d6d-b4d3-49010ce688941567513694267-her-by-invictus-Women-Black-Solid-Derbys-81567513693205-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT",
+                "FORMAL_BUSINESS"
+              ],
+              "suitabilityScore": 0.21767352003604173,
+              "globalIndex": 293
+            }
+          ]
+        }
+      ]
+    },
+    "persona_15_w_wedding": {
+      "name": "Pooja Singhania (Wedding Occasion User)",
+      "profile": {
+        "persona_id": "persona_15_w_wedding",
+        "name": "Pooja Singhania (Wedding Occasion User)",
+        "gender": "Women",
+        "style": "Festive, ethnic, elegant, wedding",
+        "occasion": "Wedding",
+        "fit_preference": "Regular",
+        "preferred_styles": [
+          "Festive",
+          "Ethnic",
+          "Elegant"
+        ],
+        "avoided_styles": [
+          "Sporty",
+          "Streetwear"
+        ],
+        "preferred_categories": [
+          "saree",
+          "kurta",
+          "anarkali",
+          "lehenga",
+          "shoes"
+        ],
+        "avoided_categories": [
+          "gymwear",
+          "tshirt",
+          "shorts",
+          "sneakers"
+        ],
+        "preferred_colors": [
+          "red",
+          "gold",
+          "maroon",
+          "emerald"
+        ],
+        "avoided_colors": [
+          "black",
+          "white",
+          "grey"
+        ],
+        "budget_range": "$200-$600",
+        "formality_target": "ETHNIC_FESTIVE",
+        "sizing": {
+          "top": "M",
+          "bottom": "30",
+          "shoe": "7",
+          "height_cm": 165.0,
+          "weight_kg": 59.0
+        }
+      },
+      "latency_ms": 849.2,
+      "scores": {
+        "suitability": 0.1725,
+        "compatibility": 0.5838,
+        "final": 0.3503
+      },
+      "scorecard": {
+        "gender_correctness": "PASS",
+        "category_correctness": "PASS",
+        "style_correctness": "PASS",
+        "occasion_correctness": "PASS",
+        "avoidance_correctness": "PASS",
+        "fit_correctness": "PASS",
+        "color_correctness": "PASS",
+        "budget_correctness": "PASS",
+        "compatibility_score": 0.5838
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_6",
+          "finalScore": 0.3653,
+          "suitabilityScore": 0.1721,
+          "compatibilityScore": 0.6175,
+          "items": [
+            {
+              "productId": 10186807,
+              "name": "AURELIA Women Maroon Ethnic Motifs Printed Anarakli Kurta with Churidar & With Dupatta",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 4999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10186807/2021/6/28/d63f9a54-1099-43a4-ab6f-b5b8636e23521624873386554-AURELIA-Women-Kurta-Sets-2131624873386117-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.2519206717982888,
+              "globalIndex": 7181
+            },
+            {
+              "productId": 10013787,
+              "name": "Ishin Women Red & Gold-Toned Hem Design Wide Leg Palazzos",
+              "brand": "ishin",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 524.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10013787/2019/7/11/fabc7df4-ab72-40b1-9cef-48f83d836afe1562831482152-Ishin-Women-Red--Gold-Toned-Solid-Wide-Leg-Palazzos-22115628-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.10538541299290954,
+              "globalIndex": 217
+            },
+            {
+              "productId": 10028963,
+              "name": "MSC Women Gold-Toned Woven Design One Toe Flats",
+              "brand": "msc",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 679.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/14/7e751d59-9260-4734-8b0f-bf60ab74649d1560491344628-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1588871245458722,
+              "globalIndex": 1040
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_10",
+          "finalScore": 0.3648,
+          "suitabilityScore": 0.1729,
+          "compatibilityScore": 0.6156,
+          "items": [
+            {
+              "productId": 10186807,
+              "name": "AURELIA Women Maroon Ethnic Motifs Printed Anarakli Kurta with Churidar & With Dupatta",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 4999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10186807/2021/6/28/d63f9a54-1099-43a4-ab6f-b5b8636e23521624873386554-AURELIA-Women-Kurta-Sets-2131624873386117-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.2519206717982888,
+              "globalIndex": 7181
+            },
+            {
+              "productId": 10266011,
+              "name": "Jompers Women Red Solid Wide Leg Palazzos",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 699.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266011/2019/7/23/800310d8-982a-44de-8967-623b16a1f3df1563883530396-Jompers-Women-Red-Solid-Straight-Palazzos-4951563883527654-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.10505722376517951,
+              "globalIndex": 11933
+            },
+            {
+              "productId": 10072343,
+              "name": "Metro Women Gold-Toned Solid T-Strap Flats",
+              "brand": "metro",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 645.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/19/85268f8c-0bb9-4190-86a6-3ade49478c2e1560892884143-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.16174449056386947,
+              "globalIndex": 3257
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_3",
+          "finalScore": 0.3208,
+          "suitabilityScore": 0.1724,
+          "compatibilityScore": 0.5183,
+          "items": [
+            {
+              "productId": 10186807,
+              "name": "AURELIA Women Maroon Ethnic Motifs Printed Anarakli Kurta with Churidar & With Dupatta",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 4999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10186807/2021/6/28/d63f9a54-1099-43a4-ab6f-b5b8636e23521624873386554-AURELIA-Women-Kurta-Sets-2131624873386117-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.2519206717982888,
+              "globalIndex": 7181
+            },
+            {
+              "productId": 10074635,
+              "name": "Vishudh Women Navy Blue & Red Solid Palazzos",
+              "brand": "vishudh",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 574.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/18/ac609e06-9d2c-4f50-bfe8-e3b455b8c25d1560852226402-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.10653912184759974,
+              "globalIndex": 3458
+            },
+            {
+              "productId": 10028963,
+              "name": "MSC Women Gold-Toned Woven Design One Toe Flats",
+              "brand": "msc",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 679.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/14/7e751d59-9260-4734-8b0f-bf60ab74649d1560491344628-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1588871245458722,
+              "globalIndex": 1040
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

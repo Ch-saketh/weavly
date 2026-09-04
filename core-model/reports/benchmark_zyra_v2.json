@@ -1,0 +1,12 @@
+{
+  "model_loading_time_s": 5.83,
+  "cold_start_latency_ms": 1071.9,
+  "warm_iterations": 20,
+  "mean_latency_ms": 830.7,
+  "median_latency_ms": 802.3,
+  "p95_latency_ms": 999.1,
+  "min_latency_ms": 783.3,
+  "max_latency_ms": 1001.4,
+  "mean_retrieval_time_ms": 331.5,
+  "mean_transformer_inference_ms": 499.1
+}

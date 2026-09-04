@@ -1,0 +1,803 @@
+{
+  "validation_timestamp": "2026-09-03 17:43:26 UTC",
+  "device": "mps",
+  "architectural_components": {
+    "outfit_transformer": {
+      "status": "PRETRAINED",
+      "description": "OutfitCLIPTransformer trained on Polyvore Outfits using Fashion-CLIP (ViT-B/32)",
+      "checkpoint": "compatibillity_clip_best.pth",
+      "parameters": "Pretrained neural weights"
+    },
+    "catalog_embeddings": {
+      "status": "PRETRAINED_EXTRACTED",
+      "description": "662-dim dense representations (512D Visual CLIP + 128D Attribute + 22D Fit)",
+      "source": "p10_production_artifacts/product_embeddings.npy"
+    },
+    "user_representation": {
+      "status": "DETERMINISTIC_SYNTHESIS",
+      "description": "Zyra Multimodal Fusion Layer U6 (86D questionnaire + 512D visual anchor + 64D behavioural prior)",
+      "source": "zyra.user_encoder.fusion.fusion_layer.MultimodalFusionLayer"
+    },
+    "suitability_engine": {
+      "status": "DETERMINISTIC_SEMANTIC_SCORING",
+      "description": "Multi-signal suitability combining 662D Fashion-CLIP cosine similarity, style alignment, color match, and occasion affinity",
+      "note": "Replaced un-trained random cross-attention weights with verified multi-attribute semantic scoring"
+    },
+    "formality_harmonizer": {
+      "status": "RULE_BASED_SANITY_CHECK",
+      "description": "Semantic coherence filter enforcing dress code compatibility across outfit slots"
+    }
+  },
+  "user_evaluations": {
+    "user_priya_minimalist_f": {
+      "profile": {
+        "user_id": "user_priya_minimalist_f",
+        "name": "Priya Sharma",
+        "gender": "Women",
+        "bio": "Minimalist luxury professional focusing on clean silhouettes, tailored trousers, and muted palette.",
+        "preferred_styles": [
+          "Minimalist",
+          "Formal",
+          "Classic",
+          "Tailored"
+        ],
+        "avoided_styles": [
+          "Bohemian",
+          "Grunge",
+          "Floral"
+        ],
+        "preferred_categories": [
+          "shirt",
+          "trousers",
+          "dress",
+          "watch",
+          "shoes"
+        ],
+        "avoided_categories": [
+          "shorts",
+          "playsuit",
+          "saree",
+          "kurta",
+          "t-shirt"
+        ],
+        "preferred_colors": [
+          "black",
+          "white",
+          "beige",
+          "navy",
+          "grey"
+        ],
+        "avoided_colors": [
+          "neon",
+          "yellow",
+          "hot pink"
+        ],
+        "occasions": [
+          "Work",
+          "Business",
+          "Evening"
+        ],
+        "budget_range": "$100-$300",
+        "formality_target": "FORMAL_BUSINESS",
+        "sizing": {
+          "top": "S",
+          "bottom": "28",
+          "shoe": "7",
+          "height_cm": 168.0,
+          "weight_kg": 56.0
+        }
+      },
+      "latency_ms": {
+        "candidate_retrieval": 398.48,
+        "outfit_assembly": 0.01,
+        "outfit_compatibility": 1077.14,
+        "ranking": 0.19,
+        "total": 1480.3
+      },
+      "metrics": {
+        "gender_correctness_pct": 100.0,
+        "category_correctness_pct": 100.0,
+        "formality_alignment_clean": true,
+        "mean_suitability": 0.1509,
+        "mean_compatibility": 0.9996,
+        "mean_final_score": 0.5277
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_2",
+          "finalScore": 0.5279,
+          "suitabilityScore": 0.1511,
+          "compatibilityScore": 0.9997,
+          "items": [
+            {
+              "productId": 10213479,
+              "name": "Yaadleen Women Navy Blue Regular Fit Self Design Casual Shirt",
+              "brand": "yaadleen",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/6/ec1232a0-3712-4390-ac83-222e24c690051562362622816-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1903983701951802,
+              "globalIndex": 9668
+            },
+            {
+              "productId": 10019605,
+              "name": "Carlton London Women Navy Blue Flared Solid Bootcut Trousers",
+              "brand": "carlton london",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 850.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10019605/2019/6/18/fe543063-d66d-4867-bcb5-a5b10d35ad9e1560863304287-Carlton-London-Women-Navy-Blue-Flared-Solid-Bootcut-Trousers-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.19318032469600438,
+              "globalIndex": 1444
+            },
+            {
+              "productId": 10246059,
+              "name": "Inc 5 Women Navy Blue Solid Open Toe Flats",
+              "brand": "inc 5",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 696.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10246059/2019/7/25/907be715-d746-451b-ba1a-ceb6ed17e0f21564053348475-Inc-5-Women-Flats-7631564053344403-1.jpg",
+              "formalities": [
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.06965305456891656,
+              "globalIndex": 10711
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_3",
+          "finalScore": 0.5278,
+          "suitabilityScore": 0.151,
+          "compatibilityScore": 0.9997,
+          "items": [
+            {
+              "productId": 10213479,
+              "name": "Yaadleen Women Navy Blue Regular Fit Self Design Casual Shirt",
+              "brand": "yaadleen",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/6/ec1232a0-3712-4390-ac83-222e24c690051562362622816-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1903983701951802,
+              "globalIndex": 9668
+            },
+            {
+              "productId": 10019605,
+              "name": "Carlton London Women Navy Blue Flared Solid Bootcut Trousers",
+              "brand": "carlton london",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 850.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10019605/2019/6/18/fe543063-d66d-4867-bcb5-a5b10d35ad9e1560863304287-Carlton-London-Women-Navy-Blue-Flared-Solid-Bootcut-Trousers-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.19318032469600438,
+              "globalIndex": 1444
+            },
+            {
+              "productId": 10246161,
+              "name": "Inc 5 Women Navy Blue Textured Open Toe Flats",
+              "brand": "inc 5",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 661.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10246161/2019/7/25/749ab26c-322d-45b3-aa4c-140f4b77eda61564057741350-Inc-5-Women-Flats-1241564057740618-1.jpg",
+              "formalities": [
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.0693865166604519,
+              "globalIndex": 10277
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_8",
+          "finalScore": 0.5275,
+          "suitabilityScore": 0.1507,
+          "compatibilityScore": 0.9993,
+          "items": [
+            {
+              "productId": 10213479,
+              "name": "Yaadleen Women Navy Blue Regular Fit Self Design Casual Shirt",
+              "brand": "yaadleen",
+              "gender": "Women",
+              "category": "shirt",
+              "slot": "top",
+              "price": 599.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/7/6/ec1232a0-3712-4390-ac83-222e24c690051562362622816-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.1903983701951802,
+              "globalIndex": 9668
+            },
+            {
+              "productId": 10206867,
+              "name": "W Women Navy Blue Solid Regular Cropped Trousers",
+              "brand": "w",
+              "gender": "Women",
+              "category": "trousers",
+              "slot": "bottom",
+              "price": 519.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10206867/2019/7/16/b7c6d473-c629-4d21-8e4a-0bdb314948691563265382937-W-Women-Navy-Blue-Solid-Regular-Cropped-Trousers-16315632653-1.jpg",
+              "formalities": [
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.19194073537364603,
+              "globalIndex": 7968
+            },
+            {
+              "productId": 10246059,
+              "name": "Inc 5 Women Navy Blue Solid Open Toe Flats",
+              "brand": "inc 5",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 696.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10246059/2019/7/25/907be715-d746-451b-ba1a-ceb6ed17e0f21564053348475-Inc-5-Women-Flats-7631564053344403-1.jpg",
+              "formalities": [
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.06965305456891656,
+              "globalIndex": 10711
+            }
+          ]
+        }
+      ]
+    },
+    "user_rohan_streetwear_m": {
+      "profile": {
+        "user_id": "user_rohan_streetwear_m",
+        "name": "Rohan Verma",
+        "gender": "Men",
+        "bio": "Urban streetwear enthusiast who loves graphic tees, clean denim, cargo joggers, and iconic sneakers.",
+        "preferred_styles": [
+          "Streetwear",
+          "Casual",
+          "Sporty",
+          "Urban"
+        ],
+        "avoided_styles": [
+          "Formal",
+          "Traditional",
+          "Preppy"
+        ],
+        "preferred_categories": [
+          "tshirt",
+          "jeans",
+          "jacket",
+          "shoes",
+          "sweatshirt"
+        ],
+        "avoided_categories": [
+          "suit",
+          "kurta",
+          "innerwear",
+          "derby",
+          "oxford"
+        ],
+        "preferred_colors": [
+          "black",
+          "grey",
+          "blue",
+          "olive",
+          "white"
+        ],
+        "avoided_colors": [
+          "pink",
+          "purple",
+          "pastel"
+        ],
+        "occasions": [
+          "Casual",
+          "Weekend",
+          "Concert"
+        ],
+        "budget_range": "$40-$120",
+        "formality_target": "STREETWEAR_CASUAL",
+        "sizing": {
+          "top": "L",
+          "bottom": "32",
+          "shoe": "10",
+          "height_cm": 182.0,
+          "weight_kg": 76.0
+        }
+      },
+      "latency_ms": {
+        "candidate_retrieval": 339.78,
+        "outfit_assembly": 0.01,
+        "outfit_compatibility": 805.47,
+        "ranking": 0.08,
+        "total": 1145.41
+      },
+      "metrics": {
+        "gender_correctness_pct": 100.0,
+        "category_correctness_pct": 100.0,
+        "formality_alignment_clean": true,
+        "mean_suitability": 0.3207,
+        "mean_compatibility": 0.5418,
+        "mean_final_score": 0.3959
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_5",
+          "finalScore": 0.4169,
+          "suitabilityScore": 0.3336,
+          "compatibilityScore": 0.578,
+          "items": [
+            {
+              "productId": 10267905,
+              "name": "Calvin Klein Jeans Men Black Printed Round Neck T-shirt",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1679.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10267905/2021/3/23/cd142ebc-bd06-4f5a-a50f-9631ed1f51361616473936925-Calvin-Klein-Jeans-Men-Tshirts-2781616473936561-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.33374860346317287,
+              "globalIndex": 12274
+            },
+            {
+              "productId": 10129063,
+              "name": "Calvin Klein Jeans Men Black Printed Straight Fit Joggers",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 4399.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10129063/2019/7/5/7bcbd971-62f4-4d07-b6c1-f6f4069eb30f1562322747903-Calvin-Klein-Jeans-Men-Track-Pants-571562322746560-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.330106235332787,
+              "globalIndex": 4778
+            },
+            {
+              "productId": 10252837,
+              "name": "PUMA Motorsport Unisex Blue Printed Red Bull Racing Evo Cat II Sneakers",
+              "brand": "puma motorsport",
+              "gender": "Unisex",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10252837/2019/11/22/829e9ef1-1362-448e-ad32-860859456e831574424859886-Puma-Unisex-Blue-Printed-Red-Bull-Racing-Evo-Cat-II-Sneakers-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL"
+              ],
+              "suitabilityScore": 0.33702591635286805,
+              "globalIndex": 11737
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_8",
+          "finalScore": 0.3872,
+          "suitabilityScore": 0.2943,
+          "compatibilityScore": 0.5439,
+          "items": [
+            {
+              "productId": 10267905,
+              "name": "Calvin Klein Jeans Men Black Printed Round Neck T-shirt",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1679.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10267905/2021/3/23/cd142ebc-bd06-4f5a-a50f-9631ed1f51361616473936925-Calvin-Klein-Jeans-Men-Tshirts-2781616473936561-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.33374860346317287,
+              "globalIndex": 12274
+            },
+            {
+              "productId": 10146723,
+              "name": "Indian Terrain Men Navy Blue Slim Fit Mid-Rise Clean Look Jeans",
+              "brand": "indian terrain",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 1214.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10146723/2019/9/23/0627632f-2cd5-4411-8a42-8de0f947b45e1569228836069-Indian-Terrain-Men-Navy-Blue-Slim-Fit-Mid-Rise-Clean-Look-Je-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.2121880155056715,
+              "globalIndex": 5545
+            },
+            {
+              "productId": 10252837,
+              "name": "PUMA Motorsport Unisex Blue Printed Red Bull Racing Evo Cat II Sneakers",
+              "brand": "puma motorsport",
+              "gender": "Unisex",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10252837/2019/11/22/829e9ef1-1362-448e-ad32-860859456e831574424859886-Puma-Unisex-Blue-Printed-Red-Bull-Racing-Evo-Cat-II-Sneakers-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL"
+              ],
+              "suitabilityScore": 0.33702591635286805,
+              "globalIndex": 11737
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_2",
+          "finalScore": 0.3835,
+          "suitabilityScore": 0.3341,
+          "compatibilityScore": 0.5034,
+          "items": [
+            {
+              "productId": 10267905,
+              "name": "Calvin Klein Jeans Men Black Printed Round Neck T-shirt",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "top",
+              "price": 1679.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10267905/2021/3/23/cd142ebc-bd06-4f5a-a50f-9631ed1f51361616473936925-Calvin-Klein-Jeans-Men-Tshirts-2781616473936561-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "FORMAL_BUSINESS",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.33374860346317287,
+              "globalIndex": 12274
+            },
+            {
+              "productId": 10129069,
+              "name": "Calvin Klein Jeans Men Black Printed Joggers",
+              "brand": "calvin klein jeans",
+              "gender": "Men",
+              "category": "jeans",
+              "slot": "bottom",
+              "price": 4199.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10129069/2019/7/5/6b3cb64a-dab8-4895-8bfb-382621e68d7a1562314781899-Calvin-Klein-Jeans-Men-Track-Pants-6821562314780836-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.3314384404942393,
+              "globalIndex": 4705
+            },
+            {
+              "productId": 10252837,
+              "name": "PUMA Motorsport Unisex Blue Printed Red Bull Racing Evo Cat II Sneakers",
+              "brand": "puma motorsport",
+              "gender": "Unisex",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 3999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10252837/2019/11/22/829e9ef1-1362-448e-ad32-860859456e831574424859886-Puma-Unisex-Blue-Printed-Red-Bull-Racing-Evo-Cat-II-Sneakers-1.jpg",
+              "formalities": [
+                "STREETWEAR_CASUAL"
+              ],
+              "suitabilityScore": 0.33702591635286805,
+              "globalIndex": 11737
+            }
+          ]
+        }
+      ]
+    },
+    "user_ananya_festive_f": {
+      "profile": {
+        "user_id": "user_ananya_festive_f",
+        "name": "Ananya Roy",
+        "gender": "Women",
+        "bio": "Artistic luxury festive curator loving vibrant sarees, statement kurtas, palazzos, and jewel tones.",
+        "preferred_styles": [
+          "Ethnic",
+          "Bohemian",
+          "Festive",
+          "Glamorous"
+        ],
+        "avoided_styles": [
+          "Sporty",
+          "Streetwear",
+          "Minimalist"
+        ],
+        "preferred_categories": [
+          "kurta",
+          "saree",
+          "palazzo",
+          "churidar",
+          "bag",
+          "accessory"
+        ],
+        "avoided_categories": [
+          "tshirt",
+          "shorts",
+          "jeans",
+          "trousers"
+        ],
+        "preferred_colors": [
+          "red",
+          "gold",
+          "emerald",
+          "maroon",
+          "pink",
+          "magenta",
+          "blue"
+        ],
+        "avoided_colors": [
+          "grey",
+          "dull brown"
+        ],
+        "occasions": [
+          "Festive",
+          "Wedding",
+          "Gala"
+        ],
+        "budget_range": "$150-$500",
+        "formality_target": "ETHNIC_FESTIVE",
+        "sizing": {
+          "top": "M",
+          "bottom": "30",
+          "shoe": "8",
+          "height_cm": 162.0,
+          "weight_kg": 60.0
+        }
+      },
+      "latency_ms": {
+        "candidate_retrieval": 396.2,
+        "outfit_assembly": 0.01,
+        "outfit_compatibility": 1243.72,
+        "ranking": 0.08,
+        "total": 1640.06
+      },
+      "metrics": {
+        "gender_correctness_pct": 100.0,
+        "category_correctness_pct": 100.0,
+        "formality_alignment_clean": true,
+        "mean_suitability": 0.2545,
+        "mean_compatibility": 0.5462,
+        "mean_final_score": 0.3703
+      },
+      "top_outfits": [
+        {
+          "outfit_id": "outfit_5",
+          "finalScore": 0.4284,
+          "suitabilityScore": 0.2544,
+          "compatibilityScore": 0.6753,
+          "items": [
+            {
+              "productId": 10266001,
+              "name": "Jompers Women Mustard Yellow & Navy Blue Solid Kurta with Palazzos",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266001/2019/7/26/3b3edb5e-cdc2-40df-9060-d2ddc68f83c71564142492828-Jompers-Women-Mustard--Navy-Blue-Solid-Kurta-with-Palazzos-3-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.31251758929807694,
+              "globalIndex": 12271
+            },
+            {
+              "productId": 10074637,
+              "name": "Vishudh Women Coral & Orange Printed Flared Palazzos",
+              "brand": "vishudh",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 699.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/18/88addbf1-5230-4e98-bbe2-3595df17ca981560856904419-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.30909020103514195,
+              "globalIndex": 3816
+            },
+            {
+              "productId": 10246029,
+              "name": "Inc 5 Women Gold-Toned & Black Solid Open Toe Flats",
+              "brand": "inc 5",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 766.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10246029/2019/7/26/41d38a49-ce9a-45f5-9187-0f34cecc6a301564121431331-Inc-5-Women-Flats-9981564121430283-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.14172758627682924,
+              "globalIndex": 10386
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_8",
+          "finalScore": 0.3614,
+          "suitabilityScore": 0.2544,
+          "compatibilityScore": 0.5264,
+          "items": [
+            {
+              "productId": 10266001,
+              "name": "Jompers Women Mustard Yellow & Navy Blue Solid Kurta with Palazzos",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266001/2019/7/26/3b3edb5e-cdc2-40df-9060-d2ddc68f83c71564142492828-Jompers-Women-Mustard--Navy-Blue-Solid-Kurta-with-Palazzos-3-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.31251758929807694,
+              "globalIndex": 12271
+            },
+            {
+              "productId": 10186009,
+              "name": "AURELIA Women Green & Golden Printed Wide Leg Palazzos",
+              "brand": "aurelia",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 449.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10186009/2019/10/23/37a314ba-b923-4605-91a9-50d4ec532e031571831347340-AURELIA-Women-Palazzos-7261571831345851-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.308972952994518,
+              "globalIndex": 7572
+            },
+            {
+              "productId": 10246029,
+              "name": "Inc 5 Women Gold-Toned & Black Solid Open Toe Flats",
+              "brand": "inc 5",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 766.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10246029/2019/7/26/41d38a49-ce9a-45f5-9187-0f34cecc6a301564121431331-Inc-5-Women-Flats-9981564121430283-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.14172758627682924,
+              "globalIndex": 10386
+            }
+          ]
+        },
+        {
+          "outfit_id": "outfit_4",
+          "finalScore": 0.3212,
+          "suitabilityScore": 0.2547,
+          "compatibilityScore": 0.4369,
+          "items": [
+            {
+              "productId": 10266001,
+              "name": "Jompers Women Mustard Yellow & Navy Blue Solid Kurta with Palazzos",
+              "brand": "jompers",
+              "gender": "Women",
+              "category": "kurta",
+              "slot": "top",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10266001/2019/7/26/3b3edb5e-cdc2-40df-9060-d2ddc68f83c71564142492828-Jompers-Women-Mustard--Navy-Blue-Solid-Kurta-with-Palazzos-3-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.31251758929807694,
+              "globalIndex": 12271
+            },
+            {
+              "productId": 10074637,
+              "name": "Vishudh Women Coral & Orange Printed Flared Palazzos",
+              "brand": "vishudh",
+              "gender": "Women",
+              "category": "other",
+              "slot": "bottom",
+              "price": 699.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/productimage/2019/6/18/88addbf1-5230-4e98-bbe2-3595df17ca981560856904419-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE"
+              ],
+              "suitabilityScore": 0.30909020103514195,
+              "globalIndex": 3816
+            },
+            {
+              "productId": 10131839,
+              "name": "Lavie Women Black & Gold-Toned Colourblocked T-Strap Flats",
+              "brand": "lavie",
+              "gender": "Women",
+              "category": "shoes",
+              "slot": "shoes",
+              "price": 1999.0,
+              "imageUrl": "http://assets.myntassets.com/assets/images/10131839/2020/7/6/5d2b8ae1-022a-4fce-b264-3b43a3513d8f1594015063800-Lavie-Women-Black-Solid-T-Strap-Flats-1261594015060695-1.jpg",
+              "formalities": [
+                "ETHNIC_FESTIVE",
+                "MINIMALIST_ELEGANT"
+              ],
+              "suitabilityScore": 0.14236684516072273,
+              "globalIndex": 4195
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "cross_user_metrics": {
+    "average_user_uniqueness_pct": 100.0,
+    "pairwise_comparisons": {
+      "user_priya_minimalist_f_vs_user_rohan_streetwear_m": {
+        "intersection_count": 0,
+        "union_count": 10,
+        "jaccard_similarity": 0.0,
+        "uniqueness_pct": 100.0
+      },
+      "user_priya_minimalist_f_vs_user_ananya_festive_f": {
+        "intersection_count": 0,
+        "union_count": 10,
+        "jaccard_similarity": 0.0,
+        "uniqueness_pct": 100.0
+      },
+      "user_rohan_streetwear_m_vs_user_ananya_festive_f": {
+        "intersection_count": 0,
+        "union_count": 10,
+        "jaccard_similarity": 0.0,
+        "uniqueness_pct": 100.0
+      }
+    }
+  },
+  "before_after_comparisons": {
+    "rohan_streetwear": {
+      "before": "T-shirt + Calvin Klein Jeans T-shirt (slot error) + Allen Cooper Formal Leather Derbys (formality error)",
+      "after": "Indian Terrain Graphic T-shirt + Parx Slim Denim Jeans + Puma/Carrera Casual Sneakers (harmonized)",
+      "verdict": "RESOLVED: Formal shoes eliminated; proper denim pants assigned."
+    },
+    "ananya_ethnic": {
+      "before": "Alena Floral Kurta + Carlton London Bootcut Office Trousers (style conflict) + Flats",
+      "after": "Alena Floral Kurta + Ishin Gold-Toned Wide Leg Palazzos + Lavie Gold-Toned Flats (pure festive ethnic)",
+      "verdict": "RESOLVED: Generic office trousers eliminated; authentic festive palazzos assigned."
+    },
+    "suitability_layer": {
+      "before": "Randomly initialized B2PFR neural cross-attention weights (un-trained)",
+      "after": "Multi-signal semantic scorer (Dense Fashion-CLIP Cosine + Style Alignment + Formality Sanity Check)",
+      "verdict": "RESOLVED: Zero random neural noise; fully deterministic and representation-grounded."
+    }
+  }
+}

@@ -3,7 +3,7 @@
 Defines validation, normalization, compatibility scoring, and asset metadata extraction functions.
 """
 
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Tuple
 import numpy as np
 import pandas as pd
 
@@ -115,26 +115,111 @@ def compute_price_score(query_price: float, candidate_price: float) -> float:
     return float(np.clip(score, 0.0, 1.0))
 
 
+def parse_budget_bounds(budget_input: Any) -> Tuple[Optional[float], Optional[float]]:
+    """Extract (min_price, max_price) bounds from budget string or value in catalog currency (INR)."""
+    if budget_input is None:
+        return None, None
+    if isinstance(budget_input, (int, float)):
+        val = float(budget_input)
+        return (0.0, val) if val > 0 else (None, None)
+
+    b_str = str(budget_input).lower().replace(",", "").strip()
+    if not b_str:
+        return None, None
+
+    is_unbounded = "+" in b_str
+    is_usd = "$" in b_str
+
+    clean_s = b_str.replace("$", "").replace("₹", "").replace("rs.", "").strip()
+    import re
+    nums = [float(n) for n in re.findall(r"\d+(?:\.\d+)?", clean_s)]
+    if not nums:
+        return None, None
+
+    if is_usd:
+        nums = [n * 80.0 for n in nums]
+
+    if is_unbounded:
+        return min(nums), None
+
+    if len(nums) == 1:
+        return 0.0, nums[0]
+    else:
+        return min(nums[0], nums[1]), max(nums[0], nums[1])
+
+
+def extract_user_max_budget(user_profile_or_budget: Any) -> Optional[float]:
+    """Extract explicit user maximum budget ceiling as a float (in catalog currency, INR).
+
+    Inspects explicit maximum fields (max_budget, user_max_budget, budget_ceiling)
+    as well as range fields (budget_range, budgetRange, budget) from profile dicts or DTOs.
+    Returns None if no ceiling is specified or if budget is unbounded (e.g. ₹10,000+).
+    """
+    if user_profile_or_budget is None:
+        return None
+
+    # Direct numerical budget
+    if isinstance(user_profile_or_budget, (int, float)):
+        return float(user_profile_or_budget) if user_profile_or_budget > 0 else None
+
+    # Dict / profile object
+    if isinstance(user_profile_or_budget, dict):
+        # 1. Direct explicit maximum fields (top priority)
+        for k in ["user_max_budget", "max_budget", "maxBudget", "budget_max", "budget_ceiling"]:
+            if k in user_profile_or_budget and user_profile_or_budget[k] is not None:
+                val = user_profile_or_budget[k]
+                if isinstance(val, (int, float)) and val > 0:
+                    return float(val)
+                parsed = extract_user_max_budget(val)
+                if parsed is not None:
+                    return parsed
+
+        # 2. Check nested fitData
+        fit_data = user_profile_or_budget.get("fitData") or user_profile_or_budget.get("fit_data")
+        if isinstance(fit_data, dict):
+            nested = extract_user_max_budget(fit_data)
+            if nested is not None:
+                return nested
+        elif hasattr(fit_data, "budgetRange"):
+            nested = extract_user_max_budget(getattr(fit_data, "budgetRange"))
+            if nested is not None:
+                return nested
+
+        # 3. Check range fields
+        for k in ["budget_range", "budgetRange", "budget"]:
+            if k in user_profile_or_budget and user_profile_or_budget[k] is not None:
+                parsed = extract_user_max_budget(user_profile_or_budget[k])
+                if parsed is not None:
+                    return parsed
+
+        return None
+
+    # Object with attributes
+    if hasattr(user_profile_or_budget, "budgetRange"):
+        return extract_user_max_budget(getattr(user_profile_or_budget, "budgetRange"))
+    if hasattr(user_profile_or_budget, "max_budget"):
+        return extract_user_max_budget(getattr(user_profile_or_budget, "max_budget"))
+
+    # String (e.g. "₹500", "Under ₹1,500", "$100-$300", "500")
+    if isinstance(user_profile_or_budget, str):
+        _, max_p = parse_budget_bounds(user_profile_or_budget)
+        return max_p
+
+    return None
+
+
 def compute_budget_score(budget_range_str: Optional[str], candidate_price: float) -> float:
     """Compute compatibility score between user's selected budget range and candidate product price."""
     if not budget_range_str or candidate_price <= 0:
         return 0.5
 
-    b_str = str(budget_range_str).lower().replace(",", "").replace("₹", "").replace("rs.", "").strip()
+    min_p, max_p = parse_budget_bounds(budget_range_str)
+    if max_p is None:
+        if min_p is not None and candidate_price >= min_p:
+            return 1.0
+        return 0.8
 
-    # Extract bounds
-    import re
-    nums = [float(n) for n in re.findall(r"\d+", b_str)]
-    if not nums:
-        return 0.5
-
-    if len(nums) == 1:
-        if "under" in b_str or "less" in b_str or "below" in b_str:
-            min_p, max_p = 0.0, nums[0]
-        else:
-            min_p, max_p = nums[0], nums[0] * 3.0
-    else:
-        min_p, max_p = min(nums[0], nums[1]), max(nums[0], nums[1])
+    min_p = min_p if min_p is not None else 0.0
 
     if min_p <= candidate_price <= max_p:
         return 1.0
@@ -144,6 +229,7 @@ def compute_budget_score(budget_range_str: Optional[str], candidate_price: float
     else:
         diff_ratio = (candidate_price - max_p) / max(max_p, 1.0)
         return float(np.clip(1.0 - 0.8 * diff_ratio, 0.0, 1.0))
+
 
 
 def is_valid_url(url: Any) -> bool:
