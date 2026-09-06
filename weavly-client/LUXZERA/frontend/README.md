@@ -1,4 +1,4 @@
-# 💎 LUXZERA Frontend — Modern AI Fashion Commerce Client
+# 💎 Weavly Frontend — Modern AI Fashion Commerce Client
 
 > **High-fidelity, responsive fashion commerce storefront, creator atelier, and interactive styling client built with Next.js 14, React 19, Tailwind CSS, Motion, and Three.js.**
 
@@ -8,7 +8,7 @@
 
 | Service | Hosting Provider | Live URL / Endpoint | Status |
 | :--- | :--- | :--- | :---: |
-| **Storefront (LUXZERA)** | Vercel / Cloud | `https://weavly.vercel.app` | 🟢 **Active** |
+| **Storefront (Weavly Client)** | Vercel / Cloud | `https://weavly.vercel.app` | 🟢 **Active** |
 | **Commerce API (Backend)** | Render Cloud | `https://zera-server.onrender.com/api` | 🟢 **Active** |
 | **Zyra Recommendation Engine** | Render / Local | `http://localhost:5001` | 🟡 **Suspended on Free Cloud Tier** (See Note) |
 
@@ -24,8 +24,8 @@
 ```mermaid
 flowchart TD
     subgraph Browser["User Browser / Client"]
-        Store["LUXZERA Storefront<br/>(Port 3000)"]
-        Wardrobe["ZeraCollection AI Stylist<br/>(/wardrobe)"]
+        Store["Weavly Storefront<br/>(Port 3000)"]
+        Wardrobe["ZyraCollection AI Stylist<br/>(/wardrobe)"]
         Onboarding["15-Point Onboarding<br/>(/onboarding)"]
         Studio["Designer Atelier<br/>(/designer-studio)"]
         Admin["Governance Portal<br/>(/admin)"]
@@ -34,7 +34,7 @@ flowchart TD
     subgraph StateManagement["State & Context Providers"]
         AuthCtx["AuthContext<br/>(JWT + Google OAuth)"]
         WardrobeCtx["WardrobeContext<br/>(Saved Items & Outfits)"]
-        CartCtx["CartContext<br/>(ZeraCart & Orders)"]
+        CartCtx["CartContext<br/>(ZyraCart & Orders)"]
     end
 
     subgraph Gateway["API Gateway & Service Layer"]
@@ -63,7 +63,7 @@ flowchart TD
 ---
 
 ### 🎨 Wireframe Box Design Aesthetics
-LUXZERA follows a minimalist, high-fashion architectural wireframe aesthetic:
+Weavly follows a minimalist, high-fashion architectural wireframe aesthetic:
 - **Primary Color**: `#183B56` (Deep Obsidian / Navy)
 - **Background**: `#F5EFEB` (Alabaster Warm Paper) & `#FFFFFF` (Crisp White)
 - **Borders & Framing**: 1px crisp structural grid lines, sharp geometry, rounded-2xl cards, and subtle elevation shadows.
@@ -78,19 +78,19 @@ LUXZERA follows a minimalist, high-fashion architectural wireframe aesthetic:
 graph TD
     Root["/ (Hero & Storefront)"]
     Root --> Shop["/men, /women, /unisex (Catalogs)"]
-    Root --> Wardrobe["/wardrobe (Zera AI Stylist)"]
+    Root --> Wardrobe["/wardrobe (Zyra AI Stylist)"]
     Root --> Onboarding["/onboarding (15-Point Fit Questionnaire)"]
     Root --> Account["/account (Profile, Biometrics, Moodboards)"]
     Root --> Designers["/designers & /designer/:id (Atelier Portfolios)"]
     Root --> Studio["/designer-studio (Creator Portal)"]
     Root --> Admin["/admin (Moderation & Governance)"]
-    Root --> Cart["/cart & /orders (ZeraCart & Tracking)"]
+    Root --> Cart["/cart & /orders (ZyraCart & Tracking)"]
 ```
 
 | Route | Page / Feature | Access | Description |
 | :--- | :--- | :---: | :--- |
 | `/` | **Hero & Storefront** | Public | Dynamic hero, Bespoke Fit trigger, featured designers, and live lookbook drops |
-| `/wardrobe` | **ZeraCollection Stylist** | Public / Auth | AI recommendation studio with 8-occasion switcher, live fit advisor, and interactive wardrobe |
+| `/wardrobe` | **ZyraCollection Stylist** | Public / Auth | AI recommendation studio with 8-occasion switcher, live fit advisor, and interactive wardrobe |
 | `/men` | **Men's Collection** | Public | Filterable catalog for menswear with category, style, and price controls |
 | `/women` | **Women's Collection** | Public | Filterable catalog for womenswear with luxury and contemporary filters |
 | `/unisex` | **Unisex Collection** | Public | Gender-neutral streetwear, oversized silhouettes, and essentials |
@@ -101,7 +101,7 @@ graph TD
 | `/onboarding` | **User Onboarding** | Auth | Complete 15-point profile, biometrics, style preferences, and multi-image photo upload |
 | `/account` | **Account & Settings** | Auth | User profile, biometrics, measurement manager, and style moodboard gallery |
 | `/admin` | **Governance Portal** | Admin | Designer verification workflow, product status review, and audit logs |
-| `/cart` | **ZeraCart** | Public / Auth | Slide-out and dedicated bag with item summary and checkout triggers |
+| `/cart` | **ZyraCart** | Public / Auth | Slide-out and dedicated bag with item summary and checkout triggers |
 | `/orders` | **Orders & Tracking** | Auth | Order history, tracking status, and milestone tracking for bespoke pieces |
 | `/custom-design` | **Bespoke Request** | Auth | Custom garment configuration and direct designer commissioning |
 
@@ -109,7 +109,7 @@ graph TD
 
 ## ⚡ 3. Key Feature Modules Breakdown
 
-### 👗 1. ZeraCollection AI Stylist (`/wardrobe`)
+### 👗 1. ZyraCollection AI Stylist (`/wardrobe`)
 - **8-Occasion Semantic Switcher**: Instantly switch between `College`, `Casual`, `Party`, `Formal`, `Wedding`, `Date Night`, `Work`, and `Sport`.
 - **Live Fresh Generation**: Directly queries Zyra V2 without stale client caching to deliver newly synthesized recommendations.
 - **Biometric & Preference Conditioning**: Evaluates the user's fit profile, preferred styles, avoided categories, and budget ceiling.
@@ -135,10 +135,10 @@ graph TD
 
 ```mermaid
 graph TD
-    App["LUXZERA App Shell"]
+    App["Weavly App Shell"]
     App --> AuthProvider["AuthContext<br/>• Session JWT<br/>• User Profile<br/>• Google OAuth2"]
     App --> WardrobeProvider["WardrobeContext<br/>• Saved Garments<br/>• Active Occasion<br/>• AI Outfits"]
-    App --> CartProvider["CartContext<br/>• ZeraCart State<br/>• Line Items<br/>• Price Calculations"]
+    App --> CartProvider["CartContext<br/>• ZyraCart State<br/>• Line Items<br/>• Price Calculations"]
 ```
 
 ---

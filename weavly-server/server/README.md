@@ -23,7 +23,7 @@
 
 ```mermaid
 flowchart TD
-    subgraph Client["LUXZERA Client (Port 3000)"]
+    subgraph Client["Weavly Client (Port 3000)"]
         NextApp["Next.js 14 App Router"]
     end
 
@@ -33,7 +33,7 @@ flowchart TD
         ZyraService["🧠 Zyra Recommendation Module<br/>(Occasion Generation • Gender Conditioning)"]
         Catalog["👗 Product & Catalog Module<br/>(Taxonomy • Inventory • Optimistic Lock)"]
         Designer["🎨 Designer Studio Module<br/>(Ateliers • Custom Garments • Escrow)"]
-        Orders["💳 Orders & Cart Module<br/>(ZeraCart • Invoices • Transactions)"]
+        Orders["💳 Orders & Cart Module<br/>(ZyraCart • Invoices • Transactions)"]
     end
 
     subgraph ExternalServices["Storage & ML Subsystems"]

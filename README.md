@@ -21,7 +21,7 @@
 
 | Service | Hosting Provider | Live URL / Endpoint | Status |
 | :--- | :--- | :--- | :---: |
-| **Storefront (LUXZERA Client)** | Vercel / Cloud | `https://weavly.vercel.app` | 🟢 **Active** |
+| **Storefront (Weavly Client)** | Vercel / Cloud | `https://weavly.vercel.app` | 🟢 **Active** |
 | **Commerce API (Weavly Server)** | Render Cloud | `https://zera-server.onrender.com/api` | 🟢 **Active** |
 | **AI Intelligence Core (Zyra)** | Render / Local | `http://localhost:5001` (`/recommend`) | 🟡 **Suspended on Free Cloud Tier** (See Note) |
 
@@ -52,8 +52,8 @@ Most e-commerce platforms do something embarrassing: they show you clothes based
 ```mermaid
 flowchart TD
     subgraph ClientLayer["Frontend Client Layer (Port 3000)"]
-        UI["LUXZERA Storefront<br/>(Next.js 14 • React 19 • Tailwind)"]
-        ZeraStylist["ZeraCollection AI Stylist<br/>(/wardrobe)"]
+        UI["Weavly Storefront<br/>(Next.js 14 • React 19 • Tailwind)"]
+        ZyraStylist["ZyraCollection AI Stylist<br/>(/wardrobe)"]
         Onboarding["15-Point Onboarding<br/>(/onboarding)"]
         DesignerPortal["Designer Atelier<br/>(/designer-studio)"]
     end
@@ -82,7 +82,7 @@ flowchart TD
     end
 
     UI -->|REST / HTTPS| Server
-    ZeraStylist -->|Occasion Request| Server
+    ZyraStylist -->|Occasion Request| Server
     Onboarding -->|Fit Metrics & Photos| Server
     DesignerPortal -->|Atelier Assets| Server
 
@@ -112,7 +112,7 @@ flowchart TD
 sequenceDiagram
     autonumber
     actor User as Customer / Browser
-    participant Client as LUXZERA Client (Next.js)
+    participant Client as Weavly Client (Next.js)
     participant Server as Weavly Server (Spring Boot)
     participant Zyra as Zyra V2 AI Core (Python / PyTorch)
     participant DB as Supabase PostgreSQL
