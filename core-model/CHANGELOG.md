@@ -2,6 +2,13 @@
 
 All notable changes to the Zyra Fashion Recommendation Intelligence System are documented in this file.
 
+## [2.0.1] - 2026-09-13
+
+### Production Deployment & Containerization
+- **Added Production Dockerfile**: Added lightweight Python 3.11-slim container definition with Gunicorn WSGI runtime, health check endpoint, and single-thread threadpool optimizations.
+- **Added .dockerignore**: Excluded local databases, checkpoints, notebooks, and temporary caches to optimize build context.
+- **Deployment Compatibility**: Ready for zero-friction containerized deployment on Render (Starter+), GCP Cloud Run, AWS ECS/EC2, or Railway.
+
 ## [2.0.0] - 2026-09-04
 
 ### Zyra V2 — Fashion Intelligence Recommendation Architecture
